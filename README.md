@@ -4,7 +4,7 @@ The official repository of all publication ready ONS charts.
 
 ## Guide to updating and placing an initial commit for a chart
 
-- All missing charts can be found in the issues section of the repository. They will have the following format, "[chart name] Initial Commit".
+- All missing charts can be found in the issues section of the repository. They will have the following format, "[descriptive chart name]: Initial Commit".
 
 - If this issue does not have an active branch and you would like to update and upload the chart please create a branch and you will be responsible for updating and making a pull request for the chart.
 
