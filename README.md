@@ -19,8 +19,8 @@ The official repository of all publication ready ONS charts.
 | -------- | -------- | -------- | -------- | -------- | -------- |
 | Bar Chart Horizontal | A static horizontal bart chart with data labels | ❌ | ❌ | ❌ | ✅ |
 | Bar Chart Split  | A static split horizontal bar bar chart | ❌ | ❌ | ❌ | ✅ |
-| Bar Chart horizontal stacked | A static stacked horizontal bar chart | ❌ | ❌ | ❌ | ❌ |
-| Heatmap by column | A static heatmap | ❌ | ❌ | ❌ | ✅ |
+| Bar Chart horizontal stacked | A static stacked horizontal bar chart | ❌ | ❌ | ❌ | ✅ |
+| Heatmap by column | A static heatmap | ❌ | ❌ | ❌ | ❌ |
 | Population pyramid with comparison toggle | A static population pyramid with comparison toggle | ❌ | ❌ | ❌ | ❌ |
 | Population pyramid with dropdown | A static population pyramid with comparison line and dropdown | ❌ | ❌ | ❌ | ❌ |
 | Population pyramid with dropdown and static comparison | | ❌ | ❌ | ❌ | ❌ |
