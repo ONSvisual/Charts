@@ -1,32 +1,33 @@
-var graphic = d3.select("#graphic");
-var pymChild = null;
+const graphic = d3.select("#graphic");
+let pymChild = null;
 
 function drawGraphic() {
   d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
+  const threshold_md = config.optional.mediumBreakpoint;
+  const threshold_sm = config.optional.mobileBreakpoint;
 
+  let size;
   if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = sm;
+    size = "sm";
   } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = md;
+    size = "md";
   } else {
-    size = lg;
+    size = "lg";
   }
 
-  let margin = config.optional.margin[size];
+  const margin = config.optional.margin[size];
 }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
   // load chart data
-  graphic_data = data;
+  const graphic_data = data;
   //use pym to create iframe chart dependent on specified variables.
   //   console.log(data);
 
   graphic_data.forEach((d) => {
     d.date = d3.timeParse(config.essential.dateFormat)(d.date);
-    //   console.log(data.date);
+    console.log(d.date);
   });
 
   pymChild = new pym.Child({
