@@ -1,0 +1,13 @@
+.dataLabels{
+  font-weight: 600;
+  font-size: 16px;
+}
+
+svg.chart g.x g.tick text{
+  font-weight: 700;
+  fill:#414042;
+}
+
+g.y g.tick text{
+  font-weight: 600;
+}
