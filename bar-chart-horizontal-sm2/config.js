@@ -14,7 +14,7 @@ config = {
   },
   optional: {
     chart_every: {
-      sm: 1,
+      sm: 2,
       md: 2,
       lg: 2,
     },
@@ -44,14 +44,14 @@ config = {
       },
     },
     seriesHeight: {
-      sm: 30,
-      md: 30,
-      lg: 30,
+      sm: 40,
+      md: 40,
+      lg: 40,
     },
     xAxisTicks: {
       sm: 4,
-      md: 8,
-      lg: 10,
+      md: 4,
+      lg: 4,
     },
     mobileBreakpoint: 510,
     mediumBreakpoint: 600,
