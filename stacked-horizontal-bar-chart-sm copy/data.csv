@@ -1,0 +1,91 @@
+name, category, value, series
+Admin,Category 1,20.85373832,series1
+Admin,Category 2,17.6949027,series1
+Admin,Category 3,84.86276061,series1
+Admin,Category 4,31.5783842,series1
+Admin,Category 5,48.20562268,series1
+Arts,Category 1,75.10385606,series1
+Arts,Category 2,92.78801932,series1
+Arts,Category 3,98.42939789,series1
+Arts,Category 4,95.19411478,series1
+Arts,Category 5,38.58584155,series1
+Retail,Category 1,64.12511024,series1
+Retail,Category 2,36.80002708,series1
+Retail,Category 3,38.20913822,series1
+Retail,Category 4,4.832285581,series1
+Retail,Category 5,31.60393462,series1
+Manufacturing,Category 1,58.04407128,series1
+Manufacturing,Category 2,91.82819229,series1
+Manufacturing,Category 3,44.15710484,series1
+Manufacturing,Category 4,93.53981204,series1
+Manufacturing,Category 5,32.06639495,series1
+Construction,Category 1,49.29571885,series1
+Construction,Category 2,61.7405718,series1
+Construction,Category 3,2.633201818,series1
+Construction,Category 4,12.00880742,series1
+Construction,Category 5,86.95296893,series1
+Health and social work,Category 1,26.42919394,series1
+Health and social work,Category 2,68.3881695,series1
+Health and social work,Category 3,38.34804204,series1
+Health and social work,Category 4,45.46625342,series1
+Health and social work,Category 5,24.65361361,series1
+Transportation and storage,Category 1,66.02170789,series1
+Transportation and storage,Category 2,25.88544503,series1
+Transportation and storage,Category 3,67.54775376,series1
+Transportation and storage,Category 4,45.4008622,series1
+Transportation and storage,Category 5,68.65015727,series1
+Accommodation and food,Category 1,24.56805884,series1
+Accommodation and food,Category 2,89.47462279,series1
+Accommodation and food,Category 3,49.36685439,series1
+Accommodation and food,Category 4,50.05168647,series1
+Accommodation and food,Category 5,65.708543,series1
+Other,Category 1,27.48215082,series1
+Other,Category 2,14.64375439,series1
+Other,Category 3,66.97898751,series1
+Other,Category 4,58.11839376,series1
+Other,Category 5,9.358939682,series1
+Admin,Category 1,20.85373832,series2
+Admin,Category 2,17.6949027,series2
+Admin,Category 3,84.86276061,series2
+Admin,Category 4,31.5783842,series2
+Admin,Category 5,48.20562268,series2
+Arts,Category 1,75.10385606,series2
+Arts,Category 2,92.78801932,series2
+Arts,Category 3,98.42939789,series2
+Arts,Category 4,95.19411478,series2
+Arts,Category 5,38.58584155,series2
+Retail,Category 1,64.12511024,series2
+Retail,Category 2,36.80002708,series2
+Retail,Category 3,38.20913822,series2
+Retail,Category 4,4.832285581,series2
+Retail,Category 5,31.60393462,series2
+Manufacturing,Category 1,58.04407128,series2
+Manufacturing,Category 2,91.82819229,series2
+Manufacturing,Category 3,44.15710484,series2
+Manufacturing,Category 4,93.53981204,series2
+Manufacturing,Category 5,32.06639495,series2
+Construction,Category 1,49.29571885,series2
+Construction,Category 2,61.7405718,series2
+Construction,Category 3,2.633201818,series2
+Construction,Category 4,12.00880742,series2
+Construction,Category 5,86.95296893,series2
+Health and social work,Category 1,26.42919394,series2
+Health and social work,Category 2,68.3881695,series2
+Health and social work,Category 3,38.34804204,series2
+Health and social work,Category 4,45.46625342,series2
+Health and social work,Category 5,24.65361361,series2
+Transportation and storage,Category 1,66.02170789,series2
+Transportation and storage,Category 2,25.88544503,series2
+Transportation and storage,Category 3,67.54775376,series2
+Transportation and storage,Category 4,45.4008622,series2
+Transportation and storage,Category 5,68.65015727,series2
+Accommodation and food,Category 1,24.56805884,series2
+Accommodation and food,Category 2,89.47462279,series2
+Accommodation and food,Category 3,49.36685439,series2
+Accommodation and food,Category 4,50.05168647,series2
+Accommodation and food,Category 5,65.708543,series2
+Other,Category 1,27.48215082,series2
+Other,Category 2,14.64375439,series2
+Other,Category 3,66.97898751,series2
+Other,Category 4,58.11839376,series2
+Other,Category 5,9.358939682,series2
