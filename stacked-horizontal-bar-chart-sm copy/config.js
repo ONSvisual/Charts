@@ -2,8 +2,8 @@ config = {
   essential: {
     graphic_data_url: "data.csv",
     colour_palette: ["#206095", "#27A0CC", "#871A5B", "#A8BD3A", "#F66068"],
-    sourceText: "Office for National Statistics",
-    accessibleSummary: "Here is the screenreader text describing the chart.",
+    sourceText: "from the Office for National Statistics",
+    accessibleSummary: "Here is the screen reader text describing the chart.",
     xDomain: "auto",
     // either "auto" or an array for the x domain e.g. [0,100]
     xAxisTickFormat: ".0f",
@@ -23,30 +23,30 @@ config = {
   },
   optional: {
     chart_every: {
-      sm: 2,
-      md: 2,
-      lg: 2,
+      sm: 1,
+      md: 1,
+      lg: 1, // This indicates you want 2 charts side by side
     },
     aspectRatio: {
       sm: [1, 1],
       md: [1, 1],
-      lg: [1, 1],
+      lg: [1, 1], //lg: [1.6, 2], can be used to make a 2x wide grid
     },
     margin: {
       sm: {
         top: 15,
-        right: 20,
+        right: 10,
         bottom: 50,
-        left: 120,
+        left: 90,
       },
       md: {
         top: 15,
         right: 20,
         bottom: 50,
-        left: 120,
+        left: 100,
       },
       lg: {
-        top: 15,
+        top: 30,
         right: 20,
         bottom: 50,
         left: 120,
@@ -58,9 +58,9 @@ config = {
       lg: 30,
     },
     xAxisTicks: {
-      sm: 4,
-      md: 8,
-      lg: 10,
+      sm: 2,
+      md: 2,
+      lg: 5,
     },
     mobileBreakpoint: 510,
     mediumBreakpoint: 600,
