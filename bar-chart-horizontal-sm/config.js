@@ -19,8 +19,8 @@ config = {
       lg: 2,
     },
     aspectRatio: {
-      sm: [1, 1],
-      md: [1, 1],
+      sm: [1, 2],
+      md: [1, 2],
       lg: [1, 2],
     },
     margin: {

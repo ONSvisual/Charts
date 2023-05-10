@@ -110,7 +110,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   console.table(series);
 
   if (config.essential.xDomain === "auto") {
-    x.domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))]).nice();
+    x.domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))]); //removed.nice()
   } else {
     x.domain(config.essential.xDomain);
   }
