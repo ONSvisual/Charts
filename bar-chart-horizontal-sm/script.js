@@ -3,12 +3,12 @@ var pymChild = null;
 
 function drawGraphic() {
   //population accessible summmary
+  // Population accessible summary
   d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
 
   var threshold_md = config.optional.mediumBreakpoint;
   var threshold_sm = config.optional.mobileBreakpoint;
 
-  //set variables for chart dimensions dependent on width of #graphic
   if (parseInt(graphic.style("width")) < threshold_sm) {
     size = "sm";
   } else if (parseInt(graphic.style("width")) < threshold_md) {
@@ -18,15 +18,15 @@ function drawGraphic() {
   }
 
   var margin = config.optional.margin[size];
+  var chart_every = config.optional.chart_every[size];
   var chart_width =
-    parseInt(graphic.style("width")) - margin.left - margin.right;
-  //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-  var height =
-    config.optional.seriesHeight[size] * graphic_data.length +
-    10 * (graphic_data.length - 1) +
-    12;
+    parseInt(graphic.style("width")) / chart_every - margin.left - margin.right;
+  var height = Math.ceil(
+    (chart_width * config.optional.aspectRatio[size][1]) /
+      config.optional.aspectRatio[size][0]
+  );
 
-  // clear out existing graphics
+  // Clear out existing graphics
   graphic.selectAll("*").remove();
 
   // Nest the graphic_data by the 'series' column

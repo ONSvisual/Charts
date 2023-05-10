@@ -8,23 +8,6 @@
   vertical-align: top;
 }
 
-/* .lg .chart-container {
-  width: calc(33.333% - 20px);
-  margin-right: 20px;
-} */
-
-
- /* .lg .chart-container {
-  width: calc(50% - 20px);
-  margin-right: 20px;
-} 
-
-.md .chart-container {
-  width: calc(50% - 20px);
-  margin-right: 20px;
-}
-
-.sm .chart-container {
-  width: 100%;
+.chart-container:last-child {
   margin-right: 0;
-} */
+}
