@@ -20,13 +20,13 @@ The official repository of all publication ready ONS charts.
 | Bar chart Horizontal                                   | A static horizontal bart chart with data labels               | ❌       | ❌           | ❌          | ✅               |
 | Bar chart Split                                        | A static split horizontal bar bar chart                       | ❌       | ❌           | ❌          | ✅               |
 | Bar chart horizontal stacked                           | A static stacked horizontal bar chart                         | ❌       | ❌           | ❌          | ✅               |
-| Bar chart horizontal small multiple                    | A static horizontal bart chart with data labels               | ❌       | ❌           | ❌          | ❌               |
-| Heatmap by column                                      | A static heatmap                                              | ❌       | ❌           | ❌          | ❌               |
-| Population pyramid with comparison toggle              | A static population pyramid with comparison toggle            | ❌       | ❌           | ❌          | ❌               |
-| Population pyramid with dropdown                       | A static population pyramid with comparison line and dropdown | ❌       | ❌           | ❌          | ❌               |
-| Population pyramid with dropdown and static comparison |                                                               | ❌       | ❌           | ❌          | ❌               |
-| Population pyramid with comparison                     |                                                               | ❌       | ❌           | ❌          | ❌               |
-| Population pyramid                                     | A static population pyramid                                   | ❌       | ❌           | ❌          | ❌               |
+| Bar chart horizontal small multiple                    | A static horizontal bart chart with data labels               | ❌       | ❌           | ❌          | ✅               |
+| Heatmap by column                                      | A static heatmap                                              | ❌       | ❌           | ❌          | ✅               |
+| Population pyramid with comparison toggle              | A static population pyramid with comparison toggle            | ❌       | ❌           | ❌          | ✅               |
+| Population pyramid with dropdown                       | A static population pyramid with comparison line and dropdown | ❌       | ❌           | ❌          | ✅               |
+| Population pyramid with dropdown and static comparison |                                                               | ❌       | ❌           | ❌          | ✅               |
+| Population pyramid with comparison                     |                                                               | ❌       | ❌           | ❌          | ✅               |
+| Population pyramid                                     | A static population pyramid                                   | ❌       | ❌           | ❌          | ✅               |
 | Line chart                                             | A static line chart                                           | ❌       | ❌           | ❌          | ❌               |
 | Line chart with dropdown                               | A static line chart with dropdown                             | ❌       | ❌           | ❌          | ❌               |
 | Line chart small multiple                              | A simple small multiple line chart                            | ❌       | ❌           | ❌          | ❌               |
