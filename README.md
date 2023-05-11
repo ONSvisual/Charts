@@ -31,5 +31,5 @@ The official repository of all publication ready ONS charts.
 | Line chart with dropdown                               | A static line chart with dropdown                             | ❌       | ❌           | ❌          | ❌               |
 | Line chart small multiple                              | A simple small multiple line chart                            | ❌       | ❌           | ❌          | ❌               |
 | Animated scatter plot                                  | Scatter plot showing change over time                         | ❌       | ❌           | ❌          | ❌               |
-| Animated bubble plot                                   | Bubble plot showing change over time                          | ❌       | ❌           | ❌          | ❌               |
+| Animated bubble plot                                   | Bubble plot showing change over time                          | ❌       | ❌           | ❌          | ✅               |
 | Multiple line chart                                    | A static multiple line chart                                  | ❌       | ❌           | ❌          | ❌               |
