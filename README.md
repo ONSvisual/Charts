@@ -11,7 +11,7 @@ The official repository of all publication ready ONS charts.
 ### Initial chart commit checklist
 
 - All initial commits of charts must must follow [JavaScript ES6](https://www.w3schools.com/js/js_es6.asp) standards and use [D3 v6](https://observablehq.com/@d3/d3v6-migration-guide) or higher.
-- Before making additions to the `lib` folder please do check the [ONS CDN](https://github.com/ONSdigital/cdn.ons.gov.uk-vendor) as you addition to the lib folder may already to uploaded.
+- Before making additions to the `lib` folder please do check the [ONS CDN](https://github.com/ONSdigital/cdn.ons.gov.uk-vendor) as your addition to the lib folder may already to uploaded.
 
 ### Charts uploaded so far
 
