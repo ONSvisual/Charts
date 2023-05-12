@@ -17,9 +17,9 @@ function drawGraphic() {
   }
 
   // Define the dimensions and margins for the chart - need to re-calcuate these based on the size of the graphic
-  const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-  const width = graphic.node().offsetWidth - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+  let margin = config.optional.margin[size];
+  let width = parseInt(graphic.style("width")) - margin.left - margin.right;
+  let height = 400 - margin.top - margin.bottom;
 
   // Remove any existing chart elements
   graphic.selectAll("*").remove();
@@ -60,24 +60,22 @@ function drawGraphic() {
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("class", "chart")
+    .style("background-color", "#fff")
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // Define the x and y scales
-  const xScale = d3
+  const xAxis = d3
     .scaleTime()
     .domain(d3.extent(graphic_data, (d) => d.date))
     .range([0, width]);
 
-  const yScale = d3
+  const yAxis = d3
     .scaleLinear()
     .domain([0, 1]) // Assuming the y-axis represents the percentage from 0 to 1
     .range([height, 0]);
 
-  // Define the stack generator
-
-  // Define the stack generator
-  // Define the stack generator
   // Define the stack generator
   const stack = d3
     .stack()
@@ -93,9 +91,9 @@ function drawGraphic() {
   // Define the area generator
   const area = d3
     .area()
-    .x((d) => xScale(d.data.date))
-    .y0((d) => yScale(d[0]))
-    .y1((d) => yScale(d[1]));
+    .x((d) => xAxis(d.data.date))
+    .y0((d) => yAxis(d[0]))
+    .y1((d) => yAxis(d[1]));
 
   // Create the areas
   svg
@@ -105,7 +103,6 @@ function drawGraphic() {
     .append("path")
     .attr("fill", (d) => {
       // Assign colors to each category
-      // You can modify this to use your color palette
       const category = d.key;
       return colorScale(category);
     })
@@ -114,15 +111,33 @@ function drawGraphic() {
   // Add the x-axis
   svg
     .append("g")
-    .attr("class", "x-axis")
+    .attr("class", "y axis")
     .attr("transform", `translate(0, ${height})`)
-    .call(d3.axisBottom(xScale));
+    .call(
+      d3
+        .axisBottom(xAxis)
+        .tickFormat(d3.timeFormat(config.essential.xAxisTickFormat))
+    );
 
   // Add the y-axis
   svg
     .append("g")
-    .attr("class", "y-axis")
-    .call(d3.axisLeft(yScale).tickFormat(d3.format(".0%")));
+    .attr("class", "y axis")
+    .call(d3.axisLeft(yAxis).tickFormat(d3.format(".0%")));
+
+  // This does the x-axis label
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .append("text")
+    .attr("x", width)
+    .attr("y", 35)
+    .attr("class", "axis--label")
+    .text(config.essential.xAxisLabel)
+    .attr("text-anchor", "end");
+
+  //create link to source
+  d3.select("#source").text("Source – " + config.essential.sourceText);
 
   //use pym to calculate chart dimensions
   if (pymChild) {

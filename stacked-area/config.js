@@ -13,7 +13,7 @@ config = {
     accessibleSummary: "Here is the screen reader text describing the chart.",
     xDomain: "auto",
     // either "auto" or an array for the x domain e.g. [0,100]
-    xAxisTickFormat: "%y",
+    xAxisTickFormat: "%Y",
     dateFormat: "%Y",
     xAxisLabel: "x axis label",
     stackOrder: "stackOrderNone",
@@ -33,21 +33,21 @@ config = {
     margin: {
       sm: {
         top: 15,
-        right: 10,
+        right: 50,
         bottom: 50,
-        left: 150,
+        left: 50,
       },
       md: {
         top: 15,
-        right: 20,
+        right: 50,
         bottom: 50,
-        left: 20,
+        left: 50,
       },
       lg: {
         top: 30,
-        right: 20,
+        right: 50,
         bottom: 50,
-        left: 160,
+        left: 50,
       },
     },
     xAxisTicks: {
