@@ -1,7 +1,14 @@
 config = {
   essential: {
     graphic_data_url: "data.csv",
-    colour_palette: ["#206095", "#27A0CC", "#871A5B", "#A8BD3A", "#F66068"],
+    colour_palette: [
+      "#206095",
+      "#27A0CC",
+      "#871A5B",
+      "#A8BD3A",
+      "#F66068",
+      "#118C7B",
+    ],
     sourceText: "from the Office for National Statistics",
     accessibleSummary: "Here is the screen reader text describing the chart.",
     xDomain: "auto",
