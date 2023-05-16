@@ -15,21 +15,21 @@ The official repository of all publication ready ONS charts. (WARNING: This repo
 
 ### Charts uploaded so far
 
-| Chart Name                                             | Description                                                   | Preview | Style Check | Code Check | Codebase Update |
-| ------------------------------------------------------ | ------------------------------------------------------------- | ------- | ----------- | ---------- | --------------- |
-| Bar chart Horizontal                                   | A static horizontal bart chart with data labels               | ❌       | ❌           | ❌          | ✅               |
-| Bar chart Split                                        | A static split horizontal bar bar chart                       | ❌       | ❌           | ❌          | ✅               |
-| Bar chart horizontal stacked                           | A static stacked horizontal bar chart                         | ❌       | ❌           | ❌          | ✅               |
-| Bar chart horizontal small multiple                    | A static horizontal bart chart with data labels               | ❌       | ❌           | ❌          | ✅               |
-| Heatmap by column                                      | A static heatmap                                              | ❌       | ❌           | ❌          | ✅               |
-| Population pyramid with comparison toggle              | A static population pyramid with comparison toggle            | ❌       | ❌           | ❌          | ✅               |
-| Population pyramid with dropdown                       | A static population pyramid with comparison line and dropdown | ❌       | ❌           | ❌          | ✅               |
-| Population pyramid with dropdown and static comparison |                                                               | ❌       | ❌           | ❌          | ✅               |
-| Population pyramid with comparison                     |                                                               | ❌       | ❌           | ❌          | ✅               |
-| Population pyramid                                     | A static population pyramid                                   | ❌       | ❌           | ❌          | ✅               |
-| Line chart                                             | A static line chart                                           | ❌       | ❌           | ❌          | ❌               |
-| Line chart with dropdown                               | A static line chart with dropdown                             | ❌       | ❌           | ❌          | ❌               |
-| Line chart small multiple                              | A simple small multiple line chart                            | ❌       | ❌           | ❌          | ❌               |
-| Animated scatter plot                                  | Scatter plot showing change over time                         | ❌       | ❌           | ❌          | ✅               |
-| Animated bubble plot                                   | Bubble plot showing change over time                          | ❌       | ❌           | ❌          | ✅               |
-| Multiple line chart                                    | A static multiple line chart                                  | ❌       | ❌           | ❌          | ❌               |
+| Chart Name                                             | Description                                                   | Preview                                                                     | Style Check | Code Check | Codebase Update |
+| ------------------------------------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------- | ---------- | --------------- |
+| Bar chart Horizontal                                   | A static horizontal bart chart with data labels               | [Link](https://onsvisual.github.io/Charts/bar-chart-horizontal/)            | ❌           | ❌          | ✅               |
+| Bar chart Split                                        | A static split horizontal bar bar chart                       | [Link](https://onsvisual.github.io/Charts/bar-chart-horizontal-split/)      | ❌           | ❌          | ✅               |
+| Bar chart horizontal stacked                           | A static stacked horizontal bar chart                         | [Link](https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-sm/) | ❌           | ❌          | ✅               |
+| Bar chart horizontal small multiple                    | A static horizontal bart chart with data labels               | [Link](https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-sm/) | ❌           | ❌          | ✅               |
+| Heatmap by column                                      | A static heatmap                                              | [Link](https://onsvisual.github.io/Charts/heatmap/)                         | ❌           | ❌          | ✅               |
+| Population pyramid with comparison toggle              | A static population pyramid with comparison toggle            | [Link]()                                                                    | ❌           | ❌          | ✅               |
+| Population pyramid with dropdown                       | A static population pyramid with comparison line and dropdown | [Link]()                                                                    | ❌           | ❌          | ✅               |
+| Population pyramid with dropdown and static comparison |                                                               | [Link]()                                                                    | ❌           | ❌          | ✅               |
+| Population pyramid with comparison                     |                                                               | [Link]()                                                                    | ❌           | ❌          | ✅               |
+| Population pyramid                                     | A static population pyramid                                   | [Link]()                                                                    | ❌           | ❌          | ✅               |
+| Line chart                                             | A static line chart                                           | [Link]()                                                                    | ❌           | ❌          | ❌               |
+| Line chart with dropdown                               | A static line chart with dropdown                             | [Link]()                                                                    | ❌           | ❌          | ❌               |
+| Line chart small multiple                              | A simple small multiple line chart                            | [Link]()                                                                    | ❌           | ❌          | ❌               |
+| Animated scatter plot                                  | Scatter plot showing change over time                         | [Link](https://onsvisual.github.io/Charts/scatter-plot-animated/)           | ❌           | ❌          | ✅               |
+| Animated bubble plot                                   | Bubble plot showing change over time                          | [Link](bubble-chart-animated)                                               | ❌           | ❌          | ✅               |
+| Multiple line chart                                    | A static multiple line chart                                  | [Link]()                                                                    | ❌           | ❌          | ❌               |
