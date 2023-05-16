@@ -29,5 +29,5 @@ config = {
   "sourceText":"text",
   "threshold_sm":"number"
 },
-"elements":{"select":0, "nav":0, "legend":0, "titles":0}
+"elements":{"select":0, "nav":0, "legend":0, "titles":1}
 };
