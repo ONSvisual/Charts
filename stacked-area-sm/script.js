@@ -43,6 +43,9 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		size = "lg";
 	}
 
+	// Calculate chart width here
+	calculatedChartWidth = calculateChartWidth(size);
+
 	const chartsPerRow = config.optional.chart_every[size];
 	const chartPosition = chartIndex % chartsPerRow;
 
@@ -50,9 +53,11 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	let margin = { ...config.optional.margin[size] };
 
 	// If the chart is not in the first position in the row, reduce the left margin
-	if (chartPosition !== 0) {
-		margin.left = 10;
-	}
+	// if (chartPosition !== 0) {
+	// 	margin.left = 10;
+	// 	// Recalculate chart width here after adjusting left margin
+	// 	calculatedChartWidth = calculateChartWidth(size);
+	// }
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== "date");
@@ -88,9 +93,9 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	//End of legend code
 
-	let width = calculateChartWidth(size) - margin.left - margin.right;
+	let width = calculatedChartWidth - margin.left - margin.right;
 	let height =
-		config.optional.aspectRatio[size][1] - margin.top - margin.bottom;
+		width / config.optional.aspectRatio[size][1] - margin.top - margin.bottom;
 
 	// Define the x and y scales
 	const x = d3
