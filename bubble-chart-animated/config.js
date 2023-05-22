@@ -19,7 +19,7 @@ config = {
 		"xAxisLabel": "Wage growth % year on year",
 		"yAxisLabel": "Median hourly pay (£)",
 		"drawSliderButtons": true,
-		"highlight": true, //if you want to adjust where the highlight label goes, input top/bottom/middle for the relevant groups in the label_y column of the data file or start/middle/end to alter the text anchor in the label_anchor column
+		"highlight": true //if you want to adjust where the highlight label goes, input top/bottom/middle for the relevant groups in the label_y column of the data file or start/middle/end to alter the text anchor in the label_anchor column
 	},
 	"optional": {
 		"margin": {
@@ -27,32 +27,32 @@ config = {
 				"top": 140,
 				"right": 20,
 				"bottom": 50,
-				"left": 35,
+				"left": 35
 			},
 			"md": {
 				"top": 115,
 				"right": 20,
 				"bottom": 50,
-				"left": 35,
+				"left": 35
 			},
 			"lg": {
 				"top": 115,
 				"right": 60,
 				"bottom": 50,
-				"left": 35,
-			},
+				"left": 35
+			}
 		},
 		"aspectRatio": {
 			"sm": [16, 14],
 			"md": [16, 12],
-			"lg": [16, 12],
+			"lg": [16, 12]
 		},
 		"xAxisTicks": {
 			"sm": 2,
 			"md": 4,
-			"lg": 4,
+			"lg": 4
 		},
 		"mobileBreakpoint": 450, //if you update this, update the max-width on the @media css for the tooltip to size correctly
-		"mediumBreakpoint": 600,
-	},
+		"mediumBreakpoint": 600
+	}
 };
