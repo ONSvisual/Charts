@@ -29,6 +29,11 @@ config = {
 		// stackOrderReverse reverse the order as set from the data file
 	},
 	"optional": {
+		"chart_every": {
+			"sm": 1,
+			"md": 1,
+			"lg": 2
+		},
 		"aspectRatio": {
 			"sm": [1, 1],
 			"md": [1, 1],
@@ -36,20 +41,20 @@ config = {
 		},
 		"margin": {
 			"sm": {
-				"top": 15,
+				"top": 30,
 				"right": 20,
-				"bottom": 50,
-				"left": 50
+				"bottom": 30,
+				"left": 30
 			},
 			"md": {
-				"top": 15,
-				"right": 50,
+				"top": 20,
+				"right": 20,
 				"bottom": 50,
 				"left": 50
 			},
 			"lg": {
 				"top": 30,
-				"right": 50,
+				"right": 10,
 				"bottom": 50,
 				"left": 50
 			}
@@ -57,7 +62,7 @@ config = {
 		"xAxisTicks": {
 			"sm": 7,
 			"md": 5,
-			"lg": 8
+			"lg": 6
 		},
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600

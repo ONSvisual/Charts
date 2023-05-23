@@ -88,7 +88,7 @@ function drawGraphic() {
 	// Generate the stacked data
 	const stackedData = stack(graphic_data);
 
-	console.log("stackedData:", stackedData);
+	// console.log("stackedData:", stackedData);
 
 	// Define the area generator
 	const area = d3
@@ -113,7 +113,7 @@ function drawGraphic() {
 	// Add the x-axis
 	svg
 		.append("g")
-		.attr("class", "y axis")
+		.attr("class", "x axis")
 		.attr("transform", `translate(0, ${height})`)
 		.call(
 			d3
@@ -155,7 +155,7 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 			...Object.entries(d)
 				.filter(([key]) => key !== "date")
 				.map(([key, value]) => [key, +value])
-				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 		};
 	});
 
@@ -164,6 +164,6 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({
-		renderCallback: drawGraphic,
+		renderCallback: drawGraphic
 	});
 });
