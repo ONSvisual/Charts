@@ -98,12 +98,12 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		width / config.optional.aspectRatio[size][1] - margin.top - margin.bottom;
 
 	// Define the x and y scales
-	const x = d3
+	const xAxis = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
 		.range([0, width]);
 
-	const y = d3
+	const yAxis = d3
 		.scaleLinear()
 		.domain([0, d3.max(graphic_data, (d) => d3.sum(categories, (c) => d[c]))])
 		.nice()
@@ -117,6 +117,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.append("svg")
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
+		.attr("class", "chart")
+		.style("backgroud-color", "#fff")
 		.append("g")
 		.attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -131,37 +133,55 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 			"d",
 			d3
 				.area()
-				.x((d) => x(d.data.date))
-				.y0((d) => y(d[0]))
-				.y1((d) => y(d[1]))
+				.x((d) => xAxis(d.data.date))
+				.y0((d) => yAxis(d[0]))
+				.y1((d) => yAxis(d[1]))
 		)
 		.attr("fill", (d) => colorScale(d.key));
 
 	// Add the x-axis
 	svg
 		.append("g")
+		.attr("class", "x axis")
 		.attr("transform", `translate(0, ${height})`)
 		.call(
 			d3
-				.axisBottom(x)
+				.axisBottom(xAxis)
 				.ticks(config.optional.xAxisTicks[size])
 				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
 		);
 
 	// Add the y-axis, but only if the chart is at the first position
 	if (chartPosition === 0) {
-		svg.append("g").call(d3.axisLeft(y));
+		svg
+			.append("g")
+			.attr("class", "y axis")
+			.call(d3.axisLeft(yAxis).tickFormat(d3.format(".0%")));
 	}
 
-	// Add a title to the chart
+	// Add a title to each of the charts
 	svg
 		.append("text")
 		.attr("x", width / 2)
 		.attr("y", -margin.top / 2)
 		.attr("text-anchor", "middle")
 		.style("font-size", "16px")
-		.style("text-decoration", "underline")
+		.style("fill", "#707071")
 		.text(seriesName);
+
+	// This does the x-axis label
+	svg
+		.append("g")
+		.attr("transform", `translate(0, ${height})`)
+		.append("text")
+		.attr("x", width)
+		.attr("y", 35)
+		.attr("class", "axis--label")
+		.text(config.essential.xAxisLabel)
+		.attr("text-anchor", "end");
+
+	//create link to source
+	d3.select("#source").text("Source: " + config.essential.sourceText);
 
 	// Send the height to the parent frame
 	if (pymChild) {
@@ -172,11 +192,11 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 // Load the data
 d3.csv(config.essential.graphic_data_url)
 	.then((data) => {
-		console.log("Original data:", data);
+		// console.log("Original data:", data);
 
 		// Group the data by the 'series' column
 		const groupedData = d3.groups(data, (d) => d.series);
-		console.log("Grouped data:", groupedData);
+		// console.log("Grouped data:", groupedData);
 
 		// Remove previous SVGs
 		graphic.selectAll("svg").remove();

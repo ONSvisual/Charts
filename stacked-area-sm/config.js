@@ -37,14 +37,14 @@ config = {
 		"aspectRatio": {
 			"sm": [1, 1],
 			"md": [1, 1],
-			"lg": [1, 1] //lg: [1.6, 2], can be used to make a 2x wide grid
+			"lg": [1, 1]
 		},
 		"margin": {
 			"sm": {
-				"top": 20,
+				"top": 30,
 				"right": 20,
-				"bottom": 50,
-				"left": 20
+				"bottom": 30,
+				"left": 30
 			},
 			"md": {
 				"top": 20,
@@ -53,8 +53,8 @@ config = {
 				"left": 50
 			},
 			"lg": {
-				"top": 20,
-				"right": 20,
+				"top": 30,
+				"right": 10,
 				"bottom": 50,
 				"left": 50
 			}
@@ -62,7 +62,7 @@ config = {
 		"xAxisTicks": {
 			"sm": 7,
 			"md": 5,
-			"lg": 8
+			"lg": 6
 		},
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
