@@ -1,32 +1,32 @@
-let graphic = d3.select("#graphic");
+let graphic = d3.select('#graphic');
 let pymChild = null;
 
 function drawGraphic() {
 	//Accessible summary
-	d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
+	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	let threshold_md = config.optional.mediumBreakpoint;
 	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style("width")) < threshold_sm) {
-		size = "sm";
-	} else if (parseInt(graphic.style("width")) < threshold_md) {
-		size = "md";
+	if (parseInt(graphic.style('width')) < threshold_sm) {
+		size = 'sm';
+	} else if (parseInt(graphic.style('width')) < threshold_md) {
+		size = 'md';
 	} else {
-		size = "lg";
+		size = 'lg';
 	}
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
-	let width = parseInt(graphic.style("width")) - margin.left - margin.right;
+	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = 400 - margin.top - margin.bottom;
 
 	// Remove any existing chart elements
-	graphic.selectAll("*").remove();
+	graphic.selectAll('*').remove();
 
 	// Get categories from the keys used in the stack generator
-	const categories = Object.keys(graphic_data[0]).filter((k) => k !== "date");
+	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
 
 	const colorScale = d3
 		.scaleOrdinal()
@@ -35,37 +35,37 @@ function drawGraphic() {
 
 	// Set up the legend
 	const legenditem = d3
-		.select("#legend")
-		.selectAll("div.legend--item")
+		.select('#legend')
+		.selectAll('div.legend--item')
 		.data(d3.zip(categories, colorScale.range()))
 		.enter()
-		.append("div")
-		.attr("class", "legend--item");
+		.append('div')
+		.attr('class', 'legend--item');
 
 	legenditem
-		.append("div")
-		.attr("class", "legend--icon--circle")
-		.style("background-color", function (d) {
+		.append('div')
+		.attr('class', 'legend--icon--circle')
+		.style('background-color', function (d) {
 			return d[1];
 		});
 
 	legenditem
-		.append("div")
-		.append("p")
-		.attr("class", "legend--text")
+		.append('div')
+		.append('p')
+		.attr('class', 'legend--text')
 		.html(function (d) {
 			return d[0];
 		});
 
 	// Create an SVG element
 	const svg = graphic
-		.append("svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.attr("class", "chart")
-		.style("background-color", "#fff")
-		.append("g")
-		.attr("transform", `translate(${margin.left},${margin.top})`);
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.attr('class', 'chart')
+		.style('background-color', '#fff')
+		.append('g')
+		.attr('transform', `translate(${margin.left},${margin.top})`);
 
 	// Define the x and y scales
 	const xAxis = d3
@@ -99,22 +99,22 @@ function drawGraphic() {
 
 	// Create the areas
 	svg
-		.selectAll("path")
+		.selectAll('path')
 		.data(stackedData)
 		.enter()
-		.append("path")
-		.attr("fill", (d) => {
+		.append('path')
+		.attr('fill', (d) => {
 			// Assign colors to each category
 			const category = d.key;
 			return colorScale(category);
 		})
-		.attr("d", area);
+		.attr('d', area);
 
 	// Add the x-axis
 	svg
-		.append("g")
-		.attr("class", "x axis")
-		.attr("transform", `translate(0, ${height})`)
+		.append('g')
+		.attr('class', 'x axis')
+		.attr('transform', `translate(0, ${height})`)
 		.call(
 			d3
 				.axisBottom(xAxis)
@@ -124,23 +124,23 @@ function drawGraphic() {
 
 	// Add the y-axis
 	svg
-		.append("g")
-		.attr("class", "y axis")
-		.call(d3.axisLeft(yAxis).tickFormat(d3.format(".0%")));
+		.append('g')
+		.attr('class', 'y axis')
+		.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
 
 	// This does the x-axis label
 	svg
-		.append("g")
-		.attr("transform", `translate(0, ${height})`)
-		.append("text")
-		.attr("x", width)
-		.attr("y", 35)
-		.attr("class", "axis--label")
+		.append('g')
+		.attr('transform', `translate(0, ${height})`)
+		.append('text')
+		.attr('x', width)
+		.attr('y', 35)
+		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
-		.attr("text-anchor", "end");
+		.attr('text-anchor', 'end');
 
 	//create link to source
-	d3.select("#source").text("Source: " + config.essential.sourceText);
+	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -153,13 +153,13 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 		return {
 			date: d3.timeParse(config.essential.dateFormat)(d.date),
 			...Object.entries(d)
-				.filter(([key]) => key !== "date")
+				.filter(([key]) => key !== 'date')
 				.map(([key, value]) => [key, +value])
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 		};
 	});
 
-	console.log("Final data structure:");
+	console.log('Final data structure:');
 	console.log(graphic_data);
 
 	// Use pym to create an iframed chart dependent on specified variables

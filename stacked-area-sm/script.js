@@ -1,13 +1,13 @@
 var pymChild = null;
-var graphic = d3.select("#graphic");
+var graphic = d3.select('#graphic');
 
 //Remove previous SVGs
-d3.select("#graphic").select("img").remove();
+d3.select('#graphic').select('img').remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
 	//population accessible summary
 
-	d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
+	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	//Was trying to be a little fancy but will need to workshop this.
 	// var size = window.innerWidth > config.optional.mobileBreakpoint ? "lg" : "sm";
@@ -18,7 +18,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		const chartMargin = config.optional.margin[size];
 
 		const chartWidth =
-			(((parseInt(graphic.style("width")) -
+			(((parseInt(graphic.style('width')) -
 				chartMargin.left -
 				chartMargin.right) /
 				chartEvery) *
@@ -35,12 +35,12 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	//set variables for chart dimensions dependent on width of #graphic
 	let size;
-	if (parseInt(graphic.style("width")) < threshold_sm) {
-		size = "sm";
-	} else if (parseInt(graphic.style("width")) < threshold_md) {
-		size = "md";
+	if (parseInt(graphic.style('width')) < threshold_sm) {
+		size = 'sm';
+	} else if (parseInt(graphic.style('width')) < threshold_md) {
+		size = 'md';
 	} else {
-		size = "lg";
+		size = 'lg';
 	}
 
 	// Calculate chart width here
@@ -60,7 +60,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	// }
 
 	// Get categories from the keys used in the stack generator
-	const categories = Object.keys(graphic_data[0]).filter((k) => k !== "date");
+	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
 
 	const colorScale = d3
 		.scaleOrdinal()
@@ -69,24 +69,24 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// Set up the legend
 	const legenditem = d3
-		.select("#legend")
-		.selectAll("div.legend--item")
+		.select('#legend')
+		.selectAll('div.legend--item')
 		.data(d3.zip(categories, colorScale.range()))
 		.enter()
-		.append("div")
-		.attr("class", "legend--item");
+		.append('div')
+		.attr('class', 'legend--item');
 
 	legenditem
-		.append("div")
-		.attr("class", "legend--icon--circle")
-		.style("background-color", function (d) {
+		.append('div')
+		.attr('class', 'legend--icon--circle')
+		.style('background-color', function (d) {
 			return d[1];
 		});
 
 	legenditem
-		.append("div")
-		.append("p")
-		.attr("class", "legend--text")
+		.append('div')
+		.append('p')
+		.attr('class', 'legend--text')
 		.html(function (d) {
 			return d[0];
 		});
@@ -114,36 +114,36 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// Create an SVG for this chart
 	const svg = graphic
-		.append("svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.attr("class", "chart")
-		.style("backgroud-color", "#fff")
-		.append("g")
-		.attr("transform", `translate(${margin.left}, ${margin.top})`);
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.attr('class', 'chart')
+		.style('backgroud-color', '#fff')
+		.append('g')
+		.attr('transform', `translate(${margin.left}, ${margin.top})`);
 
 	// Add the areas
 	svg
-		.selectAll(".area")
+		.selectAll('.area')
 		.data(stack(graphic_data))
 		.enter()
-		.append("path")
-		.attr("class", "area")
+		.append('path')
+		.attr('class', 'area')
 		.attr(
-			"d",
+			'd',
 			d3
 				.area()
 				.x((d) => xAxis(d.data.date))
 				.y0((d) => yAxis(d[0]))
 				.y1((d) => yAxis(d[1]))
 		)
-		.attr("fill", (d) => colorScale(d.key));
+		.attr('fill', (d) => colorScale(d.key));
 
 	// Add the x-axis
 	svg
-		.append("g")
-		.attr("class", "x axis")
-		.attr("transform", `translate(0, ${height})`)
+		.append('g')
+		.attr('class', 'x axis')
+		.attr('transform', `translate(0, ${height})`)
 		.call(
 			d3
 				.axisBottom(xAxis)
@@ -154,34 +154,34 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	// Add the y-axis, but only if the chart is at the first position
 	if (chartPosition === 0) {
 		svg
-			.append("g")
-			.attr("class", "y axis")
-			.call(d3.axisLeft(yAxis).tickFormat(d3.format(".0%")));
+			.append('g')
+			.attr('class', 'y axis')
+			.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
 	}
 
 	// Add a title to each of the charts
 	svg
-		.append("text")
-		.attr("x", width / 2)
-		.attr("y", -margin.top / 2)
-		.attr("text-anchor", "middle")
-		.style("font-size", "16px")
-		.style("fill", "#707071")
+		.append('text')
+		.attr('x', width / 2)
+		.attr('y', -margin.top / 2)
+		.attr('text-anchor', 'middle')
+		.style('font-size', '16px')
+		.style('fill', '#707071')
 		.text(seriesName);
 
 	// This does the x-axis label
 	svg
-		.append("g")
-		.attr("transform", `translate(0, ${height})`)
-		.append("text")
-		.attr("x", width)
-		.attr("y", 35)
-		.attr("class", "axis--label")
+		.append('g')
+		.attr('transform', `translate(0, ${height})`)
+		.append('text')
+		.attr('x', width)
+		.attr('y', 35)
+		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
-		.attr("text-anchor", "end");
+		.attr('text-anchor', 'end');
 
 	//create link to source
-	d3.select("#source").text("Source: " + config.essential.sourceText);
+	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
 	// Send the height to the parent frame
 	if (pymChild) {
@@ -199,7 +199,7 @@ d3.csv(config.essential.graphic_data_url)
 		// console.log("Grouped data:", groupedData);
 
 		// Remove previous SVGs
-		graphic.selectAll("svg").remove();
+		graphic.selectAll('svg').remove();
 
 		groupedData.forEach((group, i) => {
 			const seriesName = group[0];
@@ -208,7 +208,7 @@ d3.csv(config.essential.graphic_data_url)
 
 			// Further process the graphic_data
 			const categories = Object.keys(graphic_data[0]).filter(
-				(k) => k !== "date"
+				(k) => k !== 'date'
 			);
 			graphic_data.forEach((d) => {
 				d.date = d3.timeParse(config.essential.dateFormat)(d.date);

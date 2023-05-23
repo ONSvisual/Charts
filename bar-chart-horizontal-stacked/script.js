@@ -1,25 +1,25 @@
-var graphic = d3.select("#graphic");
+var graphic = d3.select('#graphic');
 var pymChild = null;
 
 function drawGraphic() {
 	//Accessible summary
-	d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
+	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	var threshold_md = config.optional.mediumBreakpoint;
 	var threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style("width")) < threshold_sm) {
-		size = "sm";
-	} else if (parseInt(graphic.style("width")) < threshold_md) {
-		size = "md";
+	if (parseInt(graphic.style('width')) < threshold_sm) {
+		size = 'sm';
+	} else if (parseInt(graphic.style('width')) < threshold_md) {
+		size = 'md';
 	} else {
-		size = "lg";
+		size = 'lg';
 	}
 
 	var margin = config.optional.margin[size];
 	var chart_width =
-		parseInt(graphic.style("width")) - margin.left - margin.right;
+		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	var height =
 		config.optional.seriesHeight[size] * graphic_data.length +
@@ -27,7 +27,7 @@ function drawGraphic() {
 		12;
 
 	// clear out existing graphics
-	graphic.selectAll("*").remove();
+	graphic.selectAll('*').remove();
 
 	//set up scales
 	const x = d3.scaleLinear().range([0, chart_width]);
@@ -67,16 +67,16 @@ function drawGraphic() {
 
 	//create svg for chart
 	svg = d3
-		.select("#graphic")
-		.append("svg")
-		.attr("width", chart_width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.attr("class", "chart")
-		.style("background-color", "#fff")
-		.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.select('#graphic')
+		.append('svg')
+		.attr('width', chart_width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.attr('class', 'chart')
+		.style('background-color', '#fff')
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	if (config.essential.xDomain == "auto") {
+	if (config.essential.xDomain == 'auto') {
 		x.domain(d3.extent(series.flat(2))); //flatten the arrays and then get the extent
 	} else {
 		x.domain(config.essential.xDomain);
@@ -84,76 +84,76 @@ function drawGraphic() {
 
 	// Set up the legend
 	var legenditem = d3
-		.select("#legend")
-		.selectAll("div.legend--item")
+		.select('#legend')
+		.selectAll('div.legend--item')
 		.data(
 			d3.zip(graphic_data.columns.slice(1), config.essential.colour_palette)
 		)
 		.enter()
-		.append("div")
-		.attr("class", "legend--item");
+		.append('div')
+		.attr('class', 'legend--item');
 
 	legenditem
-		.append("div")
-		.attr("class", "legend--icon--circle")
-		.style("background-color", function (d) {
+		.append('div')
+		.attr('class', 'legend--icon--circle')
+		.style('background-color', function (d) {
 			return d[1];
 		});
 
 	legenditem
-		.append("div")
-		.append("p")
-		.attr("class", "legend--text")
+		.append('div')
+		.append('p')
+		.attr('class', 'legend--text')
 		.html(function (d) {
 			return d[0];
 		});
 
 	svg
-		.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.attr("class", "x axis")
+		.append('g')
+		.attr('transform', 'translate(0,' + height + ')')
+		.attr('class', 'x axis')
 		.call(xAxis)
-		.selectAll("line")
+		.selectAll('line')
 		.each(function (d) {
 			if (d == 0) {
-				d3.select(this).attr("class", "zero-line");
+				d3.select(this).attr('class', 'zero-line');
 			}
 		});
 
 	svg
-		.append("g")
-		.attr("class", "y axis")
+		.append('g')
+		.attr('class', 'y axis')
 		.call(yAxis)
-		.selectAll("text")
+		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
 	svg
-		.append("g")
-		.selectAll("g")
+		.append('g')
+		.selectAll('g')
 		.data(series)
-		.join("g")
-		.attr("fill", (d, i) => config.essential.colour_palette[i])
-		.selectAll("rect")
+		.join('g')
+		.attr('fill', (d, i) => config.essential.colour_palette[i])
+		.selectAll('rect')
 		.data((d) => d)
-		.join("rect")
-		.attr("x", (d) => Math.min(x(d[0]), x(d[1])))
-		.attr("y", (d) => y(d.data.name))
-		.attr("width", (d) => Math.abs(x(d[0]) - x(d[1])))
-		.attr("height", y.bandwidth());
+		.join('rect')
+		.attr('x', (d) => Math.min(x(d[0]), x(d[1])))
+		.attr('y', (d) => y(d.data.name))
+		.attr('width', (d) => Math.abs(x(d[0]) - x(d[1])))
+		.attr('height', y.bandwidth());
 
 	// This does the x-axis label
 	svg
-		.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.append("text")
-		.attr("x", chart_width)
-		.attr("y", 35)
-		.attr("class", "axis--label")
+		.append('g')
+		.attr('transform', 'translate(0,' + height + ')')
+		.append('text')
+		.attr('x', chart_width)
+		.attr('y', 35)
+		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
-		.attr("text-anchor", "end");
+		.attr('text-anchor', 'end');
 
 	//create link to source
-	d3.select("#source").text("Source – " + config.essential.sourceText);
+	d3.select('#source').text('Source – ' + config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -170,25 +170,25 @@ function wrap(text, width) {
 			lineNumber = 0,
 			lineHeight = 1.1, // ems
 			// y = text.attr("y"),
-			x = text.attr("x"),
-			dy = parseFloat(text.attr("dy")),
-			tspan = text.text(null).append("tspan").attr("x", x);
+			x = text.attr('x'),
+			dy = parseFloat(text.attr('dy')),
+			tspan = text.text(null).append('tspan').attr('x', x);
 		while ((word = words.pop())) {
 			line.push(word);
-			tspan.text(line.join(" "));
+			tspan.text(line.join(' '));
 			if (tspan.node().getComputedTextLength() > width) {
 				line.pop();
-				tspan.text(line.join(" "));
+				tspan.text(line.join(' '));
 				line = [word];
 				tspan = text
-					.append("tspan")
-					.attr("x", x)
-					.attr("dy", lineHeight + "em")
+					.append('tspan')
+					.attr('x', x)
+					.attr('dy', lineHeight + 'em')
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll("tspan").size();
-		text.attr("y", function () {
+		var breaks = text.selectAll('tspan').size();
+		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});
 	});
@@ -200,6 +200,6 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({
-		renderCallback: drawGraphic,
+		renderCallback: drawGraphic
 	});
 });
