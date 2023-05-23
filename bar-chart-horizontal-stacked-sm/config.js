@@ -13,7 +13,7 @@ config = {
 		// stackOffsetNone means the baseline is set at zero
 		// stackOffsetExpand to do 100% charts
 		// stackOffsetDivergine for data with positive and negative values
-		"stackOrder": "stackOrderNone",
+		"stackOrder": "stackOrderNone"
 		// other options include
 		// stackOrderNone means the order is taken from the datafile
 		// stackOrderAppearance the earliest series (according to the maximum value) is at the bottom
@@ -25,45 +25,45 @@ config = {
 		"chart_every": {
 			"sm": 1,
 			"md": 1,
-			"lg": 2, // This indicates you want 2 charts side by side
+			"lg": 2 // This indicates you want 2 charts side by side
 		},
 		"aspectRatio": {
 			"sm": [1, 1],
 			"md": [1, 1],
-			"lg": [1.6, 2], //lg: [1.6, 2], can be used to make a 2x wide grid
+			"lg": [1.6, 2] //lg: [1.6, 2], can be used to make a 2x wide grid
 		},
 		"margin": {
 			"sm": {
 				"top": 15,
 				"right": 10,
 				"bottom": 50,
-				"left": 150,
+				"left": 150
 			},
 			"md": {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 20,
+				"left": 20
 			},
 			"lg": {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 160,
-			},
+				"left": 160
+			}
 		},
 		"seriesHeight": {
 			"sm": 30,
 			"md": 30,
-			"lg": 30,
+			"lg": 30
 		},
 		"xAxisTicks": {
 			"sm": 2,
 			"md": 2,
-			"lg": 5,
+			"lg": 5
 		},
 		"mobileBreakpoint": 510,
-		"mediumBreakpoint": 600,
+		"mediumBreakpoint": 600
 	},
-	"elements": { "select": 0, "nav": 0, "legend": 1, "titles": 0 },
+	"elements": { "select": 0, "nav": 0, "legend": 1, "titles": 0 }
 };

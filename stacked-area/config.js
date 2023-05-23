@@ -32,7 +32,7 @@ config = {
 		"aspectRatio": {
 			"sm": [1, 1],
 			"md": [1, 1],
-			"lg": [1, 1] //lg: [1.6, 2], can be used to make a 2x wide grid
+			"lg": [1, 1]
 		},
 		"margin": {
 			"sm": {
