@@ -6,11 +6,11 @@ config = {
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"dataLabels": {
 			"show": true,
-			"numberFormat": ".0%",
+			"numberFormat": ".0%"
 		},
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,100]
-		"xAxisLabel": "x axis label",
+		"xAxisLabel": "x axis label"
 	},
 	"optional": {
 		"chart_every": {
@@ -54,8 +54,8 @@ config = {
 			"lg": 4
 		},
 		"mobileBreakpoint": 510,
-		"mediumBreakpoint": 600,
+		"mediumBreakpoint": 600
 	},
 	"elements": { "select": 0, "nav": 0, "legend": 0, "titles": 0 },
-	"chart_build": {},
+	"chart_build": {}
 };
