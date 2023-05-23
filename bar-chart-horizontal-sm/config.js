@@ -5,7 +5,7 @@ config = {
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"dataLabels": {
-			"show": true,
+			"show": 1,
 			"numberFormat": ".0%"
 		},
 		"xDomain": "auto",
