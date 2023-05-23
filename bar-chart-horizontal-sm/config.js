@@ -41,7 +41,7 @@ config = {
 				"right": 20,
 				"bottom": 50,
 				"left": 120
-			},
+			}
 		},
 		"seriesHeight": {
 			"sm": 40,
