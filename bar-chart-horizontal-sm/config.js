@@ -16,42 +16,42 @@ config = {
 		"chart_every": {
 			"sm": 2,
 			"md": 2,
-			"lg": 2,
+			"lg": 2
 		},
 		"aspectRatio": {
 			"sm": [1, 2],
 			"md": [1, 2],
-			"lg": [1, 2],
+			"lg": [1, 2]
 		},
 		"margin": {
 			"sm": {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 120,
+				"left": 120
 			},
 			"md": {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 120,
+				"left": 120
 			},
 			"lg": {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 120,
+				"left": 120
 			},
 		},
 		"seriesHeight": {
 			"sm": 40,
 			"md": 40,
-			"lg": 40,
+			"lg": 40
 		},
 		"xAxisTicks": {
 			"sm": 4,
 			"md": 4,
-			"lg": 4,
+			"lg": 4
 		},
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600,
