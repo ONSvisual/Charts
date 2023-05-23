@@ -42,9 +42,9 @@ config = {
 		"margin": {
 			"sm": {
 				"top": 30,
-				"right": 20,
-				"bottom": 30,
-				"left": 30
+				"right": 10,
+				"bottom": 50,
+				"left": 50
 			},
 			"md": {
 				"top": 20,
