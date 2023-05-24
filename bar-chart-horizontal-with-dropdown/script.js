@@ -1,132 +1,135 @@
 var graphic = d3.select('#graphic');
 var pymChild = null;
-var x, y; 
+var x, y;
 
 function drawGraphic() {
+	graphic.selectAll('*').remove();
 
-	graphic.selectAll('*').remove()
-	
-	
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	uniqueOptions = [...new Set(graphic_data.map(d => d.option))];
+	uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
 
 	console.log(`dropdownData contains: ${JSON.stringify(uniqueOptions)}`);
-	
-	const optns = d3
-    .select("#select")
-    .append("div")
-    .attr("id", "sel")
-    .append("select")
-    .attr("id", "optionsSelect")
-    .attr("style", "width:calc(100% - 6px)")
-    .attr("class", "chosen-select");
 
-	 // Add the placeholder option
-	 optns
-	 .append("option")
-	 .attr("value", "")
-	 .text("Select an option"); // Placeholder text
- 
+	const optns = d3
+		.select('#select')
+		.append('div')
+		.attr('id', 'sel')
+		.append('select')
+		.attr('id', 'optionsSelect')
+		.attr('style', 'width:calc(100% - 6px)')
+		.attr('class', 'chosen-select');
+
+	// Add the placeholder option
+	optns.append('option').attr('value', '').text('Select an option'); // Placeholder text
+
+	optns
+		.selectAll('option.option')
+		.data(uniqueOptions)
+		.enter()
+		.append('option')
+		.attr('value', (d) => d)
+		.text((d) => d);
+
 	
-	 optns
-	 .selectAll("option.option")
-	 .data(uniqueOptions)
-	 .enter()
-	 .append("option")
-	 .attr("value", d => d)
-	 .text(d => d);
-	
-	 d3.select("#optionsSelect").on("change", function() {
-		const selectedOption = d3.select(this).property("value");
-		console.log(`Selected option: ${selectedOption}`);
-	  
+
+			//add some more accessibility stuff
+	d3.select('input.chosen-search-input').attr('id', 'chosensearchinput');
+	d3.select('div.chosen-search')
+		.insert('label', 'input.chosen-search-input')
+		.attr('class', 'visuallyhidden')
+		.attr('for', 'chosensearchinput')
+		.html('Type to select an area');
+		
+
+		$('#optionsSelect').trigger('chosen:updated');  // Initialize Chosen
+		
+		$('#optionsSelect').chosen().change(function () {
+			const selectedOption = $(this).val();
+			console.log(`Selected option: ${selectedOption}`);
+
 		if (selectedOption) {
-		  let filteredData = graphic_data.filter(d => d.option === selectedOption);
-		  console.log("Filtered data:", filteredData);
-	  
-		  // Update the y scale domain based on the filtered data
-		  y.domain(filteredData.map(d => d.name));
-	  
-		  // Update the y axis with the new domain
-		  svg.select(".y.axis")
-			.transition()
-			.duration(500)
-			.call(yAxis)
-			.selectAll("text")
-			.call(wrap, margin.left - 10);
-	  
-		  // Update the bars with the filtered data
-		  let bars = svg.selectAll("rect").data(filteredData, d => d.name);
-	  
-		  // Exit
-		  bars.exit()
+			let filteredData = graphic_data.filter(
+				(d) => d.option === selectedOption
+			);
+			console.log('Filtered data:', filteredData);
+
+			// Update the y scale domain based on the filtered data
+			y.domain(filteredData.map((d) => d.name));
+
+			// Update the y axis with the new domain
+			svg
+				.select('y axis')
+				.transition()
+				.duration(500)
+				.call(yAxis)
+				.selectAll('text')
+				.call(wrap, margin.left - 10);
+
+			// Update the bars with the filtered data
+			let bars = svg.selectAll('rect').data(filteredData, (d) => d.name);
+
+			// Exit
+			bars.exit().transition().duration(300).attr('width', 0).remove();
+
+			// Enter and update
+			bars
+				.enter()
+				.append('rect')
+				.attr('x', x(0))
+				.attr('y', (d) => y(d.name))
+				.attr('width', 0)
+				.attr('height', y.bandwidth())
+				.attr('fill', config.essential.colour_palette)
+				.merge(bars)
+				.transition()
+				.duration(500)
+				.attr('width', (d) => x(d.value) - x(0));
+
+			// Update the data labels
+			if (config.essential.dataLabels.show === true) {
+				svg
+					.selectAll('text.dataLabels')
+					.data(filteredData)
+					.join('text')
+					.attr('class', 'dataLabels')
+					.attr('x', (d) => x(d.value))
+					.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
+					.attr('y', (d) => y(d.name) + 19)
+					.attr('text-anchor', (d) =>
+						x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
+					)
+					.attr('fill', (d) =>
+						x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
+					)
+					.text((d) =>
+						d3.format(config.essential.dataLabels.numberFormat)(d.value)
+					)
+					.transition()
+					.duration(500)
+					.attr('x', (d) => x(d.value));
+			}
+		} else {
+			// Clear the chart if no option is selected
+			clearChart();
+		}
+	});
+
+	// ...
+
+	function clearChart() {
+		// Clear the chart graphics
+		svg.selectAll('rect').transition().duration(300).attr('width', 0).remove();
+
+		svg
+			.selectAll('text.dataLabels')
 			.transition()
 			.duration(300)
-			.attr("width", 0)
+			.attr('x', -100)
 			.remove();
-	  
-		  // Enter and update
-		  bars.enter()
-			.append("rect")
-			.attr("x", x(0))
-			.attr("y", d => y(d.name))
-			.attr("width", 0)
-			.attr("height", y.bandwidth())
-			.attr("fill", config.essential.colour_palette)
-			.merge(bars)
-			.transition()
-			.duration(500)
-			.attr("width", d => x(d.value) - x(0));
-	  
-		  // Update the data labels
-		  if (config.essential.dataLabels.show === true) {
-			svg.selectAll("text.dataLabels")
-			  .data(filteredData)
-			  .join("text")
-			  .attr("class", "dataLabels")
-			  .attr("x", d => x(d.value))
-			  .attr("dx", d => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
-			  .attr("y", d => y(d.name) + 19)
-			  .attr("text-anchor", d =>
-				x(d.value) - x(0) < chart_width / 10 ? "start" : "end"
-			  )
-			  .attr("fill", d =>
-				x(d.value) - x(0) < chart_width / 10 ? "#414042" : "#ffffff"
-			  )
-			  .text(d =>
-				d3.format(config.essential.dataLabels.numberFormat)(d.value)
-			  )
-			  .transition()
-			  .duration(500)
-			  .attr("x", d => x(d.value));
-		  }
-		} else {
-		  // Clear the chart if no option is selected
-		  clearChart();
-		}
-	  });
-	  
-	  // ...
-	  
-	  function clearChart() {
-		// Clear the chart graphics
-		svg.selectAll("rect")
-		  .transition()
-		  .duration(300)
-		  .attr("width", 0)
-		  .remove();
-	  
-		svg.selectAll("text.dataLabels")
-		  .transition()
-		  .duration(300)
-		  .attr("x", -100)
-		  .remove();
-	  }
-	  
-	  
-			
+	}
+
 
 	var threshold_md = config.optional.mediumBreakpoint;
 	var threshold_sm = config.optional.mobileBreakpoint;
@@ -145,20 +148,19 @@ function drawGraphic() {
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 
-	var uniqueNames = [...new Set(graphic_data.map(d => d.name))];
-var height =
-  config.optional.seriesHeight[size] * uniqueNames.length +
-  10 * (uniqueNames.length - 1) +
-  12;
-
+	var uniqueNames = [...new Set(graphic_data.map((d) => d.name))];
+	var height =
+		config.optional.seriesHeight[size] * uniqueNames.length +
+		10 * (uniqueNames.length - 1) +
+		12;
 
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
 	//set up scales
-	 x = d3.scaleLinear().range([0, chart_width]);
+	x = d3.scaleLinear().range([0, chart_width]);
 
-	 y = d3
+	y = d3
 		.scaleBand()
 		.paddingOuter(0.2)
 		.paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
@@ -189,13 +191,14 @@ var height =
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-		    // Append y-axis to SVG
-			svg.append('g')
-			.attr('class', 'y axis')
-			.call(yAxis)
-			.selectAll('text')
-			.call(wrap, margin.left - 10);
-			
+	// Append y-axis to SVG
+	svg
+		.append('g')
+		.attr('class', 'y axis')
+		.call(yAxis)
+		.selectAll('text')
+		.call(wrap, margin.left - 10);
+
 	if (config.essential.xDomain == 'auto') {
 		x.domain([
 			0,
@@ -219,8 +222,7 @@ var height =
 			}
 		});
 
-		console.log(`Length of graphic_data: ${graphic_data.length}`);
-
+	console.log(`Length of graphic_data: ${graphic_data.length}`);
 
 	// svg
 	// 	.selectAll('rect')
@@ -264,7 +266,7 @@ var height =
 		.attr('text-anchor', 'end');
 
 	//create link to source
-	d3.select('#source').text('Source – ' + config.essential.sourceText);
+	d3.select('#source').text('Source:' + config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -272,16 +274,6 @@ var height =
 	}
 }
 
-
-// function clearChart() {
-// 	d3
-// 		.selectAll('rect')
-// 		.transition()
-// 		.attr('x', (d) => (d.option))
-// 		.attr('width', 0);
-
-// 	$('#optionsSelect').val(null).trigger('chosen:updated');
-// }
 
 function wrap(text, width) {
 	text.each(function () {

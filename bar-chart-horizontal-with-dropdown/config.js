@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		"colour_palette": "#27A0CC",
-		"sourceText": "Office for National Statistics",
+		"sourceText": " from the Office for National Statistics",
 		"accessibleSummary": "Here is the screenreader text describing the chart.",
 		"dataLabels": {
 			"show": true,
