@@ -11,6 +11,16 @@ config = {
 		],
 		"sourceText": "from the Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
+		"lineCurveType": "curveMonotoneX", // Set the default line curve type
+		// Examples of line curve types
+// "lineCurveType": "curveLinear", // Straight line segments
+// "lineCurveType": "curveStep", // Step-wise line
+// "lineCurveType": "curveStepBefore", // Step-before line
+// "lineCurveType": "curveStepAfter", // Step-after line
+// "lineCurveType": "curveBasis", // B-spline curve
+// "lineCurveType": "curveCardinal", // Cardinal spline curve
+// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
+
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,2000]
 		"xAxisTickFormat": {
@@ -18,7 +28,7 @@ config = {
 			"md": "%Y",
 			"lg": "%Y"
 		},
-		"dateFormat": "%Y",
+		"dateFormat": "%d-%m-%Y",
 		"xAxisLabel": "x axis label"
 	},
 	"optional": {
@@ -30,24 +40,29 @@ config = {
 		"margin": {
 			"sm": {
 				"top": 15,
-				"right": 20,
+				"right": 100,
 				"bottom": 50,
 				"left": 80
 			},
 			"md": {
 				"top": 15,
-				"right": 50,
+				"right":100,
 				"bottom": 50,
 				"left": 80
 			},
 			"lg": {
 				"top": 30,
-				"right": 50,
+				"right": 100,
 				"bottom": 50,
-				"left": 80
+				"left": 60
 			}
 		},
 		"xAxisTicks": {
+			"sm": 7,
+			"md": 5,
+			"lg": 5
+		},
+		"yAxisTicks": {
 			"sm": 7,
 			"md": 5,
 			"lg": 8
