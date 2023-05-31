@@ -2,6 +2,7 @@ var graphic = d3.select('#graphic');
 var pymChild = null;
 var x, y;
 
+
 function drawGraphic() {
 	graphic.selectAll('*').remove();
 
@@ -44,91 +45,122 @@ function drawGraphic() {
 		
 
 		$('#optionsSelect').trigger('chosen:updated');  // Initialize Chosen
+
+		let labelPositions = new Map();  // Create a map to store label positions
 		
 		$('#optionsSelect').chosen().change(function () {
 			const selectedOption = $(this).val();
 			console.log(`Selected option: ${selectedOption}`);
-
-		if (selectedOption) {
-			let filteredData = graphic_data.filter(
-				(d) => d.option === selectedOption
-			);
-			console.log('Filtered data:', filteredData);
-
-			// Update the y scale domain based on the filtered data
-			y.domain(filteredData.map((d) => d.name));
-
-			// Update the y axis with the new domain
-			svg
-				.select('y axis')
-				.transition()
-				.duration(500)
-				.call(yAxis)
-				.selectAll('text')
-				.call(wrap, margin.left - 10);
-
-			// Update the bars with the filtered data
-			let bars = svg.selectAll('rect').data(filteredData, (d) => d.name);
-
-			// Exit
-			bars.exit().transition().duration(300).attr('width', 0).remove();
-
-			// Enter and update
-			bars
-				.enter()
-				.append('rect')
-				.attr('x', x(0))
-				.attr('y', (d) => y(d.name))
-				.attr('width', 0)
-				.attr('height', y.bandwidth())
-				.attr('fill', config.essential.colour_palette)
-				.merge(bars)
-				.transition()
-				.duration(500)
-				.attr('width', (d) => x(d.value) - x(0));
-
-			// Update the data labels
-			if (config.essential.dataLabels.show === true) {
+		
+			if (selectedOption) {
+				let filteredData = graphic_data.filter(
+					(d) => d.option === selectedOption
+				);
+				console.log('Filtered data:', filteredData);
+		
+				// Update the y scale domain based on the filtered data
+				y.domain(filteredData.map((d) => d.name));
+		
+				// Update the y axis with the new domain
 				svg
-					.selectAll('text.dataLabels')
-					.data(filteredData)
-					.join('text')
-					.attr('class', 'dataLabels')
-					.attr('x', (d) => x(d.value))
-					.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
-					.attr('y', (d) => y(d.name) + 19)
-					.attr('text-anchor', (d) =>
-						x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
-					)
-					.attr('fill', (d) =>
-						x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
-					)
-					.text((d) =>
-						d3.format(config.essential.dataLabels.numberFormat)(d.value)
-					)
+					.select('y axis')
 					.transition()
-					.duration(500)
-					.attr('x', (d) => x(d.value));
-			}
-		} else {
-			// Clear the chart if no option is selected
-			clearChart();
-		}
-	});
+					.duration(2000)
+					.call(yAxis)
+					.selectAll('text')
+					.call(wrap, margin.left - 10);
+		
+				// Store the current positions of the labels in the map
+				svg.selectAll('text.dataLabels').each(function(d) {
+					labelPositions.set(d.name, x(d.value));
+				});
+		
+				// Enter and update
+				let bars = svg.selectAll('rect').data(filteredData, (d) => d.name);
+		
+				// Exit
+				bars.exit().transition().duration(400).ease(d3.easeCubic).attr('width', 0).remove();
+		
+				// Enter and update
+				bars
+					.enter()
+					.append('rect')
+					.attr('x', x(0))
+					.attr('y', (d) => y(d.name))
+					.attr('width', 0)
+					.attr('height', y.bandwidth())
+					.attr('fill', config.essential.colour_palette)
+					.merge(bars)
+					.transition()
+					.duration(1250)
+					.ease(d3.easeCubic)
+					.attr('width', (d) => x(d.value) - x(0));
+		
+				// Update the data labels
+				if (config.essential.dataLabels.show === true) {
+					svg
+						.selectAll('text.dataLabels')
+						.data(filteredData)
+						.join('text')
+						.attr('class', 'dataLabels')
+						.attr('x', (d) => labelPositions.get(d.name) || x(0))  // Use the stored position or x(0) if not found
+						.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
+						.attr('y', (d) => y(d.name) + 19)
+						.attr('text-anchor', (d) =>
+							x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
+						)
+						.attr('fill', (d) =>
+							x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
+						)
+						.text((d) =>
+							d3.format(config.essential.dataLabels.numberFormat)(d.value)
+						)
+						.transition()
+						.duration(1200)
+						.ease(d3.easeCubic)
+						                .tween('text', function(d) {
+                    // Parse this.textContent as a float and multiply it by 0.001 to get the start value. This need to match the data.
+                    let startValue = parseFloat(this.textContent)*0.001;
 
-	// ...
+                    // Create an interpolator
+                    const i = d3.interpolate(startValue, d.value);
 
-	function clearChart() {
-		// Clear the chart graphics
-		svg.selectAll('rect').transition().duration(300).attr('width', 0).remove();
+                    // Create a position interpolator
+                    const xi = d3.interpolate(labelPositions.get(d.name) || x(0), x(d.value) - (x(d.value) - x(0) < chart_width / 10 ? -3 : 3));
 
-		svg
-			.selectAll('text.dataLabels')
-			.transition()
-			.duration(300)
-			.attr('x', -100)
-			.remove();
-	}
+                    return function(t) {
+                        // Calculate the interpolated value
+                        let interpolatedValue = i(t);
+
+                        // Update the label's text
+                        this.textContent = d3.format(config.essential.dataLabels.numberFormat)(interpolatedValue);
+
+                        // Update the label's x position
+                        d3.select(this).attr('x', xi(t));
+                    };
+                });
+        }
+
+    } else {
+        // Clear the chart if no option is selected
+        clearChart();
+    }
+});
+
+// Clear the chart if no option is selected
+
+function clearChart() {
+    // Clear the chart graphics
+    svg.selectAll('rect').transition().duration(2000).attr('width', 0).remove();
+
+    svg
+        .selectAll('text.dataLabels')
+        .transition()
+        .duration(1000)
+        .attr('x', -100)
+        .remove();
+};
+
 
 
 	var threshold_md = config.optional.mediumBreakpoint;
@@ -224,35 +256,6 @@ function drawGraphic() {
 
 	console.log(`Length of graphic_data: ${graphic_data.length}`);
 
-	// svg
-	// 	.selectAll('rect')
-	// 	.data(graphic_data)
-	// 	.join('rect')
-	// 	.attr('x', x(0))
-	// 	.attr('y', (d) => y(d.name))
-	// 	.attr('width', (d) => x(d.value) - x(0))
-	// 	.attr('height', y.bandwidth())
-	// 	.attr('fill', config.essential.colour_palette);
-
-	// if (config.essential.dataLabels.show == true) {
-	// 	svg
-	// 		.selectAll('text.dataLabels')
-	// 		.data(filteredData)
-	// 		.join('text')
-	// 		.attr('class', 'dataLabels')
-	// 		.attr('x', (d) => x(d.value))
-	// 		.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
-	// 		.attr('y', (d) => y(d.name) + 19)
-	// 		.attr('text-anchor', (d) =>
-	// 			x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
-	// 		)
-	// 		.attr('fill', (d) =>
-	// 			x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
-	// 		)
-	// 		.text((d) =>
-	// 			d3.format(config.essential.dataLabels.numberFormat)(d.value)
-	// 		);
-	// } //end if for datalabels
 
 	// This does the x-axis label
 	svg
