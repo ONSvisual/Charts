@@ -25,6 +25,36 @@ function drawGraphic() {
 	// Add the placeholder option
 	optns.append('option').attr('value', '').text('Select an option'); // Placeholder text
 
+	function updateChart(selectedOption) {
+		// Remove existing bars and labels
+		d3.selectAll(".bar").remove();
+		d3.selectAll(".label").remove();
+	
+		// Filter data based on selected option
+		let filteredData = data.filter(d => d['section'] === selectedOption);
+	
+		// Create bars and labels based on filtered data
+		var bar = g.selectAll(".bar")
+			.data(filteredData)
+			.enter().append("rect")
+			.attr("class", "bar")
+			.attr("x", function(d) { return x(d['value']); })
+			.attr("width", function(d) { return width - x(d['value']); })
+			.attr("y", function(d) { return y(d['label']); })
+			.attr("height", y.rangeBand());
+	
+		var label = g.selectAll(".label")
+			.data(filteredData)
+			.enter().append("text")
+			.attr("class", "label")
+			.attr("x", function(d) { return x(d['value']) - 3; })
+			.attr("y", function(d) { return y(d['label']) + y.rangeBand() / 2; })
+			.attr("dy", ".35em")
+			.text(function(d) { return d['value']; });
+	}
+
+	
+
 	optns
 		.selectAll('option.option')
 		.data(uniqueOptions)
@@ -33,7 +63,6 @@ function drawGraphic() {
 		.attr('value', (d) => d)
 		.text((d) => d);
 
-	
 
 			//add some more accessibility stuff
 	d3.select('input.chosen-search-input').attr('id', 'chosensearchinput');
@@ -43,12 +72,25 @@ function drawGraphic() {
 		.attr('for', 'chosensearchinput')
 		.html('Type to select an area');
 		
+// Initialize Chosen
+$('#optionsSelect').chosen();
 
-		$('#optionsSelect').trigger('chosen:updated');  // Initialize Chosen
+// Set first option as selected and trigger a change event
+if (config.essential.selectFirstOption && uniqueOptions.length > 0) {
+    d3.select('#optionsSelect option[value=""]').remove();  // Remove the placeholder option
+    d3.select('#optionsSelect').property('value', uniqueOptions[0]);
+    console.log('Current value:', d3.select('#optionsSelect').property('value'));
+}
+
+// Update Chosen with the new selection
+$('#optionsSelect').trigger('chosen:updated');
 
 		let labelPositions = new Map();  // Create a map to store label positions
 		
-		$('#optionsSelect').chosen().change(function () {
+		$('#optionsSelect').on('change',function () {
+			
+			console.log('Change event fired');
+			
 			const selectedOption = $(this).val();
 			console.log(`Selected option: ${selectedOption}`);
 		
@@ -57,6 +99,8 @@ function drawGraphic() {
 					(d) => d.option === selectedOption
 				);
 				console.log('Filtered data:', filteredData);
+
+				
 		
 				// Update the y scale domain based on the filtered data
 				y.domain(filteredData.map((d) => d.name));

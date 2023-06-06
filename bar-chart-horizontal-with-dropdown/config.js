@@ -10,7 +10,8 @@ config = {
 		},
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,100]
-		"xAxisLabel": "x axis label"
+		"xAxisLabel": "x axis label",
+		"selectFirstOption": false // Set this to true if you want the first option to be slected by default
 	},
 	"optional": {
 		"margin": {
