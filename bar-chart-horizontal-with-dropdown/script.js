@@ -231,16 +231,13 @@ function clearChart() {
 		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
-	if (config.essential.xDomain == 'auto') {
-		x.domain([
-			0,
-			d3.max(graphic_data, function (d) {
-				return d.value;
-			})
-		]);
-	} else {
-		x.domain(config.essential.xDomain);
-	}
+		if (config.essential.xDomain == 'auto') {
+			x.domain([
+				0,
+				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+		} else {
+			x.domain(config.essential.xDomain);
+		}
 
 	svg
 		.append('g')
