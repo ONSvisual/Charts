@@ -11,7 +11,7 @@ config = {
 		],
 		"sourceText": "from the Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
-		"lineCurveType": "curveMonotoneX", // Set the default line curve type
+		"lineCurveType": "curveLinear", // Set the default line curve type
 		// Examples of line curve types
 // "lineCurveType": "curveLinear", // Straight line segments
 // "lineCurveType": "curveStep", // Step-wise line
@@ -20,13 +20,14 @@ config = {
 // "lineCurveType": "curveBasis", // B-spline curve
 // "lineCurveType": "curveCardinal", // Cardinal spline curve
 // "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
+// "lineCurveType": "curveMonotoneX" // Monotone spline curve
 
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,2000]
 		"xAxisTickFormat": {
 			"sm": "%y",
 			"md": "%Y",
-			"lg": "%Y"
+			"lg": "%B %Y"
 		},
 		"dateFormat": "%d-%m-%Y",
 		"xAxisLabel": "x axis label"

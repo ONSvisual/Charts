@@ -42,15 +42,15 @@ function drawGraphic() {
 		.range([0, width]);
 	console.log(`xAxis defined`);
 
-    const yAxis = d3
-    .scaleLinear()
-    .domain([0, d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))])
-    .nice()
-    .range([height, 0]);
-console.log(`yAxis defined`);
-
-
-
+	const y = d3
+		.scaleLinear()
+		.domain([
+			0,
+			d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
+		])
+		.nice()
+		.range([height, 0]);
+	console.log(`yAxis defined`);
 
 	// Create an SVG element
 	const svg = graphic
@@ -63,56 +63,81 @@ console.log(`yAxis defined`);
 		.attr('transform', `translate(${margin.left},${margin.top})`);
 	console.log(`SVG element created`);
 
-	// Finalise the code here and finish off the the chart.
 	// create lines and circles for each category
-	categories.forEach(function(category) {
-		const lineGenerator = d3.line()
-			.x(d => xAxis(d.date))
-			.y(d => yAxis(d[category]))
-			.curve(d3.curveMonotoneX)
+	categories.forEach(function (category) {
+		const lineGenerator = d3
+			.line()
+			.x((d) => xAxis(d.date))
+			.y((d) => y(d[category]))
+			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
 		console.log(`Line generator created for category: ${category}`);
 
-        
-
-		svg.append("path")
+		svg
+			.append('path')
 			.datum(graphic_data)
-			.attr("fill", "none")
-			.attr("stroke", config.essential.colour_palette[categories.indexOf(category) % config.essential.colour_palette.length])
-			.attr("stroke-width", 3)
-			.attr("d", lineGenerator)
-			.style("stroke-linejoin", "round")
-			.style("stroke-linecap", "round");
-		console.log(`Path appended for category: ${category}`);
+			.attr('fill', 'none')
+			.attr(
+				'stroke',
+				config.essential.colour_palette[
+					categories.indexOf(category) % config.essential.colour_palette.length
+				]
+			)
+			.attr('stroke-width', 3)
+			.attr('d', lineGenerator)
+			.style('stroke-linejoin', 'round')
+			.style('stroke-linecap', 'round');
+		//console.log(`Path appended for category: ${category}`);
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
 
-		svg.append("circle")
-			.attr("cx", xAxis(lastDatum.date))
-			.attr("cy", yAxis(lastDatum[category]))
-			.attr("r", 4)
-			.attr("fill", config.essential.colour_palette[categories.indexOf(category) % config.essential.colour_palette.length])
-		console.log(`Circle appended for category: ${category}`);
+		svg
+			.append('circle')
+			.attr('cx', xAxis(lastDatum.date))
+			.attr('cy', y(lastDatum[category]))
+			.attr('r', 4)
+			.attr(
+				'fill',
+				config.essential.colour_palette[
+					categories.indexOf(category) % config.essential.colour_palette.length
+				]
+			);
+		// console.log(`Circle appended for category: ${category}`);
 
-		svg.append("text")
-			.attr("transform", `translate(${xAxis(lastDatum.date)}, ${yAxis(lastDatum[category])})`)
-			.attr("x", 10)
-			.attr("dy", ".35em")
-			.attr("text-anchor", "start")
-			.attr("fill", config.essential.colour_palette[categories.indexOf(category) % config.essential.colour_palette.length])
-			.text(category);
+		// Add text labels to the right of the circles
+		svg
+			.append('text')
+			.attr(
+				'transform',
+				`translate(${xAxis(lastDatum.date)}, ${y(lastDatum[category])})`
+			)
+			.attr('x', 10)
+			.attr('dy', '.35em')
+			.attr('text-anchor', 'start')
+			.attr(
+				'fill',
+				config.essential.colour_palette[
+					categories.indexOf(category) % config.essential.colour_palette.length
+				]
+			)
+			.text(category)
+			.call(wrap, margin.right - 10); //wrap function for the direct labelling.
+			
 		console.log(`Text appended for category: ${category}`);
 	});
 
-// add grid lines to y axis
-svg.append("g")            
-    .attr("class", "grid")
-    .call(d3.axisLeft(yAxis)
-        .ticks(config.optional.yAxisTicks[size])
-        .tickSize(-width)
-        .tickFormat(""));
-console.log(`Grid lines added to y axis`);
-
+	// add grid lines to y axis
+	svg
+		.append('g')
+		.attr('class', 'grid')
+		.call(
+			d3
+				.axisLeft(y)
+				.ticks(config.optional.yAxisTicks[size])
+				.tickSize(-width)
+				.tickFormat('')
+		);
+	console.log(`Grid lines added to y axis`);
 
 	// Add the x-axis
 	svg
@@ -125,16 +150,15 @@ console.log(`Grid lines added to y axis`);
 				.ticks(config.optional.xAxisTicks[size])
 				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
 		);
-	console.log(`x-axis added`);
+	// console.log(`x-axis added`);
 
-	
 	// Add the y-axis
-svg.append('g')
-.attr('class', 'y axis')
-.call(d3.axisLeft(yAxis).ticks(config.optional.yAxisTicks[size]));
+	svg
+		.append('g')
+		.attr('class', 'y axis')
+		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
 
-console.log(`y-axis added`);
-
+	console.log(`y-axis added`);
 
 	// This does the x-axis label
 	svg
@@ -150,15 +174,51 @@ console.log(`y-axis added`);
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
-	console.log(`Link to source created`);
+	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
 		pymChild.sendHeight();
 	}
-	console.log(`PymChild height sent`);
+	// console.log(`PymChild height sent`);
 }
 
+//text wrap function for the direct labelling
+
+function wrap(text, width) {
+	text.each(function () {
+		var text = d3.select(this),
+			words = text.text().split(/\s+/).reverse(),
+			word,
+			line = [],
+			lineNumber = 0,
+			lineHeight = 1.1, // ems
+			// y = text.attr("y"),
+			x = text.attr('x'),
+			dy = parseFloat(text.attr('dy')),
+			tspan = text.text(null).append('tspan').attr('x', x);
+		while ((word = words.pop())) {
+			line.push(word);
+			tspan.text(line.join(' '));
+			if (tspan.node().getComputedTextLength() > width) {
+				line.pop();
+				tspan.text(line.join(' '));
+				line = [word];
+				tspan = text
+					.append('tspan')
+					.attr('x', x)
+					.attr('dy', lineHeight + 'em')
+					.text(word);
+			}
+		}
+		var breaks = text.selectAll('tspan').size();
+		text.attr('y', function () {
+			return -6 * (breaks - 1);
+		});
+	});
+}
+
+// Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
 		return {
@@ -169,14 +229,14 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 		};
 	});
-	console.log(`Data from CSV processed`);
+	// console.log(`Data from CSV processed`);
 
-	console.log('Final data structure:');
-	console.log(graphic_data);
+	// console.log('Final data structure:');
+	// console.log(graphic_data);
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic
 	});
-	console.log(`PymChild created with renderCallback to drawGraphic`);
+	// console.log(`PymChild created with renderCallback to drawGraphic`);
 });
