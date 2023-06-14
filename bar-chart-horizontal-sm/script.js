@@ -23,7 +23,7 @@ function drawGraphic() {
 		parseInt(graphic.style('width')) / chart_every - margin.left - margin.right;
 	var height = Math.ceil(
 		(chart_width * config.optional.aspectRatio[size][1]) /
-			config.optional.aspectRatio[size][0]
+		config.optional.aspectRatio[size][0]
 	);
 
 	// Clear out existing graphics
@@ -79,10 +79,7 @@ function drawGraphic() {
 		if (config.essential.xDomain == 'auto') {
 			x.domain([
 				0,
-				d3.max(data, function (d) {
-					return d.value;
-				})
-			]);
+				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
 		} else {
 			x.domain(config.essential.xDomain);
 		}

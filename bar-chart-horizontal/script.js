@@ -66,10 +66,7 @@ function drawGraphic() {
 	if (config.essential.xDomain == 'auto') {
 		x.domain([
 			0,
-			d3.max(graphic_data, function (d) {
-				return d.value;
-			})
-		]);
+			d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
 	} else {
 		x.domain(config.essential.xDomain);
 	}
