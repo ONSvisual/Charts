@@ -80,7 +80,7 @@ function drawGraphic() {
 			.attr(
 				'stroke',
 				config.essential.colour_palette[
-					categories.indexOf(category) % config.essential.colour_palette.length
+				categories.indexOf(category) % config.essential.colour_palette.length
 				]
 			)
 			.attr('stroke-width', 3)
@@ -99,10 +99,11 @@ function drawGraphic() {
 			.attr(
 				'fill',
 				config.essential.colour_palette[
-					categories.indexOf(category) % config.essential.colour_palette.length
+				categories.indexOf(category) % config.essential.colour_palette.length
 				]
 			);
 		// console.log(`Circle appended for category: ${category}`);
+
 
 		// Add text labels to the right of the circles
 		svg
@@ -117,12 +118,12 @@ function drawGraphic() {
 			.attr(
 				'fill',
 				config.essential.colour_palette[
-					categories.indexOf(category) % config.essential.colour_palette.length
+				categories.indexOf(category) % config.essential.colour_palette.length
 				]
 			)
 			.text(category)
 			.call(wrap, margin.right - 10); //wrap function for the direct labelling.
-			
+
 		console.log(`Text appended for category: ${category}`);
 	});
 

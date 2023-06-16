@@ -4,6 +4,7 @@ config = {
 		"colour_palette": ["#206095", "#27A0CC", "#871A5B", "#A8BD3A", "#F66068"],
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screenreader text describing the chart.",
+		"drawLegend": true, // set to false to remove the legend (still working on this)
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,100]
 		"xAxisTickFormat": ".0f",
