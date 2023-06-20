@@ -460,25 +460,25 @@ function drawGraphic() {
 				.style('font-weight', 500)
 				.attr('x', function (d) {
 					if (d.label_y == 'middle' && d.label_anchor == 'start') {
-						return x(d.x) + r(d.size) + 6;
+						return x(d.x) + config.essential.size + 6;
 					} // shifts to the side of the circle when text anchor is middle
 					else if (d.label_y == 'middle' && d.label_anchor == 'end') {
-						return x(d.x) - r(d.size) - 6;
+						return x(d.x) - config.essential.size - 6;
 					} // shifts to the other side of the circle when text anchor is middle
 					else {
 						return x(d.x);
 					}
 				})
-				// .attr('y',function(d) { return (y(d.y) < (topYTick) ? (y(d.y)+r(d.size)+15) : (y(d.y)-r(d.size))-2 )})
+				// .attr('y',function(d) { return (y(d.y) < (topYTick) ? (y(d.y)+config.essential.size+15) : (y(d.y)-config.essential.size)-2 )})
 				.attr('y', function (d) {
 					if (d.label_y == 'top') {
-						return y(d.y) - r(d.size) - 6;
+						return y(d.y) - config.essential.size - 6;
 					} else if (d.label_y == 'bottom') {
-						return y(d.y) + r(d.size) + 15;
+						return y(d.y) + config.essential.size + 15;
 					} else if (d.label_y == 'middle') {
 						return y(d.y);
 					} else {
-						return y(d.y) - r(d.size) - 2;
+						return y(d.y) - config.essential.size - 2;
 					}
 				})
 				.style('text-anchor', function (d) {
