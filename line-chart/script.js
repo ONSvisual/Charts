@@ -1,12 +1,12 @@
 let graphic = d3.select('#graphic');
-console.log(`Graphic selected: ${graphic}`);
+//console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
 
 function drawGraphic() {
 	//Accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
+	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
 
 	let threshold_md = config.optional.mediumBreakpoint;
 	let threshold_sm = config.optional.mobileBreakpoint;
@@ -19,28 +19,30 @@ function drawGraphic() {
 	} else {
 		size = 'lg';
 	}
-	console.log(`Size set: ${size}`);
+	// console.log(`Size set: ${size}`);
+
+
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
 	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = 400 - margin.top - margin.bottom;
-	console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
+	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
 
 	// Remove any existing chart elements
 	graphic.selectAll('*').remove();
-	console.log(`Removed existing chart elements`);
+	//console.log(`Removed existing chart elements`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
-	console.log(`Categories retrieved: ${categories}`);
+	// console.log(`Categories retrieved: ${categories}`);
 
 	// Define the x and y scales
 	const xAxis = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
 		.range([0, width]);
-	console.log(`xAxis defined`);
+	//console.log(`xAxis defined`);
 
 	const y = d3
 		.scaleLinear()
@@ -50,7 +52,8 @@ function drawGraphic() {
 		])
 		.nice()
 		.range([height, 0]);
-	console.log(`yAxis defined`);
+	//console.log(`yAxis defined`);
+
 
 	// Create an SVG element
 	const svg = graphic
@@ -61,7 +64,9 @@ function drawGraphic() {
 		.style('background-color', '#fff')
 		.append('g')
 		.attr('transform', `translate(${margin.left},${margin.top})`);
-	console.log(`SVG element created`);
+	//console.log(`SVG element created`);
+
+
 
 	// create lines and circles for each category
 	categories.forEach(function (category) {
@@ -71,7 +76,7 @@ function drawGraphic() {
 			.y((d) => y(d[category]))
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
-		console.log(`Line generator created for category: ${category}`);
+		// console.log(`Line generator created for category: ${category}`);
 
 		svg
 			.append('path')
@@ -91,6 +96,61 @@ function drawGraphic() {
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
 
+
+		// console.log(`drawLegend: ${size}`);
+		// size === 'sm'
+		
+		if (config.essential.drawLegend || size === 'sm') {
+	
+
+				// Set up the legend
+			var legenditem = d3
+			.select('#legend')
+			.selectAll('div.legend--item')
+			.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+			.enter()
+			.append('div')
+			.attr('class', 'legend--item');
+
+		legenditem
+			.append('div')
+			.attr('class', 'legend--icon--circle')
+			.style('background-color', function (d) {
+				return d[1];
+			});
+
+		legenditem
+			.append('div')
+			.append('p')
+			.attr('class', 'legend--text')
+			.html(function (d) {
+				return d[0];
+			});
+
+		} else {
+
+		// Add text labels to the right of the circles
+		svg
+		.append('text')
+		.attr(
+			'transform',
+			`translate(${xAxis(lastDatum.date)}, ${y(lastDatum[category])})`
+		)
+		.attr('x', 10)
+		.attr('dy', '.35em')
+		.attr('text-anchor', 'start')
+		.attr(
+			'fill',
+			config.essential.colour_palette[
+			categories.indexOf(category) % config.essential.colour_palette.length
+			]
+		)
+		.text(category)
+		.call(wrap, margin.right - 10); //wrap function for the direct labelling.
+			
+		};
+
+
 		svg
 			.append('circle')
 			.attr('cx', xAxis(lastDatum.date))
@@ -105,26 +165,7 @@ function drawGraphic() {
 		// console.log(`Circle appended for category: ${category}`);
 
 
-		// Add text labels to the right of the circles
-		svg
-			.append('text')
-			.attr(
-				'transform',
-				`translate(${xAxis(lastDatum.date)}, ${y(lastDatum[category])})`
-			)
-			.attr('x', 10)
-			.attr('dy', '.35em')
-			.attr('text-anchor', 'start')
-			.attr(
-				'fill',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
-				]
-			)
-			.text(category)
-			.call(wrap, margin.right - 10); //wrap function for the direct labelling.
 
-		console.log(`Text appended for category: ${category}`);
 	});
 
 	// add grid lines to y axis
@@ -138,20 +179,28 @@ function drawGraphic() {
 				.tickSize(-width)
 				.tickFormat('')
 		);
-	console.log(`Grid lines added to y axis`);
+		
 
-	// Add the x-axis
-	svg
-		.append('g')
-		.attr('class', 'x axis')
-		.attr('transform', `translate(0, ${height})`)
-		.call(
-			d3
-				.axisBottom(xAxis)
-				.ticks(config.optional.xAxisTicks[size])
-				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
-		);
-	// console.log(`x-axis added`);
+// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
+let tickValues = xAxis.ticks(config.optional.xAxisTicks[size]);
+
+// Add the first and last dates to the ticks array, and use a Set to remove any duplicates
+tickValues = Array.from(new Set([graphic_data[0].date, ...tickValues, graphic_data[graphic_data.length - 1].date]));
+
+//console.log(`tickValues: ${tickValues}`);
+
+// Add the x-axis
+svg
+    .append('g')
+    .attr('class', 'x axis')
+    .attr('transform', `translate(0, ${height})`)
+    .call(
+        d3
+            .axisBottom(xAxis)
+            .tickValues(tickValues)
+            .tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
+    );
+
 
 	// Add the y-axis
 	svg
@@ -159,7 +208,7 @@ function drawGraphic() {
 		.attr('class', 'y axis')
 		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
 
-	console.log(`y-axis added`);
+	
 
 	// This does the x-axis label
 	svg
@@ -171,7 +220,6 @@ function drawGraphic() {
 		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
 		.attr('text-anchor', 'end');
-	console.log(`x-axis label added`);
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
