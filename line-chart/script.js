@@ -269,6 +269,7 @@ function wrap(text, width) {
 
 // Load the data
 loadChartData(config.essential.graphic_data_url).then((rawData) => {
+	console.log("Raw data loaded:", rawData);
 	graphic_data = rawData.map((d) => {
 		return {
 			date: d3.timeParse(config.essential.dateFormat)(d.date),
@@ -278,6 +279,8 @@ loadChartData(config.essential.graphic_data_url).then((rawData) => {
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 		};
 	});
+
+	console.log("Processed data:", graphic_data)
 	// console.log(`Data from CSV processed`);
 
 	// console.log('Final data structure:');
