@@ -268,7 +268,7 @@ function wrap(text, width) {
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+loadChartData(config.essential.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
 		return {
 			date: d3.timeParse(config.essential.dateFormat)(d.date),
