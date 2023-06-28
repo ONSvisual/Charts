@@ -1,13 +1,16 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 
   //population accessible summmary
   d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
 
-  var threshold_md = config.optional.mediumBreakpoint;
-  var threshold_sm = config.optional.mobileBreakpoint;
+  let threshold_md = config.optional.mediumBreakpoint;
+  let threshold_sm = config.optional.mobileBreakpoint;
+  let colour = d3.scaleOrdinal(config.essential.colour_palette); //
+
+
 
   //set variables for chart dimensions dependent on width of #graphic
   if (parseInt(graphic.style("width")) < threshold_sm) {
@@ -20,7 +23,7 @@ function drawGraphic() {
 
   var margin = config.optional.margin[size]
   var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-   var height = config.essential.chart_height * chart_width
+  var height = 400 - margin.top - margin.bottom;
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
@@ -31,22 +34,7 @@ function drawGraphic() {
 
   const y = d3.scaleLinear()
      .range([height, 0])
- 
-
-  //set up yAxis generator
-  var yAxis = d3.axisLeft(y)
-    .tickSize(chart_width+5)
-    .tickPadding(5)
-    .tickFormat(d3.format(".0%"))
-    .ticks(config.optional.yAxisTicks[size])
-  
-      //set up xAxis generator
-  var xAxis = d3.axisBottom(x)
-    .tickSize(-height-5)
-    .tickPadding(5)
-      .tickFormat(d3.format(".0%"))
-    .ticks(config.optional.xAxisTicks[size]);
-  
+     
 
   //create svg for chart
   svg = d3.select('#graphic').append('svg')
@@ -58,58 +46,81 @@ function drawGraphic() {
     .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
 
 
+   // lets move on to setting up the legend for this chart. 
+let groups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
+
+
+let legenditem = d3
+.select('#legend')
+.selectAll('div.legend-item')
+.data(groups)
+.enter()
+.append('div')
+.attr('class', 'legend--item');
+
+legenditem 
+ .append('div')
+ .attr('class', 'legend--icon--circle')
+ .style('background-color', (d) => colour(d) );
+
+legenditem
+ .append('div')
+ .append('p')
+ .attr('class', 'legend--text')
+ .html((d) => d);
+
+
+
+    // both of these are need to be looked at.
+
   if(config.essential.xDomain=="auto"){
-    x.domain([0, d3.max(graphic_data,function(d){return d.value})]);
+    x.domain([0, d3.max(graphic_data,function(d){return d.xvalue})]);
   }else{
     x.domain(config.essential.xDomain)
   }
 
 
-
   if(config.essential.xDomain=="auto"){
-    y.domain([0, d3.max(graphic_data,function(d){return d.value2})]);
+    y.domain([0, d3.max(graphic_data,function(d){return d.yvalue})]);
   }else{
     y.domain(config.essential.xDomain)
   }
 
   svg
-    .append('g')
-    .attr('transform', 'translate(0,' + (height +5)+ ')')
-    .attr('class', 'x axis')
-    .call(xAxis).selectAll('line').each(function(d)
-      {
-        if (d == 0) {
-          d3.select(this)
-          .attr('class','zero-line')
-        };
-      })
+  .append('g')
+  .attr('class', 'x axis')
+  .attr('transform', `translate(0,${height})`)
+  .call(
+    d3.axisBottom(x)
+    .ticks(config.optional.xAxisTicks[size])
+    .tickSize(-height)
+    .tickPadding(10)
+    .tickFormat(d3.format(config.essential.xAxisFormat))
+  )
 
   svg
-    .append('g')
-    .attr('class', 'y axis numeric')
-    .call(yAxis)
-    // .selectAll('text').call(wrap,margin.left-10)
-        .attr("transform","translate ("+chart_width+",0)")
-    .selectAll('line').each(function(d)
-    {
-      if (d == 0) {
-        d3.select(this)
-        .attr('class','zero-line')
-      };
-    })
+.append('g')
+.attr('class','axis numeric')
+.call(
+  d3.axisLeft(y)
+  .ticks(config.optional.yAxisTicks[size])
+  .tickSize(-chart_width)
+  .tickPadding(10)
+  .tickFormat(d3.format(config.essential.yAxisFormat))
+);
 
 
 
   svg.selectAll('circle')
       .data(graphic_data)
       .join('circle')
-      .attr('cx',(d) => x(d.value))
-      .attr('cy',(d) => y(d.value2))
+      .attr('cx',(d) => x(d.xvalue))
+      .attr('cy',(d) => y(d.yvalue))
       .attr('r',config.essential.radius)
-        .attr("fill", config.essential.colour_palette)
+      .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
       .attr('fill-opacity',config.essential.fillOpacity)
-.attr('stroke',config.essential.colour_palette)
-.attr('stroke-opacity',config.essential.strokeOpacity)
+      .attr('stroke',(d)=> colour(d.group))
+      .attr('stroke-opacity',config.essential.strokeOpacity);
 
 
 // This does the x-axis label
