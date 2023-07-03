@@ -1,5 +1,5 @@
-var pymChild = null;
-var graphic = d3.select('#graphic');
+let pymChild = null;
+const graphic = d3.select('#graphic');
 
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
@@ -142,7 +142,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	// Add the x-axis
 	svg
 		.append('g')
-		.attr('class', 'x axis')
+		.attr('class', 'axis numeric')
 		.attr('transform', `translate(0, ${height})`)
 		.call(
 			d3
@@ -215,9 +215,9 @@ d3.csv(config.essential.graphic_data_url)
 				for (let category of categories) {
 					d[category] = +d[category];
 				}
+				drawGraphic(seriesName, graphic_data, i);
 			});
-
-			drawGraphic(seriesName, graphic_data, i);
+			
 		});
 	})
 	.catch((error) => console.error(error));
