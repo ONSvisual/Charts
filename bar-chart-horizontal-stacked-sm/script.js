@@ -1,5 +1,5 @@
-var pymChild = null;
-var graphic = d3.select('#graphic');
+let pymChild = null;
+const graphic = d3.select('#graphic');
 
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
@@ -255,6 +255,9 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	}
 }
 
+// You have 2 wrap text options. The first does add any text styling to data with gaps. 
+
+
 // function wrap(text, width) {
 //   text.each(function () {
 //     var text = d3.select(this),
@@ -287,6 +290,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 //     });
 //   });
 // }
+
 
 function wrap(text, width, graphic_data) {
 	text.each(function (d, i) {

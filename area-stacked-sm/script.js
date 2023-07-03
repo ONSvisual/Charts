@@ -1,5 +1,5 @@
-var pymChild = null;
-var graphic = d3.select('#graphic');
+let pymChild = null;
+const graphic = d3.select('#graphic');
 
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
@@ -142,7 +142,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	// Add the x-axis
 	svg
 		.append('g')
-		.attr('class', 'x axis')
+		.attr('class', 'axis numeric')
 		.attr('transform', `translate(0, ${height})`)
 		.call(
 			d3
@@ -159,7 +159,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 			.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
 	}
 
-	// Add a title to each of the charts
+	// Add a title to each of the charts 
 	svg
 		.append('text')
 		.attr('x', width / 2)
@@ -189,6 +189,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	}
 }
 
+
+function renderCallback(){
 // Load the data
 d3.csv(config.essential.graphic_data_url)
 	.then((data) => {
@@ -214,10 +216,18 @@ d3.csv(config.essential.graphic_data_url)
 				d.date = d3.timeParse(config.essential.dateFormat)(d.date);
 				for (let category of categories) {
 					d[category] = +d[category];
-				}
+				}	
 			});
 
 			drawGraphic(seriesName, graphic_data, i);
-		});
-	})
-	.catch((error) => console.error(error));
+			})
+})
+};
+
+// use pym to create iframed charts dependent on specified variables
+
+pymChild = new pym.Child({
+	renderCallback: renderCallback,
+});
+
+	
