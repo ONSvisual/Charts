@@ -1,6 +1,5 @@
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
-
 let pymChild = null;
 
 function drawGraphic() {
@@ -268,25 +267,39 @@ function wrap(text, width) {
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
-	graphic_data = rawData.map((d) => {
-		return {
-			date: d3.timeParse(config.essential.dateFormat)(d.date),
-			...Object.entries(d)
-				.filter(([key]) => key !== 'date')
-				.map(([key, value]) => [key, +value])
-				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-		};
+d3.csv(config.essential.graphic_data_url).then(data => {
+
+	graphic_data = data.map((d) => {
+	return {
+	date: d3.timeParse(config.essential.dateFormat)(d.date),
+	...Object.entries(d)
+	.filter(([key]) => key !== 'date')
+	.map(([key, value]) => [key, +value])
+	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+	};
 	});
-
-	// console.log(`Data from CSV processed`);
-
-	// console.log('Final data structure:');
-	// console.log(graphic_data);
-
-	// Use pym to create an iframed chart dependent on specified variables
+	
+	// Identify metrics and their associated lower and upper confidence intervals
+	const metricKeys = Object.keys(graphic_data[0]).filter(d => !d.endsWith('_lowerCI') && !d.endsWith('_upperCI'));
+	
+	const nestedData = metricKeys.map(metric => {
+	return {
+	key: metric,
+	values: graphic_data.map(d => {
+	return {
+	date: d.date,
+	value: d[metric],
+	lowerCI: d[`${metric}_lowerCI`],
+	upperCI: d[`${metric}_upperCI`]
+	};
+	})
+	};
+	});
+	
+	console.log(nestedData);
+	
 	pymChild = new pym.Child({
-		renderCallback: drawGraphic
+	renderCallback: drawGraphic
 	});
-	// console.log(`PymChild created with renderCallback to drawGraphic`);
-});
+	
+	});
