@@ -278,15 +278,15 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 		};
 	});
-
+	drawGraphic()
 	// console.log(`Data from CSV processed`);
 
 	// console.log('Final data structure:');
 	// console.log(graphic_data);
 
 	// Use pym to create an iframed chart dependent on specified variables
-	pymChild = new pym.Child({
-		renderCallback: drawGraphic
-	});
+	// pymChild = new pym.Child({
+	// 	renderCallback: drawGraphic
+	// });
 	// console.log(`PymChild created with renderCallback to drawGraphic`);
 });
