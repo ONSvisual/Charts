@@ -43,18 +43,23 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		size = 'lg';
 	}
 
+	// todo: Add a transform and translate argument to the !=0 charts to move them to the
+
+
 	// Calculate chart width here
 	calculatedChartWidth = calculateChartWidth(size);
 
 	const chartsPerRow = config.optional.chart_every[size];
 	const chartPosition = chartIndex % chartsPerRow;
 
+	console.log(chartIndex);
+	
 	// Set dimensions
 	let margin = { ...config.optional.margin[size] };
 
-	// If the chart is not in the first position in the row, reduce the left margin
+	//If the chart is not in the first position in the row, reduce the left margin
 	// if (chartPosition !== 0) {
-	// 	margin.left = 10;
+	// 	margin.left = 50;
 	// 	// Recalculate chart width here after adjusting left margin
 	// 	calculatedChartWidth = calculateChartWidth(size);
 	// }
@@ -106,7 +111,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	const yAxis = d3
 		.scaleLinear()
 		.domain([0, d3.max(graphic_data, (d) => d3.sum(categories, (c) => d[c]))])
-		.nice()
+		// .nice()
 		.range([height, 0]);
 
 	// Define the stack generator
@@ -200,6 +205,7 @@ d3.csv(config.essential.graphic_data_url)
 		const groupedData = d3.groups(data, (d) => d.series);
 		// console.log("Grouped data:", groupedData);
 
+		console.table(groupedData);
 		// Remove previous SVGs
 		graphic.selectAll('svg').remove();
 
