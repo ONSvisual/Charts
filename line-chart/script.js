@@ -178,7 +178,8 @@ function drawGraphic() {
 				.ticks(config.optional.yAxisTicks[size])
 				.tickSize(-width)
 				.tickFormat('')
-		);
+		)
+		.lower();
 		
 
 // This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
