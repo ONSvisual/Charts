@@ -133,6 +133,19 @@ function drawGraphic() {
 				);
 		} //end if for datalabels
 
+		// This does the chart title label
+		svg
+			.append('g')
+			.attr('transform', 'translate(0, 0)')
+			.append('text')
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('dy', -15)
+			.attr('class', 'title')
+			.text(d => d[0])
+			.attr('text-anchor', 'start')
+			.call(wrap, chart_width);
+		
 		// This does the x-axis label
 		svg
 			.append('g')
