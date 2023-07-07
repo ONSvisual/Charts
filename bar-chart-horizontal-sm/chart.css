@@ -11,3 +11,8 @@
 .chart-container:last-child {
   margin-right: 0;
 }
+
+.title {
+  font-weight: 600;
+  fill: #414042;
+}
