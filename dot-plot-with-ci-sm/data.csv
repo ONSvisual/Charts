@@ -1,29 +1,49 @@
-date,name,series,xvalue,yvalue,group,lowerCI,upperCI
-30/04/2023,Other services,series1,0.987848719,0.9,group1,,
-01/05/2023,Manufacturing,series1,0.983661406,0.986,group1,,
-02/05/2023,Construction,series1,0.681288045,0.4,group1,,
-03/05/2023,Arts,series1,0.481757214,0.2,group1,,
-04/05/2023,Administrative,series1,0.209665614,0.6,group1,,
-05/05/2023,Wholesale trade,series1,0.176396639,0.4,group1,,
-06/05/2023,Administrative and supportive service activities,series1,0.047910167,0.15,group1,,
-07/05/2023,Other services,series1,0.207848719,0.2,group2,,
-08/05/2023,Manufacturing,series1,0.603661406,0.6,group2,,
-09/05/2023,Construction,series1,0.21288045,0.2,group2,,
-10/05/2023,Arts,series1,0.281757214,0.4,group2,,
-11/05/2023,Administrative,series1,0.409665614,0.8,group2,,
-12/05/2023,Wholesale trade,series1,0.276396639,0.5,group2,,
-13/05/2023,Administrative and supportive service activities,series1,0.147910167,0.25,group2,,
-30/04/2023,Other services,series2,0.987848719,0.9,group1,,
-01/05/2023,Manufacturing,series2,0.983661406,0.986,group1,,
-02/05/2023,Construction,series2,0.681288045,0.4,group1,,
-03/05/2023,Arts,series2,0.481757214,0.2,group1,,
-04/05/2023,Administrative,series2,0.209665614,0.6,group1,,
-05/05/2023,Wholesale trade,series2,0.176396639,0.4,group1,,
-06/05/2023,Administrative and supportive service activities,series2,0.047910167,0.15,group1,,
-07/05/2023,Other services,series2,0.207848719,0.2,group2,,
-08/05/2023,Manufacturing,series2,0.603661406,0.6,group2,,
-09/05/2023,Construction,series2,0.21288045,0.2,group2,,
-10/05/2023,Arts,series2,0.281757214,0.4,group2,,
-11/05/2023,Administrative,series2,0.409665614,0.8,group2,,
-12/05/2023,Wholesale trade,series2,0.276396639,0.5,group2,,
-13/05/2023,Administrative and supportive service activities,series2,0.147910167,0.25,group2,,
+date,name,series,yvalue,group,xvalue,lowerCI,upperCI
+06/05/2023,Other services,sympt now headache,0.9,Male,0.1519,0.1446,0.1595
+13/05/2023,Manufacturing,sympt now headache,0.986,Male,0.1568,0.1509,0.1628
+20/05/2023,Construction,sympt now headache,0.4,Male,0.1538,0.148,0.1598
+27/05/2023,Arts,sympt now headache,0.2,Male,0.1514,0.1455,0.1574
+03/06/2023,Administrative,sympt now headache,0.6,Male,0.1408,0.1319,0.1501
+10/06/2023,Wholesale trade,sympt now headache,0.4,Male,0.1221,0.1148,0.1298
+06/05/2023,Administrative and supportive service activities,sympt now headache,0.15,Female,0.2709,0.262,0.28
+13/05/2023,Other services,sympt now headache,0.2,Female,0.2656,0.2586,0.2727
+20/05/2023,Manufacturing,sympt now headache,0.6,Female,0.2618,0.2548,0.2688
+27/05/2023,Construction,sympt now headache,0.2,Female,0.2582,0.2511,0.2653
+03/06/2023,Arts,sympt now headache,0.4,Female,0.2338,0.2231,0.2447
+10/06/2023,Administrative,sympt now headache,0.8,Female,0.2123,0.2033,0.2216
+06/05/2023,Other services,sympt now fatigue weakness,0.9,Male,0.1872,0.1792,0.1954
+13/05/2023,Manufacturing,sympt now fatigue weakness,0.986,Male,0.1785,0.1723,0.1849
+20/05/2023,Construction,sympt now fatigue weakness,0.4,Male,0.1962,0.1897,0.2027
+27/05/2023,Arts,sympt now fatigue weakness,0.2,Male,0.1796,0.1733,0.186
+03/06/2023,Administrative,sympt now fatigue weakness,0.6,Male,0.1617,0.1522,0.1714
+10/06/2023,Wholesale trade,sympt now fatigue weakness,0.4,Male,0.1541,0.146,0.1625
+06/05/2023,Administrative and supportive service activities,sympt now fatigue weakness,0.15,Female,0.267,0.2581,0.276
+13/05/2023,Other services,sympt now fatigue weakness,0.2,Female,0.2652,0.2582,0.2723
+20/05/2023,Manufacturing,sympt now fatigue weakness,0.6,Female,0.257,0.2501,0.2641
+27/05/2023,Construction,sympt now fatigue weakness,0.2,Female,0.2633,0.2562,0.2705
+03/06/2023,Arts,sympt now fatigue weakness,0.4,Female,0.2368,0.2261,0.2477
+10/06/2023,Administrative,sympt now fatigue weakness,0.8,Female,0.1999,0.191,0.209
+06/05/2023,Other services,sympt now runny nose sneezing,0.9,Male,0.2355,0.2268,0.2444
+13/05/2023,Manufacturing,sympt now runny nose sneezing,0.986,Male,0.1937,0.1873,0.2002
+20/05/2023,Construction,sympt now runny nose sneezing,0.4,Male,0.2142,0.2076,0.221
+27/05/2023,Arts,sympt now runny nose sneezing,0.2,Male,0.2101,0.2034,0.2169
+03/06/2023,Administrative,sympt now runny nose sneezing,0.6,Male,0.2229,0.2123,0.2339
+10/06/2023,Wholesale trade,sympt now runny nose sneezing,0.4,Male,0.2206,0.2112,0.2302
+06/05/2023,Administrative and supportive service activities,sympt now runny nose sneezing,0.15,Female,0.2659,0.257,0.275
+13/05/2023,Other services,sympt now runny nose sneezing,0.2,Female,0.2524,0.2455,0.2594
+20/05/2023,Manufacturing,sympt now runny nose sneezing,0.6,Female,0.248,0.2412,0.255
+27/05/2023,Construction,sympt now runny nose sneezing,0.2,Female,0.266,0.2589,0.2732
+03/06/2023,Arts,sympt now runny nose sneezing,0.4,Female,0.2719,0.2607,0.2833
+10/06/2023,Administrative,sympt now runny nose sneezing,0.8,Female,0.2475,0.2379,0.2573
+06/05/2023,Other services,ili euro,0.9,Male,0.1429,0.1357,0.1502
+13/05/2023,Manufacturing,ili euro,0.986,Male,0.1354,0.1299,0.1411
+20/05/2023,Construction,ili euro,0.4,Male,0.1425,0.1369,0.1483
+27/05/2023,Arts,ili euro,0.2,Male,0.1335,0.128,0.1393
+03/06/2023,Administrative,ili euro,0.6,Male,0.1281,0.1196,0.137
+10/06/2023,Wholesale trade,ili euro,0.4,Male,0.1115,0.1044,0.1189
+06/05/2023,Administrative and supportive service activities,ili euro,0.15,Female,0.184,0.1762,0.1919
+13/05/2023,Other services,ili euro,0.2,Female,0.1896,0.1834,0.1959
+20/05/2023,Manufacturing,ili euro,0.6,Female,0.1815,0.1753,0.1877
+27/05/2023,Construction,ili euro,0.2,Female,0.1809,0.1747,0.1872
+03/06/2023,Arts,ili euro,0.4,Female,0.1595,0.1503,0.169
+10/06/2023,Administrative,ili euro,0.8,Female,0.1459,0.1381,0.154

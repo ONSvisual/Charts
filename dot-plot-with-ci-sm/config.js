@@ -2,17 +2,17 @@ config={
   "essential": {
     "graphic_data_url": "data.csv",
     "colour_palette": ["#206095","#3fb0b3"],
-    "fillOpacity":0.5,
+    "fillOpacity":1,
     "strokeOpacity":1,
     "dateFormat": "%d/%m/%Y",
         "radius": "4",
-    "sourceText": "From the Office for National Statistics",
+    "sourceText": "Coronavirus (COVID-19) Infection Survey from the Office for National Statistics",
     "accessibleSummary":"Here is the screenreader text describing the chart.",
-    "xDomain":"auto",
+    "xDomain":[0,0.3],
     "yDomain":"auto",
     // either "auto" or an array for the x domain e.g. [0,100]
-    "xAxisLabel":"x axis label",
-    "yAxisLabel":"y axis label",
+    "xAxisLabel":"date",
+    "yAxisLabel":"percent",
     "xAxisFormat":"%d'",
     "yAxisFormat":".0%"
   },

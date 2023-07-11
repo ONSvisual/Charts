@@ -95,7 +95,7 @@ console.log("x",d3.extent(graphic_data, (d) => d.date))
     // both of these are need to be looked at.
 
   if(config.essential.xDomain=="auto"){
-    y.domain([0, d3.max(graphic_data,function(d){return d.yvalue})]);
+    y.domain([0, d3.max(graphic_data,function(d){return d.xvalue})]);
   }else{
     y.domain(config.essential.xDomain)
   }
@@ -123,19 +123,68 @@ console.log("x",d3.extent(graphic_data, (d) => d.date))
   .tickFormat(d3.format(config.essential.yAxisFormat))
 );
 
+//adding ci's to each of the charts.
 
+svg.append('g')
+.selectAll('line')
+.data((d) => d[1])
+.join('line')
+.attr('x1', d => x(d.date))
+.attr('y1', d => y(d.lowerCI))
+.attr('x2', d => x(d.date))
+.attr('y2', d => y(d.upperCI))
+.attr("stroke", d => colour(d.group))
+.attr('stroke-opacity')
+
+let capWidth = 10;
+
+svg.append('g')
+.selectAll('line.lower')
+.data((d) => d[1])
+.join('line')
+.attr('class', 'lower')
+.attr('x1', d=> x(d.date) - capWidth/2)
+.attr('y1', d => y(d.lowerCI))
+.attr('x2', d => x(d.date) + capWidth/2)
+.attr('y2', d => y(d.lowerCI))
+.attr("stroke", d => colour(d.group))
+
+svg.append('g')
+.selectAll('line.upper')
+.data((d) => d[1])
+.join('line')
+.attr('class', 'upper')
+.attr('x1', d => x(d.date) - capWidth/2)
+.attr('y1', d=> y(d.upperCI))
+.attr('x2', d => x(d.date) + capWidth/2)
+.attr('y2', d => y(d.upperCI))
+.attr("stroke", d => colour(d.group))
+//add dots to the plot.
 
   svg.selectAll('circle')
-      .data(graphic_data)
+      .data((d) => d[1])
       .join('circle')
       .attr('cx',(d) => x(d.date))
-      .attr('cy',(d) => y(d.yvalue))
+      .attr('cy',(d) => y(d.xvalue))
       .attr('r',config.essential.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
       .attr('fill-opacity',config.essential.fillOpacity)
       .attr('stroke',(d)=> colour(d.group))
       .attr('stroke-opacity',config.essential.strokeOpacity);
 
+
+		// This does the chart title label
+		svg
+			.append('g')
+			.attr('transform', 'translate(0, 0)')
+			.append('text')
+			.attr('x', 0)
+			.attr('y', 0)
+			.attr('dy', -15)
+			.attr('class', 'title')
+			.text(d => d[0])
+			.attr('text-anchor', 'start')
+			.call(wrap, chart_width);
 
 // This does the x-axis label
     svg
