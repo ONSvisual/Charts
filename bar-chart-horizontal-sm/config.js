@@ -25,19 +25,19 @@ config = {
 		},
 		"margin": {
 			"sm": {
-				"top": 15,
+				"top": 30,
 				"right": 20,
 				"bottom": 50,
 				"left": 120
 			},
 			"md": {
-				"top": 15,
+				"top": 30,
 				"right": 20,
 				"bottom": 50,
 				"left": 120
 			},
 			"lg": {
-				"top": 15,
+				"top": 30,
 				"right": 20,
 				"bottom": 50,
 				"left": 120
