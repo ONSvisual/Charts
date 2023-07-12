@@ -32,7 +32,7 @@ config = {
 		"chart_every": {
 			"sm": 1,
 			"md": 1,
-			"lg": 3
+			"lg": 2
 		},
 		"aspectRatio": {
 			"sm": [1, 1],

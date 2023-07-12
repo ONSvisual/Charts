@@ -108,7 +108,7 @@ legenditem
     .tickFormat(d3.format(config.essential.xAxisFormat))
   )
 
-  svg
+svg
 .append('g')
 .attr('class','axis numeric')
 .call(

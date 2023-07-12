@@ -125,7 +125,7 @@ function drawGraphic() {
 	// Add the y-axis
 	svg
 		.append('g')
-		.attr('class', 'y axis')
+		.attr('class', 'y axis numeric')
 		.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
 
 	// This does the x-axis label
@@ -159,8 +159,7 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 		};
 	});
 
-	console.log('Final data structure:');
-	console.log(graphic_data);
+	// console.log('Final data structure:',graphic_data);
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({
