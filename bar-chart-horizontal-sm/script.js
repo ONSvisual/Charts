@@ -26,6 +26,7 @@ function drawGraphic() {
 		config.optional.aspectRatio[size][0]
 	);
 
+
 	// Clear out existing graphics
 	graphic.selectAll('*').remove();
 
@@ -39,10 +40,10 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, data) {
+	function drawChart(container, data, chartIndex) {
 		// Log the data being used for each small multiple
 		console.log('Data for this small multiple:', data);
-
+		console.log(chartIndex);
 		//set up scales
 		const x = d3.scaleLinear().range([0, chart_width]);
 
@@ -56,8 +57,20 @@ function drawGraphic() {
 		//use the data to find unique entries in the name column
 		y.domain([...new Set(data.map((d) => d.name))]);
 
+
+		let chartsPerRow = config.optional.chart_every[size];
+		let chartPosition = chartIndex % chartsPerRow;
+	
+	
+	
+		// If the chart is not in the first position in the row, reduce the left margin
+		if (chartPosition !== 0) {
+			margin.left = 10;
+		}
+
 		//set up yAxis generator
-		var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	
+		let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 		//set up xAxis generator
 		var xAxis = d3
@@ -159,8 +172,8 @@ function drawGraphic() {
 	}
 
 	// Draw the charts for each small multiple
-	chartContainers.each(function ([key, value]) {
-		drawChart(d3.select(this), value);
+	chartContainers.each(function ([key, value], i) {
+		drawChart(d3.select(this), value, i);
 	});
 
 	//create link to source

@@ -5,7 +5,7 @@ legend = d3.select('#legend');
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
 
-function drawGraphic(seriesName, graphic_data, chartIndex) {
+ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	//population accessible summary
 
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -55,14 +55,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		margin.left = 10;
 	}
 
-	// let numSeries = groupedData.length;
 
-	//console.log(`The value of numSeries is ${numSeries}.`);
-
-	// let chart_width =
-	//   (parseInt(graphic.style("width")) - margin.left - margin.right) /
-	//     numSeries -
-	//   20;
 
 	let chart_width = calculateChartWidth(size);
 
