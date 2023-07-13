@@ -1,5 +1,5 @@
 config={
-  "essential": {
+  "essential": { 
     "graphic_data_url": "data.csv",
     "colour_palette": ["#206095","#3fb0b3"],
     "fillOpacity":0.5,
