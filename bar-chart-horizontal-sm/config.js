@@ -28,19 +28,19 @@ config = {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			},
 			"md": {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			},
 			"lg": {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			}
 		},
 		"seriesHeight": {

@@ -19,12 +19,16 @@ function drawGraphic() {
 
 	var margin = config.optional.margin[size];
 	var chart_every = config.optional.chart_every[size];
-	var chart_width =
-		parseInt(graphic.style('width')) / chart_every - margin.left - margin.right;
+	// var chart_width =
+	// 	parseInt(graphic.style('width')) / chart_every - margin.left - margin.right;
+
+	let chart_width = ((parseInt(graphic.style('width'))- margin.left+10) / chart_every) - margin.right -10;
 	var height = Math.ceil(
 		(chart_width * config.optional.aspectRatio[size][1]) /
 		config.optional.aspectRatio[size][0]
 	);
+
+	
 
 
 	// Clear out existing graphics
