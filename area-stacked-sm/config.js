@@ -47,9 +47,9 @@ config = {
 				"left": 50
 			},
 			"md": {
-				"top": 20,
-				"right": 20,
-				"bottom": 0,
+				"top": 30,
+				"right": 10,
+				"bottom": 50,
 				"left": 50
 			},
 			"lg": {
