@@ -46,10 +46,16 @@ let legenditem = d3
 .append('div')
 .attr('class', 'legend--item');
 
+// Hey fellow Brit - I know you might be looking at color and are tempted to change that to colour - don't! Sadly this is a d3 module. https://github.com/d3/d3-color
 legenditem 
  .append('div')
- .attr('class', 'legend--icon--circle')
- .style('background-color', (d) => colour(d) );
+ .attr('class', 'legend--icon--circle2')
+ .style('background-color', (d) => {
+  let color = d3.color(colour(d));
+  color.opacity = 0.5;
+  return color;
+ })
+  .style('border-color', (d) => colour(d));
 
 legenditem
  .append('div')
