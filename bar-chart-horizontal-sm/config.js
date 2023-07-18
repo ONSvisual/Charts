@@ -28,19 +28,19 @@ config = {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			},
 			"md": {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			},
 			"lg": {
 				"top": 30,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			}
 		},
 		"seriesHeight": {
@@ -49,8 +49,8 @@ config = {
 			"lg": 40
 		},
 		"xAxisTicks": {
-			"sm": 4,
-			"md": 4,
+			"sm": 2,
+			"md": 2,
 			"lg": 4
 		},
 		"mobileBreakpoint": 510,

@@ -1,10 +1,11 @@
 let pymChild = null;
-const graphic = d3.select('#graphic');
+let graphic = d3.select('#graphic');
+legend = d3.select('#legend'); 
 
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
 
-function drawGraphic(seriesName, graphic_data, chartIndex) {
+ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	//population accessible summary
 
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -54,14 +55,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		margin.left = 10;
 	}
 
-	// let numSeries = groupedData.length;
 
-	//console.log(`The value of numSeries is ${numSeries}.`);
-
-	// let chart_width =
-	//   (parseInt(graphic.style("width")) - margin.left - margin.right) /
-	//     numSeries -
-	//   20;
 
 	let chart_width = calculateChartWidth(size);
 
@@ -117,8 +111,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	y.domain(graphic_data.map((d) => d.name));
 
 	// Set up the legend
-	let legenditem = d3
-		.select('#legend')
+	let legenditem = legend
 		.selectAll('div.legend--item')
 		.data(
 			d3.zip(graphic_data.columns.slice(1), config.essential.colour_palette)

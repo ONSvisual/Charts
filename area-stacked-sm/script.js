@@ -1,7 +1,8 @@
 let pymChild = null;
-const graphic = d3.select('#graphic');
+let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
 
-//Remove previous SVGs
+//Remove fallback
 d3.select('#graphic').select('img').remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
@@ -30,8 +31,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// size thresholds as defined in the config.js file
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	let size;
@@ -73,8 +74,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.range(config.essential.colour_palette);
 
 	// Set up the legend
-	const legenditem = d3
-		.select('#legend')
+	const legenditem = legend
 		.selectAll('div.legend--item')
 		.data(d3.zip(categories, colorScale.range()))
 		.enter()
@@ -111,14 +111,13 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	const yAxis = d3
 		.scaleLinear()
 		.domain([0, d3.max(graphic_data, (d) => d3.sum(categories, (c) => d[c]))])
-		// .nice()
 		.range([height, 0]);
 
 	// Define the stack generator
 	const stack = d3.stack().keys(categories);
 
 	// Create an SVG for this chart
-	const svg = graphic
+	let svg = graphic
 		.append('svg')
 		.attr('width', width + margin.left + margin.right)
 		.attr('height', height + margin.top + margin.bottom)
@@ -160,10 +159,12 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	if (chartPosition === 0) {
 		svg
 			.append('g')
-			.attr('class', 'y axis')
+			.attr('class', 'y axis numeric')
 			.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
 	}
 
+
+	 // todo: This needs to be moved to the gobal style css
 	// Add a title to each of the charts 
 	svg
 		.append('text')
@@ -207,7 +208,7 @@ d3.csv(config.essential.graphic_data_url)
 
 		console.table(groupedData);
 		// Remove previous SVGs
-		graphic.selectAll('svg').remove();
+	//	graphic.selectAll('svg').remove();
 
 		groupedData.forEach((group, i) => {
 			const seriesName = group[0];

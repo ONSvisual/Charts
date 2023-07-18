@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
+let legend = d3.select('#legend');
 
 function drawGraphic() {
 
@@ -23,9 +24,9 @@ function drawGraphic() {
 
   const chartEvery = config.optional.chartEvery[size];
 
-  var margin = config.optional.margin[size]
-  var chart_width = (parseInt(graphic.style("width"))/chartEvery) - margin.left - margin.right;
-  var height = 400 - margin.top - margin.bottom;
+  let margin = config.optional.margin[size]
+  let chart_width = (parseInt(graphic.style("width"))/chartEvery) - margin.left - margin.right;
+  let height = 400 - margin.top - margin.bottom;
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
@@ -65,16 +66,13 @@ legenditem
  grouped_data = d3.group(graphic_data, d => d.series)  
 
 
- console.log(grouped_data);
-
-
  
   //set up scales
   const x = d3.scaleTime()
     .domain(d3.extent(graphic_data, (d) => d.date))
     .range([0, chart_width]);
 
-console.log("x",d3.extent(graphic_data, (d) => d.date))
+// console.log("x",d3.extent(graphic_data, (d) => d.date))
 
   const y = d3.scaleLinear()
      .range([height, 0])
@@ -174,7 +172,7 @@ svg
 
 function wrap(text, width) {
         text.each(function() {
-          var text = d3.select(this),
+          let text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
@@ -200,7 +198,7 @@ function wrap(text, width) {
 
       }
 
-
+//load data 
 d3.csv(config.essential.graphic_data_url)
   .then((data) => {
 
@@ -210,8 +208,6 @@ d3.csv(config.essential.graphic_data_url)
 
     data.forEach((d) => {d.date = parseTime(d.date) });
 
-
-    console.log(graphic_data);
     //use pym to create iframed chart dependent on specified variables
     pymChild = new pym.Child({
       renderCallback: drawGraphic

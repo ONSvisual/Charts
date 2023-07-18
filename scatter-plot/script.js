@@ -50,6 +50,8 @@ function drawGraphic() {
 let groups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
 
 
+// This code is meant to create a legend in the style of the scatterplot circle.
+
 let legenditem = d3
 .select('#legend')
 .selectAll('div.legend-item')
@@ -60,8 +62,13 @@ let legenditem = d3
 
 legenditem 
  .append('div')
- .attr('class', 'legend--icon--circle')
- .style('background-color', (d) => colour(d) );
+ .attr('class', 'legend--icon--circle2')
+ .style('background-color', (d) => {
+  let color = d3.color(colour(d));
+  color.opacity = 0.5;
+  return color;
+ } )
+ .style('border-color', (d) => colour(d));
 
 legenditem
  .append('div')

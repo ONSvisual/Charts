@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
+let legend = d3.select('#legend');
 
 function drawGraphic() {
 
@@ -23,18 +24,17 @@ function drawGraphic() {
 
   const chartEvery = config.optional.chartEvery[size];
 
-  var margin = config.optional.margin[size]
-  var chart_width = (parseInt(graphic.style("width"))/chartEvery) - margin.left - margin.right;
-  var height = 400 - margin.top - margin.bottom;
+  let margin = config.optional.margin[size]
+  let chart_width = (parseInt(graphic.style("width"))/chartEvery) - margin.left - margin.right;
+  let height = 400 - margin.top - margin.bottom;
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
-
+  legend.selectAll("*").remove();
 
 
   // lets move on to setting up the legend for this chart. 
 let legendGroups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
-
 
 
 let legenditem = d3
@@ -45,10 +45,16 @@ let legenditem = d3
 .append('div')
 .attr('class', 'legend--item');
 
+// Hey fellow Brit - I know you might be looking at color and are tempted to change that to colour - don't! Sadly this is a d3 module. https://github.com/d3/d3-color
 legenditem 
  .append('div')
- .attr('class', 'legend--icon--circle')
- .style('background-color', (d) => colour(d) );
+ .attr('class', 'legend--icon--circle2')
+ .style('background-color', (d) => {
+  let color = d3.color(colour(d));
+  color.opacity = 0.5;
+  return color;
+ })
+  .style('border-color', (d) => colour(d));
 
 legenditem
  .append('div')
@@ -68,7 +74,7 @@ legenditem
     //lets also try a new smallmultiple version here which will group data on the basis of series
  grouped_data = d3.group(graphic_data, d => d.series)  
 
-  //create svg for chart
+  //create a svg for each chart
   svg = d3.select('#graphic')
      .selectAll('div')
      .data(grouped_data)
@@ -108,7 +114,7 @@ legenditem
     .tickFormat(d3.format(config.essential.xAxisFormat))
   )
 
-  svg
+svg
 .append('g')
 .attr('class','axis numeric')
 .call(
@@ -170,7 +176,7 @@ svg
 
 function wrap(text, width) {
         text.each(function() {
-          var text = d3.select(this),
+          let text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
@@ -190,7 +196,7 @@ function wrap(text, width) {
               tspan = text.append("tspan").attr('x',x).attr("dy", lineHeight + "em").text(word);
             }
           }
-          var breaks = text.selectAll("tspan").size();
+          let breaks = text.selectAll("tspan").size();
           text.attr("y", function(){return -6 * (breaks-1);});
         });
 
