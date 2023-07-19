@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
+let legend = d3.select('#legend');
 
 function drawGraphic() {
 	//Accessible summary
@@ -38,13 +39,13 @@ function drawGraphic() {
 
 	// Remove any existing chart elements
 	graphic.selectAll('*').remove();
-
+	legend.selectAll('*').remove();
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
 
 	// Create a container div for each small multiple
-	var chartContainers = graphic
+	let chartContainers = graphic
 		.selectAll('.chart-container')
 		.data(categories)
 		.join('div')
@@ -62,7 +63,7 @@ function drawGraphic() {
 		let chart_width = calculateChartWidth(size);
 
 		//height is set by the aspect ratio
-		var height =
+		let height =
 			aspectRatio[1] / aspectRatio[0] * chart_width;
 
 		// Define the x and y scales
@@ -254,8 +255,7 @@ function drawGraphic() {
 
 
 	// Set up the legend
-	var legenditem = d3
-		.select('#legend')
+	var legenditem = legend
 		.selectAll('div.legend--item')
 		.data([["Selected region", "#206095"], ["All other regions", "#dadada"]])
 		.enter()
