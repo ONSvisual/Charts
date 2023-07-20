@@ -30,9 +30,6 @@ function drawGraphic() {
 	graphic.selectAll('*').remove();
 
 
-let groupedData = d3.group(graphic_data, (d) => d.date);
-
- console.log("Key grouped data", groupedData);
 
 	// //set up scales
 	// const x = d3.scaleLinear().range([0, chart_width]);
@@ -184,9 +181,17 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 
 	let parseTime = d3.timeParse(config.essential.dateFormat);
 
-	data.forEach((d) => { d.date = parseTime(d.date) })
+	data.forEach((d) => { 
+		d.date = parseTime(d.date); 
 
-	 console.log(graphic_data);
+		for (let prop in d) {
+			if (prop !== 'date') {
+				d[prop] = +d[prop];
+		}
+	
+	}
+	});
+	 console.log("original data ",graphic_data);
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic
