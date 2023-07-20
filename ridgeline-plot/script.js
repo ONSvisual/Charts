@@ -25,27 +25,27 @@ function drawGraphic() {
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
- let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
-//  console.log("keys ",keys);
+	let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
+	//  console.log("keys ",keys);
 
- //height come from the number of keys - 1 because of date variable.
- let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
- 
- 
-//layers version 1
-// let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
+	//height come from the number of keys - 1 because of date variable.
+	let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
 
-//layers version 2
 
-let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]})));
+	//layers version 1
+	// let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
 
-//  console.log("layers",layers);
+	//layers version 2
+
+	let layers = keys.map(key => graphic_data.map(d => ({ date: d.date, value: d[key] })));
+
+	//  console.log("layers",layers);
 
 
 	//set up scales
 	const x = d3.scaleTime()
-	.range([0, chart_width])
-	.domain(d3.extent(graphic_data, d => d.date));
+		.range([0, chart_width])
+		.domain(d3.extent(graphic_data, d => d.date));
 
 	//set up xAxis generator
 	var xAxis = d3
@@ -62,11 +62,23 @@ let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]
 		.range([0, height])
 		.domain(keys);
 
-		let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
+	const y_linear = d3
+		.scaleLinear()
+		.range([0, y.bandwidth])
+		.domain([0, 1])
+
+	let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
 
 
 	//set up yAxis generator
 	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+
+	let areaGenerator = d3.area()
+		.x((d) => x(d.date))
+		.y1((d) => y_linear(d.value))
+
+
+
 
 
 
@@ -103,25 +115,35 @@ let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]
 
 
 
-let series = chart_g.selectAll('.series')
-    .data(layers)
-    .enter().append('g')
-    .attr('class', 'series')
-    .attr('fill', (d, i) => d3.interpolateViridis(i / keys.length)) // This will give each series a different color
-    .attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
+	let series = chart_g.selectAll('.series')
+		.data(layers)
+		.enter().append('g')
+		.attr('class', 'series')
+		.attr('fill', (d, i) => d3.interpolateViridis(i / keys.length)) // This will give each series a different color
+		.attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
 
-console.log(series);
+	console.log(series);
+console.log(layers[0])
+
+	// Create the areas
+	chart_g
+		.selectAll('path')
+		.data(layers)
+		.enter()
+		.append('path')
+		.attr('d', areaGenerator);
 
 
-// draw the ridgeline plot
-// Append lines (the ridges)
-    // chart_g.append('g')
-    //     .selectAll('path')
-    //     .data(layers)
-    //     .join('path')
-    //         .attr('fill', 'black')
-    //         .attr('stroke', (d, i) => z(i))
-    //         .attr('d', line);
+
+	// draw the ridgeline plot
+	// Append lines (the ridges)
+	// chart_g.append('g')
+	//     .selectAll('path')
+	//     .data(layers)
+	//     .join('path')
+	//         .attr('fill', 'black')
+	//         .attr('stroke', (d, i) => z(i))
+	//         .attr('d', line);
 
 
 	// This does the x-axis label
@@ -183,15 +205,15 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 
 	let parseTime = d3.timeParse(config.essential.dateFormat);
 
-	data.forEach((d) => { 
-		d.date = parseTime(d.date); 
+	data.forEach((d) => {
+		d.date = parseTime(d.date);
 
 		for (let prop in d) {
 			if (prop !== 'date') {
 				d[prop] = +d[prop];
+			}
+
 		}
-	
-	}
 	});
 	// console.log("original data ",graphic_data);
 	//use pym to create iframed chart dependent on specified variables
