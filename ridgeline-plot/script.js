@@ -52,7 +52,6 @@ function drawGraphic() {
 
 	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
-	// You missed a y_scale for your areaGenerator function
 	let y_scale = d3.scaleLinear()
 		.range([config.optional.seriesHeight[size], 0])
 		.domain([0, d3.max(layers, layer => d3.max(layer, d => d.value))]);
