@@ -36,7 +36,7 @@ function drawGraphic() {
 		.range([0, chart_width])
 		.domain(d3.extent(graphic_data, d => d.date));
 
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
 		.tickFormat(d3.format('.0%'))
@@ -49,7 +49,7 @@ function drawGraphic() {
 
 	let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
 
-	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 	let y_scale = d3.scaleLinear()
 		.range([config.optional.seriesHeight[size], 0])
@@ -73,7 +73,8 @@ function drawGraphic() {
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
 		.attr('class', 'x axis')
-		.call(xAxis)
+		//.call(xAxis)
+		.call(xAxis.tickFormat(d3.timeFormat('%H:%M')))
 		.selectAll('line')
 		.each(function (d) {
 			if (d == 0) {
@@ -81,18 +82,22 @@ function drawGraphic() {
 			}
 		});
 
-	chart_g
+		chart_g
 		.append('g')
 		.attr('class', 'y axis')
 		.call(yAxis)
 		.selectAll('text')
-		.call(wrap, margin.left - 10);
+		.attr('dy', '15px') // Adjust the vertical position of the labels using pixels
+		.attr('transform', 'translate(-5, 0)') // Adjust the horizontal position of the labels
+		.call(wrap, margin.left); 
+	
 
 	let series = chart_g.selectAll('.series')
 		.data(layers)
 		.enter().append('g')
 		.attr('class', 'series')
-		.attr('fill', (d, i) => z(i)) // change this line from interpolateViridis to z(i) to map correctly with z color scale
+		//.attr('fill', (d, i) => z(i)) // change this line from interpolateViridis to z(i) to map correctly with z color scale
+		.attr('fill', '#206095')
 		.attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
 
 	series.append('path')
