@@ -29,6 +29,13 @@ function drawGraphic() {
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
+ let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
+
+ console.log("keys ",keys);
+
+ let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
+
+ console.log("layers",layers);
 
 
 	// //set up scales
