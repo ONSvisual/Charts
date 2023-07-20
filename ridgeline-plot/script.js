@@ -58,20 +58,13 @@ function drawGraphic() {
 		.range([0, height])
 		.domain(keys);
 
-	const z = d3.scaleLinear()
-		.domain(0, y.bandwidth())
-		.range([0,1]);
+		let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
 
 
 	//set up yAxis generator
 	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
-	// //set up xAxis generator
-	// var xAxis = d3
-	// 	.axisBottom(x)
-	// 	.tickSize(-height)
-	// 	.tickFormat(d3.format('.0%'))
-	// 	.ticks(config.optional.xAxisTicks[size]);
+
 
 	//create chart_g for chart
 	chart_g = graphic
@@ -83,13 +76,6 @@ function drawGraphic() {
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	// if (config.essential.xDomain == 'auto') {
-	// 	x.domain([
-	// 		0,
-	// 		d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
-	// } else {
-	// 	x.domain(config.essential.xDomain);
-	// }
 
 	chart_g
 		.append('g')
@@ -110,15 +96,28 @@ function drawGraphic() {
 		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
-	// svg
-	// 	.selectAll('rect')
-	// 	.data(graphic_data)
-	// 	.join('rect')
-	// 	.attr('x', x(0))
-	// 	.attr('y', (d) => y(d.name))
-	// 	.attr('width', (d) => x(d.value) - x(0))
-	// 	.attr('height', y.bandwidth())
-	// 	.attr('fill', config.essential.colour_palette);
+
+
+
+let series = chart_g.selectAll('.series')
+    .data(layers)
+    .enter().append('g')
+    .attr('class', 'series')
+    .attr('fill', (d, i) => d3.interpolateViridis(i / keys.length)) // This will give each series a different color
+    .attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
+
+console.log(series);
+
+
+// draw the ridgeline plot
+// Append lines (the ridges)
+    // chart_g.append('g')
+    //     .selectAll('path')
+    //     .data(layers)
+    //     .join('path')
+    //         .attr('fill', 'black')
+    //         .attr('stroke', (d, i) => z(i))
+    //         .attr('d', line);
 
 
 	// This does the x-axis label
@@ -190,7 +189,7 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 	
 	}
 	});
-	 console.log("original data ",graphic_data);
+	// console.log("original data ",graphic_data);
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic
