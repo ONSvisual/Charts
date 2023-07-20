@@ -280,6 +280,8 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 		};
 	});
 
+	console.log(graphic_data);
+	
 	// console.log(`Data from CSV processed`);
 
 	// console.log('Final data structure:');
