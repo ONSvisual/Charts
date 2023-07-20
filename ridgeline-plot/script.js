@@ -25,61 +25,43 @@ function drawGraphic() {
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
- let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
-//  console.log("keys ",keys);
+	graphic.selectAll('*').remove();
 
-	//height come from the number of keys - 1 because of date variable.
+	let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
+
 	let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
 
+	let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]})));
 
-	//layers version 1
-	// let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
-
-	//layers version 2
-
-	let layers = keys.map(key => graphic_data.map(d => ({ date: d.date, value: d[key] })));
-
-//  console.log("layers",layers);
-
-
-	//set up scales
 	const x = d3.scaleTime()
 		.range([0, chart_width])
 		.domain(d3.extent(graphic_data, d => d.date));
 
-	//set up xAxis generator
 	var xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
 		.tickFormat(d3.format('.0%'))
 		.ticks(config.optional.xAxisTicks[size]);
 
-
-		let y = d3.scalePoint()
+	let y = d3.scalePoint()
 		.domain(keys)
 		.range([height, 0])
 		.padding(1);
 
-		// const z = d3.scaleOrdinal()
-		// .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])
-		// .domain(keys);
+	let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
 
-		let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
-
-
-	//set up yAxis generator
 	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+
+	// You missed a y_scale for your areaGenerator function
+	let y_scale = d3.scaleLinear()
+		.range([config.optional.seriesHeight[size], 0])
+		.domain([0, d3.max(layers, layer => d3.max(layer, d => d.value))]);
 
 	let areaGenerator = d3.area()
 		.x((d) => x(d.date))
-		.y1((d) => y_linear(d.value))
+		.y0(y_scale(0))
+		.y1((d) => y_scale(d.value));
 
-
-
-
-
-
-	//create chart_g for chart
 	chart_g = graphic
 		.append('svg')
 		.attr('width', chart_width + margin.left + margin.right)
@@ -88,7 +70,6 @@ function drawGraphic() {
 		.style('background-color', '#fff')
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
 
 	chart_g
 		.append('g')
@@ -109,31 +90,17 @@ function drawGraphic() {
 		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
+	let series = chart_g.selectAll('.series')
+		.data(layers)
+		.enter().append('g')
+		.attr('class', 'series')
+		.attr('fill', (d, i) => z(i)) // change this line from interpolateViridis to z(i) to map correctly with z color scale
+		.attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
 
+	series.append('path')
+		.attr('class', 'area') // you forgot to specify class for your path
+		.attr('d', areaGenerator);
 
-
-let series = chart_g.selectAll('.series')
-    .data(layers)
-    .enter().append('g')
-    .attr('class', 'series')
-    .attr('fill', (d, i) => d3.interpolateViridis(i / keys.length)) // This will give each series a different color
-    .attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
-
-console.log(series);
-
-
-	// draw the ridgeline plot
-	// Append lines (the ridges)
-	// chart_g.append('g')
-	//     .selectAll('path')
-	//     .data(layers)
-	//     .join('path')
-	//         .attr('fill', 'black')
-	//         .attr('stroke', (d, i) => z(i))
-	//         .attr('d', line);
-
-
-	// This does the x-axis label
 	chart_g
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
@@ -143,6 +110,8 @@ console.log(series);
 		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
 		.attr('text-anchor', 'end');
+
+	d3.select('#source').text('Source – ' + config.essential.sourceText);
 
 	//create link to source
 	d3.select('#source').text('Source – ' + config.essential.sourceText);
