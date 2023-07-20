@@ -6,7 +6,6 @@ function drawGraphic() {
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
