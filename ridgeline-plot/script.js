@@ -38,21 +38,36 @@ function drawGraphic() {
  console.log("layers",layers);
 
 
-	// //set up scales
-	// const x = d3.scaleLinear().range([0, chart_width]);
+	//set up scales
+	const x = d3.scaleTime()
+	.range([0, chart_width])
+	.domain(d3.extent(graphic_data, d => d.date));
 
-	// const y = d3
-	// 	.scaleBand()
-	// 	.paddingOuter(0.2)
-	// 	.paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
-	// 	.range([0, height])
-	// 	.round(true);
+	//set up xAxis generator
+	var xAxis = d3
+		.axisBottom(x)
+		.tickSize(-height)
+		.tickFormat(d3.format('.0%'))
+		.ticks(config.optional.xAxisTicks[size]);
+
+
+	const y = d3
+		.scaleBand()
+		// .paddingOuter(0.2)
+		// .paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
+		.range([0, height])
+		.domain(keys)
+		.round(true);
+
+	const z = d3.scaleLinear()
+		.domain(0, y.bandwidth())
+		.range([0,1]);
 
 	// //use the data to find unique entries in the name column
 	// y.domain([...new Set(graphic_data.map((d) => d.name))]);
 
-	// //set up yAxis generator
-	// var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	//set up yAxis generator
+	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 	// //set up xAxis generator
 	// var xAxis = d3
@@ -61,16 +76,16 @@ function drawGraphic() {
 	// 	.tickFormat(d3.format('.0%'))
 	// 	.ticks(config.optional.xAxisTicks[size]);
 
-	// //create svg for chart
-	// svg = d3
-	// 	.select('#graphic')
-	// 	.append('svg')
-	// 	.attr('width', chart_width + margin.left + margin.right)
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('class', 'chart')
-	// 	.style('background-color', '#fff')
-	// 	.append('g')
-	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	//create svg for chart
+	svg = d3
+		.select('#graphic')
+		.append('svg')
+		.attr('width', chart_width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.attr('class', 'chart')
+		.style('background-color', '#fff')
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 	// if (config.essential.xDomain == 'auto') {
 	// 	x.domain([
@@ -80,24 +95,24 @@ function drawGraphic() {
 	// 	x.domain(config.essential.xDomain);
 	// }
 
-	// svg
-	// 	.append('g')
-	// 	.attr('transform', 'translate(0,' + height + ')')
-	// 	.attr('class', 'x axis')
-	// 	.call(xAxis)
-	// 	.selectAll('line')
-	// 	.each(function (d) {
-	// 		if (d == 0) {
-	// 			d3.select(this).attr('class', 'zero-line');
-	// 		}
-	// 	});
+	svg
+		.append('g')
+		.attr('transform', 'translate(0,' + height + ')')
+		.attr('class', 'x axis')
+		.call(xAxis)
+		.selectAll('line')
+		.each(function (d) {
+			if (d == 0) {
+				d3.select(this).attr('class', 'zero-line');
+			}
+		});
 
-	// svg
-	// 	.append('g')
-	// 	.attr('class', 'y axis')
-	// 	.call(yAxis)
-	// 	.selectAll('text')
-	// 	.call(wrap, margin.left - 10);
+	svg
+		.append('g')
+		.attr('class', 'y axis')
+		.call(yAxis)
+		.selectAll('text')
+		.call(wrap, margin.left - 10);
 
 	// svg
 	// 	.selectAll('rect')
