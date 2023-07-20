@@ -21,17 +21,18 @@ function drawGraphic() {
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-	let height =
-		config.optional.seriesHeight[size] * graphic_data.length +
-		10 * (graphic_data.length - 1) +
-		12;
 
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
+// clear out existing graphics
+graphic.selectAll('*').remove();
 
  let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
-
  console.log("keys ",keys);
+
+ //height come from the number of keys - 1 because of date variable.
+ let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
+ 
+ 
+
 
  let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
 
@@ -63,8 +64,6 @@ function drawGraphic() {
 		.domain(0, y.bandwidth())
 		.range([0,1]);
 
-	// //use the data to find unique entries in the name column
-	// y.domain([...new Set(graphic_data.map((d) => d.name))]);
 
 	//set up yAxis generator
 	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
@@ -124,25 +123,6 @@ function drawGraphic() {
 	// 	.attr('height', y.bandwidth())
 	// 	.attr('fill', config.essential.colour_palette);
 
-	// if (config.essential.dataLabels.show == true) {
-	// 	svg
-	// 		.selectAll('text.dataLabels')
-	// 		.data(graphic_data)
-	// 		.join('text')
-	// 		.attr('class', 'dataLabels')
-	// 		.attr('x', (d) => x(d.value))
-	// 		.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
-	// 		.attr('y', (d) => y(d.name) + 19)
-	// 		.attr('text-anchor', (d) =>
-	// 			x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
-	// 		)
-	// 		.attr('fill', (d) =>
-	// 			x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
-	// 		)
-	// 		.text((d) =>
-	// 			d3.format(config.essential.dataLabels.numberFormat)(d.value)
-	// 		);
-	// } //end if for datalabels
 
 	// This does the x-axis label
 	svg
