@@ -22,21 +22,20 @@ function drawGraphic() {
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 
-// clear out existing graphics
-graphic.selectAll('*').remove();
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
 
  let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
- console.log("keys ",keys);
+//  console.log("keys ",keys);
 
  //height come from the number of keys - 1 because of date variable.
  let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
  
  
 
-
  let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
 
- console.log("layers",layers);
+//  console.log("layers",layers);
 
 
 	//set up scales
@@ -57,8 +56,7 @@ graphic.selectAll('*').remove();
 		// .paddingOuter(0.2)
 		// .paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
 		.range([0, height])
-		.domain(keys)
-		.round(true);
+		.domain(keys);
 
 	const z = d3.scaleLinear()
 		.domain(0, y.bandwidth())
@@ -75,9 +73,8 @@ graphic.selectAll('*').remove();
 	// 	.tickFormat(d3.format('.0%'))
 	// 	.ticks(config.optional.xAxisTicks[size]);
 
-	//create svg for chart
-	svg = d3
-		.select('#graphic')
+	//create chart_g for chart
+	chart_g = graphic
 		.append('svg')
 		.attr('width', chart_width + margin.left + margin.right)
 		.attr('height', height + margin.top + margin.bottom)
@@ -94,7 +91,7 @@ graphic.selectAll('*').remove();
 	// 	x.domain(config.essential.xDomain);
 	// }
 
-	svg
+	chart_g
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
 		.attr('class', 'x axis')
@@ -106,7 +103,7 @@ graphic.selectAll('*').remove();
 			}
 		});
 
-	svg
+	chart_g
 		.append('g')
 		.attr('class', 'y axis')
 		.call(yAxis)
@@ -125,7 +122,7 @@ graphic.selectAll('*').remove();
 
 
 	// This does the x-axis label
-	svg
+	chart_g
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
 		.append('text')
