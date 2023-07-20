@@ -1,4 +1,4 @@
-Time,Sleep and rest,Personal care,Paid work,Travel,Unpaid household work,Unpaid care,Watching television,Entertainment and leisure,Education and study,Other,Series
+date,Sleep and rest,Personal care,Paid work,Travel,Unpaid household work,Unpaid care,Watching television,Entertainment and leisure,Education and study,Other,Series
 4:00:00,97.1,0.9,0.7,0.1,0.2,0.1,0.2,0.3,0.0,0.4,Weekdays
 4:10:00,97.1,0.8,0.7,0.1,0.2,0.1,0.2,0.3,0.0,0.4,Weekdays
 4:20:00,97.1,0.9,0.7,0.1,0.2,0.1,0.2,0.4,0.0,0.4,Weekdays
@@ -65,7 +65,7 @@ Time,Sleep and rest,Personal care,Paid work,Travel,Unpaid household work,Unpaid 
 14:30:00,2.6,7.3,39.4,6.5,19.7,1.9,6.0,13.0,2.9,0.9,Weekdays
 14:40:00,2.7,7.0,39.2,6.9,18.9,2.0,6.3,13.5,2.8,0.7,Weekdays
 14:50:00,2.7,6.0,39.3,7.7,19.0,2.2,6.1,13.2,2.8,0.9,Weekdays
-3:00:00 pm,2.9,6.1,37.7,9.3,17.8,2.8,5.8,13.4,2.9,1.4,Weekdays
+15:00:00,2.9,6.1,37.7,9.3,17.8,2.8,5.8,13.4,2.9,1.4,Weekdays
 15:10:00,2.9,6.7,37.7,8.8,17.2,3.2,5.9,13.5,2.6,1.3,Weekdays
 15:20:00,3.0,5.8,37.7,9.0,16.8,3.5,6.3,14.5,2.4,1.0,Weekdays
 15:30:00,3.3,5.0,37.1,8.5,16.7,4.2,6.6,15.0,2.7,1.0,Weekdays

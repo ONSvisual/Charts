@@ -1,12 +1,12 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -17,11 +17,11 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-	var height =
+	let height =
 		config.optional.seriesHeight[size] * graphic_data.length +
 		10 * (graphic_data.length - 1) +
 		12;
@@ -29,96 +29,98 @@ function drawGraphic() {
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
-	//set up scales
-	const x = d3.scaleLinear().range([0, chart_width]);
 
-	const y = d3
-		.scaleBand()
-		.paddingOuter(0.2)
-		.paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
-		.range([0, height])
-		.round(true);
 
-	//use the data to find unique entries in the name column
-	y.domain([...new Set(graphic_data.map((d) => d.name))]);
+	// //set up scales
+	// const x = d3.scaleLinear().range([0, chart_width]);
 
-	//set up yAxis generator
-	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	// const y = d3
+	// 	.scaleBand()
+	// 	.paddingOuter(0.2)
+	// 	.paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
+	// 	.range([0, height])
+	// 	.round(true);
 
-	//set up xAxis generator
-	var xAxis = d3
-		.axisBottom(x)
-		.tickSize(-height)
-		.tickFormat(d3.format('.0%'))
-		.ticks(config.optional.xAxisTicks[size]);
+	// //use the data to find unique entries in the name column
+	// y.domain([...new Set(graphic_data.map((d) => d.name))]);
 
-	//create svg for chart
-	svg = d3
-		.select('#graphic')
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// //set up yAxis generator
+	// var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
-	if (config.essential.xDomain == 'auto') {
-		x.domain([
-			0,
-			d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
-	} else {
-		x.domain(config.essential.xDomain);
-	}
+	// //set up xAxis generator
+	// var xAxis = d3
+	// 	.axisBottom(x)
+	// 	.tickSize(-height)
+	// 	.tickFormat(d3.format('.0%'))
+	// 	.ticks(config.optional.xAxisTicks[size]);
 
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,' + height + ')')
-		.attr('class', 'x axis')
-		.call(xAxis)
-		.selectAll('line')
-		.each(function (d) {
-			if (d == 0) {
-				d3.select(this).attr('class', 'zero-line');
-			}
-		});
+	// //create svg for chart
+	// svg = d3
+	// 	.select('#graphic')
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	svg
-		.append('g')
-		.attr('class', 'y axis')
-		.call(yAxis)
-		.selectAll('text')
-		.call(wrap, margin.left - 10);
+	// if (config.essential.xDomain == 'auto') {
+	// 	x.domain([
+	// 		0,
+	// 		d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+	// } else {
+	// 	x.domain(config.essential.xDomain);
+	// }
 
-	svg
-		.selectAll('rect')
-		.data(graphic_data)
-		.join('rect')
-		.attr('x', x(0))
-		.attr('y', (d) => y(d.name))
-		.attr('width', (d) => x(d.value) - x(0))
-		.attr('height', y.bandwidth())
-		.attr('fill', config.essential.colour_palette);
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,' + height + ')')
+	// 	.attr('class', 'x axis')
+	// 	.call(xAxis)
+	// 	.selectAll('line')
+	// 	.each(function (d) {
+	// 		if (d == 0) {
+	// 			d3.select(this).attr('class', 'zero-line');
+	// 		}
+	// 	});
 
-	if (config.essential.dataLabels.show == true) {
-		svg
-			.selectAll('text.dataLabels')
-			.data(graphic_data)
-			.join('text')
-			.attr('class', 'dataLabels')
-			.attr('x', (d) => x(d.value))
-			.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
-			.attr('y', (d) => y(d.name) + 19)
-			.attr('text-anchor', (d) =>
-				x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
-			)
-			.attr('fill', (d) =>
-				x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
-			)
-			.text((d) =>
-				d3.format(config.essential.dataLabels.numberFormat)(d.value)
-			);
-	} //end if for datalabels
+	// svg
+	// 	.append('g')
+	// 	.attr('class', 'y axis')
+	// 	.call(yAxis)
+	// 	.selectAll('text')
+	// 	.call(wrap, margin.left - 10);
+
+	// svg
+	// 	.selectAll('rect')
+	// 	.data(graphic_data)
+	// 	.join('rect')
+	// 	.attr('x', x(0))
+	// 	.attr('y', (d) => y(d.name))
+	// 	.attr('width', (d) => x(d.value) - x(0))
+	// 	.attr('height', y.bandwidth())
+	// 	.attr('fill', config.essential.colour_palette);
+
+	// if (config.essential.dataLabels.show == true) {
+	// 	svg
+	// 		.selectAll('text.dataLabels')
+	// 		.data(graphic_data)
+	// 		.join('text')
+	// 		.attr('class', 'dataLabels')
+	// 		.attr('x', (d) => x(d.value))
+	// 		.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
+	// 		.attr('y', (d) => y(d.name) + 19)
+	// 		.attr('text-anchor', (d) =>
+	// 			x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
+	// 		)
+	// 		.attr('fill', (d) =>
+	// 			x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
+	// 		)
+	// 		.text((d) =>
+	// 			d3.format(config.essential.dataLabels.numberFormat)(d.value)
+	// 		);
+	// } //end if for datalabels
 
 	// This does the x-axis label
 	svg
@@ -177,6 +179,11 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
+	let parseTime = d3.timeParse(config.essential.dateFormat);
+
+	data.forEach((d) => { d.date = parseTime(d.date) })
+
+	console.log(graphic_data);
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic

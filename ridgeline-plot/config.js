@@ -9,6 +9,7 @@ config = {
 			"numberFormat": ".0%"
 		},
 		"xDomain": "auto",
+		"dateFormat": "%-I:%M:%S",
 		// either "auto" or an array for the x domain e.g. [0,100]
 		"xAxisLabel": "x axis label"
 	},
