@@ -30,12 +30,14 @@ function drawGraphic() {
 
  //height come from the number of keys - 1 because of date variable.
  let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
- 
- 
 
- let layers = keys.map(key => graphic_data.map(({ date, [key]: value }) => ({ date, value })));
+ //version 1
+// let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]})));
 
-//  console.log("layers",layers);
+
+let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]})));
+
+ console.log("layers",layers);
 
 
 	//set up scales
@@ -96,6 +98,14 @@ function drawGraphic() {
 		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
+
+		chart_g.append('g')
+    .selectAll('path')
+    .data(layers)
+    .join('path')
+        .attr('fill', 'black')
+        .attr('stroke', (d, i) => z(i))
+        .attr('d', d => line(d));
 
 
 
@@ -189,6 +199,8 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 	
 	}
 	});
+
+
 	// console.log("original data ",graphic_data);
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({
