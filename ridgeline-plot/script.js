@@ -25,7 +25,6 @@ function drawGraphic() {
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
-	graphic.selectAll('*').remove();
 
 	let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
 
@@ -97,7 +96,7 @@ function drawGraphic() {
 		.attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
 
 	series.append('path')
-		.attr('class', 'area') // you forgot to specify class for your path
+		.attr('class', 'area') // forgot to specify class for your path
 		.attr('d', areaGenerator);
 
 	chart_g
@@ -109,8 +108,6 @@ function drawGraphic() {
 		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
 		.attr('text-anchor', 'end');
-
-	d3.select('#source').text('Source – ' + config.essential.sourceText);
 
 	//create link to source
 	d3.select('#source').text('Source – ' + config.essential.sourceText);
