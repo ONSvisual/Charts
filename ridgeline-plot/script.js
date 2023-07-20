@@ -25,7 +25,12 @@ function drawGraphic() {
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
- let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
+ // let keys = Object.keys(graphic_data[0]).filter((d) => d !== 'date');
+ 		
+ 
+ const keys = graphic_data.columns.slice(1);
+
+	 console.log("keys ",keys);
 //  console.log("keys ",keys);
 
  //height come from the number of keys - 1 because of date variable.
@@ -42,6 +47,7 @@ let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]
 //  console.log("layers",layers);
 
 
+
 	//set up scales
 	const x = d3.scaleTime()
 	.range([0, chart_width])
@@ -55,14 +61,14 @@ let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]
 		.ticks(config.optional.xAxisTicks[size]);
 
 
-	const y = d3
-		.scaleBand()
-		// .paddingOuter(0.2)
-		// .paddingInner(((graphic_data.length - 1) * 10) / (graphic_data.length * 30))
-		.range([0, height])
-		.domain(keys);
+		let y = d3.scalePoint()
+		.domain(keys)
+		.range([height, 0])
+		.padding(1);
 
-		let z = d3.scaleSequential(d3.interpolateCool).domain([0, keys.length]);
+		const z = d3.scaleOrdinal()
+		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"])
+		.domain(keys);
 
 
 	//set up yAxis generator
@@ -103,15 +109,20 @@ let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]
 
 
 
-let series = chart_g.selectAll('.series')
-    .data(layers)
-    .enter().append('g')
-    .attr('class', 'series')
-    .attr('fill', (d, i) => d3.interpolateViridis(i / keys.length)) // This will give each series a different color
-    .attr('transform', (d, i) => `translate(0,${y(keys[i])})`);
+// Add the lines
+keys.forEach((key, i) => {
+    let line = d3.line()
+      .x(d => x(d.date))
+      .y(d => y(key))
+      .curve(d3.curveBasis);
 
-console.log(series);
-
+    chart_g.append('path')
+      .datum(graphic_data)
+      .attr('fill', 'none')
+      .attr('stroke', z(i))
+      .attr('stroke-width', 1.5)
+      .attr('d', line);
+  });
 
 // draw the ridgeline plot
 // Append lines (the ridges)
