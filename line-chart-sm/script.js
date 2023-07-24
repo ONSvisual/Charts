@@ -41,8 +41,11 @@ function drawGraphic() {
 	graphic.selectAll('*').remove();
 	legend.selectAll('*').remove();
 
+	const reference = config.essential.reference_category;
+
 	// Get categories from the keys used in the stack generator
-	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
+	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== reference);
+	const categoriesToPlot = Object.keys(graphic_data[0]).filter((k) => k !== 'date')
 
 	// Create a container div for each small multiple
 	let chartContainers = graphic
@@ -77,7 +80,7 @@ function drawGraphic() {
 			.scaleLinear()
 			.domain([
 				0,
-				d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
+				d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
 			])
 			.nice()
 			.range([height, 0]);
@@ -96,7 +99,7 @@ function drawGraphic() {
 
 
 		// create lines and circles for each category
-		categories.forEach(function (category) {
+		categoriesToPlot.forEach(function (category) {
 			const lineGenerator = d3
 				.line()
 				.x((d) => xAxis(d.date))
@@ -109,7 +112,8 @@ function drawGraphic() {
 				.datum(graphic_data)
 				.attr('fill', 'none')
 				.attr(
-					'stroke', () => (categories.indexOf(category) == index) ? "#206095" : "#dadada"
+					'stroke', () => (categories.indexOf(category) == index) ? config.essential.colour_palette[0] : 
+						category == reference ? config.essential.colour_palette[1] : config.essential.colour_palette[2]
 					// config.essential.colour_palette[
 					// categories.indexOf(category) % config.essential.colour_palette.length
 					// ]
@@ -139,7 +143,7 @@ function drawGraphic() {
 						.attr('y', 4)
 						.attr('text-anchor', 'start')
 						.attr(
-							'fill', "#206095"
+							'fill', config.essential.colour_palette[0]
 							// config.essential.colour_palette[
 							// categories.indexOf(category) % config.essential.colour_palette.length
 							// ]
@@ -154,7 +158,7 @@ function drawGraphic() {
 						.attr('cy', y(lastDatum[category]))
 						.attr('r', 3)
 						.attr(
-							'fill', "#206095"
+							'fill', config.essential.colour_palette[0]
 							// config.essential.colour_palette[
 							// categories.indexOf(category) % config.essential.colour_palette.length
 							// ]
@@ -257,7 +261,7 @@ function drawGraphic() {
 	// Set up the legend
 	var legenditem = legend
 		.selectAll('div.legend--item')
-		.data([["Selected region", "#206095"], ["All other regions", "#dadada"]])
+		.data([["Selected region", config.essential.colour_palette[0]], [reference, config.essential.colour_palette[1]], ["All other regions", config.essential.colour_palette[2]]])
 		.enter()
 		.append('div')
 		.attr('class', 'legend--item');

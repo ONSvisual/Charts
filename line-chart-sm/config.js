@@ -2,15 +2,13 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		"colour_palette": [
-			"#206095",
+			"#003C57",
 			"#27A0CC",
-			"#871A5B",
-			"#A8BD3A",
-			"#F66068",
-			"#118C7B"
+			"#dadada"
 		],
 		"labelFinalPoint": true,
-		"sourceText": "from the Office for National Statistics",
+		"reference_category": "England",// Highlighted on each chart and doesn't get it's own chart - leave blank to turn off
+		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"lineCurveType": "curveLinear", // Set the default line curve type
 		// Examples of line curve types
