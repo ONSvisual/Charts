@@ -343,7 +343,7 @@ d3.csv(config.essential.graphic_data_url)
 			const graphic_data = group[1];
 			graphic_data.columns = data.columns;
 
-			drawGraphic(seriesName, graphic_data, i);
+			pymChild = new pym.Child({renderCallback: drawGraphic(seriesName, graphic_data, i)});
 		});
 	})
 	.catch((error) => console.error(error));
