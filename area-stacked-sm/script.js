@@ -168,10 +168,11 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	// Add a title to each of the charts 
 	svg
 		.append('text')
-		.attr('x', width / 2)
+		.attr('x', 0)
 		.attr('y', -margin.top / 2)
-		.attr('text-anchor', 'middle')
+		.attr('text-anchor', 'start')
 		.style('font-size', '16px')
+		.style('font-weight', 600)
 		.style('fill', '#707071')
 		.text(seriesName);
 
