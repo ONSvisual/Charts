@@ -1,11 +1,11 @@
 let pymChild = null;
 let graphic = d3.select('#graphic');
-legend = d3.select('#legend'); 
+legend = d3.select('#legend');
 
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
 
- function drawGraphic(seriesName, graphic_data, chartIndex) {
+function drawGraphic(seriesName, graphic_data, chartIndex) {
 	//population accessible summary
 
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -18,13 +18,15 @@ d3.select('#graphic').select('img').remove();
 		const aspectRatio = config.optional.aspectRatio[size];
 		const chartMargin = config.optional.margin[size];
 
-		const chartWidth =
-			(((parseInt(graphic.style('width')) -
-				chartMargin.left -
-				chartMargin.right) /
-				chartEvery) *
-				aspectRatio[0]) /
-			aspectRatio[1];
+		// const chartWidth =
+		// 	(((parseInt(graphic.style('width')) -
+		// 		chartMargin.left -
+		// 		chartMargin.right) /
+		// 		chartEvery) *
+		// 		aspectRatio[0]) /
+		// 	aspectRatio[1];
+
+		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
 
 		return chartWidth;
 	}
@@ -343,7 +345,7 @@ d3.csv(config.essential.graphic_data_url)
 			const graphic_data = group[1];
 			graphic_data.columns = data.columns;
 
-			pymChild = new pym.Child({renderCallback: drawGraphic(seriesName, graphic_data, i)});
+			pymChild = new pym.Child({ renderCallback: drawGraphic(seriesName, graphic_data, i) });
 		});
 	})
 	.catch((error) => console.error(error));

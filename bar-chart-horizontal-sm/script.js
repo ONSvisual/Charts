@@ -22,14 +22,8 @@ function drawGraphic() {
 	// var chart_width =
 	// 	parseInt(graphic.style('width')) / chart_every - margin.left - margin.right;
 
+	// Chart width calculation allowing for 10px left margin between the charts
 	let chart_width = ((parseInt(graphic.style('width'))- margin.left+10) / chart_every) - margin.right -10;
-	var height = Math.ceil(
-		(chart_width * config.optional.aspectRatio[size][1]) /
-		config.optional.aspectRatio[size][0]
-	);
-
-	
-
 
 	// Clear out existing graphics
 	graphic.selectAll('*').remove();
@@ -48,6 +42,12 @@ function drawGraphic() {
 		// Log the data being used for each small multiple
 		console.log('Data for this small multiple:', data);
 		console.log(chartIndex);
+
+		// Calculate the height based on the data
+		var height = config.optional.seriesHeight[size] * data.length +
+		10 * (data.length - 1) +
+		12;
+
 		//set up scales
 		const x = d3.scaleLinear().range([0, chart_width]);
 
@@ -181,7 +181,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	d3.select('#source').text('Source – ' + config.essential.sourceText);
+	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

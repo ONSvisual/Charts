@@ -14,8 +14,8 @@ config = {
 	},
 	"optional": {
 		"chart_every": {
-			"sm": 2,
-			"md": 2,
+			"sm": 1,
+			"md": 1,
 			"lg": 2
 		},
 		"aspectRatio": {
@@ -44,9 +44,9 @@ config = {
 			}
 		},
 		"seriesHeight": {
-			"sm": 40,
-			"md": 40,
-			"lg": 40
+			"sm": 30,
+			"md": 30,
+			"lg": 30
 		},
 		"xAxisTicks": {
 			"sm": 2,

@@ -31,19 +31,19 @@ config = {
 		"showStartEndDate": false,
 		"margin": {
 			"sm": {
-				"top": 40,
+				"top": 50,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			},
 			"md": {
-				"top": 40,
+				"top": 50,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			},
 			"lg": {
-				"top": 40,
+				"top": 50,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
@@ -57,7 +57,7 @@ config = {
 		"aspectRatio": {
 			"sm": [1, 1],
 			"md": [1, 1],
-			"lg": [1, 1]
+			"lg": [4, 3]
 		},
 		"xAxisTicksEvery": {
 			"sm": 4,
@@ -65,9 +65,9 @@ config = {
 			"lg": 3
 		},
 		"yAxisTicks": {
-			"sm": 4,
+			"sm": 10,
 			"md": 8,
-			"lg": 10
+			"lg": 4
 		},
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600

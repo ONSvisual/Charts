@@ -29,19 +29,19 @@ config = {
 		"showStartEndDate": true,
 		"margin": {
 			"sm": {
-				"top": 30,
+				"top": 40,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			},
 			"md": {
-				"top": 30,
+				"top": 40,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			},
 			"lg": {
-				"top": 30,
+				"top": 40,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
