@@ -136,7 +136,7 @@ function drawGraphic() {
 			.append('text')
 			.attr('x', 0)
 			.attr('y', 0)
-			.attr('dy', -15)
+			.attr('dy', -25)
 			.attr('class', 'title')
 			.text(series)
 			.attr('text-anchor', 'start')
@@ -147,11 +147,11 @@ function drawGraphic() {
 			.append('g')
 			.attr('transform', 'translate(0,0)')
 			.append('text')
-			.attr('x', 0)
-			.attr('y', 0)
+			.attr('x', -margin.left + 10)
+			.attr('y', -5)
 			.attr('class', 'axis--label')
 			.text(config.essential.yAxisLabel)
-			.attr('text-anchor', 'end');
+			.attr('text-anchor', 'start');
 	}
 
 	// Draw the charts for each small multiple
