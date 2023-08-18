@@ -5,20 +5,23 @@ var graphic = d3.select("#graphic");
 d3.select("#graphic").select("img").remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
-    d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
+  d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
 
-function calculateChartWidth(size) {
+  function calculateChartWidth(size) {
     const chartEvery = config.optional.chart_every[size];
     const aspectRatio = config.optional.aspectRatio[size];
     const chartMargin = config.optional.margin[size];
 
     const containerWidth = parseInt(graphic.style("width"));
     const chartsPerRow = chartEvery;
-    const chartWidth =
-      ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
-      (aspectRatio[0] / aspectRatio[1]);
+    // const chartWidth =
+    //   ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
+    //   (aspectRatio[0] / aspectRatio[1]);
 
-    return chartWidth - 10; // Just giving it a little extra space.
+    // Chart width calculation allowing for 10px left margin between the charts
+    const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+
+    return chartWidth;
   }
 
   // size thresholds as defined in the config.js file
@@ -39,7 +42,7 @@ function calculateChartWidth(size) {
   const chartsPerRow = config.optional.chart_every[size];
   const chartPosition = chartIndex % chartsPerRow;
   const colorsArray = ["#206095", "#27A0CC", "#871A5B", "#746CB1", "#A8BD3A"];
-  
+
   // Set dimensions
   let margin = { ...config.optional.margin[size] };
 
@@ -48,32 +51,32 @@ function calculateChartWidth(size) {
     10 * (graphic_data.length - 1) +
     12;
 
-  
-// If the chart is not in the first position in the row, reduce the left margin
-if (chartPosition !== 0) {
-  margin.left = 10;
-}
 
-let chart_width = calculateChartWidth(size); // Calculate the initial chart width
+  // If the chart is not in the first position in the row, reduce the left margin
+  if (chartPosition !== 0) {
+    margin.left = 10;
+  }
 
-// Calculate the total available width for two charts in a row
-const containerWidth = parseInt(graphic.style("width"));
-const availableWidth = containerWidth - margin.left - margin.right;
+  let chart_width = calculateChartWidth(size); // Calculate the initial chart width
 
-// Calculate the chart width for two charts in a row, accounting for spacing
-const chartWidthPerRow = availableWidth / chartsPerRow;
+  // Calculate the total available width for two charts in a row
+  const containerWidth = parseInt(graphic.style("width"));
+  const availableWidth = containerWidth - margin.left - margin.right;
 
-// Adjust the chart width based on the available space and desired grid layout
-chart_width = Math.min(chartWidthPerRow, chart_width);
-chart_width *= 1; 
+  // Calculate the chart width for two charts in a row, accounting for spacing
+  const chartWidthPerRow = availableWidth / chartsPerRow;
 
-// Calculate the row index and column index based on chart position
-const rowIndex = Math.floor(chartIndex / chartsPerRow);
-const colIndex = chartIndex % chartsPerRow;
+  // Adjust the chart width based on the available space and desired grid layout
+  chart_width = Math.min(chartWidthPerRow, chart_width);
+  chart_width *= 1;
 
-// Calculate the translation for positioning the chart in the grid
-const translateX = colIndex * (chartWidthPerRow + 10);
-const translateY = rowIndex * (height + margin.top + margin.bottom);
+  // Calculate the row index and column index based on chart position
+  const rowIndex = Math.floor(chartIndex / chartsPerRow);
+  const colIndex = chartIndex % chartsPerRow;
+
+  // Calculate the translation for positioning the chart in the grid
+  const translateX = colIndex * (chartWidthPerRow + 10);
+  const translateY = rowIndex * (height + margin.top + margin.bottom);
 
 
   // Define scales
@@ -123,7 +126,7 @@ const translateY = rowIndex * (height + margin.top + margin.bottom);
     .style("background-color", "#fff")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    
+
   // Add axes
   svg
     .append("g")
@@ -169,25 +172,25 @@ const translateY = rowIndex * (height + margin.top + margin.bottom);
     .call(wrap, 150, graphic_data);
 
 
-// Draw chart
-svg
-  .selectAll("g.chart-group")
-  .data(series)
-  .enter()
-  .append("g")
-  .attr("class", "chart-group")
-  .selectAll("rect")
-  .data((d) => d)
-  .join("rect")
-  .attr("x", (d) => x(d.data.name))
-  .attr("y", (d, i) => y(graphic_data[i].name))
-  .attr("width", (d) => Math.abs(x(d[0]) - x(d[1])))
-  .attr("height", y.bandwidth())
-  .style("fill", colorsArray[chartIndex % colorsArray.length]);
+  // Draw chart
+  svg
+    .selectAll("g.chart-group")
+    .data(series)
+    .enter()
+    .append("g")
+    .attr("class", "chart-group")
+    .selectAll("rect")
+    .data((d) => d)
+    .join("rect")
+    .attr("x", (d) => x(d.data.name))
+    .attr("y", (d, i) => y(graphic_data[i].name))
+    .attr("width", (d) => Math.abs(x(d[0]) - x(d[1])))
+    .attr("height", y.bandwidth())
+    .style("fill", colorsArray[chartIndex % colorsArray.length]);
 
-    console.log(colorsArray)
+  console.log(colorsArray)
 
-    svg
+  svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
     .append("text")
@@ -251,11 +254,11 @@ function renderCallback() {
   // Load the data
   d3.csv(config.essential.graphic_data_url)
     .then((data) => {
-     // console.log("Original data:", data);
+      // console.log("Original data:", data);
 
       // Group the data by the 'series' column
       const groupedData = d3.groups(data, (d) => d.series);
-     // console.log("Grouped data:", groupedData);
+      // console.log("Grouped data:", groupedData);
 
       // Remove previous SVGs
       graphic.selectAll("svg").remove();

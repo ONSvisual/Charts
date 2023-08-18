@@ -37,19 +37,19 @@ config = {
         top: 60,
         right: 20,
         bottom: 50,
-        left: 190,
+        left: 160,
       },
       md: {
         top: 60,
         right: 20,
         bottom: 50,
-        left: 260,
+        left: 160,
       },
       lg: {
         top: 60,
         right: 20,
         bottom: 50,
-        left: 260,
+        left: 160,
       },
     },
     seriesHeight: {
