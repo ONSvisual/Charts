@@ -18,13 +18,15 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		const aspectRatio = config.optional.aspectRatio[size];
 		const chartMargin = config.optional.margin[size];
 
-		const chartWidth =
-			(((parseInt(graphic.style('width')) -
-				chartMargin.left -
-				chartMargin.right) /
-				chartEvery) *
-				aspectRatio[0]) /
-			aspectRatio[1];
+		// const chartWidth =
+		// 	(((parseInt(graphic.style('width')) -
+		// 		chartMargin.left -
+		// 		chartMargin.right) /
+		// 		chartEvery) *
+		// 		aspectRatio[0]) /
+		// 	aspectRatio[1];
+
+		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
 
 		return chartWidth;
 	}
@@ -44,8 +46,6 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		size = 'lg';
 	}
 
-	// todo: Add a transform and translate argument to the !=0 charts to move them to the
-
 
 	// Calculate chart width here
 	calculatedChartWidth = calculateChartWidth(size);
@@ -54,16 +54,14 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	const chartPosition = chartIndex % chartsPerRow;
 
 	console.log(chartIndex);
-	
+
 	// Set dimensions
 	let margin = { ...config.optional.margin[size] };
 
-	//If the chart is not in the first position in the row, reduce the left margin
-	// if (chartPosition !== 0) {
-	// 	margin.left = 50;
-	// 	// Recalculate chart width here after adjusting left margin
-	// 	calculatedChartWidth = calculateChartWidth(size);
-	// }
+	// If the chart is not in the first position in the row, reduce the left margin
+	if (chartPosition !== 0) {
+		margin.left = 10;
+	}
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
@@ -98,9 +96,9 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	//End of legend code
 
-	let width = calculatedChartWidth - margin.left - margin.right;
+	let width = calculatedChartWidth;
 	let height =
-		width / config.optional.aspectRatio[size][1] - margin.top - margin.bottom;
+		width * (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) - margin.top - margin.bottom;
 
 	// Define the x and y scales
 	const xAxis = d3
@@ -164,7 +162,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	}
 
 
-	 // todo: This needs to be moved to the gobal style css
+	// todo: This needs to be moved to the gobal style css
 	// Add a title to each of the charts 
 	svg
 		.append('text')
@@ -197,39 +195,39 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 }
 
 
-function renderCallback(){
-// Load the data
-d3.csv(config.essential.graphic_data_url)
-	.then((data) => {
-		// console.log("Original data:", data);
+function renderCallback() {
+	// Load the data
+	d3.csv(config.essential.graphic_data_url)
+		.then((data) => {
+			// console.log("Original data:", data);
 
-		// Group the data by the 'series' column
-		const groupedData = d3.groups(data, (d) => d.series);
-		// console.log("Grouped data:", groupedData);
+			// Group the data by the 'series' column
+			const groupedData = d3.groups(data, (d) => d.series);
+			// console.log("Grouped data:", groupedData);
 
-		console.table(groupedData);
-		// Remove previous SVGs
-	//	graphic.selectAll('svg').remove();
+			console.table(groupedData);
+			// Remove previous SVGs
+			//	graphic.selectAll('svg').remove();
 
-		groupedData.forEach((group, i) => {
-			const seriesName = group[0];
-			let graphic_data = group[1];
-			graphic_data.columns = data.columns;
+			groupedData.forEach((group, i) => {
+				const seriesName = group[0];
+				let graphic_data = group[1];
+				graphic_data.columns = data.columns;
 
-			// Further process the graphic_data
-			const categories = Object.keys(graphic_data[0]).filter(
-				(k) => k !== 'date'
-			);
-			graphic_data.forEach((d) => {
-				d.date = d3.timeParse(config.essential.dateFormat)(d.date);
-				for (let category of categories) {
-					d[category] = +d[category];
-				}	
-			});
+				// Further process the graphic_data
+				const categories = Object.keys(graphic_data[0]).filter(
+					(k) => k !== 'date'
+				);
+				graphic_data.forEach((d) => {
+					d.date = d3.timeParse(config.essential.dateFormat)(d.date);
+					for (let category of categories) {
+						d[category] = +d[category];
+					}
+				});
 
-			drawGraphic(seriesName, graphic_data, i);
+				drawGraphic(seriesName, graphic_data, i);
 			})
-})
+		})
 };
 
 // use pym to create iframed charts dependent on specified variables
@@ -238,4 +236,3 @@ pymChild = new pym.Child({
 	renderCallback: renderCallback,
 });
 
-	
