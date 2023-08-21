@@ -9,6 +9,14 @@ config = {
 			"#F66068",
 			"#118C7B"
 		],
+		"text_colour_palette": [
+			"#206095",
+			"#1F80A3",
+			"#871A5B",
+			"#6E7E26",
+			"#F66068",
+			"#118C7B"
+		],
 		"drawLegend": false,
 		"sourceText": "from the Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
@@ -28,47 +36,49 @@ config = {
 		"xAxisTickFormat": {
 			"sm": "%b %y",
 			"md": "%b %y",
-			"lg": "%B %Y"
+			"lg": "%b %y"
 		},
-		"dateFormat": "%d-%m-%Y",
-		"xAxisLabel": "x axis label"
+		"dateFormat": "%d/%m/%Y",
+		"yAxisLabel": "y axis label"
 	},
 	"optional": {
 		"aspectRatio": {
 			"sm": [1, 1],
-			"md": [1, 1],
-			"lg": [1, 1]
+			"md": [4, 3],
+			"lg": [16, 9]
 		},
 		"margin": {
 			"sm": {
 				"top": 15,
 				"right": 30,
 				"bottom": 50,
-				"left": 55
+				"left": 30
 			},
 			"md": {
 				"top": 15,
 				"right": 100,
 				"bottom": 50,
-				"left": 80
+				"left": 30
 			},
 			"lg": {
 				"top": 30,
 				"right": 100,
 				"bottom": 50,
-				"left": 60
+				"left": 30
 			}
 		},
-		"xAxisTicks": { // this is the number of ticks on the x axis but it will always show the first and last date.
-			"sm": 2,
-			"md": 2,
-			"lg": 5
+		"xAxisTicks": { // this is the number of ticks on the x axis add the first and last date with the options below
+			"sm": 3,
+			"md": 5,
+			"lg": 7
 		},
 		"yAxisTicks": {
 			"sm": 7,
 			"md": 5,
 			"lg":8
 		},
+		"addFirstDate": false,
+		"addFinalDate": false,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},

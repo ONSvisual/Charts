@@ -1,3 +1,5 @@
+//Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
+
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
 let pymChild = null;
@@ -25,7 +27,8 @@ function drawGraphic() {
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
 	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = 400 - margin.top - margin.bottom;
+	// let height = 400 - margin.top - margin.bottom;
+	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * width
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
 
 	// Remove any existing chart elements
@@ -33,25 +36,44 @@ function drawGraphic() {
 	//console.log(`Removed existing chart elements`);
 
 	// Get categories from the keys used in the stack generator
-	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
-	// console.log(`Categories retrieved: ${categories}`);
+	// const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
+	const categories = Object.keys(graphic_data[0]).filter(d => !d.endsWith('_lowerCI') && !d.endsWith('_upperCI')).slice(1)
+	// console.log(categories);
 
+	const fulldataKeys = Object.keys(graphic_data[0]).slice(1)
 	// Define the x and y scales
-	const xAxis = d3
+	const x = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
 		.range([0, width]);
-	//console.log(`xAxis defined`);
+	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
 		.domain([
 			0,
-			d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
+			d3.max(graphic_data, (d) => Math.max(...fulldataKeys.map((c) => d[c])))
 		])
-		.nice()
+		// .nice()
 		.range([height, 0]);
 	//console.log(`yAxis defined`);
+
+
+	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
+	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
+
+	// Add the first and last dates to the ticks array, and use a Set to remove any duplicates
+	// tickValues = Array.from(new Set([graphic_data[0].date, ...tickValues, graphic_data[graphic_data.length - 1].date]));
+
+	if (config.optional.addFirstDate == true) {
+		tickValues.push(graphic_data[0].date)
+		console.log("First date added")
+	}
+
+	if (config.optional.addFinalDate == true) {
+		tickValues.push(graphic_data[graphic_data.length - 1].date)
+		console.log("Last date added")
+	}
 
 
 	// Create an SVG element
@@ -66,12 +88,43 @@ function drawGraphic() {
 	//console.log(`SVG element created`);
 
 
+	// Add the x-axis
+	svg
+		.append('g')
+		.attr('class', 'x axis')
+		.attr('transform', `translate(0, ${height})`)
+		.call(
+			d3
+				.axisBottom(x)
+				.tickValues(tickValues)
+				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
+		);
 
-	// create lines and circles for each category
+
+	// Add the y-axis
+	svg
+		.append('g')
+		.attr('class', 'y axis numeric')
+		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
+
+	// add grid lines to y axis
+	svg
+		.append('g')
+		.attr('class', 'grid')
+		.call(
+			d3
+				.axisLeft(y)
+				.ticks(config.optional.yAxisTicks[size])
+				.tickSize(-width)
+				.tickFormat('')
+		);
+
+
+	// create lines and areas for each category
 	categories.forEach(function (category) {
 		const lineGenerator = d3
 			.line()
-			.x((d) => xAxis(d.date))
+			.x((d) => x(d.date))
 			.y((d) => y(d[category]))
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
@@ -95,130 +148,111 @@ function drawGraphic() {
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
 
+		const areaGenerator = d3.area()
+			.x(d => x(d.date))
+			.y0(d => y(d[`${category}_lowerCI`]))
+			.y1(d => y(d[`${category}_upperCI`]))
+
+		svg.append('path')
+			.attr('d', areaGenerator(graphic_data))
+			.attr('fill', config.essential.colour_palette[
+				categories.indexOf(category) % config.essential.colour_palette.length
+			])
+			.attr('opacity', 0.15)
 
 		// console.log(`drawLegend: ${size}`);
 		// size === 'sm'
-		
+
 		if (config.essential.drawLegend || size === 'sm') {
-	
 
-				// Set up the legend
+
+			// Set up the legend
 			var legenditem = d3
-			.select('#legend')
-			.selectAll('div.legend--item')
-			.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-			.enter()
-			.append('div')
-			.attr('class', 'legend--item');
+				.select('#legend')
+				.selectAll('div.legend--item')
+				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+				.enter()
+				.append('div')
+				.attr('class', 'legend--item');
 
-		legenditem
-			.append('div')
-			.attr('class', 'legend--icon--circle')
-			.style('background-color', function (d) {
-				return d[1];
-			});
+			legenditem
+				.append('div')
+				.attr('class', 'legend--icon--circle')
+				.style('background-color', function (d) {
+					return d[1];
+				});
 
-		legenditem
-			.append('div')
-			.append('p')
-			.attr('class', 'legend--text')
-			.html(function (d) {
-				return d[0];
-			});
+			legenditem
+				.append('div')
+				.append('p')
+				.attr('class', 'legend--text')
+				.html(function (d) {
+					return d[0];
+				});
 
 		} else {
 
-		// Add text labels to the right of the circles
-		svg
-		.append('text')
-		.attr(
-			'transform',
-			`translate(${xAxis(lastDatum.date)}, ${y(lastDatum[category])})`
-		)
-		.attr('x', 10)
-		.attr('dy', '.35em')
-		.attr('text-anchor', 'start')
-		.attr(
-			'fill',
-			config.essential.colour_palette[
-			categories.indexOf(category) % config.essential.colour_palette.length
-			]
-		)
-		.text(category)
-		.call(wrap, margin.right - 10); //wrap function for the direct labelling.
-			
+			// Add text labels to the right of the circles
+			svg
+				.append('text')
+				.attr(
+					'transform',
+					`translate(${x(lastDatum.date)}, ${y(lastDatum[category])})`
+				)
+				.attr('x', 10)
+				.attr('dy', '.35em')
+				.attr('text-anchor', 'start')
+				.attr(
+					'fill', //Colours adjusted for text where needed
+					config.essential.text_colour_palette[
+					categories.indexOf(category) % config.essential.text_colour_palette.length
+					]
+				)
+				.text(category)
+				.style('font-weight', 700)
+				.style('font-size', '14px')
+				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
+
+			svg
+				.append('circle')
+				.attr('cx', x(lastDatum.date))
+				.attr('cy', y(lastDatum[category]))
+				.attr('r', 4)
+				.attr(
+					'fill',
+					config.essential.colour_palette[
+					categories.indexOf(category) % config.essential.colour_palette.length
+					]
+				);
+			// console.log(`Circle appended for category: ${category}`);
+
 		};
-
-
-		svg
-			.append('circle')
-			.attr('cx', xAxis(lastDatum.date))
-			.attr('cy', y(lastDatum[category]))
-			.attr('r', 4)
-			.attr(
-				'fill',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
-				]
-			);
-		// console.log(`Circle appended for category: ${category}`);
-
 
 
 	});
 
-	// add grid lines to y axis
+	d3.select('#legend')
+		.append('div')
+		.attr('class', 'legend--item CI')
+		.append('div')
+		.attr('class', 'legend--icon--square')
+
+	d3.select('.legend--item.CI')
+		.append('div')
+		.attr('class', 'legend--text')
+		.text('95% confidence interval')
+
+
+	// This does the y-axis label
 	svg
 		.append('g')
-		.attr('class', 'grid')
-		.call(
-			d3
-				.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
-				.tickSize(-width)
-				.tickFormat('')
-		);
-		
-
-// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
-let tickValues = xAxis.ticks(config.optional.xAxisTicks[size]);
-
-// Add the first and last dates to the ticks array, and use a Set to remove any duplicates
-tickValues = Array.from(new Set([graphic_data[0].date, ...tickValues, graphic_data[graphic_data.length - 1].date]));
-
-//console.log(`tickValues: ${tickValues}`);
-
-// Add the x-axis
-svg
-    .append('g')
-    .attr('class', 'x axis')
-    .attr('transform', `translate(0, ${height})`)
-    .call(
-        d3
-            .axisBottom(xAxis)
-            .tickValues(tickValues)
-            .tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
-    );
-
-
-	// Add the y-axis
-	svg
-		.append('g')
-		.attr('class', 'y axis')
-		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
-
-	
-
-	// This does the x-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, ${height})`)
+		.attr('transform', `translate(0, 0)`)
 		.append('text')
-		.attr('x', width)
-		.attr('y', 35)
+		.attr('x', -margin.left + 10)
+		.attr('y', 0)
 		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+		.text(config.essential.yAxisLabel)
+		.attr('text-anchor', 'start');
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
@@ -270,36 +304,17 @@ function wrap(text, width) {
 d3.csv(config.essential.graphic_data_url).then(data => {
 
 	graphic_data = data.map((d) => {
-	return {
-	date: d3.timeParse(config.essential.dateFormat)(d.date),
-	...Object.entries(d)
-	.filter(([key]) => key !== 'date')
-	.map(([key, value]) => [key, +value])
-	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-	};
+		return {
+			date: d3.timeParse(config.essential.dateFormat)(d.date),
+			...Object.entries(d)
+				.filter(([key]) => key !== 'date')
+				.map(([key, value]) => [key, +value])
+				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+		};
 	});
-	
-	// Identify metrics and their associated lower and upper confidence intervals
-	const metricKeys = Object.keys(graphic_data[0]).filter(d => !d.endsWith('_lowerCI') && !d.endsWith('_upperCI'));
-	
-	const nestedData = metricKeys.map(metric => {
-	return {
-	key: metric,
-	values: graphic_data.map(d => {
-	return {
-	date: d.date,
-	value: d[metric],
-	lowerCI: d[`${metric}_lowerCI`],
-	upperCI: d[`${metric}_upperCI`]
-	};
-	})
-	};
-	});
-	
-	console.log(nestedData);
-	
+
 	pymChild = new pym.Child({
-	renderCallback: drawGraphic
+		renderCallback: drawGraphic
 	});
-	
-	});
+
+});

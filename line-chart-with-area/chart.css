@@ -17,4 +17,12 @@
   .grid path {
     stroke-width: 0; /* Removes the line along the y-axis */
   }
-  
+
+  .legend--icon--square {
+    height: 12px;
+    width: 12px;
+    background-color: #c6c6c6;
+    /* border-radius: 50%; */
+    align-self: center;
+    flex-shrink: 0;
+  }
