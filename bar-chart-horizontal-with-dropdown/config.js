@@ -10,7 +10,8 @@ config = {
 		},
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,100]
-		"xAxisLabel": "x axis label"
+		"xAxisLabel": "x axis label",
+		"defaultOption": "option1"
 	},
 	"optional": {
 		"margin": {
