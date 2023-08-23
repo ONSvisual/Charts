@@ -3,7 +3,6 @@ var pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
-	// Population accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	var threshold_md = config.optional.mediumBreakpoint;
@@ -16,14 +15,6 @@ function drawGraphic() {
 	} else {
 		size = 'lg';
 	}
-
-	var margin = config.optional.margin[size];
-	var chart_every = config.optional.chart_every[size];
-	// var chart_width =
-	// 	parseInt(graphic.style('width')) / chart_every - margin.left - margin.right;
-
-	// Chart width calculation allowing for 10px left margin between the charts
-	let chart_width = ((parseInt(graphic.style('width'))- margin.left+10) / chart_every) - margin.right -10;
 
 	// Clear out existing graphics
 	graphic.selectAll('*').remove();
@@ -43,11 +34,36 @@ function drawGraphic() {
 		console.log('Data for this small multiple:', data);
 		console.log(chartIndex);
 
+
+	function calculateChartWidth(size) {
+		const chartEvery = config.optional.chart_every[size];
+		const chartMargin = config.optional.margin[size];
+
+		// Chart width calculation allowing for 10px left margin between the charts
+		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+	
+		return chartWidth;
+	}
+
+
 		// Calculate the height based on the data
 		var height = config.optional.seriesHeight[size] * data.length +
-		10 * (data.length - 1) +
-		12;
+			10 * (data.length - 1) +
+			12;
 
+
+		let chartsPerRow = config.optional.chart_every[size];
+		let chartPosition = chartIndex % chartsPerRow;
+
+		let margin = { ...config.optional.margin[size] };
+
+		// If the chart is not in the first position in the row, reduce the left margin
+		if (chartPosition !== 0) {
+			margin.left = 10;
+		} 
+
+		let chart_width = calculateChartWidth(size)
+		
 		//set up scales
 		const x = d3.scaleLinear().range([0, chart_width]);
 
@@ -61,19 +77,8 @@ function drawGraphic() {
 		//use the data to find unique entries in the name column
 		y.domain([...new Set(data.map((d) => d.name))]);
 
-
-		let chartsPerRow = config.optional.chart_every[size];
-		let chartPosition = chartIndex % chartsPerRow;
-	
-	
-	
-		// If the chart is not in the first position in the row, reduce the left margin
-		if (chartPosition !== 0) {
-			margin.left = 10;
-		}
-
 		//set up yAxis generator
-	
+
 		let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 		//set up xAxis generator
@@ -113,12 +118,15 @@ function drawGraphic() {
 				}
 			});
 
-		svg
-			.append('g')
-			.attr('class', 'y axis')
-			.call(yAxis)
-			.selectAll('text')
-			.call(wrap, margin.left - 10);
+		if (chartPosition == 0) {
+			svg
+				.append('g')
+				.attr('class', 'y axis')
+				.call(yAxis)
+				.selectAll('text')
+				.call(wrap, margin.left - 10);
+		}
+
 
 		svg
 			.selectAll('rect')
@@ -162,7 +170,7 @@ function drawGraphic() {
 			.text(d => d[0])
 			.attr('text-anchor', 'start')
 			.call(wrap, chart_width);
-		
+
 		// This does the x-axis label
 		svg
 			.append('g')
