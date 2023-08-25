@@ -212,7 +212,7 @@ function drawGraphic() {
 		});
 
 	//create link to source
-	d3.select('#source').text('Source – ' + config.essential.sourceText);
+	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
