@@ -45,14 +45,17 @@ function drawGraphic() {
 	//console.log(`x defined`);
 
 	const y = d3
-		.scaleLinear()
-		.domain([
-			0,
-			d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
-		])
-		.nice()
-		.range([height, 0]);
-	//console.log(`yAxis defined`);
+	.scaleLinear()
+	.range([height, 0]);
+
+	if (config.essential.yDomain == "auto") {
+		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
+		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
+		y.domain([minY, maxY])
+		console.log(minY, maxY)
+	} else {
+		y.domain(config.essential.yDomain)
+	}
 
 		// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
 		let tickValues = x.ticks(config.optional.xAxisTicks[size]);
@@ -215,16 +218,16 @@ svg
 
 	
 
-	// This does the x-axis label
+	// This does the y-axis label
 	svg
 		.append('g')
-		.attr('transform', `translate(0, ${height})`)
+		.attr('transform', `translate(0, 0))`)
 		.append('text')
-		.attr('x', width)
-		.attr('y', 35)
+		.attr('x', -margin.left +5)
+		.attr('y', -15)
 		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+		.text(config.essential.yAxisLabel)
+		.attr('text-anchor', 'start');
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
