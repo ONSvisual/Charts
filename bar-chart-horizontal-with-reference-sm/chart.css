@@ -1,0 +1,24 @@
+.dataLabels{
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.chart-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.chart-container:last-child {
+  margin-right: 0;
+}
+
+.title {
+  font-weight: 600;
+  fill: #414042;
+}
+
+line.refline {
+  stroke: #222;
+  stroke-width: 3px;
+  stroke-linecap: round;
+}
