@@ -68,12 +68,28 @@ function drawGraphic() {
 		.attr('transform', `translate(${margin.left},${margin.top})`);
 
 	// Define the x and y scales
-	const xAxis = d3
+	const x = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
 		.range([0, width]);
 
-	const yAxis = d3
+	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
+	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
+
+	// Add the first and last dates to the ticks array, and use a Set to remove any duplicates
+	// tickValues = Array.from(new Set([graphic_data[0].date, ...tickValues, graphic_data[graphic_data.length - 1].date]));
+
+	if (config.optional.addFirstDate == true) {
+		tickValues.push(graphic_data[0].date)
+		console.log("First date added")
+	}
+
+	if (config.optional.addFinalDate == true) {
+		tickValues.push(graphic_data[graphic_data.length - 1].date)
+		console.log("Last date added")
+	}
+
+	const y = d3
 		.scaleLinear()
 		.domain([0, 1]) // Assuming the y-axis represents the percentage from 0 to 1
 		.range([height, 0]);
@@ -93,9 +109,9 @@ function drawGraphic() {
 	// Define the area generator
 	const area = d3
 		.area()
-		.x((d) => xAxis(d.data.date))
-		.y0((d) => yAxis(d[0]))
-		.y1((d) => yAxis(d[1]));
+		.x((d) => x(d.data.date))
+		.y0((d) => y(d[0]))
+		.y1((d) => y(d[1]));
 
 	// Create the areas
 	svg
@@ -117,16 +133,16 @@ function drawGraphic() {
 		.attr('transform', `translate(0, ${height})`)
 		.call(
 			d3
-				.axisBottom(xAxis)
+				.axisBottom(x)
 				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
-				.ticks(config.optional.xAxisTicks[size])
+				.tickValues(tickValues)
 		);
 
 	// Add the y-axis
 	svg
 		.append('g')
 		.attr('class', 'y axis numeric')
-		.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
+		.call(d3.axisLeft(y).tickFormat(d3.format('.0%')));
 
 	// This does the x-axis label
 	svg

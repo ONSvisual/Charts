@@ -62,7 +62,7 @@ config = {
 				"left": 60
 			}
 		},
-		"xAxisTicksEvery": { // this is the interval of ticks on the x axis but it will always show the first and last date.
+		"xAxisTicksEvery": { // this is the interval of ticks on the x axis - always including the first and last date
 			"sm": 4,
 			"md": 2,
 			"lg": 5
@@ -72,6 +72,8 @@ config = {
 			"md": 5,
 			"lg":8
 		},
+		"addFirstDate": false,
+		"addFinalDate": false,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},

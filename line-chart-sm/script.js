@@ -70,7 +70,7 @@ function drawGraphic() {
 			aspectRatio[1] / aspectRatio[0] * chart_width;
 
 		// Define the x and y scales
-		const xAxis = d3
+		const x = d3
 			.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
 			.range([0, chart_width]);
@@ -102,7 +102,7 @@ function drawGraphic() {
 		categoriesToPlot.forEach(function (category) {
 			const lineGenerator = d3
 				.line()
-				.x((d) => xAxis(d.date))
+				.x((d) => x(d.date))
 				.y((d) => y(d[category]))
 				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null);
@@ -137,7 +137,7 @@ function drawGraphic() {
 						.attr('class', 'dataLabel')
 						.attr(
 							'transform',
-							`translate(${xAxis(lastDatum.date)}, ${y(lastDatum[category])})`
+							`translate(${x(lastDatum.date)}, ${y(lastDatum[category])})`
 						)
 						.attr('x', 5)
 						.attr('y', 4)
@@ -154,7 +154,7 @@ function drawGraphic() {
 				if (categories.indexOf(category) == index) {
 					svg
 						.append('circle')
-						.attr('cx', xAxis(lastDatum.date))
+						.attr('cx', x(lastDatum.date))
 						.attr('cy', y(lastDatum[category]))
 						.attr('r', 3)
 						.attr(
@@ -190,7 +190,7 @@ function drawGraphic() {
 			.attr('transform', `translate(0, ${height})`)
 			.call(
 				d3
-					.axisBottom(xAxis)
+					.axisBottom(x)
 					.tickValues(graphic_data
 						.map(function (d) {
 							return d.date.getTime()

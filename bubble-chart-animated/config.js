@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		"colour_palette": "#27A0CC",
-		"sourceText": "Source text from the Office for National Statistics",
+		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is your accessibility summary, dvcXXXX",
 		"xDomain": "auto", //auto for auto domain or array [0,50] to define your own
 		"yDomain": "auto", //auto for auto domain or array [0,50] to define your own

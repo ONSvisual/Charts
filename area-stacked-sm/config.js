@@ -9,7 +9,7 @@ config = {
 			"#F66068",
 			"#118C7B"
 		],
-		"sourceText": "from the Office for National Statistics",
+		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"xDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,100]
@@ -42,27 +42,27 @@ config = {
 		"margin": {
 			"sm": {
 				"top": 30,
-				"right": 10,
+				"right": 20,
 				"bottom": 50,
 				"left": 50
 			},
 			"md": {
 				"top": 30,
-				"right": 10,
+				"right": 20,
 				"bottom": 50,
 				"left": 50
 			},
 			"lg": {
 				"top": 30,
-				"right": 10,
+				"right": 20,
 				"bottom": 50,
 				"left": 50
 			}
 		},
-		"xAxisTicks": {
+		"xAxisTicksEvery": {
 			"sm": 7,
 			"md": 5,
-			"lg": 6
+			"lg": 4
 		},
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600

@@ -38,11 +38,11 @@ function drawGraphic() {
 	// console.log(`Categories retrieved: ${categories}`);
 
 	// Define the x and y scales
-	const xAxis = d3
+	const x = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
 		.range([0, width]);
-	//console.log(`xAxis defined`);
+	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
@@ -54,6 +54,18 @@ function drawGraphic() {
 		.range([height, 0]);
 	//console.log(`yAxis defined`);
 
+		// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
+		let tickValues = x.ticks(config.optional.xAxisTicks[size]);
+
+		if (config.optional.addFirstDate == true) {
+			tickValues.push(graphic_data[0].date)
+			console.log("First date added")
+		}
+	
+		if (config.optional.addFinalDate == true) {
+			tickValues.push(graphic_data[graphic_data.length - 1].date)
+			console.log("Last date added")
+		}
 
 	// Create an SVG element
 	const svg = graphic
@@ -72,7 +84,7 @@ function drawGraphic() {
 	categories.forEach(function (category) {
 		const lineGenerator = d3
 			.line()
-			.x((d) => xAxis(d.date))
+			.x((d) => x(d.date))
 			.y((d) => y(d[category]))
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
@@ -134,7 +146,7 @@ function drawGraphic() {
 		.append('text')
 		.attr(
 			'transform',
-			`translate(${xAxis(lastDatum.date)}, ${y(lastDatum[category])})`
+			`translate(${x(lastDatum.date)}, ${y(lastDatum[category])})`
 		)
 		.attr('x', 10)
 		.attr('dy', '.35em')
@@ -153,7 +165,7 @@ function drawGraphic() {
 
 		svg
 			.append('circle')
-			.attr('cx', xAxis(lastDatum.date))
+			.attr('cx', x(lastDatum.date))
 			.attr('cy', y(lastDatum[category]))
 			.attr('r', 4)
 			.attr(
@@ -181,15 +193,7 @@ function drawGraphic() {
 		)
 		.lower();
 		
-
-// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
-let tickValues = xAxis.ticks(config.optional.xAxisTicks[size]);
-
-// Add the first and last dates to the ticks array, and use a Set to remove any duplicates
-tickValues = Array.from(new Set([graphic_data[0].date, ...tickValues, graphic_data[graphic_data.length - 1].date]));
-
-//console.log(`tickValues: ${tickValues}`);
-
+		
 // Add the x-axis
 svg
     .append('g')
@@ -197,7 +201,7 @@ svg
     .attr('transform', `translate(0, ${height})`)
     .call(
         d3
-            .axisBottom(xAxis)
+            .axisBottom(x)
             .tickValues(tickValues)
             .tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
     );

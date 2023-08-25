@@ -85,17 +85,31 @@ function drawGraphic() {
 			.axisBottom(x)
 			.tickSize(10)
 			.tickPadding(10)
-			.tickValues(x.domain().filter(function (d, i) {
-				return !(i % config.optional.xAxisTicksEvery[size])
-			}))
+			.tickValues(graphic_data
+				.map(function (d) {
+					return d.date.getTime()
+				}) //just get dates as seconds past unix epoch
+				.filter(function (d, i, arr) {
+					return arr.indexOf(d) == i
+				}) //find unique
+				.map(function (d) {
+					return new Date(d)
+				}) //map back to dates
+				.sort(function (a, b) {
+					return a - b
+				})
+				.filter(function (d, i) {
+					return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
+				})
+			)
 			.tickFormat(xTime);
 
-		//Labelling the first and/or last bar if needed
-		if (config.optional.showStartEndDate == true) {
-			xAxis.tickValues(x.domain().filter(function (d, i) {
-				return !(i % config.optional.xAxisTicksEvery[size])
-			}).concat(x.domain()[0], x.domain()[x.domain().length - 1]))
-		}
+		// //Labelling the first and/or last bar if needed
+		// if (config.optional.showStartEndDate == true) {
+		// 	xAxis.tickValues(x.domain().filter(function (d, i) {
+		// 		return !(i % config.optional.xAxisTicksEvery[size])
+		// 	}).concat(x.domain()[0], x.domain()[x.domain().length - 1]))
+		// }
 
 		//create svg for chart
 		const svg = container

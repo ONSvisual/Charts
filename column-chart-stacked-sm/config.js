@@ -28,7 +28,6 @@ config = {
 		// stackOrderReverse reverse the order as set from the data file
 	},
 	"optional": {
-		"showStartEndDate": false,
 		"margin": {
 			"sm": {
 				"top": 50,
@@ -59,7 +58,7 @@ config = {
 			"md": [1, 1],
 			"lg": [4, 3]
 		},
-		"xAxisTicksEvery": {
+		"xAxisTicksEvery": { // this is the interval of ticks on the x axis - always including the first and last date
 			"sm": 4,
 			"md": 4,
 			"lg": 3

@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"accessibleSummary":
 			"This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
-		"sourceText": "Office for National Statistics – Census 2021",
+		"sourceText": "Office for National Statistics",
 		"graphic_data_url": "data.csv",
 		"comparison_data": "comparison.csv",
 		"dataType": "numbers",

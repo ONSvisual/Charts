@@ -19,7 +19,7 @@ config = {
 		// rowWidth set the width of y category column in pixel
 		"accessibleSummary":
 			"This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
-		"sourceText": "Office for National Statistics – Census 2021",
+		"sourceText": "Office for National Statistics",
 		"threshold_sm": 500
 	},
 	//Don't adjust this part - it only affects the chart build tool
