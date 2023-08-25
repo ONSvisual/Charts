@@ -47,6 +47,21 @@ function drawGraphic() {
 	//use the data to find unique entries in the date column
 	x.domain([...new Set(graphic_data.map((d) => d.date))]);
 
+	let tickValues = x.domain().filter(function (d, i) {
+		return !(i % config.optional.xAxisTicksEvery[size])
+	});
+
+	//Labelling the first and/or last bar if needed
+	if (config.optional.addFirstDate == true) {
+		tickValues.push(graphic_data[0].date)
+		console.log("First date added")
+	}
+
+	if (config.optional.addFinalDate == true) {
+		tickValues.push(graphic_data[graphic_data.length - 1].date)
+		console.log("Last date added")
+	}
+
 	//set up yAxis generator
 	var yAxis = d3.axisLeft(y)
 		.tickSize(-chart_width)
@@ -69,9 +84,7 @@ function drawGraphic() {
 		.axisBottom(x)
 		.tickSize(10)
 		.tickPadding(10)
-		.tickValues(x.domain().filter(function (d, i) {
-			return !(i % config.optional.xAxisTicksEvery[size])
-		})/*.concat(x.domain()[0], x.domain()[x.domain().length-1])*/) //Labelling the first and/or last bar if needed
+		.tickValues(tickValues) //Labelling the first and/or last bar if needed
 		.tickFormat(xTime);
 
 	//create svg for chart

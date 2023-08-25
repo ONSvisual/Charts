@@ -26,7 +26,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		// 		aspectRatio[0]) /
 		// 	aspectRatio[1];
 
-		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 20)) / chartEvery) - chartMargin.right;
 
 		return chartWidth;
 	}
@@ -60,7 +60,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// If the chart is not in the first position in the row, reduce the left margin
 	if (chartPosition !== 0) {
-		margin.left = 10;
+		margin.left = 20;
 	}
 
 	// Get categories from the keys used in the stack generator
@@ -149,7 +149,23 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.call(
 			d3
 				.axisBottom(xAxis)
-				.ticks(config.optional.xAxisTicks[size])
+				.tickValues(graphic_data
+					.map(function (d) {
+						return d.date.getTime()
+					}) //just get dates as seconds past unix epoch
+					.filter(function (d, i, arr) {
+						return arr.indexOf(d) == i
+					}) //find unique
+					.map(function (d) {
+						return new Date(d)
+					}) //map back to dates
+					.sort(function (a, b) {
+						return a - b
+					})
+					.filter(function (d, i) {
+						return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == graphic_data.length - 1 //Rob's fussy comment about labelling the last date
+					})
+				)
 				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
 		);
 

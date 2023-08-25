@@ -5,7 +5,7 @@ config={
     "fillOpacity":0.5,
     "strokeOpacity":1,
         "radius": "4",
-    "sourceText": "From the Office for National Statistics",
+    "sourceText": "Office for National Statistics",
     "accessibleSummary":"Here is the screenreader text describing the chart.",
     "xDomain":"auto",
     "yDomain":"auto",

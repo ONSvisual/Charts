@@ -10,7 +10,7 @@ config = {
 			"#118C7B"
 		],
 		"drawLegend": false,
-		"sourceText": "from the Office for National Statistics",
+		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"lineCurveType": "curveLinear", // Set the default line curve type
 		// Examples of line curve types
@@ -59,7 +59,7 @@ config = {
 				"left": 60
 			}
 		},
-		"xAxisTicks": { // this is the number of ticks on the x axis but it will always show the first and last date.
+		"xAxisTicks": { // this is the number of ticks on the x axis - add the first and last date with the options below
 			"sm": 2,
 			"md": 2,
 			"lg": 5
@@ -69,6 +69,8 @@ config = {
 			"md": 5,
 			"lg":8
 		},
+		"addFirstDate": false,
+		"addFinalDate": false,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},

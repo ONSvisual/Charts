@@ -2,7 +2,7 @@ config = {
   essential: {
     graphic_data_url: "data.csv", 
     colour_palette: ["#206095", "#27A0CC","#871A5B", "#A8BD3A","#F66068"],
-    sourceText: "from the Office for National Statistics",
+    sourceText: "Office for National Statistics",
     accessibleSummary: "The chart canvas is hidden from screen readers. The main message is summarised by the chart title and the data behind the chart is available to download below.",
     xDomain: [0, 80],
     // either "auto" or an array for the x domain e.g. [0,100]

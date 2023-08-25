@@ -5,7 +5,7 @@ config = {
 		"colour_palette": ["#A09FA0", "#206095"],
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary":
-			"Chart showing death rates due to alchohol by regions, for males, females and all.",
+			"CHere is the screenreader text describing the chart.",
 		"xDomain": "auto"
 		// either auto or a custom domain as an array e.g [0,100]
 	},

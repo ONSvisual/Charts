@@ -5,8 +5,8 @@ config = {
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screenreader text describing the chart.",
 		"xAxisTickFormat": {
-			"sm": "%Y",
-			"md": "%Y",
+			"sm": "%b-%y",
+			"md": "%b-%y",
 			"lg": "%b-%y"
 		},
 		"dateFormat": "%b-%y",
@@ -26,7 +26,6 @@ config = {
 			"md": [1, 1],
 			"lg": [1, 1]
 		},
-		"showStartEndDate": true,
 		"margin": {
 			"sm": {
 				"top": 40,
@@ -47,9 +46,9 @@ config = {
 				"left": 70
 			}
 		},
-		"xAxisTicksEvery": {
-			"sm": 4,
-			"md": 4,
+		"xAxisTicksEvery": { // this is the interval of ticks on the x axis - always including the first and last date
+			"sm": 3,
+			"md": 5,
 			"lg": 4
 		},
 		"yAxisTicks": {

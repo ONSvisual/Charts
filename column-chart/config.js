@@ -51,6 +51,8 @@ config = {
 			"md": 8,
 			"lg": 10
 		},
+		"addFirstDate": false,
+		"addFinalDate": false,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},
