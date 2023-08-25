@@ -23,7 +23,7 @@ config = {
 		// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
 		// "lineCurveType": "curveMonotoneX" // Monotone spline curve
 
-		"xDomain": "auto",
+		"yDomain": [0,30000],
 		// either "auto" or an array for the x domain e.g. [0,2000]
 		"xAxisTickFormat": {
 			"sm": "%b %y",
@@ -31,7 +31,7 @@ config = {
 			"lg": "%B %Y"
 		},
 		"dateFormat": "%d-%m-%Y",
-		"xAxisLabel": "x axis label"
+		"yAxisLabel": "y axis label"
 	},
 	"optional": {
 		"aspectRatio": {

@@ -21,15 +21,15 @@ config = {
 		// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
 		// "lineCurveType": "curveMonotoneX" // Monotone spline curve
 
-		"xDomain": "auto",
-		// either "auto" or an array for the x domain e.g. [0,2000]
+		"yDomain": "auto",
+		// either "auto" or an array for the y domain e.g. [0,2000]
 		"xAxisTickFormat": {
 			"sm": "%b %y",
 			"md": "%b %y",
 			"lg": "%b %y"
 		},
 		"dateFormat": "%d/%m/%Y",
-		"xAxisLabel": "x axis label"
+		"yAxisLabel": "y axis label"
 	},
 	"optional": {
 		"chart_every": {

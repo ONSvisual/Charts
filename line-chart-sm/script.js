@@ -78,13 +78,16 @@ function drawGraphic() {
 
 		const y = d3
 			.scaleLinear()
-			.domain([
-				0,
-				d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
-			])
-			.nice()
 			.range([height, 0]);
 
+			if (config.essential.yDomain == "auto") {
+				let minY = d3.min(graphic_data, (d) => Math.min(...categoriesToPlot.map((c) => d[c])))
+				let maxY = d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
+				y.domain([minY, maxY])
+				console.log(minY, maxY)
+			} else {
+				y.domain(config.essential.yDomain)
+			}
 
 		// Create an SVG element
 		const svg = container
@@ -112,7 +115,7 @@ function drawGraphic() {
 				.datum(graphic_data)
 				.attr('fill', 'none')
 				.attr(
-					'stroke', () => (categories.indexOf(category) == index) ? config.essential.colour_palette[0] : 
+					'stroke', () => (categories.indexOf(category) == index) ? config.essential.colour_palette[0] :
 						category == reference ? config.essential.colour_palette[1] : config.essential.colour_palette[2]
 					// config.essential.colour_palette[
 					// categories.indexOf(category) % config.essential.colour_palette.length
@@ -182,6 +185,12 @@ function drawGraphic() {
 			)
 			.lower();
 
+			d3.selectAll('g.tick line')
+				.each(function (e) {
+					if (e == 0) {
+						d3.select(this).attr('class', 'zero-line');
+					}
+				})
 
 		// Add the x-axis
 		svg
@@ -232,25 +241,26 @@ function drawGraphic() {
 			.append('text')
 			.attr('x', 0)
 			.attr('y', 0)
-			.attr('dy', -15)
+			.attr('dy', -20)
 			.attr('class', 'title')
 			.text(series)
 			.attr('text-anchor', 'start')
 			.call(wrap, (chart_width + margin.right));
 
 
-		// This does the x-axis label
-		svg
-			.append('g')
-			.attr('transform', `translate(0, ${height})`)
-			.append('text')
-			.attr('x', chart_width)
-			.attr('y', 35)
-			.attr('class', 'axis--label')
-			.text(config.essential.xAxisLabel)
-			.attr('text-anchor', 'end');
+		// This does the y-axis label
+		if (index % chart_every === 0) {
+			svg
+				.append('g')
+				.attr('transform', `translate(0, 0)`)
+				.append('text')
+				.attr('x', -margin.left + 5)
+				.attr('y', 0)
+				.attr('class', 'axis--label')
+				.text(config.essential.yAxisLabel)
+				.attr('text-anchor', 'start');
+		}
 	}
-
 
 	// Draw the charts for each small multiple
 	chartContainers.each(function (chart, i) {
