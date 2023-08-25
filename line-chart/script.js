@@ -196,6 +196,12 @@ function drawGraphic() {
 		)
 		.lower();
 		
+		d3.selectAll('g.tick line')
+		.each(function (e) {
+			if (e == 0) {
+				d3.select(this).attr('class', 'zero-line');
+			}
+		})
 		
 // Add the x-axis
 svg
@@ -221,7 +227,7 @@ svg
 	// This does the y-axis label
 	svg
 		.append('g')
-		.attr('transform', `translate(0, 0))`)
+		.attr('transform', `translate(0, 0)`)
 		.append('text')
 		.attr('x', -margin.left +5)
 		.attr('y', -15)
