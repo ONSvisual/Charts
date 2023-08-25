@@ -497,7 +497,7 @@ function drawGraphic() {
 	} //end updateVisuals function
 
 	//create link to source
-	d3.select('#source').text(config.essential.sourceText);
+	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

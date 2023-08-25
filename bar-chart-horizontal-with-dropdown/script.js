@@ -270,7 +270,7 @@ function changeData(selectedOption) {
 		.attr('text-anchor', 'end');
 
 	//create link to source
-	d3.select('#source').text('Source:' + config.essential.sourceText);
+	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
 	$('#optionsSelect').val(config.essential.defaultOption).trigger('chosen:updated');
 	changeData(config.essential.defaultOption)
