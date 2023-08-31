@@ -22,3 +22,10 @@ line.refline {
   stroke-width: 3px;
   stroke-linecap: round;
 }
+
+div.legend--item--here {
+  display:flex;
+  padding-right:40px;
+  padding-bottom: 12px;
+  margin-top: 12px;
+}
