@@ -104,12 +104,15 @@ function drawGraphic() {
 		y.domain(config.essential.yDomain);
 	}
 
+	//Getting the list of colours used in this visualisation
+	let colours = [...config.essential.colour_palette].slice(0, graphic_data.columns.slice(1).length)
+
 	// Set up the legend
 	var legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-		d3.zip(graphic_data.columns.slice(1), config.essential.colour_palette)
+			d3.zip(graphic_data.columns.slice(1).reverse(), colours.reverse())
 		)
 		.enter()
 		.append('div')
@@ -129,6 +132,11 @@ function drawGraphic() {
 		.html(function (d) {
 			return d[0];
 		});
+
+	if (size !== 'sm') {
+		d3.select('#legend')
+			.style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`)
+	}
 
 	svg
 		.append('g')

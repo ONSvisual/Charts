@@ -68,6 +68,7 @@ config = {
 			"md": 8,
 			"lg": 4
 		},
+		"legendColumns": 4,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},

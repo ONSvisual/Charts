@@ -65,6 +65,7 @@ config = {
 		},
 		"addFirstDate": false,
 		"addFinalDate": false,
+		"legendColumns": 4,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},
