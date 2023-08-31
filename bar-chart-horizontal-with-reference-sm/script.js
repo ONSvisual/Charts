@@ -1,4 +1,5 @@
 var graphic = d3.select('#graphic');
+var legend = d3.select('#legend');
 var pymChild = null;
 
 function drawGraphic() {
@@ -18,7 +19,32 @@ function drawGraphic() {
 
 	// Clear out existing graphics
 	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
 
+	//Set up the legend
+	legend
+		.append('div')
+		.attr('class', 'legend--item--here')
+		.append('div').attr('class', 'legend--icon--circle')
+		.style('background-color', config.essential.colour_palette)
+
+	d3.select(".legend--item--here")
+		.append('div')
+		.append('p').attr('class', 'legend--text')
+		.html("Value")
+
+	legend
+		.append('div')
+		.attr("class", "legend--item--here refline")
+		.append('div')
+		.attr('class', 'legend--icon--refline')
+		.style('background-color', "#222")
+
+	d3.select(".legend--item--here.refline")
+		.append('div')
+		.append('p').attr('class', 'legend--text')
+		.html("Reference value")
+	
 	// Nest the graphic_data by the 'series' column
 	var nested_data = d3.group(graphic_data, (d) => d.series);
 
