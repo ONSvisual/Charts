@@ -191,6 +191,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.text(seriesName);
 
 	// This does the x-axis label
+	if (chartIndex % chartsPerRow === chartsPerRow-1) {
 	svg
 		.append('g')
 		.attr('transform', `translate(0, ${height})`)
@@ -200,6 +201,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
 		.attr('text-anchor', 'end');
+	}
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

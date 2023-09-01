@@ -92,10 +92,10 @@ legenditem
 
     // both of these are need to be looked at.
 
-  if(config.essential.xDomain=="auto"){
+  if(config.essential.yDomain=="auto"){
     y.domain([0, d3.max(graphic_data,function(d){return d.yvalue})]);
   }else{
-    y.domain(config.essential.xDomain)
+    y.domain(config.essential.yDomain)
   }
 
   svg
