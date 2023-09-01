@@ -50,12 +50,16 @@ function drawGraphic() {
 
 	const y = d3
 		.scaleLinear()
-		.domain([
-			0,
-			d3.max(graphic_data, (d) => Math.max(...fulldataKeys.map((c) => d[c])))
-		])
-		// .nice()
 		.range([height, 0]);
+
+	if (config.essential.yDomain == "auto") {
+		y.domain(
+			[d3.min(graphic_data, (d) => Math.min(...fulldataKeys.map((c) => d[c]))),
+			d3.max(graphic_data, (d) => Math.max(...fulldataKeys.map((c) => d[c])))]
+		)
+	} else {
+		y.domain(config.essential.yDomain)
+	}
 	//console.log(`yAxis defined`);
 
 
@@ -249,7 +253,7 @@ function drawGraphic() {
 		.attr('transform', `translate(0, 0)`)
 		.append('text')
 		.attr('x', -margin.left + 10)
-		.attr('y', 0)
+		.attr('y', -10)
 		.attr('class', 'axis--label')
 		.text(config.essential.yAxisLabel)
 		.attr('text-anchor', 'start');
