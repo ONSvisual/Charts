@@ -13,7 +13,8 @@ config = {
     // either "auto" or an array for the x domain e.g. [0,100]
     "xAxisLabel": "x axis label",
     "yAxisLabel": "y axis label",
-    "xAxisFormat": "%d'",
+    "xAxisFormat": "%d/%m/%y",
+    "xAxisNumberFormat": ".0f",
     "yAxisFormat": ".0%"
   },
   "optional": {
