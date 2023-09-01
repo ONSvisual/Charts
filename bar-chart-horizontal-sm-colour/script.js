@@ -190,15 +190,18 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
   console.log(colorsArray)
 
-  svg
-    .append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .append("text")
-    .attr("x", chart_width)
-    .attr("y", 35)
-    .attr("class", "axis--label")
-    .text(config.essential.xAxisLabel)
-    .attr("text-anchor", "end");
+	// This does the x-axis label
+	if (chartIndex % chartsPerRow === chartsPerRow-1) {
+    svg
+      .append('g')
+      .attr('transform', `translate(0, ${height})`)
+      .append('text')
+      .attr('x', chart_width)
+      .attr('y', 35)
+      .attr('class', 'axis--label')
+      .text(config.essential.xAxisLabel)
+      .attr('text-anchor', 'end');
+    }
 
   //create link to source
   d3.select("#source").text("Source: " + config.essential.sourceText);

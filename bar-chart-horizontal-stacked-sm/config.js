@@ -34,13 +34,13 @@ config = {
 		},
 		"margin": {
 			"sm": {
-				"top": 15,
+				"top": 30,
 				"right": 10,
 				"bottom": 50,
 				"left": 150
 			},
 			"md": {
-				"top": 15,
+				"top": 30,
 				"right": 20,
 				"bottom": 50,
 				"left": 20

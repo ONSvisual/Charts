@@ -209,16 +209,18 @@ function drawGraphic() {
 			.attr('text-anchor', 'start')
 			.call(wrap, chart_width);
 
-		// This does the x-axis label
+	// This does the x-axis label
+	if (chartIndex % chartsPerRow === chartsPerRow-1) {
 		svg
-			.append('g')
-			.attr('transform', 'translate(0,' + height + ')')
-			.append('text')
-			.attr('x', chart_width)
-			.attr('y', 35)
-			.attr('class', 'axis--label')
-			.text(config.essential.xAxisLabel)
-			.attr('text-anchor', 'end');
+		  .append('g')
+		  .attr('transform', `translate(0, ${height})`)
+		  .append('text')
+		  .attr('x', chart_width)
+		  .attr('y', 35)
+		  .attr('class', 'axis--label')
+		  .text(config.essential.xAxisLabel)
+		  .attr('text-anchor', 'end');
+		}
 	}
 
 	// Draw the charts for each small multiple
