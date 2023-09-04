@@ -70,10 +70,28 @@ function drawGraphic() {
 			aspectRatio[1] / aspectRatio[0] * chart_width;
 
 		// Define the x and y scales
-		const x = d3
-			.scaleTime()
-			.domain(d3.extent(graphic_data, (d) => d.date))
-			.range([0, chart_width]);
+
+		let xDataType;
+
+		if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+		  xDataType = 'date';
+		} else {
+		  xDataType = 'numeric';
+		}
+	  
+		// console.log(xDataType)
+
+		let x;
+
+		if (xDataType == 'date') {
+		  x = d3.scaleTime()
+		  .domain(d3.extent(graphic_data, (d) => d.date))
+		  .range([0, chart_width]);
+		} else {
+		  x = d3.scaleLinear()
+		  .domain(d3.extent(graphic_data, (d) => +d.date))
+		  .range([0, chart_width]);
+		}
 
 
 		const y = d3
@@ -84,7 +102,7 @@ function drawGraphic() {
 				let minY = d3.min(graphic_data, (d) => Math.min(...categoriesToPlot.map((c) => d[c])))
 				let maxY = d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
 				y.domain([minY, maxY])
-				console.log(minY, maxY)
+				// console.log(minY, maxY)
 			} else {
 				y.domain(config.essential.yDomain)
 			}
@@ -201,9 +219,9 @@ function drawGraphic() {
 				d3
 					.axisBottom(x)
 					.tickValues(graphic_data
-						.map(function (d) {
-							return d.date.getTime()
-						}) //just get dates as seconds past unix epoch
+						.map((d) => xDataType == 'date' ? 
+							 d.date.getTime() : d.date
+						) //just get dates as seconds past unix epoch
 						.filter(function (d, i, arr) {
 							return arr.indexOf(d) == i
 						}) //find unique
@@ -217,7 +235,8 @@ function drawGraphic() {
 							return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == graphic_data.length - 1 //Rob's fussy comment about labelling the last date
 						})
 					)
-					.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
+					.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
+					: d3.format(config.essential.xAxisNumberFormat)(d))
 			);
 
 
@@ -341,14 +360,23 @@ function wrap(text, width) {
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		return {
-			date: d3.timeParse(config.essential.dateFormat)(d.date),
-			...Object.entries(d)
-				.filter(([key]) => key !== 'date')
-				.map(([key, value]) => [key, +value])
-				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-		};
-	});
+		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+			return {
+				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				...Object.entries(d)
+					.filter(([key]) => key !== 'date')
+					.map(([key, value]) => [key, +value])
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+			}
+		} else {
+			return {
+				date: (+d.date),
+				...Object.entries(d)
+					.filter(([key]) => key !== 'date')
+					.map(([key, value]) => [key, +value])
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+			}}
+		});
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({

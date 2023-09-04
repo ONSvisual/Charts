@@ -41,11 +41,30 @@ function drawGraphic() {
 	// console.log(categories);
 
 	const fulldataKeys = Object.keys(graphic_data[0]).slice(1)
+
 	// Define the x and y scales
-	const x = d3
-		.scaleTime()
-		.domain(d3.extent(graphic_data, (d) => d.date))
-		.range([0, width]);
+
+	let xDataType;
+
+	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+	  xDataType = 'date';
+	} else {
+	  xDataType = 'numeric';
+	}
+  
+	// console.log(xDataType)
+
+	let x;
+
+	if (xDataType == 'date') {
+	  x = d3.scaleTime()
+	  .domain(d3.extent(graphic_data, (d) => d.date))
+	  .range([0, width]);
+	} else {
+	  x = d3.scaleLinear()
+	  .domain(d3.extent(graphic_data, (d) => +d.date))
+	  .range([0, width]);
+	}
 	//console.log(`x defined`);
 
 	const y = d3
@@ -101,7 +120,8 @@ function drawGraphic() {
 			d3
 				.axisBottom(x)
 				.tickValues(tickValues)
-				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
+					: d3.format(config.essential.xAxisNumberFormat)(d))
 		);
 
 
@@ -308,14 +328,23 @@ function wrap(text, width) {
 d3.csv(config.essential.graphic_data_url).then(data => {
 
 	graphic_data = data.map((d) => {
-		return {
-			date: d3.timeParse(config.essential.dateFormat)(d.date),
-			...Object.entries(d)
-				.filter(([key]) => key !== 'date')
-				.map(([key, value]) => [key, +value])
-				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-		};
-	});
+		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+			return {
+				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				...Object.entries(d)
+					.filter(([key]) => key !== 'date')
+					.map(([key, value]) => [key, +value])
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+			}
+		} else {
+			return {
+				date: (+d.date),
+				...Object.entries(d)
+					.filter(([key]) => key !== 'date')
+					.map(([key, value]) => [key, +value])
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+			}}
+		});
 
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic
