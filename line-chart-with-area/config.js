@@ -1,6 +1,6 @@
 config = {
 	"essential": {
-		"graphic_data_url": "data.csv",
+		"graphic_data_url": "datanumeric.csv",
 		"colour_palette": [
 			"#206095",
 			"#27A0CC",
@@ -38,6 +38,7 @@ config = {
 			"md": "%b %y",
 			"lg": "%b %y"
 		},
+		"xAxisNumberFormat": ".0f",
 		"dateFormat": "%d/%m/%Y",
 		"yAxisLabel": "y axis label"
 	},

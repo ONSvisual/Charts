@@ -28,6 +28,7 @@ config = {
 			"md": "%b %y",
 			"lg": "%b %y"
 		},
+		"xAxisNumberFormat": ".0f",
 		"dateFormat": "%d/%m/%Y",
 		"yAxisLabel": "y axis label"
 	},

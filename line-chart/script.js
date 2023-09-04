@@ -37,16 +37,34 @@ function drawGraphic() {
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
 	// console.log(`Categories retrieved: ${categories}`);
 
+	let xDataType;
+
+	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+	  xDataType = 'date';
+	} else {
+	  xDataType = 'numeric';
+	}
+  
+	// console.log(xDataType)
+
 	// Define the x and y scales
-	const x = d3
-		.scaleTime()
-		.domain(d3.extent(graphic_data, (d) => d.date))
-		.range([0, width]);
+
+	let x;
+
+	if (xDataType == 'date') {
+	  x = d3.scaleTime()
+	  .domain(d3.extent(graphic_data, (d) => d.date))
+	  .range([0, width]);
+	} else {
+	  x = d3.scaleLinear()
+	  .domain(d3.extent(graphic_data, (d) => +d.date))
+	  .range([0, width]);
+	}
 	//console.log(`x defined`);
 
 	const y = d3
-	.scaleLinear()
-	.range([height, 0]);
+		.scaleLinear()
+		.range([height, 0]);
 
 	if (config.essential.yDomain == "auto") {
 		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
@@ -57,18 +75,18 @@ function drawGraphic() {
 		y.domain(config.essential.yDomain)
 	}
 
-		// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
-		let tickValues = x.ticks(config.optional.xAxisTicks[size]);
+	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
+	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
 
-		if (config.optional.addFirstDate == true) {
-			tickValues.push(graphic_data[0].date)
-			console.log("First date added")
-		}
-	
-		if (config.optional.addFinalDate == true) {
-			tickValues.push(graphic_data[graphic_data.length - 1].date)
-			console.log("Last date added")
-		}
+	if (config.optional.addFirstDate == true) {
+		tickValues.push(graphic_data[0].date)
+		console.log("First date added")
+	}
+
+	if (config.optional.addFinalDate == true) {
+		tickValues.push(graphic_data[graphic_data.length - 1].date)
+		console.log("Last date added")
+	}
 
 	// Create an SVG element
 	const svg = graphic
@@ -114,55 +132,55 @@ function drawGraphic() {
 
 		// console.log(`drawLegend: ${size}`);
 		// size === 'sm'
-		
+
 		if (config.essential.drawLegend || size === 'sm') {
-	
 
-				// Set up the legend
+
+			// Set up the legend
 			var legenditem = d3
-			.select('#legend')
-			.selectAll('div.legend--item')
-			.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-			.enter()
-			.append('div')
-			.attr('class', 'legend--item');
+				.select('#legend')
+				.selectAll('div.legend--item')
+				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+				.enter()
+				.append('div')
+				.attr('class', 'legend--item');
 
-		legenditem
-			.append('div')
-			.attr('class', 'legend--icon--circle')
-			.style('background-color', function (d) {
-				return d[1];
-			});
+			legenditem
+				.append('div')
+				.attr('class', 'legend--icon--circle')
+				.style('background-color', function (d) {
+					return d[1];
+				});
 
-		legenditem
-			.append('div')
-			.append('p')
-			.attr('class', 'legend--text')
-			.html(function (d) {
-				return d[0];
-			});
+			legenditem
+				.append('div')
+				.append('p')
+				.attr('class', 'legend--text')
+				.html(function (d) {
+					return d[0];
+				});
 
 		} else {
 
-		// Add text labels to the right of the circles
-		svg
-		.append('text')
-		.attr(
-			'transform',
-			`translate(${x(lastDatum.date)}, ${y(lastDatum[category])})`
-		)
-		.attr('x', 10)
-		.attr('dy', '.35em')
-		.attr('text-anchor', 'start')
-		.attr(
-			'fill',
-			config.essential.colour_palette[
-			categories.indexOf(category) % config.essential.colour_palette.length
-			]
-		)
-		.text(category)
-		.call(wrap, margin.right - 10); //wrap function for the direct labelling.
-			
+			// Add text labels to the right of the circles
+			svg
+				.append('text')
+				.attr(
+					'transform',
+					`translate(${x(lastDatum.date)}, ${y(lastDatum[category])})`
+				)
+				.attr('x', 10)
+				.attr('dy', '.35em')
+				.attr('text-anchor', 'start')
+				.attr(
+					'fill',
+					config.essential.colour_palette[
+					categories.indexOf(category) % config.essential.colour_palette.length
+					]
+				)
+				.text(category)
+				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
+
 		};
 
 
@@ -195,25 +213,26 @@ function drawGraphic() {
 				.tickFormat('')
 		)
 		.lower();
-		
-		d3.selectAll('g.tick line')
+
+	d3.selectAll('g.tick line')
 		.each(function (e) {
 			if (e == 0) {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
-		
-// Add the x-axis
-svg
-    .append('g')
-    .attr('class', 'x axis')
-    .attr('transform', `translate(0, ${height})`)
-    .call(
-        d3
-            .axisBottom(x)
-            .tickValues(tickValues)
-            .tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
-    );
+
+	// Add the x-axis
+	svg
+		.append('g')
+		.attr('class', 'x axis')
+		.attr('transform', `translate(0, ${height})`)
+		.call(
+			d3
+				.axisBottom(x)
+				.tickValues(tickValues)
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
+					: d3.format(config.essential.xAxisNumberFormat)(d))
+		);
 
 
 	// Add the y-axis
@@ -222,14 +241,14 @@ svg
 		.attr('class', 'y axis')
 		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
 
-	
+
 
 	// This does the y-axis label
 	svg
 		.append('g')
 		.attr('transform', `translate(0, 0)`)
 		.append('text')
-		.attr('x', -margin.left +5)
+		.attr('x', -margin.left + 5)
 		.attr('y', -15)
 		.attr('class', 'axis--label')
 		.text(config.essential.yAxisLabel)
@@ -284,17 +303,26 @@ function wrap(text, width) {
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		return {
-			date: d3.timeParse(config.essential.dateFormat)(d.date),
-			...Object.entries(d)
-				.filter(([key]) => key !== 'date')
-				.map(([key, value]) => [key, +value])
-				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-		};
-	});
+		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+			return {
+				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				...Object.entries(d)
+					.filter(([key]) => key !== 'date')
+					.map(([key, value]) => [key, +value])
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+			}
+		} else {
+			return {
+				date: (+d.date),
+				...Object.entries(d)
+					.filter(([key]) => key !== 'date')
+					.map(([key, value]) => [key, +value])
+					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
+			}}
+		});
 
 	console.log(graphic_data);
-	
+
 	// console.log(`Data from CSV processed`);
 
 	// console.log('Final data structure:');
