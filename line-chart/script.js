@@ -179,6 +179,7 @@ function drawGraphic() {
 					]
 				)
 				.text(category)
+				.attr("class","directLineLabel")
 				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
 
 		};
@@ -239,8 +240,9 @@ function drawGraphic() {
 	svg
 		.append('g')
 		.attr('class', 'y axis')
-		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
-
+		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
+		.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+	
 
 
 	// This does the y-axis label
@@ -254,7 +256,18 @@ function drawGraphic() {
 		.text(config.essential.yAxisLabel)
 		.attr('text-anchor', 'start');
 
-	//create link to source
+// This does the x-axis label
+svg
+.append('g')
+.attr('transform', "translate(0, "+(height+margin.bottom)+")")
+.append('text')
+.attr('x',width)
+.attr('y', -25)
+.attr('class', 'axis--label')
+.text(config.essential.xAxisLabel)
+.attr('text-anchor', 'end');
+
+//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 	// console.log(`Link to source created`);
 

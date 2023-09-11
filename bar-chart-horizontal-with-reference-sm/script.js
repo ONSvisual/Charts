@@ -127,7 +127,10 @@ function drawGraphic() {
 		if (config.essential.xDomain == 'auto') {
 			x.domain([
 				0,
-				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+					//x domain is the maximum out of the value and the reference value
+					Math.max((d3.max(graphic_data.map(({ value }) => Number(value))),
+					d3.max(graphic_data.map(({ ref }) => Number(ref)))))
+				])
 		} else {
 			x.domain(config.essential.xDomain);
 		}

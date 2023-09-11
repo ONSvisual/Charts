@@ -1,16 +1,86 @@
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,input,select,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+input,
+select,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   /* margin: 0;
   padding: 0;
   border: 0;
@@ -22,11 +92,12 @@ time, mark, audio, video {
 
 html {
   -webkit-text-size-adjust: none;
-  text-size-adjust:none;
+  text-size-adjust: none;
   /* prevent font scaling in landscape */
 }
 
 body
+
 /* required */
   {
   font-family: 'Open Sans', sans-serif;
@@ -37,6 +108,7 @@ body
 }
 
 text
+
 /* required */
   {
   font-family: 'Open Sans', sans-serif;
@@ -46,6 +118,7 @@ text
 
 /* chart */
 #graphic
+
 /* required */
   {
   width: 100%;
@@ -53,32 +126,32 @@ text
 
 /* axis tick labels */
 svg.chart g.axis text
+
 /* sets all tick text as grey 100 */
-{
+  {
   font-size: 14px;
   fill: #414042;
 }
 
 /* overwrites x-axis as grey 75 */
-svg.chart g.x.axis text
-{
-  fill:#707071;
+svg.chart g.x.axis text {
+  fill: #707071;
 }
 
 /* if axis has class numeric, make it grey75 */
-svg.chart g.axis.numeric text{
+svg.chart g.axis.numeric text {
   fill: #707071;
 }
 
 /* if axis has class categorical, make it grey100 */
-svg.chart g.axis.categorical text{
-  fill:#414042;
+svg.chart g.axis.categorical text {
+  fill: #414042;
 }
 
 
 
 /* this sets the labels for the axis */
-.axis--label{
+.axis--label {
   font-size: 14px;
   fill: #707071;
 }
@@ -86,32 +159,40 @@ svg.chart g.axis.categorical text{
 
 /* do not show the line that runs the domain of the axis */
 svg.chart g.axis path.domain
+
 /* required */
-{
-  display:none;
+  {
+  display: none;
 }
 
 /* this sets the ticks */
-svg.chart .axis line
-{
+svg.chart .axis line {
   stroke: #d9d9d9;
   shape-rendering: crispEdges;
 }
 
 /* this sets zero line */
 
-g.tick line.zero-line
-{
+g.tick line.zero-line {
   stroke: #B3B3B3;
   stroke-width: 1.5px;
   shape-rendering: crispEdges;
 }
 
 
+
+
 /* this sets the style for lines charts */
-path.line{
-  fill:none;
+path.line {
+  fill: none;
 }
+
+.directLineLabel {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/*this sets the style for */
 
 
 /* source */
@@ -123,14 +204,14 @@ h5#source {
 }
 
 /* legend div */
-#legend{
-  display:flex;
+#legend {
+  display: flex;
   flex-wrap: wrap;
 }
 
 .legend--item {
-  display:flex;
-  padding-right:40px;
+  display: flex;
+  padding-right: 40px;
   padding-bottom: 12px;
 }
 
@@ -142,6 +223,8 @@ h5#source {
   flex-shrink: 0;
 }
 
+
+
 /* a legend circle with a border for scatterplots */
 
 .legend--icon--circle2 {
@@ -150,7 +233,7 @@ h5#source {
   border-radius: 50%;
   align-self: center;
   flex-shrink: 0;
-  border:2px solid
+  border: 2px solid
 }
 
 .legend--icon--refline {
@@ -158,36 +241,71 @@ h5#source {
   width: 20px;
   align-self: center;
   flex-shrink: 0;
-
 }
 
-.legend--text{
-  color:#707070;
+.legend--text {
+  color: #707070;
   line-height: 14px;
   font-size: 14px;
   padding-left: 12px;
-  margin:0;
+  margin: 0;
 }
 
+
 @media (max-width: 400px) {
-  #legend{
-    flex-flow:column;
+  #legend {
+    flex-flow: column;
   }
 
-  .legend--item{
+  .legend--item {
     padding-bottom: 8px;
   }
 }
 
+/*styles for annotation added with the annotation.js script*/
+.annotation_arrow {
+  fill: none;
+  stroke: #414042;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1px;
+  opacity: 0.9;
+}
+
+.annotation-text {
+  fill: #414042;
+  color: #414042;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+}
+
+.annotation-line {
+  stroke: #b3b3b3;
+  stroke-width: 2px;
+  stroke-dasharray: 4 4;
+}
+
+.annotation-range {
+  fill: #ececec;
+  stroke-width: 2px;
+  stroke-dasharray: 4 4;
+}
+
+.direction-arrow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px;
+}
 
 /* for content that needs to be visible to a screenreader but invisible and take no space for users viewing the chart */
-.visuallyhidden{
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	padding: 0;
-	overflow: hidden;
- 	clip: rect(0,0,0,0);
-	border: 0;
+.visuallyhidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
