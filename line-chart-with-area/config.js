@@ -17,7 +17,7 @@ config = {
 			"#F66068",
 			"#118C7B"
 		],
-		"drawLegend": true,
+		"drawLegend": false,
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"lineCurveType": "curveLinear", // Set the default line curve type
