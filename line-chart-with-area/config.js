@@ -17,7 +17,7 @@ config = {
 			"#F66068",
 			"#118C7B"
 		],
-		"drawLegend": false,
+		"drawLegend": true,
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"lineCurveType": "curveLinear", // Set the default line curve type
@@ -50,13 +50,13 @@ config = {
 		},
 		"margin": {
 			"sm": {
-				"top": 15,
+				"top": 30,
 				"right": 30,
 				"bottom": 50,
 				"left": 30
 			},
 			"md": {
-				"top": 15,
+				"top": 30,
 				"right": 100,
 				"bottom": 50,
 				"left": 30
