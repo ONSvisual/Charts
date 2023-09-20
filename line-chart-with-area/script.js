@@ -56,14 +56,20 @@ function drawGraphic() {
 
 	let x;
 
+
+
 	if (xDataType == 'date') {
 	  x = d3.scaleTime()
 	  .domain(d3.extent(graphic_data, (d) => d.date))
 	  .range([0, width]);
-	} else {
+	} else if (config.essential.xDomain == "auto"){
 	  x = d3.scaleLinear()
 	  .domain(d3.extent(graphic_data, (d) => +d.date))
 	  .range([0, width]);
+	} else {
+		x = d3.scaleLinear()
+		.domain(config.essential.xDomain)
+		.range([0, width]);
 	}
 	//console.log(`x defined`);
 
