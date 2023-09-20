@@ -9,7 +9,7 @@ config={
     "accessibleSummary":"Here is the screenreader text describing the chart.",
     "xDomain":"auto",
     "yDomain":"auto",
-    // either "auto" or an array for the x domain e.g. [0,100]
+    // either "auto" or an array for the x/y domain e.g. [0,100]
     "xAxisLabel":"x axis label",
     "yAxisLabel":"y axis label",
     "xAxisFormat":".0%",

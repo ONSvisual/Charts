@@ -30,7 +30,7 @@ config = {
 		// "lineCurveType": "curveCardinal", // Cardinal spline curve
 		// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
 		// "lineCurveType": "curveMonotoneX" // Monotone spline curve
-
+		"xDomain": "auto",
 		"yDomain": [0,7],
 		// either "auto" or an array for the x domain e.g. [0,2000]
 		"xAxisTickFormat": {
@@ -50,13 +50,13 @@ config = {
 		},
 		"margin": {
 			"sm": {
-				"top": 15,
+				"top": 30,
 				"right": 30,
 				"bottom": 50,
 				"left": 30
 			},
 			"md": {
-				"top": 15,
+				"top": 30,
 				"right": 100,
 				"bottom": 50,
 				"left": 30

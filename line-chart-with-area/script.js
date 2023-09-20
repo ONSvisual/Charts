@@ -2,6 +2,7 @@
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
+let legend = d3.selectAll('#legend')
 let pymChild = null;
 
 function drawGraphic() {
@@ -34,6 +35,7 @@ function drawGraphic() {
 	// Remove any existing chart elements
 	graphic.selectAll('*').remove();
 	//console.log(`Removed existing chart elements`);
+	legend.selectAll('*').remove();
 
 	// Get categories from the keys used in the stack generator
 	// const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
@@ -56,14 +58,20 @@ function drawGraphic() {
 
 	let x;
 
+
+
 	if (xDataType == 'date') {
 	  x = d3.scaleTime()
 	  .domain(d3.extent(graphic_data, (d) => d.date))
 	  .range([0, width]);
-	} else {
+	} else if (config.essential.xDomain == "auto"){
 	  x = d3.scaleLinear()
 	  .domain(d3.extent(graphic_data, (d) => +d.date))
 	  .range([0, width]);
+	} else {
+		x = d3.scaleLinear()
+		.domain(config.essential.xDomain)
+		.range([0, width]);
 	}
 	//console.log(`x defined`);
 
