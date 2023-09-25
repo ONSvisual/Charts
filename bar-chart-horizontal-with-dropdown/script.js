@@ -1,11 +1,13 @@
 var graphic = d3.select('#graphic');
+var select = d3.select('#select');
 var pymChild = null;
 var x, y;
 
 
 function drawGraphic() {
 	graphic.selectAll('*').remove();
-
+	select.selectAll('*').remove();
+	
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -13,8 +15,7 @@ function drawGraphic() {
 
 	console.log(`dropdownData contains: ${JSON.stringify(uniqueOptions)}`);
 
-	const optns = d3
-		.select('#select')
+	const optns = select
 		.append('div')
 		.attr('id', 'sel')
 		.append('select')
