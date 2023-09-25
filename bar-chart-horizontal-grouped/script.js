@@ -119,7 +119,7 @@ function drawGraphic() {
     .attr('y', d => groups.filter(f => f[0] == d.group)[0][3](d.name))
     .attr('width',(d) => x(d.value)-x(0))
     .attr('height', (d) => groups.filter(f => f[0] == d.group)[0][3].bandwidth())
-    .attr('fill',"#206095");
+    .attr('fill', config.essential.colour_palette);
 
 
 
