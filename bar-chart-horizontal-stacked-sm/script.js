@@ -11,7 +11,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	//Was trying to be a little fancy but will need to workshop this.
-	// var size = window.innerWidth > config.optional.mobileBreakpoint ? "lg" : "sm";
+	// let size = window.innerWidth > config.optional.mobileBreakpoint ? "lg" : "sm";
 
 	function calculateChartWidth(size) {
 		const chartEvery = config.optional.chart_every[size];
@@ -33,8 +33,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// size thresholds as defined in the config.js file
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	let size;
@@ -93,7 +93,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 	// Define stack layout
-	var stack = d3
+	let stack = d3
 		.stack()
 		.offset(d3[config.essential.stackOffset])
 		.order(d3[config.essential.stackOrder])
@@ -256,7 +256,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 // function wrap(text, width) {
 //   text.each(function () {
-//     var text = d3.select(this),
+//     let text = d3.select(this),
 //       words = text.text().split(/\s+/).reverse(),
 //       word,
 //       line = [],
@@ -280,7 +280,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 //           .text(word);
 //       }
 //     }
-//     var breaks = text.selectAll("tspan").size();
+//     let breaks = text.selectAll("tspan").size();
 //     text.attr("y", function () {
 //       return -6 * (breaks - 1);
 //     });
@@ -290,7 +290,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 function wrap(text, width, graphic_data) {
 	text.each(function (d, i) {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -313,7 +313,7 @@ function wrap(text, width, graphic_data) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

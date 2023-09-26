@@ -1,5 +1,5 @@
-var pymChild = null;
-var graphic = d3.select("#graphic");
+let pymChild = null;
+let graphic = d3.select("#graphic");
 
 //Remove previous SVGs
 d3.select("#graphic").select("img").remove();
@@ -26,8 +26,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
   // size thresholds as defined in the config.js file
 
-  var threshold_md = config.optional.mediumBreakpoint;
-  var threshold_sm = config.optional.mobileBreakpoint;
+  let threshold_md = config.optional.mediumBreakpoint;
+  let threshold_sm = config.optional.mobileBreakpoint;
 
   //set variables for chart dimensions dependent on width of #graphic
   let size;
@@ -99,7 +99,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
   // Define stack layout
-  var stack = d3
+  let stack = d3
     .stack()
     .offset(d3[config.essential.stackOffset])
     .order(d3[config.essential.stackOrder])
@@ -214,7 +214,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 function wrap(text, width, graphic_data) {
   text.each(function (d, i) {
-    var text = d3.select(this),
+    let text = d3.select(this),
       words = text.text().split(/\s+/).reverse(),
       word,
       line = [],
@@ -237,7 +237,7 @@ function wrap(text, width, graphic_data) {
           .text(word);
       }
     }
-    var breaks = text.selectAll("tspan").size();
+    let breaks = text.selectAll("tspan").size();
     text.attr("y", function () {
       return -6 * (breaks - 1);
     });

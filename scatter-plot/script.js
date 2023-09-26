@@ -21,9 +21,9 @@ function drawGraphic() {
     size = "lg"
   }
 
-  var margin = config.optional.margin[size]
-  var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-  var height = 400 - margin.top - margin.bottom;
+  let margin = config.optional.margin[size]
+  let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
+  let height = 400 - margin.top - margin.bottom;
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
@@ -167,7 +167,7 @@ svg
 
 function wrap(text, width) {
         text.each(function() {
-          var text = d3.select(this),
+          let text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
@@ -187,7 +187,7 @@ function wrap(text, width) {
               tspan = text.append("tspan").attr('x',x).attr("dy", lineHeight + "em").text(word);
             }
           }
-          var breaks = text.selectAll("tspan").size();
+          let breaks = text.selectAll("tspan").size();
           text.attr("y", function(){return -6 * (breaks-1);});
         });
 

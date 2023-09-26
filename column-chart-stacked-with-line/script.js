@@ -1,12 +1,12 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -19,11 +19,11 @@ function drawGraphic() {
 
 
 	const aspectRatio = config.optional.aspectRatio[size];
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by the aspect ratio
-	var height =
+	let height =
 		aspectRatio[1] / aspectRatio[0] * chart_width;
 
 	// clear out existing graphics
@@ -43,7 +43,7 @@ function drawGraphic() {
 	x.domain([...new Set(graphic_data.map((d) => d.date))]);
 
 	//set up yAxis generator
-	var yAxis = d3.axisLeft(y)
+	let yAxis = d3.axisLeft(y)
 		.tickSize(-chart_width)
 		.tickPadding(10)
 		.ticks(config.optional.yAxisTicks[size])
@@ -67,7 +67,7 @@ function drawGraphic() {
 	}
 
 	//set up xAxis generator
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(10)
 		.tickPadding(10)
@@ -83,8 +83,8 @@ function drawGraphic() {
 	let series = stack(graphic_data);
 
 	//gets array of arrays for individual lines
-	var lines = [];
-	for (var column in graphic_data[0]) {
+	let lines = [];
+	for (let column in graphic_data[0]) {
 		if (column == 'date') continue;
 		lines[column] = graphic_data.map(function (d) {
 			return {
@@ -97,7 +97,7 @@ function drawGraphic() {
 
 	// console.log("linesflat: ", Object.entries(lines).flat(3))
 
-	var counter;
+	let counter;
 	// do some code to overwrite blanks with the last known point
 	keys = Object.keys(lines);
 	for (i = 0; i < keys.length; i++) {
@@ -117,7 +117,7 @@ function drawGraphic() {
 	// console.log("keys: ", keys)
 
 	// Set up the legend
-	var legenditem = d3
+	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
@@ -210,9 +210,9 @@ function drawGraphic() {
 	// .attr('fill', config.essential.colour_palette[0]);
 
 
-	var thisCurve = d3.curveLinear
+	let thisCurve = d3.curveLinear
 
-	var line = d3.line()
+	let line = d3.line()
 		.defined((d) => d.amt !== 'null')
 		.curve(thisCurve)
 		.x((d) => x(d.name))
@@ -258,7 +258,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -282,7 +282,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

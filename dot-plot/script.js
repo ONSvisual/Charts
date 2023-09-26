@@ -1,12 +1,12 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -17,34 +17,34 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height
-	var height = config.optional.seriesHeight[size] * graphic_data.length;
+	let height = config.optional.seriesHeight[size] * graphic_data.length;
 
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
 	//set up scales
-	var x = d3.scaleLinear().range([0, chart_width]);
+	let x = d3.scaleLinear().range([0, chart_width]);
 
-	var y = d3.scalePoint().padding(0.5).range([0, height]);
+	let y = d3.scalePoint().padding(0.5).range([0, height]);
 
 	//use the data to find unique entries in the name column
 	y.domain(graphic_data.map((d) => d.name));
 
 	//set up yAxis generator
-	var yAxis = d3.axisLeft(y).tickSize(-chart_width).tickPadding(10);
+	let yAxis = d3.axisLeft(y).tickSize(-chart_width).tickPadding(10);
 
 	//set up xAxis generator
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
 		.ticks(config.optional.xAxisTicks[size]);
 
 	// Set up the legend
-	var legenditem = d3
+	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
@@ -81,7 +81,7 @@ function drawGraphic() {
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 	if (config.essential.xDomain == 'auto') {
-		var max = d3.max(graphic_data, function (d) {
+		let max = d3.max(graphic_data, function (d) {
 			return d3.max([+d.min, +d.max]);
 		});
 		x.domain([0, max]);
@@ -150,7 +150,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -174,7 +174,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

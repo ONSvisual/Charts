@@ -1,5 +1,5 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 
@@ -10,8 +10,8 @@ function drawGraphic() {
   //population accessible summmary
   d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
 
-  var threshold_md = config.optional.mediumBreakpoint;
-  var threshold_sm = config.optional.mobileBreakpoint;
+  let threshold_md = config.optional.mediumBreakpoint;
+  let threshold_sm = config.optional.mobileBreakpoint;
 
   //set variables for chart dimensions dependent on width of #graphic
   if (parseInt(graphic.style("width")) < threshold_sm) {
@@ -22,8 +22,8 @@ function drawGraphic() {
     size = "lg"
   }
 
-  var margin = config.optional.margin[size]
-  var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
+  let margin = config.optional.margin[size]
+  let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
 
   groups = d3.groups(graphic_data, (d) => d.group)
 
@@ -67,7 +67,7 @@ function drawGraphic() {
   });
 
   //set up xAxis generator
-  var xAxis = d3.axisBottom(x)
+  let xAxis = d3.axisBottom(x)
     .ticks(config.optional.xAxisTicks[size])
     .tickFormat(d3.format(config.essential.xAxisFormat));
 
@@ -168,7 +168,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
   text.each(function () {
-    var text = d3.select(this),
+    let text = d3.select(this),
       words = text.text().split(/\s+/).reverse(),
       word,
       line = [],
@@ -188,7 +188,7 @@ function wrap(text, width) {
         tspan = text.append("tspan").attr('x', x).attr("dy", lineHeight + "em").text(word);
       }
     }
-    var breaks = text.selectAll("tspan").size();
+    let breaks = text.selectAll("tspan").size();
     text.attr("y", function () {
       return -6 * (breaks - 1);
     });

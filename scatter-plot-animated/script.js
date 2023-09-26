@@ -1,12 +1,12 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -17,22 +17,22 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-	var height = Math.ceil(
+	let height = Math.ceil(
 		(chart_width * config.optional.aspectRatio[size][1]) /
 			config.optional.aspectRatio[size][0]
 	);
 
 	//Set the timepoints from the data for the slider labels and sort from oldest to newest
-	var timepoints = [...new Set(graphic_data.map((d) => d.year))].sort();
+	let timepoints = [...new Set(graphic_data.map((d) => d.year))].sort();
 
 	//Takes the last data point from the date series
 
-	var timeLoad = config.essential.timeLoad;
+	let timeLoad = config.essential.timeLoad;
 
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
@@ -59,7 +59,7 @@ function drawGraphic() {
 
 			//Set the linear scale for the slider
 
-			var sliderScale = d3
+			let sliderScale = d3
 				.scaleLinear()
 				.domain(sliderDomain)
 				.range([0, chart_width - margin.right]);
@@ -200,13 +200,13 @@ function drawGraphic() {
 	}
 
 	//set up yAxis generator
-	var yAxis = d3
+	let yAxis = d3
 		.axisLeft(y)
 		.tickSize(-chart_width - 10)
 		.tickFormat(d3.format(config.essential.yDisplayFormat));
 
 	//set up xAxis generator
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height - 10)
 		.tickFormat(d3.format(config.essential.xDisplayFormat))
@@ -313,22 +313,22 @@ function drawGraphic() {
 
 	function updateVisuals(data) {
 		// create a tooltip
-		var tooltip = d3
+		let tooltip = d3
 			.selectAll('body')
 			.append('div')
 			.attr('class', 'tooltip')
 			.style('opacity', 0);
 
 		//Set the date format
-		var data_format = d3.format('.1f');
+		let data_format = d3.format('.1f');
 
 		// Three functions that change the tooltip when user hover / move / leave the circle
 
-		var mouseover = function (d) {
+		let mouseover = function (d) {
 			tooltip.style('opacity', 1);
 			d3.select(this).style('stroke', 'orange').style('opacity', 1);
 		};
-		var mousemove = function (event, d) {
+		let mousemove = function (event, d) {
 			// console.log(d3.pointer(event))
 			if (parseInt(graphic.style('width')) > threshold_md) {
 				tooltip
@@ -385,7 +385,7 @@ function drawGraphic() {
 					.style('top', 0 + 'px');
 			}
 		};
-		var mouseleave = function (d) {
+		let mouseleave = function (d) {
 			if (parseInt(graphic.style('width')) > threshold_md) {
 				tooltip.style('opacity', 0);
 				d3.select(this)
@@ -521,18 +521,18 @@ function wrap(
 	if (centreVertically == null) centreVertically = true;
 
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			x = text.attr('x'),
 			y = text.attr('y');
 
-		var words = [];
+		let words = [];
 		text
 			.text()
 			.split(/\s+/)
 			.forEach(function (w) {
 				if (splitOnHyphen) {
-					var subWords = w.split('-');
-					for (var i = 0; i < subWords.length - 1; i++)
+					let subWords = w.split('-');
+					for (let i = 0; i < subWords.length - 1; i++)
 						words.push(subWords[i] + '-');
 					words.push(subWords[subWords.length - 1] + ' ');
 				} else {
@@ -543,13 +543,13 @@ function wrap(
 		text.text(null); // Empty the text element
 
 		// `tspan` is the tspan element that is currently being added to
-		var tspan = text.append('tspan');
+		let tspan = text.append('tspan');
 
-		var line = ''; // The current value of the line
-		var prevLine = ''; // The value of the line before the last word (or sub-word) was added
-		var nWordsInLine = 0; // Number of words in the line
-		for (var i = 0; i < words.length; i++) {
-			var word = words[i];
+		let line = ''; // The current value of the line
+		let prevLine = ''; // The value of the line before the last word (or sub-word) was added
+		let nWordsInLine = 0; // Number of words in the line
+		for (let i = 0; i < words.length; i++) {
+			let word = words[i];
 			prevLine = line;
 			line = line + word;
 			++nWordsInLine;
@@ -565,17 +565,17 @@ function wrap(
 			}
 		}
 
-		var tspans = text.selectAll('tspan');
+		let tspans = text.selectAll('tspan');
 
-		var h = lineHeightEms;
+		let h = lineHeightEms;
 		// Reduce the line height a bit if there are more than 2 lines.
 		if (tspans.size() > 2)
-			for (var i = 0; i < tspans.size(); i++) h *= lineHeightSquishFactor;
+			for (let i = 0; i < tspans.size(); i++) h *= lineHeightSquishFactor;
 
 		tspans.each(function (d, i) {
 			// Calculate the y offset (dy) for each tspan so that the vertical centre
 			// of the tspans roughly aligns with the text element's y position.
-			var dy = i * h;
+			let dy = i * h;
 
 			if (centreVertically) dy -= ((tspans.size() - 1) * h) / 2;
 			d3.select(this)

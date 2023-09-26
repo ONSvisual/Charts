@@ -1,5 +1,5 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -43,7 +43,7 @@ function drawGraphic() {
 
 		if (size == 'sm') {
 			// Set up the legend
-			var legenditem = d3
+			let legenditem = d3
 				.select('#legend')
 				.selectAll('div.legend--item')
 				.data(d3.zip(xcategories, config.essential.colour_palette_colours))
