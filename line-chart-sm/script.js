@@ -22,7 +22,7 @@ function drawGraphic() {
 	const aspectRatio = config.optional.aspectRatio[size];
 	const chart_every = config.optional.chart_every[size];
 	const droppedMargin = 20;
-	// var chart_width =
+	// let chart_width =
 	// 	((parseInt(graphic.style('width')) - margin.left + 10) / chart_every) - margin.right -10;
 
 
@@ -288,7 +288,7 @@ function drawGraphic() {
 
 
 	// Set up the legend
-	var legenditem = legend
+	let legenditem = legend
 		.selectAll('div.legend--item')
 		.data([["Selected region", config.essential.colour_palette[0]], [reference, config.essential.colour_palette[1]], ["All other regions", config.essential.colour_palette[2]]])
 		.enter()
@@ -326,7 +326,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -350,7 +350,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

@@ -1,12 +1,12 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -19,11 +19,11 @@ function drawGraphic() {
 
 
 	const aspectRatio = config.optional.aspectRatio[size];
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by the aspect ratio
-	var height =
+	let height =
 		aspectRatio[1] / aspectRatio[0] * chart_width;
 
 	// clear out existing graphics
@@ -58,7 +58,7 @@ function drawGraphic() {
 	}
 
 	//set up yAxis generator
-	var yAxis = d3.axisLeft(y)
+	let yAxis = d3.axisLeft(y)
 		.tickSize(-chart_width)
 		.tickPadding(10)
 		.ticks(config.optional.yAxisTicks[size])
@@ -67,7 +67,7 @@ function drawGraphic() {
 	let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
 
 	//set up xAxis generator
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(10)
 		.tickPadding(10)
@@ -145,7 +145,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -169,7 +169,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

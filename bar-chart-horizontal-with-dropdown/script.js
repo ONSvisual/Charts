@@ -1,7 +1,7 @@
-var graphic = d3.select('#graphic');
-var select = d3.select('#select');
-var pymChild = null;
-var x, y;
+let graphic = d3.select('#graphic');
+let select = d3.select('#select');
+let pymChild = null;
+let x, y;
 
 
 function drawGraphic() {
@@ -168,8 +168,8 @@ function changeData(selectedOption) {
 
 }
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -180,13 +180,13 @@ function changeData(selectedOption) {
 		size = 'lg';
 	}
 
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 
-	var uniqueNames = [...new Set(graphic_data.map((d) => d.name))];
-	var height =
+	let uniqueNames = [...new Set(graphic_data.map((d) => d.name))];
+	let height =
 		config.optional.seriesHeight[size] * uniqueNames.length +
 		10 * (uniqueNames.length - 1) +
 		12;
@@ -208,10 +208,10 @@ function changeData(selectedOption) {
 	y.domain([...new Set(graphic_data.map((d) => d.name))]);
 
 	//set up yAxis generator
-	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 	//set up xAxis generator
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
 		.tickFormat(d3.format('.0%'))
@@ -286,7 +286,7 @@ function changeData(selectedOption) {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -310,7 +310,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

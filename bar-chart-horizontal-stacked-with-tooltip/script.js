@@ -1,12 +1,12 @@
-var graphic = d3.select('#graphic');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let pymChild = null;
 
 function drawGraphic() {
 	//Accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -17,11 +17,11 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	var margin = config.optional.margin[size];
-	var chart_width =
+	let margin = config.optional.margin[size];
+	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-	var height =
+	let height =
 		config.optional.seriesHeight[size] * graphic_data.length +
 		10 * (graphic_data.length - 1) +
 		12;
@@ -48,7 +48,7 @@ function drawGraphic() {
 	y.domain([...new Set(graphic_data.map((d) => d.name))]);
 
 	//set up yAxis generator
-	var yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 	const stack = d3
 		.stack()
@@ -59,7 +59,7 @@ function drawGraphic() {
 	const series = stack(graphic_data);
 
 	//set up xAxis generator
-	var xAxis = d3
+	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
 		.tickFormat(d3.format(config.essential.xAxisTickFormat))
@@ -83,7 +83,7 @@ function drawGraphic() {
 	}
 
 	// Set up the legend
-	var legenditem = d3
+	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
@@ -167,7 +167,7 @@ function drawGraphic() {
 
 		})
 
-	var tooltipGroup = svg.append("g")
+	let tooltipGroup = svg.append("g")
 		.attr("class", "tooltipGroup")
 		.attr("transform", "scale(0)")
 
@@ -215,7 +215,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -239,7 +239,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

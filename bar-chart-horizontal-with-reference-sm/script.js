@@ -1,13 +1,13 @@
-var graphic = d3.select('#graphic');
-var legend = d3.select('#legend');
-var pymChild = null;
+let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
+let pymChild = null;
 
 function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	if (parseInt(graphic.style('width')) < threshold_sm) {
 		size = 'sm';
@@ -46,10 +46,10 @@ function drawGraphic() {
 		.html("Reference value")
 	
 	// Nest the graphic_data by the 'series' column
-	var nested_data = d3.group(graphic_data, (d) => d.series);
+	let nested_data = d3.group(graphic_data, (d) => d.series);
 
 	// Create a container div for each small multiple
-	var chartContainers = graphic
+	let chartContainers = graphic
 		.selectAll('.chart-container')
 		.data(Array.from(nested_data))
 		.join('div')
@@ -73,7 +73,7 @@ function drawGraphic() {
 
 
 		// Calculate the height based on the data
-		var height = config.optional.seriesHeight[size] * data.length +
+		let height = config.optional.seriesHeight[size] * data.length +
 			10 * (data.length - 1) +
 			12;
 
@@ -108,7 +108,7 @@ function drawGraphic() {
 		let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 		//set up xAxis generator
-		var xAxis = d3
+		let xAxis = d3
 			.axisBottom(x)
 			.tickSize(-height)
 			.tickFormat(d3.format('.0%'))
@@ -242,7 +242,7 @@ function drawGraphic() {
 
 function wrap(text, width) {
 	text.each(function () {
-		var text = d3.select(this),
+		let text = d3.select(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
 			line = [],
@@ -265,7 +265,7 @@ function wrap(text, width) {
 					.text(word);
 			}
 		}
-		var breaks = text.selectAll('tspan').size();
+		let breaks = text.selectAll('tspan').size();
 		text.attr('y', function () {
 			return -6 * (breaks - 1);
 		});

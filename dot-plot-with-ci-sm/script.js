@@ -245,7 +245,7 @@ function wrap(text, width) {
         tspan = text.append("tspan").attr('x', x).attr("dy", lineHeight + "em").text(word);
       }
     }
-    var breaks = text.selectAll("tspan").size();
+    let breaks = text.selectAll("tspan").size();
     text.attr("y", function () { return -6 * (breaks - 1); });
   });
 

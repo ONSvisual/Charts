@@ -1,7 +1,7 @@
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
 const legend = d3.select('#legend');
-var pymChild = null;
+let pymChild = null;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -20,7 +20,7 @@ function drawGraphic() {
 			return { nm: d.AREANM, cd: d.AREACD };
 		})
 		.filter(function (a) {
-			var key = a.nm + '|' + a.cd;
+			let key = a.nm + '|' + a.cd;
 			if (!this[key]) {
 				this[key] = true;
 				return true;
@@ -105,8 +105,8 @@ function drawGraphic() {
 		}
 	});
 
-	var threshold_md = config.optional.mediumBreakpoint;
-	var threshold_sm = config.optional.mobileBreakpoint;
+	let threshold_md = config.optional.mediumBreakpoint;
+	let threshold_sm = config.optional.mobileBreakpoint;
 
 	//set variables for chart dimensions dependent on width of #graphic
 	if (parseInt(graphic.style('width')) < threshold_sm) {
@@ -117,7 +117,7 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	var margin = config.optional.margin[size];
+	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;
 
 	allAges = graphic_data.columns.slice(3);
