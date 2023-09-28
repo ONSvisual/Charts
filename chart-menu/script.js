@@ -21,6 +21,9 @@ function dataURLtoFile(dataurl, filename) {
     return new File([u8arr], filename, { type: mime })
   }
 
+
+
+  
 function downloadImage(el) {
 	console.log(el);
 	let content = document.querySelector('#'+el).firstChild.contentWindow.document.body;
@@ -48,6 +51,17 @@ function downloadImage(el) {
 			a.style.display = 'none'
 			a.href = url
 			a.download = `${text}.png`
+
+			try {
+				navigator.clipboard.write([
+					new ClipboardItem({
+						'image/png': url
+					})
+				]);
+			} catch (error) {
+				console.error(error);
+			}
+
 			document.body.appendChild(a)
 			a.click()
 			window.URL.revokeObjectURL(url)
