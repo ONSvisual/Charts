@@ -28,7 +28,7 @@ function downloadImage(el) {
 	console.log(el);
 	let content = el.contentWindow.document.body;
 	// let heading=document.createElement("h3")
-	console.log(text, body);
+	//console.log(text, body);
 	// heading.innerText=text;
 
 	// console.log(content)
@@ -49,7 +49,7 @@ function downloadImage(el) {
 			const a = document.createElement('a')
 			a.style.display = 'none'
 			a.href = url
-			a.download = `${text}.png`
+			a.download = `chart.png`
 
 			try {
 				navigator.clipboard.write([
