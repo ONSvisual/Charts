@@ -26,10 +26,10 @@ function dataURLtoFile(dataurl, filename) {
   
 function downloadImage(el) {
 	console.log(el);
-	let content = document.querySelector('#modal'+el.replace("chart","")).firstChild.contentWindow.document.body;
+	let content = el.contentWindow.document.body;
 	// let heading=document.createElement("h3")
 	let text = document.querySelector('#title'+el.replace("chart","")).innerHTML;
-	console.log(text);
+	console.log(text, body);
 	// heading.innerText=text;
 
 	// console.log(content)
@@ -84,7 +84,7 @@ for (let i = 0; i < charts.length; i++) {
 	grid.append('div').attr('id', 'container' + i).attr('class', 'container')
 	d3.select('#container' + i).append('div').attr('id', 'title' + i).attr('class', 'title-div').text(charts[i])
 	d3.select('#container' + i).append('button').attr('type', 'button').attr('id', 'btn' + i).text('View full chart')/*.attr('class', 'reveal')*/
-	d3.select('#container' + i).append('button').attr('type', 'button').attr('id', 'img' + i).text('Get thumbnail to paste in draft')
+	//d3.select('#container' + i).append('button').attr('type', 'button').attr('id', 'img' + i).text('Get thumbnail to paste in draft')
 
 	d3.select('#container' + i).append('div').attr('id', 'chart' + i).attr('class', 'chart')
 	d3.select('#container' + i).append('div').attr('id', 'data' + charts[i].replace(/\s/g, "")).html(`<a href=${urls[i]}data.csv download>Download the data csv file</a>`)
@@ -92,8 +92,12 @@ for (let i = 0; i < charts.length; i++) {
 	d3.select('#container' + i).append('div').attr('id', 'modal' + i).attr('class', 'modal').style('display', 'none')
 		.append('div').attr('class', 'modal-content').html(`<span id='close${i}' class="close">&times;</span>
     <div class='title-div'>${charts[i]}</div>
-	<div id='modal-chart${i}'>Chart ${i}</div>
+	
+	<div id='modal-chart${i}'>Chart ${i}
+	</div>
+	<button id='img${i}'>Get thumbnail to paste in draft</button>
 	`)
+
 
 	let modal = d3.select('#modal' + i)
 	let btn = d3.select('#btn' + i)
@@ -107,8 +111,8 @@ for (let i = 0; i < charts.length; i++) {
 	})
 
 	imgBtn.on('click', function (e) {
-		console.log(e.target.nextSibling.id);
-		downloadImage(e.target.nextSibling.id)
+		console.log(e.target.parentElement.getElementsByTagName("iframe")[0]);
+		downloadImage(e.target.parentElement.getElementsByTagName("iframe")[0])
 	})
 
 
