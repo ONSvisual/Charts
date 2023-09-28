@@ -39,17 +39,13 @@ function downloadImage(el) {
 
 	html2canvas(chart, { scale: 4 })//SCALE TO MAKE SMALLER
 		.then((canvas) => {
+			
+			canvas.toBlob(function(blob) { 
+				const item = new ClipboardItem({ "image/png": blob });
+				navigator.clipboard.write([item]); 
+			});
+			
 			const dataURL = canvas.toDataURL('image/png', 1.0)
-			const blob=canvas.toBlob(bl=>bl,'image/png', 1.0)
-			try {
-				navigator.clipboard.write([
-					new ClipboardItem({
-						'image/png': blob
-					})
-				]);
-			} catch (error) {
-				console.error(error);
-			}
 			console.log(dataURL)
 			const file = dataURLtoFile(dataURL)
 
@@ -91,7 +87,7 @@ for (let i = 0; i < charts.length; i++) {
 	d3.select('#container' + i).append('div').attr('id', 'modal' + i).attr('class', 'modal').style('display', 'none')
 		.append('div').attr('class', 'modal-content').html(`<span id='close${i}' class="close">&times;</span>
     <div class='title-div'>${charts[i]}</div>
-	<button id='img${i}'>Get thumbnail to paste in draft</button>
+	<button id='img${i}'>Get thumbnail to paste in draft</button><br><br>
 	<div id='modal-chart${i}'>Chart ${i}
 	</div>
 	`)
