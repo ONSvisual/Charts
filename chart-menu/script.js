@@ -50,8 +50,9 @@ function downloadImage(el) {
 
 
 	html2canvas(chart, {
-		width: 700,
-		height: 700
+		width: 1000,
+		height: 1000,
+		scale:1
 	  })//SCALE TO MAKE SMALLER with {scale: x}
 		.then((canvas) => {
 			
