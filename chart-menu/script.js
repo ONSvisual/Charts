@@ -41,6 +41,15 @@ function downloadImage(el) {
 		.then((canvas) => {
 			const dataURL = canvas.toDataURL('image/png', 1.0)
 			const blob=canvas.toBlob(bl=>bl,'image/png', 1.0)
+			try {
+				navigator.clipboard.write([
+					new ClipboardItem({
+						'image/png': blob
+					})
+				]);
+			} catch (error) {
+				console.error(error);
+			}
 			console.log(dataURL)
 			const file = dataURLtoFile(dataURL)
 
@@ -52,17 +61,6 @@ function downloadImage(el) {
 			a.style.display = 'none'
 			a.href = url
 			a.download = `chart.png`
-
-			try {
-				navigator.clipboard.write([
-					new ClipboardItem({
-						'image/png': blob
-					})
-				]);
-			} catch (error) {
-				console.error(error);
-			}
-
 			document.body.appendChild(a)
 			a.click()
 			window.URL.revokeObjectURL(url)
