@@ -22,9 +22,11 @@ function dataURLtoFile(dataurl, filename) {
   }
 
 function downloadImage(el) {
-	console.log(el)
-	let chart = document.querySelector('#'+el).firstChild.contentWindow.document.body.innerHTML;
-	console.log(chart)
+	console.log(el);
+	let content = document.createElement('div');
+	content.innerHTML=document.querySelector('#'+el).firstChild.contentWindow.document.body.innerHTML;
+	content.id="chart";
+	let chart=document.querySelector("#chart")
 
 	html2canvas(chart, { scale: 2 })
 		.then((canvas) => {
