@@ -49,7 +49,10 @@ function downloadImage(el) {
 	let chart=content
 
 
-	html2canvas(chart)//SCALE TO MAKE SMALLER
+	html2canvas(chart, {
+		width: 700,
+		height: 700
+	  })//SCALE TO MAKE SMALLER with {scale: x}
 		.then((canvas) => {
 			
 			// canvas.toBlob(function(blob) { 
@@ -60,7 +63,7 @@ function downloadImage(el) {
 			// });
 
 			const dataURL = canvas.toDataURL('image/png', 1.0)
-			console.log(dataURL)
+			//console.log(dataURL)
 			const file = dataURLtoFile(dataURL)
 
 			return dataURL
