@@ -26,6 +26,7 @@ function downloadImage(el) {
 	let content = document.createElement('div');
 	content.innerHTML=document.querySelector('#'+el).firstChild.contentWindow.document.body.innerHTML;
 	content.id="chart";
+	document.body.appendChild(content)
 	let chart=document.querySelector("#chart")
 
 	html2canvas(chart, { scale: 2 })
