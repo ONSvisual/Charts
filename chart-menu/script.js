@@ -25,6 +25,7 @@ function downloadImage(el) {
 	console.log(el);
 	let content = document.createElement('div');
 	content.innerHTML=document.querySelector('#'+el).firstChild.contentWindow.document.body.innerHTML;
+	console.log(content)
 	content.id="chart";
 	document.body.appendChild(content)
 	let chart=document.querySelector("#chart")
