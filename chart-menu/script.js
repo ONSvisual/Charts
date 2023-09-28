@@ -26,7 +26,7 @@ function dataURLtoFile(dataurl, filename) {
   
 function downloadImage(el) {
 	console.log(el);
-	let content = document.querySelector('#modal'+el.replace("chart",""))//.firstChild.contentWindow.document.body;
+	let content = document.querySelector('#modal'+el.replace("chart","")).firstChild.contentWindow.document.body;
 	// let heading=document.createElement("h3")
 	let text = document.querySelector('#title'+el.replace("chart","")).innerHTML;
 	console.log(text);
