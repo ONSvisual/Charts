@@ -42,9 +42,11 @@ function downloadImage(el) {
 			
 			canvas.toBlob(function(blob) { 
 				const item = new ClipboardItem({ "image/png": blob });
-				navigator.clipboard.write([item]); 
+				navigator.clipboard.write([item]).then(function(x) {
+					alert("Image copied to clipboard");
+				  });
 			});
-			
+
 			const dataURL = canvas.toDataURL('image/png', 1.0)
 			console.log(dataURL)
 			const file = dataURLtoFile(dataURL)
