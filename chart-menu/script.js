@@ -27,7 +27,6 @@ function downloadImage(el) {
 	let heading=document.createElement("h3")
 	let text = document.querySelector('#title'+el.replace("chart","")).innerHTML;
 	heading.innerText=text;
-	content.prepend(heading)
 
 	// console.log(content)
 	// content.id="chart";
@@ -46,7 +45,7 @@ function downloadImage(el) {
 			const a = document.createElement('a')
 			a.style.display = 'none'
 			a.href = url
-			a.download = `chart.png`
+			a.download = `${text}.png`
 			document.body.appendChild(a)
 			a.click()
 			window.URL.revokeObjectURL(url)
