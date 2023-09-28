@@ -24,6 +24,11 @@ function dataURLtoFile(dataurl, filename) {
 function downloadImage(el) {
 	console.log(el);
 	let content = document.querySelector('#'+el).firstChild.contentWindow.document.body.innerHTML;
+	let heading=document.createElement("h3")
+	let text = document.querySelector('#title'+el.replace("chart",""))
+	heading.innerText=text;
+	content.prepend(heading)
+
 	// console.log(content)
 	// content.id="chart";
 	// document.body.appendChild(content)
