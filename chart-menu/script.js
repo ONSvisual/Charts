@@ -33,6 +33,7 @@ function downloadImage(el) {
 	// document.body.appendChild(content)
 	let chart=content
 
+
 	html2canvas(chart, { scale: 2 })
 		.then((canvas) => {
 			const dataURL = canvas.toDataURL('image/png', 1.0)
