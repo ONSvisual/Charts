@@ -40,12 +40,12 @@ function downloadImage(el) {
 	html2canvas(chart, { scale: 4 })//SCALE TO MAKE SMALLER
 		.then((canvas) => {
 			
-			canvas.toBlob(function(blob) { 
-				const item = new ClipboardItem({ "image/png": blob });
-				navigator.clipboard.write([item]).then(function(x) {
-					alert("Image copied to clipboard");
-				  });
-			});
+			// canvas.toBlob(function(blob) { 
+			// 	const item = new ClipboardItem({ "image/png": blob });
+			// 	navigator.clipboard.write([item]).then(function(x) {
+			// 		alert("Image copied to clipboard");
+			// 	  });
+			// });
 
 			const dataURL = canvas.toDataURL('image/png', 1.0)
 			console.log(dataURL)
