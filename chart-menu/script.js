@@ -28,7 +28,6 @@ function downloadImage(el) {
 	console.log(el);
 	let content = el.contentWindow.document.body;
 	// let heading=document.createElement("h3")
-	let text = document.querySelector('#title'+el.replace("chart","")).innerHTML;
 	console.log(text, body);
 	// heading.innerText=text;
 
