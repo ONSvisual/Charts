@@ -3,8 +3,8 @@ let grid = d3.select('#grid')
 // let urls = ["https://onsvisual.github.io/Charts/area-stacked/", "https://onsvisual.github.io/Charts/area-stacked-sm/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-split/", "https://onsvisual.github.io/Charts/bar-chart-horizontal/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-with-dropdown/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-sm/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-with-reference-sm/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-sm-colour/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-clustered/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-with-tooltip/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-sm/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-grouped/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-clustered/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-grouped/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-grouped-clustered/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-clustered-grouped/", "https://onsvisual.github.io/Charts/bubble-chart-animated/", "https://onsvisual.github.io/Charts/comet-plot/", "https://onsvisual.github.io/Charts/column-chart/", "https://onsvisual.github.io/Charts/column-chart-sm/", "https://onsvisual.github.io/Charts/column-chart-stacked/", "https://onsvisual.github.io/Charts/column-chart-stacked-with-line/", "https://onsvisual.github.io/Charts/column-chart-stacked-sm/", "https://onsvisual.github.io/Charts/dot-plot/", "https://onsvisual.github.io/Charts/dot-plot-with-ci-sm/", "https://onsvisual.github.io/Charts/heatmap/", "https://onsvisual.github.io/Charts/heatmap-per-column/", "https://onsvisual.github.io/Charts/line-chart/", "https://onsvisual.github.io/Charts/area-stacked/", "https://onsvisual.github.io/Charts/line-chart-sm/", "https://onsvisual.github.io/Charts/line-chart-with-area/", "https://onsvisual.github.io/Charts/population-pyramid-static/", "https://onsvisual.github.io/Charts/population-pyramid-with-comparison-toggle/", "https://onsvisual.github.io/Charts/population-pyramid-static-with-comparison/", "https://onsvisual.github.io/Charts/population-pyramid-with-dropdown/", "https://onsvisual.github.io/Charts/population-pyramid-with-dropdown-and-interactive-comparison/", "https://onsvisual.github.io/Charts/range-plot/", "https://onsvisual.github.io/Charts/scatter-plot/", "https://onsvisual.github.io/Charts/scatter-plot-sm/", "https://onsvisual.github.io/Charts/scatter-plot-animated/", "https://onsvisual.github.io/maptemplates/simplemap/", "https://onsvisual.github.io/maptemplates/changeovertime/", "https://onsvisual.github.io/maptemplates/multimap/", "https://onsvisual.github.io/maptemplates/multimap_simplebar/", "https://onsvisual.github.io/maptemplates/multimap_vertical-scale/", "https://onsvisual.github.io/maptemplates/simplemap_beeswarm/", "https://onsvisual.github.io/maptemplates/simplemap_stackedbar/", "https://onsvisual.github.io/maptemplates/multiple_characteristics_map/", "https://onsvisual.github.io/maptemplates/Side-by-side-map/", "https://onsvisual.github.io/maptemplates/hexmap/", "https://onsvisual.github.io/maptemplates/lsoa-small-area/houseprice/", "https://onsvisual.github.io/maptemplates/msoa/covid-death-map/", "https://onsvisual.github.io/maptemplates/msoa/simplemap/", "https://onsvisual.github.io/maptemplates/msoa/multimap/"];
 let url = "https://onsvisual.github.io/Charts/";
 let list = d3.select('#list')
-let charts = ["Area stacked small multiple", 	"Bar chart Split", 	"Bar chart small multiple", 	"Bar chart horizontal with reference small multiple", 	"Bar chart horizontal stacked small multiple", 	"Bar chart horizontal stacked group", 	"Bar chart horizontal stacked clustered", 	"Bar chart horizontal stacked clustered grouped", 	"Bar chart horizontal grouped", 	"Comet plot", 	"Column small multiple", 	"Colum chart stacked small multiple", 	"Dotplot", 	"Heatmap", 	"Heatmap by column", 	"Line chart small multiple", 	"A line chart with area shaded", 	"Population pyramid", 	"Population pyramid with toggle", 	"Population pyramid with a static comparison", 	"Population pyramid with dropdown and interactive comparison", 	"Range plot", 	"Simple map"]
-let urls = ["https://onsvisual.github.io/Charts/area-stacked-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-split/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-with-reference-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-grouped/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-clustered/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-clustered-grouped/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-grouped/", 	"https://onsvisual.github.io/Charts/comet-plot/", 	"https://onsvisual.github.io/Charts/column-chart-sm/", 	"https://onsvisual.github.io/Charts/column-chart-stacked-sm/", 	"https://onsvisual.github.io/Charts/dot-plot/", 	"https://onsvisual.github.io/Charts/heatmap/", 	"https://onsvisual.github.io/Charts/heatmap-per-column/", 	"https://onsvisual.github.io/Charts/line-chart-sm/", 	"https://onsvisual.github.io/Charts/line-chart-with-area/", 	"https://onsvisual.github.io/Charts/population-pyramid-static/", 	"https://onsvisual.github.io/Charts/population-pyramid-with-comparison-toggle/", 	"https://onsvisual.github.io/Charts/population-pyramid-static-with-comparison/", 	"https://onsvisual.github.io/Charts/population-pyramid-with-dropdown-and-interactive-comparison/", 	"https://onsvisual.github.io/Charts/range-plot/", 	"https://onsvisual.github.io/maptemplates/simplemap/"]
+let charts = ["Area stacked small multiple", 	"Bar chart Split", 	"Bar chart small multiple", 	"Bar chart horizontal with reference small multiple", 	"Bar chart horizontal stacked small multiple", 	"Bar chart horizontal stacked group", 	"Bar chart horizontal grouped", 	"Comet plot", 	"Column small multiple", 	"Colum chart stacked small multiple", 	"Dotplot", 	"Heatmap", 	"Heatmap by column", 	"Line chart small multiple", 	"A line chart with area shaded", 	"Population pyramid", 	"Population pyramid with toggle", 	"Population pyramid with a static comparison", 	"Population pyramid with dropdown and interactive comparison", 	"Range plot", 	"Simple map", "other"]
+let urls = ["https://onsvisual.github.io/Charts/area-stacked-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-split/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-with-reference-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-sm/", 	"https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-grouped/", "https://onsvisual.github.io/Charts/bar-chart-horizontal-grouped/", 	"https://onsvisual.github.io/Charts/comet-plot/", 	"https://onsvisual.github.io/Charts/column-chart-sm/", 	"https://onsvisual.github.io/Charts/column-chart-stacked-sm/", 	"https://onsvisual.github.io/Charts/dot-plot/", 	"https://onsvisual.github.io/Charts/heatmap/", 	"https://onsvisual.github.io/Charts/heatmap-per-column/", 	"https://onsvisual.github.io/Charts/line-chart-sm/", 	"https://onsvisual.github.io/Charts/line-chart-with-area/", 	"https://onsvisual.github.io/Charts/population-pyramid-static/", 	"https://onsvisual.github.io/Charts/population-pyramid-with-comparison-toggle/", 	"https://onsvisual.github.io/Charts/population-pyramid-static-with-comparison/", 	"https://onsvisual.github.io/Charts/population-pyramid-with-dropdown-and-interactive-comparison/", 	"https://onsvisual.github.io/Charts/range-plot/", 	"https://onsvisual.github.io/maptemplates/simplemap/", "other"]
 
 /* SLOW SCROLL (ON SOME BROWSERS) */
 
@@ -104,6 +104,7 @@ function filterSelection(c) {
 
 // Show filtered elements
 function w3AddClass(element, name) {
+	// console.log(element)
   var i, arr1, arr2;
   arr1 = element.className.split(" ");
   arr2 = name.split(" ");
@@ -153,7 +154,7 @@ for (let i = 0; i < charts.length; i++) {
 	grid.append('div').attr('id', 'container' + i).attr('class', 'container')
 	d3.select('#container' + i).append('div').attr('id', 'title' + i).attr('class', 'title-div').text(charts[i])
 
-	tags.forEach((d) => d3.select('#container' + i).attr('class', 'container ' + d[0]))
+	tags.forEach((d) => d3.select('#container' + i).classed(d[0], true))
 
 	//d3.select('#container' + i).append('button').attr('type', 'button').attr('id', 'img' + i).text('Get thumbnail to paste in draft')
 
@@ -178,6 +179,7 @@ for (let i = 0; i < charts.length; i++) {
 	let imgBtn=d3.select('#img' + i)
 	// When the user clicks on the button, open the modal
 	btn.on('click', function () {
+		console.log('clicked')
 		// modal.style.display = "block";
 		modal.style('display', 'block')
 		let pymParent1 = new pym.Parent(`modal-chart${i}`, `${urls[i]}`, {})
@@ -272,17 +274,20 @@ for (let i = 0; i < charts.length; i++) {
 // d3.select('#dataMSOAmultimap').html(`<a href=${urls[54]}data/data.csv download>Download the data csv file</a>`)
 
 //Some manual adjustments for specific charts
-d3.select('#dataPopulationpyramidwithtoggle').append('p').html(`<a href=${urls[18]}comparison.csv download>Download the comparison data csv file</a>`)
-d3.select('#dataPopulationpyramidwithtoggle').append('p').html(`<a href=${urls[18]}comparison-time.csv download>Download the comparison time data csv file</a>`)
-d3.select('#dataPopulationpyramidwithastaticcomparison').append('p').html(`<a href=${urls[19]}comparison.csv download>Download the comparison data csv file</a>`)
+d3.select('#dataPopulationpyramidwithtoggle').append('p').html(`<a href=${urls[16]}comparison.csv download>Download the comparison data csv file</a>`)
+d3.select('#dataPopulationpyramidwithtoggle').append('p').html(`<a href=${urls[16]}comparison-time.csv download>Download the comparison time data csv file</a>`)
+d3.select('#dataPopulationpyramidwithastaticcomparison').append('p').html(`<a href=${urls[17]}comparison.csv download>Download the comparison data csv file</a>`)
 // d3.select('#dataPopulationpyramidwithdropdown').append('p').html(`<a href=${urls[35]}comparison.csv download>Download the comparison data csv file</a>`)
-d3.select('#dataPopulationpyramidwithdropdownandinteractivecomparison').append('p').html(`<a href=${urls[20]}comparison.csv download>Download the comparison data csv file</a>`)
-d3.select('#dataSimplemap').html(`<a href=${urls[22]}data/data.csv download>Download the data csv file</a>`)
+d3.select('#dataPopulationpyramidwithdropdownandinteractivecomparison').append('p').html(`<a href=${urls[18]}comparison.csv download>Download the comparison data csv file</a>`)
+d3.select('#dataSimplemap').html(`<a href=${urls[20]}data/data.csv download>Download the data csv file</a>`)
 
 d3.selectAll('iframe').attr('loading', 'lazy')
 
+d3.select('#container21').remove()
+
 filterSelection("all")
 }// End drawGraphic
+
 
 d3.select('body').append('div').html(`<a href=#top>🠕 Back to the top</a>`)
 
