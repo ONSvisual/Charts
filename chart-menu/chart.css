@@ -10,12 +10,12 @@
   font-size: 24px;
   font-weight: 600;
   font-family: 'Open Sans', sans-serif;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   min-height: 66px;
 }
 
 .chart {
-  padding-top: 20px;
+  /* padding-top: 20px; */
   max-height: 400px;
   overflow: auto;
 }
@@ -42,10 +42,11 @@ a {
   transition: 0.3s;
 
   padding: 12px 16px;
-  height: 650px;
+  height: 670px;
   display: flex;
   flex-direction: column;
   border-radius: 4px;
+  display: none;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -140,4 +141,32 @@ button {
 
 button:hover {
   background-color: darkgreen;
+}
+
+/* Filter buttons! */
+
+/* The "show" class is added to the filtered elements */
+.show {
+  display: block;
+}
+
+/* Style the buttons */
+.btn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  color: #414042;
+}
+
+/* Add a light grey background on mouse-over */
+.btn:hover {
+  background-color: #ddd;
+}
+
+/* Add a dark background to the active button */
+.btn.active {
+  background-color: #666;
+  color: white;
 }

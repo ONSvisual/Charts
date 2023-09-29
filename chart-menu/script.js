@@ -91,10 +91,69 @@ function downloadImage(el) {
   </button> |
 */
 
+function filterSelection(c) {
+  var x, i;
+  x = document.getElementsByClassName("container");
+  if (c == "all") c = "";
+  // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+  for (i = 0; i < x.length; i++) {
+    w3RemoveClass(x[i], "show");
+    if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+  }
+}
+
+// Show filtered elements
+function w3AddClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    if (arr1.indexOf(arr2[i]) == -1) {
+      element.className += " " + arr2[i];
+    }
+  }
+}
+
+// Hide elements that are not selected
+function w3RemoveClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    while (arr1.indexOf(arr2[i]) > -1) {
+      arr1.splice(arr1.indexOf(arr2[i]), 1);
+    }
+  }
+  element.className = arr1.join(" ");
+}
+
+// Add active class to the current control button (highlight it)
+var btnContainer = document.getElementById("myBtnContainer");
+var btns = btnContainer.getElementsByClassName("btn");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function() {
+    var current = document.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+    this.className += " active";
+  });
+}
+
+function drawGraphic() {
+
+	console.log(graphic_data)
 
 for (let i = 0; i < charts.length; i++) {
+
+
+		console.log(Object.entries(graphic_data[i]).filter(d => d[1] == 'TRUE'))
+	// console.log(Object.entries(graphic_data))	
+
+	let tags = Object.entries(graphic_data[i]).filter(d => d[1] == 'TRUE')
+
 	grid.append('div').attr('id', 'container' + i).attr('class', 'container')
 	d3.select('#container' + i).append('div').attr('id', 'title' + i).attr('class', 'title-div').text(charts[i])
+
+	tags.forEach((d) => d3.select('#container' + i).attr('class', 'container ' + d[0]))
 
 	//d3.select('#container' + i).append('button').attr('type', 'button').attr('id', 'img' + i).text('Get thumbnail to paste in draft')
 
@@ -145,9 +204,9 @@ for (let i = 0; i < charts.length; i++) {
 
 // 	d3.select('#container' + i).append('div').attr('id', 'chart' + i).attr('class', 'chart')
 // 	d3.select('#container' + i).append('div').attr('id', 'data' + charts[i].replace(/\s/g, "")).html(`<a href=${urls[i]}data.csv download>Download the data csv file</a>`)
-// 	if (i % 3 == 0) {
-// 		d3.select('#container' + i).append('div').html(`<a href=#top>🠕 Back to the top</a>`)
-// 	}
+	// if (i % 3 == 0) {
+	// 	d3.select('#container' + i).append('div').html(`<a href=#top>🠕 Back to the top</a>`)
+	// }
 
 // 	//Making the 'modal' - the full screen pop-up
 // 	d3.select('#container' + i).append('div').attr('id', 'modal' + i).attr('class', 'modal').style('display', 'none')
@@ -221,3 +280,16 @@ d3.select('#dataPopulationpyramidwithdropdownandinteractivecomparison').append('
 d3.select('#dataSimplemap').html(`<a href=${urls[22]}data/data.csv download>Download the data csv file</a>`)
 
 d3.selectAll('iframe').attr('loading', 'lazy')
+
+filterSelection("all")
+}// End drawGraphic
+
+d3.select('body').append('div').html(`<a href=#top>🠕 Back to the top</a>`)
+
+d3.csv(config.essential.graphic_data_url).then((data) => {
+	//load chart data
+	graphic_data = data;
+
+	drawGraphic()
+
+});
