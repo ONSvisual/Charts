@@ -1,4 +1,5 @@
 let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
@@ -28,6 +29,7 @@ function drawGraphic() {
 
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
+	legend.selectAll("*").remove();
 
 	//set up scales
 	const y = d3.scaleLinear().range([height, 0]);
