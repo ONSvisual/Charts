@@ -30,7 +30,7 @@ function drawGraphic() {
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
-
+	legend.selectAll("*").remove();
 
 
   // lets move on to setting up the legend for this chart. 
