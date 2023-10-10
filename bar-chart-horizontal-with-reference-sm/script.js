@@ -39,6 +39,7 @@ function drawGraphic() {
 		.append('div')
 		.attr('class', 'legend--icon--refline')
 		.style('background-color', "#222")
+		.style('border-radius', '5px');
 
 	d3.select(".legend--item--here.refline")
 		.append('div')
