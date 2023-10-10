@@ -24,18 +24,10 @@ function drawGraphic() {
 
   const chartEvery = config.optional.chartEvery[size];
 
-  // let margin = config.optional.margin[size]
-  // let chart_width = (parseInt(graphic.style("width")) / chartEvery) - margin.left - margin.right;
-
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
   legend.selectAll("*").remove();
-
-
-  // lets move on to setting up the legend for this chart. 
-  // let legendGroups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
-
 
 
   // let legenditem = d3
@@ -71,21 +63,7 @@ function drawGraphic() {
 
   // console.log(xDataType)
 
-  //set up scales
-
-  // let x;
-
-  // if (xDataType == 'date') {
-  //   x = d3.scaleTime()
-  //   .domain(d3.extent(graphic_data, (d) => d.date))
-  //   .range([0, chart_width]);
-  // } else {
-  //   x = d3.scaleLinear()
-  //   .domain(d3.extent(graphic_data, (d) => +d.date))
-  //   .range([0, chart_width]);
-  // }
-
-  console.log(Array.from(grouped_data))
+  // console.log(Array.from(grouped_data))
 
   // Create a container div for each small multiple
   var chartContainers = graphic
