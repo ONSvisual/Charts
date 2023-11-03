@@ -1,6 +1,6 @@
 # Charts
 
-The official repository of all publication ready ONS charts. (WARNING: This repository is under construction)
+The official repository of all publication ready ONS charts. See the [chart menu](https://onsvisual.github.io/Charts/chart-menu/). (WARNING: This repository is under construction)
 
 ## Guide to updating and placing an initial commit for a chart
 
