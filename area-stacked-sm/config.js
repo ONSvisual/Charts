@@ -18,8 +18,10 @@ config = {
 			"md": "%Y",
 			"lg": "%Y"
 		},
+		"yAxisFormat": ".0%",
 		"dateFormat": "%Y",
 		"xAxisLabel": "x axis label",
+		"yAxisLabel": "y axis label",
 		"stackOrder": "stackOrderNone"
 		// other options include
 		// stackOrderNone means the order is taken from the datafile
@@ -41,19 +43,19 @@ config = {
 		},
 		"margin": {
 			"sm": {
-				"top": 30,
+				"top": 50,
 				"right": 20,
 				"bottom": 50,
 				"left": 50
 			},
 			"md": {
-				"top": 30,
+				"top": 50,
 				"right": 20,
 				"bottom": 50,
 				"left": 50
 			},
 			"lg": {
-				"top": 30,
+				"top": 50,
 				"right": 20,
 				"bottom": 50,
 				"left": 50
@@ -65,7 +67,9 @@ config = {
 			"lg": 4
 		},
 		"mobileBreakpoint": 510,
-		"mediumBreakpoint": 600
+		"mediumBreakpoint": 600,
+		"legendColumns": 4,
+		"dropYAxis": true
 	},
 	"elements": { "select": 0, "nav": 0, "legend": 1, "titles": 0 }
 };

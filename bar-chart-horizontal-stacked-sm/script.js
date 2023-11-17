@@ -5,7 +5,7 @@ legend = d3.select('#legend');
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
 
-function drawGraphic(seriesName, graphic_data, chartIndex) {
+function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries) {
 	//population accessible summary
 
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -18,17 +18,14 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		const aspectRatio = config.optional.aspectRatio[size];
 		const chartMargin = config.optional.margin[size];
 
-		// const chartWidth =
-		// 	(((parseInt(graphic.style('width')) -
-		// 		chartMargin.left -
-		// 		chartMargin.right) /
-		// 		chartEvery) *
-		// 		aspectRatio[0]) /
-		// 	aspectRatio[1];
-
-		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-
-		return chartWidth;
+		if (config.optional.dropYAxis) {
+			// Chart width calculation allowing for 10px left margin between the charts
+			const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+			return chartWidth;
+		} else {
+			const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+			return chartWidth;
+		}
 	}
 
 	// size thresholds as defined in the config.js file
@@ -53,8 +50,10 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	let margin = { ...config.optional.margin[size] };
 
 	// If the chart is not in the first position in the row, reduce the left margin
-	if (chartPosition !== 0) {
-		margin.left = 10;
+	if (config.optional.dropYAxis) {
+		if (chartPosition !== 0) {
+			margin.left = 10;
+		}
 	}
 
 
@@ -90,7 +89,11 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.tickFormat(d3.format(config.essential.xAxisTickFormat))
 		.ticks(config.optional.xAxisTicks[size]);
 
-	let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	let yAxis = d3.axisLeft(y)
+		.tickSize(0)
+		.tickPadding(10)
+		.tickFormat((d) => config.optional.dropYAxis !== true ? (d) :
+			chartPosition == 0 ? (d) : "");
 
 	// Define stack layout
 	let stack = d3
@@ -103,7 +106,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	const series = stack(graphic_data);
 
-	console.table(series);
+	// console.table(series);
 
 	if (config.essential.xDomain === 'auto') {
 		x.domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))]); //removed.nice()
@@ -139,10 +142,10 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	//End of legend code
 
-	console.log('Chart width:', chart_width);
-	console.log('Height:', height);
-	console.log('X domain:', x.domain());
-	console.log('Y domain:', y.domain());
+	// console.log('Chart width:', chart_width);
+	// console.log('Height:', height);
+	// console.log('X domain:', x.domain());
+	// console.log('Y domain:', y.domain());
 
 	// Create SVG
 	let svg = d3
@@ -181,37 +184,24 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// console.log(`The value of margin.left - (your value) is ${margin.left - 30}.`);
 
-	// This will append the y axis to every chart
-	// svg.append("g").attr("class", "y axis").call(yAxis);
-
-	// This will append the y axis to only the leftmost chart in each row
 	// if (chartIndex % chartsPerRow === 0) {
-	//   svg.append("g").attr("class", "y axis").call(yAxis).call(wrap, margin.left-10); //problem here
-	// } else {
-	//   svg.append("g").attr("class", "y axis").call(yAxis.tickValues([]));
-	// }
-
-	//trying to wrap text
-
-	if (chartIndex % chartsPerRow === 0) {
 		svg
 			.append('g')
 			.attr('class', 'y axis')
 			.call(yAxis)
 			.selectAll('.tick text')
 			.call(wrap, margin.left - 10, graphic_data);
-	} else {
-		svg.append('g').attr('class', 'y axis').call(yAxis.tickValues([]));
-	}
+	// } else {
+	// 	svg.append('g').attr('class', 'y axis').call(yAxis.tickValues([]));
+	// }
 
 	// Add a bold text label to the top left corner of the chart SVG
 	svg
 		.append('text')
-		.attr('class', 'axis-label')
+		.attr('class', 'title')
 		.attr('x', 0)
 		.attr('y', -margin.top / 2)
-		.text(seriesName)
-		.style('font-weight', 'bold');
+		.text(seriesName);
 
 	// Draw chart
 	svg
@@ -230,17 +220,17 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.attr('height', y.bandwidth());
 
 	// This does the x-axis label
-	if (chartIndex % chartsPerRow === chartsPerRow-1) {
+	if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === numberOfSeries - 1) {
 		svg
-		  .append('g')
-		  .attr('transform', `translate(0, ${height})`)
-		  .append('text')
-		  .attr('x', chart_width)
-		  .attr('y', 35)
-		  .attr('class', 'axis--label')
-		  .text(config.essential.xAxisLabel)
-		  .attr('text-anchor', 'end');
-		}
+			.append('g')
+			.attr('transform', `translate(0, ${height})`)
+			.append('text')
+			.attr('x', chart_width)
+			.attr('y', 35)
+			.attr('class', 'axis--label')
+			.text(config.essential.xAxisLabel)
+			.attr('text-anchor', 'end');
+	}
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
@@ -332,11 +322,11 @@ function wrap(text, width, graphic_data) {
 // Load the data
 d3.csv(config.essential.graphic_data_url)
 	.then((data) => {
-		console.log('Original data:', data);
+		// console.log('Original data:', data);
 
 		// Group the data by the 'series' column
 		const groupedData = d3.groups(data, (d) => d.series);
-		console.log('Grouped data:', groupedData);
+		// console.log('Grouped data:', groupedData);
 
 		// Remove previous SVGs
 		graphic.selectAll('svg').remove();
@@ -346,7 +336,7 @@ d3.csv(config.essential.graphic_data_url)
 			const graphic_data = group[1];
 			graphic_data.columns = data.columns;
 
-			pymChild = new pym.Child({ renderCallback: drawGraphic(seriesName, graphic_data, i) });
+			pymChild = new pym.Child({ renderCallback: drawGraphic(seriesName, graphic_data, i, groupedData.length) });
 		});
 	})
 	.catch((error) => console.error(error));
