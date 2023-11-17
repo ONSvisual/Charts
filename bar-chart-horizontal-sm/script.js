@@ -31,19 +31,23 @@ function drawGraphic() {
 
 	function drawChart(container, data, chartIndex) {
 		// Log the data being used for each small multiple
-		console.log('Data for this small multiple:', data);
-		console.log(chartIndex);
+		// console.log('Data for this small multiple:', data);
+		// console.log(chartIndex);
 
 
-	function calculateChartWidth(size) {
-		const chartEvery = config.optional.chart_every[size];
-		const chartMargin = config.optional.margin[size];
+		function calculateChartWidth(size) {
+			const chartEvery = config.optional.chart_every[size];
+			const chartMargin = config.optional.margin[size];
 
-		// Chart width calculation allowing for 10px left margin between the charts
-		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-	
-		return chartWidth;
-	}
+			if (config.optional.dropYAxis) {
+				// Chart width calculation allowing for 10px left margin between the charts
+				const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+				return chartWidth;
+			} else {
+				const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+				return chartWidth;
+			}
+		}
 
 
 		// Calculate the height based on the data
@@ -58,12 +62,14 @@ function drawGraphic() {
 		let margin = { ...config.optional.margin[size] };
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (chartPosition !== 0) {
-			margin.left = 10;
-		} 
+		if (config.optional.dropYAxis) {
+			if (chartPosition !== 0) {
+				margin.left = 10;
+			}
+		}
 
 		let chart_width = calculateChartWidth(size)
-		
+
 		//set up scales
 		const x = d3.scaleLinear().range([0, chart_width]);
 
@@ -77,9 +83,13 @@ function drawGraphic() {
 		//use the data to find unique entries in the name column
 		y.domain([...new Set(data.map((d) => d.name))]);
 
-		//set up yAxis generator
+		//set up yAxis generator - if dropYAxis is true only adding labels to the leftmost chart
 
-		let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+		let yAxis = d3.axisLeft(y)
+			.tickSize(0)
+			.tickPadding(10)
+			.tickFormat((d) => config.optional.dropYAxis !== true ? (d) :
+				chartPosition == 0 ? (d) : "");
 
 		//set up xAxis generator
 		let xAxis = d3
@@ -118,14 +128,14 @@ function drawGraphic() {
 				}
 			});
 
-		if (chartPosition == 0) {
-			svg
-				.append('g')
-				.attr('class', 'y axis')
-				.call(yAxis)
-				.selectAll('text')
-				.call(wrap, margin.left - 10);
-		}
+		// if (chartPosition == 0) {
+		svg
+			.append('g')
+			.attr('class', 'y axis')
+			.call(yAxis)
+			.selectAll('text')
+			.call(wrap, margin.left - 10);
+		// }
 
 
 		svg
@@ -171,17 +181,17 @@ function drawGraphic() {
 			.attr('text-anchor', 'start')
 			.call(wrap, chart_width);
 
-	// This does the x-axis label
-	if (chartIndex % chartsPerRow === chartsPerRow-1) {
-		svg
-			.append('g')
-			.attr('transform', `translate(0, ${height})`)
-			.append('text')
-			.attr('x', chart_width)
-			.attr('y', 35)
-			.attr('class', 'axis--label')
-			.text(config.essential.xAxisLabel)
-			.attr('text-anchor', 'end');
+		// This does the x-axis label
+		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...nested_data].length-1) {
+			svg
+				.append('g')
+				.attr('transform', `translate(0, ${height})`)
+				.append('text')
+				.attr('x', chart_width)
+				.attr('y', 35)
+				.attr('class', 'axis--label')
+				.text(config.essential.xAxisLabel)
+				.attr('text-anchor', 'end');
 		}
 	}
 

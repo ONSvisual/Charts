@@ -18,17 +18,14 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		const aspectRatio = config.optional.aspectRatio[size];
 		const chartMargin = config.optional.margin[size];
 
-		// const chartWidth =
-		// 	(((parseInt(graphic.style('width')) -
-		// 		chartMargin.left -
-		// 		chartMargin.right) /
-		// 		chartEvery) *
-		// 		aspectRatio[0]) /
-		// 	aspectRatio[1];
-
-		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 20)) / chartEvery) - chartMargin.right;
-
-		return chartWidth;
+		if (config.optional.dropYAxis) {
+			// Chart width calculation allowing for 10px left margin between the charts
+			const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 20)) / chartEvery) - chartMargin.right;
+			return chartWidth;
+		} else {
+			const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+			return chartWidth;
+		}
 	}
 
 	// size thresholds as defined in the config.js file
@@ -53,28 +50,35 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	const chartsPerRow = config.optional.chart_every[size];
 	const chartPosition = chartIndex % chartsPerRow;
 
-	console.log(chartIndex);
+	// console.log(chartIndex);
 
 	// Set dimensions
 	let margin = { ...config.optional.margin[size] };
 
 	// If the chart is not in the first position in the row, reduce the left margin
-	if (chartPosition !== 0) {
-		margin.left = 20;
+	if (config.optional.dropYAxis) {
+		if (chartPosition !== 0) {
+			margin.left = 20;
+		}
 	}
 
 	// Get categories from the keys used in the stack generator
-	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
+	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== 'series');
 
 	const colorScale = d3
 		.scaleOrdinal()
 		.domain(categories)
 		.range(config.essential.colour_palette);
 
+	//Getting the list of colours used in this visualisation
+	let colours = [...config.essential.colour_palette].slice(0, categories.length)
+
 	// Set up the legend
 	const legenditem = legend
 		.selectAll('div.legend--item')
-		.data(d3.zip(categories, colorScale.range()))
+		.data(
+			d3.zip([...categories].reverse(), colours.reverse())
+		)
 		.enter()
 		.append('div')
 		.attr('class', 'legend--item');
@@ -93,6 +97,11 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.html(function (d) {
 			return d[0];
 		});
+
+	if (size !== 'sm') {
+		d3.select('#legend')
+			.style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`)
+	}
 
 	//End of legend code
 
@@ -169,14 +178,27 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 				.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
 		);
 
-	// Add the y-axis, but only if the chart is at the first position
-	if (chartPosition === 0) {
-		svg
-			.append('g')
-			.attr('class', 'y axis numeric')
-			.call(d3.axisLeft(yAxis).tickFormat(d3.format('.0%')));
-	}
 
+	//Add the y-axis to the leftmost chart, or all charts if dropYAxis in the config is false
+	svg
+		.append('g')
+		.attr('class', 'y axis numeric')
+		.call(d3.axisLeft(yAxis)
+			.tickSize(calculateTickSize())
+			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
+				chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""));
+
+	function calculateTickSize() {
+		if (config.optional.dropYAxis) {
+			if (chartPosition == 0) {
+				return 5
+			} else {
+				return 0
+			}
+		} else {
+			return 5
+		}
+	}
 
 	// todo: This needs to be moved to the gobal style css
 	// Add a title to each of the charts 
@@ -186,23 +208,32 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.attr('y', -margin.top / 2)
 		.attr('text-anchor', 'start')
 		.style('font-size', '16px')
-		.style('font-weight', 600)
-		.style('fill', '#707071')
+		.attr('class', 'title')
 		.text(seriesName);
 
 	// This does the x-axis label
-	if (chartIndex % chartsPerRow === chartsPerRow-1) {
-	svg
-		.append('g')
-		.attr('transform', `translate(0, ${height})`)
-		.append('text')
-		.attr('x', width)
-		.attr('y', 35)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+	if (chartIndex % chartsPerRow === chartsPerRow - 1) {
+		svg
+			.append('g')
+			.attr('transform', `translate(0, ${height})`)
+			.append('text')
+			.attr('x', width)
+			.attr('y', 35)
+			.attr('class', 'axis--label')
+			.text(config.essential.xAxisLabel)
+			.attr('text-anchor', 'end');
 	}
 
+	// This does the y-axis label
+	svg
+		.append('g')
+		.attr('transform', 'translate(0,0)')
+		.append('text')
+		.attr('x', -(margin.left - 5))
+		.attr('y', -10)
+		.attr('class', 'axis--label')
+		.text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
+		.attr('text-anchor', 'start');
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 
@@ -223,7 +254,7 @@ function renderCallback() {
 			const groupedData = d3.groups(data, (d) => d.series);
 			// console.log("Grouped data:", groupedData);
 
-			console.table(groupedData);
+			// console.table(groupedData);
 			// Remove previous SVGs
 			//	graphic.selectAll('svg').remove();
 
@@ -234,7 +265,7 @@ function renderCallback() {
 
 				// Further process the graphic_data
 				const categories = Object.keys(graphic_data[0]).filter(
-					(k) => k !== 'date'
+					(k) => k !== 'date' && k !== 'series'
 				);
 				graphic_data.forEach((d) => {
 					d.date = d3.timeParse(config.essential.dateFormat)(d.date);

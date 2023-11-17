@@ -9,6 +9,7 @@ config = {
 			"md": "%Y",
 			"lg": "%b-%y"
 		},
+		"yAxisFormat": ".0f",
 		"dateFormat": "%b-%y",
 		//the format your date data has in data.csv
 		"yDomain": "auto",
@@ -70,7 +71,8 @@ config = {
 		},
 		"legendColumns": 4,
 		"mobileBreakpoint": 510,
-		"mediumBreakpoint": 600
+		"mediumBreakpoint": 600,
+		"dropYAxis": true
 	},
 	"elements": { "select": 0, "nav": 0, "legend": 0, "titles": 0 },
 	"chart_build": {}

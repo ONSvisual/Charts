@@ -71,9 +71,11 @@ legenditem
   const y = d3.scaleLinear()
      .range([height, 0])
    
-    //lets also try a new smallmultiple version here which will group data on the basis of series
- grouped_data = d3.group(graphic_data, d => d.series)  
+  //group data on the basis of plot
+  grouped_data = d3.group(graphic_data, d => d.series)
 
+  let plots = [...new Set(d3.map(graphic_data, d => d.series))];
+ 
   //create a svg for each chart
   svg = d3.select('#graphic')
      .selectAll('div')
@@ -130,6 +132,7 @@ svg
   svg.selectAll('circle')
       .data(graphic_data)
       .join('circle')
+      .data(d => d[1])
       .attr('cx',(d) => x(d.xvalue))
       .attr('cy',(d) => y(d.yvalue))
       .attr('r',config.essential.radius)
@@ -138,29 +141,41 @@ svg
       .attr('stroke',(d)=> colour(d.group))
       .attr('stroke-opacity',config.essential.strokeOpacity);
 
+  // This does the chart title label
+  svg
+    .append('g')
+    .attr('transform', 'translate(0, 0)')
+    .append('text')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('dy', 20 - margin.top)
+    .attr('class', 'title')
+    .text(d => d[0])
+    .attr('text-anchor', 'start')
+    .call(wrap, chart_width);
 
-// This does the x-axis label
-    svg
+  // This does the x-axis label - just on the rightmost chart of each row
+  svg
     .append('g')
     .attr('transform', 'translate(0,' + height + ')')
     .append('text')
-    .attr('x',chart_width)
-    .attr('y',40)
-    .attr('class','axis--label')
-    .text((d,i) => i%chartEvery == chartEvery-1 ?
+    .attr('x', chart_width)
+    .attr('y', 40)
+    .attr('class', 'axis--label')
+    .text((d, i) => i % chartEvery == chartEvery - 1 || plots.indexOf(d[0]) === plots.length - 1 ?
       config.essential.xAxisLabel : "")
-    .attr('text-anchor','end');
+    .attr('text-anchor', 'end');
 
-// This does the y-axis label
-svg
-.append('g')
-.attr('transform', 'translate(0,0)')
-.append('text')
-.attr('x',-(margin.left-5))
-.attr('y',-10)
-.attr('class','axis--label')
-.text(config.essential.yAxisLabel)
-.attr('text-anchor','start');
+  // This does the y-axis label - just on the leftmost chart of each row
+  svg
+    .append('g')
+    .attr('transform', 'translate(0,0)')
+    .append('text')
+    .attr('x', -(margin.left - 5))
+    .attr('y', -10)
+    .attr('class', 'axis--label')
+    .text((d) => plots.indexOf(d[0]) % chartEvery == 0 ? config.essential.yAxisLabel : "")
+    .attr('text-anchor', 'start');
 
 
   //create link to source

@@ -25,19 +25,19 @@ config = {
     },
     "margin": {
       "sm": {
-        "top": 30,
+        "top": 50,
         "right": 20,
         "bottom": 50,
         "left": 50
       },
       "md": {
-        "top": 30,
+        "top": 50,
         "right": 20,
         "bottom": 50,
         "left": 50
       },
       "lg": {
-        "top": 30,
+        "top": 50,
         "right": 50,
         "bottom": 50,
         "left": 50
@@ -54,7 +54,8 @@ config = {
       "lg": 10
     },
     "mobileBreakpoint": 510,
-    "mediumBreakpoint": 600
+    "mediumBreakpoint": 600,
+    "dropYAxis": true
   },
   "elements": { "select": 0, "nav": 0, "legend": 0, "titles": 0 },
   "chart_build": {}

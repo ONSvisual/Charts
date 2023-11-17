@@ -12,3 +12,8 @@
 .grid path {
   stroke-width: 0;
 }
+
+.title {
+  font-weight: 600;
+  fill: #414042;
+}

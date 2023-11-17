@@ -30,7 +30,7 @@ function drawGraphic() {
 
   // clear out existing graphics
   graphic.selectAll("*").remove();
-	legend.selectAll("*").remove();
+  legend.selectAll("*").remove();
 
 
   // lets move on to setting up the legend for this chart. 
@@ -58,8 +58,10 @@ function drawGraphic() {
     .html((d) => d);
 
 
-  //lets also try a new smallmultiple version here which will group data on the basis of plot
+  //group data on the basis of plot
   grouped_data = d3.group(graphic_data, d => d.plot)
+
+  let plots = [...new Set(d3.map(graphic_data, d => d.plot))];
 
   let xDataType;
 
@@ -77,16 +79,16 @@ function drawGraphic() {
 
   if (xDataType == 'date') {
     x = d3.scaleTime()
-    .domain(d3.extent(graphic_data, (d) => d.date))
-    .range([0, chart_width]);
+      .domain(d3.extent(graphic_data, (d) => d.date))
+      .range([0, chart_width]);
   } else {
     x = d3.scaleLinear()
-    .domain(d3.extent(graphic_data, (d) => +d.date))
-    .range([0, chart_width]);
+      .domain(d3.extent(graphic_data, (d) => +d.date))
+      .range([0, chart_width]);
   }
 
 
-  console.log("x",d3.extent(graphic_data, (d) => +d.date))
+  // console.log("x",d3.extent(graphic_data, (d) => +d.date))
 
   const y = d3.scaleLinear()
     .range([height, 0])
@@ -187,8 +189,20 @@ function drawGraphic() {
     .attr('stroke', (d) => colour(d.group))
     .attr('stroke-opacity', config.essential.strokeOpacity);
 
+  // This does the chart title label
+  svg
+    .append('g')
+    .attr('transform', 'translate(0, 0)')
+    .append('text')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('dy', 20 - margin.top)
+    .attr('class', 'title')
+    .text(d => d[0])
+    .attr('text-anchor', 'start')
+    .call(wrap, chart_width);
 
-  // This does the x-axis label
+  // This does the x-axis label - just on the rightmost chart of each row
   svg
     .append('g')
     .attr('transform', 'translate(0,' + height + ')')
@@ -196,11 +210,11 @@ function drawGraphic() {
     .attr('x', chart_width)
     .attr('y', 40)
     .attr('class', 'axis--label')
-    .text((d, i) => i % chartEvery == chartEvery - 1 ?
+    .text((d, i) => i % chartEvery == chartEvery - 1 || plots.indexOf(d[0]) === plots.length - 1 ?
       config.essential.xAxisLabel : "")
     .attr('text-anchor', 'end');
 
-  // This does the y-axis label
+  // This does the y-axis label - just on the leftmost chart of each row
   svg
     .append('g')
     .attr('transform', 'translate(0,0)')
@@ -208,7 +222,7 @@ function drawGraphic() {
     .attr('x', -(margin.left - 5))
     .attr('y', -10)
     .attr('class', 'axis--label')
-    .text(config.essential.yAxisLabel)
+    .text((d) => plots.indexOf(d[0]) % chartEvery == 0 ? config.essential.yAxisLabel : "")
     .attr('text-anchor', 'start');
 
 
@@ -259,14 +273,14 @@ d3.csv(config.essential.graphic_data_url)
     //load chart data
     graphic_data = data;
 
-    data.forEach((d,i) => {
+    data.forEach((d, i) => {
 
       //If the date column is has date data store it as dates
       if (parseTime(data[i].date) !== null) {
         d.date = parseTime(d.date)
       }
       // console.log(data[i].date)
-       });
+    });
 
     //use pym to create iframed chart dependent on specified variables
     pymChild = new pym.Child({

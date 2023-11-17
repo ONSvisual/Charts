@@ -17,16 +17,6 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-
-	const aspectRatio = config.optional.aspectRatio[size];
-	let margin = config.optional.margin[size];
-	let chart_every = config.optional.chart_every[size];
-	let chart_width =
-		parseInt(graphic.style('width')) / chart_every - margin.left - margin.right;
-	//height is set by the aspect ratio
-	let height =
-		aspectRatio[1] / aspectRatio[0] * chart_width;
-
 	// clear out existing graphics
 	graphic.selectAll('*').remove();
 
@@ -40,7 +30,42 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, data, series) {
+	function drawChart(container, data, chartIndex) {
+
+		function calculateChartWidth(size) {
+
+			const chartMargin = config.optional.margin[size];
+
+			if (config.optional.dropYAxis) {
+				// Chart width calculation allowing for 10px left margin between the charts
+				const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+				return chartWidth;
+			} else {
+				const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+				return chartWidth;
+			}
+		}
+
+		const chartEvery = config.optional.chart_every[size];
+		const chartsPerRow = config.optional.chart_every[size];
+		let chartPosition = chartIndex % chartsPerRow;
+
+		let margin = { ...config.optional.margin[size] };
+
+		// If the chart is not in the first position in the row, reduce the left margin
+		if (config.optional.dropYAxis) {
+			if (chartPosition !== 0) {
+				margin.left = 10;
+			}
+		}
+
+		const aspectRatio = config.optional.aspectRatio[size];
+		let chart_width = calculateChartWidth(size)
+
+		//height is set by the aspect ratio
+		let height =
+			aspectRatio[1] / aspectRatio[0] * chart_width;
+
 		//set up scales
 		const y = d3.scaleLinear().range([height, 0]);
 
@@ -59,7 +84,8 @@ function drawGraphic() {
 			.tickSize(-chart_width)
 			.tickPadding(10)
 			.ticks(config.optional.yAxisTicks[size])
-			.tickFormat(d3.format('.0%'));
+			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
+			chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "");
 
 		let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
 
@@ -114,7 +140,7 @@ function drawGraphic() {
 
 		svg
 			.append('g')
-			.attr('class', 'y axis')
+			.attr('class', 'y axis numeric') //Can be numeric or categorical
 			.call(yAxis)
 			.selectAll('line')
 			.each(function (d) {
@@ -144,7 +170,7 @@ function drawGraphic() {
 			.attr('y', 0)
 			.attr('dy', -25)
 			.attr('class', 'title')
-			.text(series)
+			.text(data[0].series)
 			.attr('text-anchor', 'start')
 			.call(wrap, chart_width);
 
@@ -156,13 +182,13 @@ function drawGraphic() {
 			.attr('x', -margin.left + 10)
 			.attr('y', -5)
 			.attr('class', 'axis--label')
-			.text(config.essential.yAxisLabel)
+			.text(() => chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "")
 			.attr('text-anchor', 'start');
 	}
 
 	// Draw the charts for each small multiple
-	chartContainers.each(function ([key, value]) {
-		drawChart(d3.select(this), value, key);
+	chartContainers.each(function ([key, value], i) {
+		drawChart(d3.select(this), value, i);
 	});
 
 	//create link to source

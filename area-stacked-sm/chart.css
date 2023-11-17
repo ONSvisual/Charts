@@ -1,0 +1,10 @@
+.title {
+    font-weight: 600;
+    fill: #414042;
+  }
+
+  #legend{
+    display: grid;
+    align-items: center;
+    padding-bottom: 20px;
+  }

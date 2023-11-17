@@ -63,7 +63,8 @@ config = {
 			"lg": 5
 		},
 		"mobileBreakpoint": 510,
-		"mediumBreakpoint": 600
+		"mediumBreakpoint": 600,
+		"dropYAxis": true
 	},
 	"elements": { "select": 0, "nav": 0, "legend": 1, "titles": 0 }
 };
