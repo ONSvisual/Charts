@@ -62,7 +62,7 @@ function drawGraphic() {
 	d3.select('#button0').property('checked', true);
 	d3.select('#selected').text(
 		config.essential.buttonLabels[
-			document.querySelector('input[name="button"]:checked').value
+		document.querySelector('input[name="button"]:checked').value
 		] + ' is selected'
 	);
 
@@ -71,7 +71,7 @@ function drawGraphic() {
 		onchange(document.querySelector('input[name="button"]:checked').value);
 		d3.select('#selected').text(
 			config.essential.buttonLabels[
-				document.querySelector('input[name="button"]:checked').value
+			document.querySelector('input[name="button"]:checked').value
 			] + ' is selected'
 		);
 	});
@@ -332,10 +332,10 @@ function drawGraphic() {
 		.attr(
 			'transform',
 			'translate(' +
-				(fullwidth - margin.left - margin.right) +
-				',' +
-				(height + 30) +
-				')'
+			(fullwidth - margin.left - margin.right) +
+			',' +
+			(height + 30) +
+			')'
 		)
 		.attr('class', 'axis--label')
 		.attr('text-anchor', 'end')
@@ -400,9 +400,9 @@ function drawGraphic() {
 	titleDivs
 		.append('div')
 		.append('p')
-		.attr('class', 'legend--text')
+		.attr('class', (d) => 'legend--text ' + 'item' + d)
 		.html((d) =>
-			d == 'x' ? config.essential.legend[0] : config.essential.legend[1]
+			d == 'x' ? config.essential.legend[0] : config.essential.buttonLabels[0]
 		);
 
 	function onchange(value) {
@@ -420,6 +420,11 @@ function drawGraphic() {
 					? lineRight(comparison_data_new) + 'l 0 ' + -y.bandwidth()
 					: lineRight(time_comparison_data_new) + 'l 0 ' + -y.bandwidth()
 			);
+
+		//Updating the legend based on which button is selected
+		d3.selectAll("p.legend--text.itemy").text(config.essential.buttonLabels[
+			document.querySelector('input[name="button"]:checked').value
+		])
 	}
 
 	//create link to source
