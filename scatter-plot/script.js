@@ -141,7 +141,8 @@ legenditem
     .attr('y',40)
     .attr('class','axis--label')
     .text(config.essential.xAxisLabel)
-    .attr('text-anchor','end');
+    .attr('text-anchor','end')
+    .call(wrap, chart_width);
 
 // This does the y-axis label
 svg
@@ -175,10 +176,10 @@ function wrap(text, width) {
             line = [],
             lineNumber = 0,
             lineHeight = 1.1, // ems
-            // y = text.attr("y"),
+            y = text.attr("y"),
             x = text.attr("x"),
             dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr('x',x);
+            tspan = text.text(null).append("tspan").attr('x',x).attr('y',y);
           while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
