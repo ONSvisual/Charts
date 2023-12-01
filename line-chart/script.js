@@ -174,8 +174,8 @@ function drawGraphic() {
 				.attr('text-anchor', 'start')
 				.attr(
 					'fill',
-					config.essential.colour_palette[
-					categories.indexOf(category) % config.essential.colour_palette.length
+					config.essential.text_colour_palette[
+					categories.indexOf(category) % config.essential.text_colour_palette.length
 					]
 				)
 				.text(category)
