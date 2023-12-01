@@ -10,7 +10,7 @@ config={
     "xDomain":"auto",
     "yDomain":"auto",
     // either "auto" or an array for the x/y domain e.g. [0,100]
-    "xAxisLabel":"x axis label",
+    "xAxisLabel":"Really long x axis label that is so long that is needs wrapping on mobile because it is so so so so so so so long",
     "yAxisLabel":"y axis label",
     "xAxisFormat":".0%",
     "yAxisFormat":".0%"
@@ -20,19 +20,19 @@ config={
       "sm": {
         "top": 30,
         "right": 20,
-        "bottom": 50,
+        "bottom": 75,
         "left": 50
       },
       "md": {
         "top": 30,
         "right": 20,
-        "bottom": 50,
+        "bottom": 75,
         "left": 50
       },
       "lg": {
         "top": 30,
         "right":50,
-        "bottom": 50,
+        "bottom": 75,
         "left": 50
       }
     },
