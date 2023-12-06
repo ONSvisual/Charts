@@ -9,6 +9,14 @@ config = {
 			"#F66068",
 			"#118C7B"
 		],
+		"text_colour_palette": [
+			"#206095",
+			"#1F80A3",
+			"#871A5B",
+			"#6E7E26",
+			"#F66068",
+			"#118C7B"
+		],
 		"drawLegend": false,
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
