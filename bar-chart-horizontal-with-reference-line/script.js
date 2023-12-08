@@ -104,14 +104,13 @@ function drawGraphic() {
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-		
 
 	if (config.essential.xDomain == 'auto') {
 		x.domain([
 			0,
 			//x domain is the maximum out of the value and the reference value
-			Math.max((d3.max(graphic_data.map(({ value }) => Number(value))),
-			d3.max(graphic_data.map(({ ref }) => Number(ref)))))
+			Math.max(d3.max(graphic_data.map(({ value }) => Number(value))),
+			d3.max(graphic_data.map(({ ref }) => Number(ref))))
 		])
 	} else {
 		x.domain(config.essential.xDomain);
