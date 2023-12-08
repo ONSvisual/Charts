@@ -116,7 +116,7 @@ function drawGraphic() {
 			.tickSize(0)
 			.tickPadding(10)
 			.tickFormat((d) => config.optional.dropYAxis !== true ? (d) :
-			chartPosition == 0 ? (d) : "");
+				chartPosition == 0 ? (d) : "");
 
 		//set up xAxis generator
 		let xAxis = d3
@@ -139,8 +139,8 @@ function drawGraphic() {
 			x.domain([
 				0,
 				//x domain is the maximum out of the value and the reference value
-				Math.max((d3.max(graphic_data.map(({ value }) => Number(value))),
-					d3.max(graphic_data.map(({ ref }) => Number(ref)))))
+				Math.max(d3.max(graphic_data.map(({ value }) => Number(value))),
+					d3.max(graphic_data.map(({ ref }) => Number(ref))))
 			])
 		} else {
 			x.domain(config.essential.xDomain);
@@ -159,12 +159,12 @@ function drawGraphic() {
 			});
 
 		// if (chartPosition == 0) {
-			svg
-				.append('g')
-				.attr('class', 'y axis')
-				.call(yAxis)
-				.selectAll('text')
-				.call(wrap, margin.left - 10);
+		svg
+			.append('g')
+			.attr('class', 'y axis')
+			.call(yAxis)
+			.selectAll('text')
+			.call(wrap, margin.left - 10);
 		// }
 
 
@@ -224,7 +224,7 @@ function drawGraphic() {
 			.call(wrap, chart_width);
 
 		// This does the x-axis label
-		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...nested_data].length-1) {
+		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...nested_data].length - 1) {
 			svg
 				.append('g')
 				.attr('transform', `translate(0, ${height})`)
