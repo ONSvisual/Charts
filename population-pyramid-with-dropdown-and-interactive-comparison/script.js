@@ -208,14 +208,14 @@ function drawGraphic() {
 			graphic_data,
 			graphic_data.columns.slice(3),
 			'age',
-			'value'
+			'percentage'
 		);
 
 		tidydataComparisonPercentage = pivot(
 			comparison_data,
 			comparison_data.columns.slice(3),
 			'age',
-			'value'
+			'percentage'
 		);
 	}
 
