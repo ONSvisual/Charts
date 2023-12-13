@@ -241,8 +241,7 @@ function drawGraphic() {
 					]
 				)
 				.text(category)
-				.style('font-weight', 700)
-				.style('font-size', '14px')
+				.attr("class","directLineLabel")
 				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
 
 			svg
