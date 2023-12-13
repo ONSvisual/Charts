@@ -166,7 +166,7 @@ function drawGraphic() {
 			graphic_data,
 			graphic_data.columns.slice(3),
 			'age',
-			'value'
+			'percentage'
 		);
 
 		comparison_data_new = comparison_data.map(function (d) {
