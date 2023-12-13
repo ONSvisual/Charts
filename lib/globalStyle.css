@@ -105,6 +105,7 @@ body
   font-weight: 400;
   max-width: 700px;
   margin: 0px auto;
+  padding-bottom: 10px;
 }
 
 text
@@ -207,6 +208,7 @@ h5#source {
 #legend {
   display: flex;
   flex-wrap: wrap;
+  padding-top: 10px;
 }
 
 .legend--item {
