@@ -49,6 +49,9 @@ function drawGraphic() {
 	// Nest the graphic_data by the 'series' column
 	let nested_data = d3.group(graphic_data, (d) => d.series);
 
+	//Generate a list of categories based on the order in the first chart that we can use to order the subsequent charts
+	let namesArray = [...nested_data][0][1].map(d => d.name);
+
 	// Create a container div for each small multiple
 	let chartContainers = graphic
 		.selectAll('.chart-container')
@@ -61,6 +64,8 @@ function drawGraphic() {
 		// console.log('Data for this small multiple:', data);
 		// console.log(chartIndex);
 
+		//Sort the data so that the bars in each chart are in the same order
+		data.sort((a, b) => namesArray.indexOf(a.name) - namesArray.indexOf(b.name))
 
 		function calculateChartWidth(size) {
 			const chartEvery = config.optional.chart_every[size];

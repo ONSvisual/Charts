@@ -185,12 +185,12 @@ function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries) {
 	// console.log(`The value of margin.left - (your value) is ${margin.left - 30}.`);
 
 	// if (chartIndex % chartsPerRow === 0) {
-		svg
-			.append('g')
-			.attr('class', 'y axis')
-			.call(yAxis)
-			.selectAll('.tick text')
-			.call(wrap, margin.left - 10, graphic_data);
+	svg
+		.append('g')
+		.attr('class', 'y axis')
+		.call(yAxis)
+		.selectAll('.tick text')
+		.call(wrap, margin.left - 10, graphic_data);
 	// } else {
 	// 	svg.append('g').attr('class', 'y axis').call(yAxis.tickValues([]));
 	// }
@@ -326,7 +326,10 @@ d3.csv(config.essential.graphic_data_url)
 
 		// Group the data by the 'series' column
 		const groupedData = d3.groups(data, (d) => d.series);
-		// console.log('Grouped data:', groupedData);
+		// console.log('Grouped data:', groupedData[0][1]);
+
+		//Generate a list of categories based on the order in the first chart that we can use to order the subsequent charts
+		let namesArray = [...groupedData][0][1].map(d => d.name);
 
 		// Remove previous SVGs
 		graphic.selectAll('svg').remove();
@@ -334,6 +337,10 @@ d3.csv(config.essential.graphic_data_url)
 		groupedData.forEach((group, i) => {
 			const seriesName = group[0];
 			const graphic_data = group[1];
+
+			//Sort the data so that the bars in each chart are in the same order
+			graphic_data.sort((a, b) => namesArray.indexOf(a.name) - namesArray.indexOf(b.name))
+
 			graphic_data.columns = data.columns;
 
 			pymChild = new pym.Child({ renderCallback: drawGraphic(seriesName, graphic_data, i, groupedData.length) });

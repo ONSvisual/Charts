@@ -190,8 +190,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
   console.log(colorsArray)
 
-	// This does the x-axis label
-	if (chartIndex % chartsPerRow === chartsPerRow-1) {
+  // This does the x-axis label
+  if (chartIndex % chartsPerRow === chartsPerRow - 1) {
     svg
       .append('g')
       .attr('transform', `translate(0, ${height})`)
@@ -201,7 +201,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
       .attr('class', 'axis--label')
       .text(config.essential.xAxisLabel)
       .attr('text-anchor', 'end');
-    }
+  }
 
   //create link to source
   d3.select("#source").text("Source: " + config.essential.sourceText);
@@ -263,12 +263,19 @@ function renderCallback() {
       const groupedData = d3.groups(data, (d) => d.series);
       // console.log("Grouped data:", groupedData);
 
+      //Generate a list of categories based on the order in the first chart that we can use to order the subsequent charts
+      let namesArray = [...groupedData][0][1].map(d => d.name);
+
       // Remove previous SVGs
       graphic.selectAll("svg").remove();
 
       groupedData.forEach((group, i) => {
         const seriesName = group[0];
         const graphic_data = group[1];
+
+        //Sort the data so that the bars in each chart are in the same order
+        graphic_data.sort((a, b) => namesArray.indexOf(a.name) - namesArray.indexOf(b.name))
+
         graphic_data.columns = data.columns;
 
         drawGraphic(seriesName, graphic_data, i);
