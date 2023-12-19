@@ -350,7 +350,7 @@ function drawGraphic() {
 		)
 		.attr('class', 'axis--label')
 		.attr('text-anchor', 'middle')
-		.text('Age');
+		.text(config.essential.yAxislabel);
 
 	// Set up the legend
 	widths = [chart_width + margin.left, chart_width + margin.right];

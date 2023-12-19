@@ -13,7 +13,8 @@ config = {
 		// this is the lighter palette for reference lines ["#9A86E9", "#3fb0b3"]
 		"comparison_colour_palette": ["#5c5185", "#306970"],
 		"legend": ["Area name", "Selected comparison"],
-		"xAxislabel": ["Percentage"]
+		"xAxislabel": ["Percentage"],
+		"yAxislabel": ["Age"]
 	},
 	"optional": {
 		"margin": {

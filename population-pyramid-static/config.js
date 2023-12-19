@@ -9,7 +9,8 @@ config = {
 		"colour_palette": ["#6749A6", "#2EA1A4"],
 		// this is the darker palette when there are no comparison lines  ["#6749A6","#2EA1A4"]
 		"legend": ["Variable name"],
-		"xAxislabel": ["Percentage"]
+		"xAxislabel": ["Percentage"],
+		"yAxislabel": ["Age"]
 	},
 	"optional": {
 		"margin": {
