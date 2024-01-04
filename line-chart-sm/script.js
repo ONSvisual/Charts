@@ -125,6 +125,7 @@ function drawGraphic() {
 				.line()
 				.x((d) => x(d.date))
 				.y((d) => y(d[category]))
+				.defined(d => d[category] !== null) // Only plot lines where we have values
 				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null);
 
@@ -365,7 +366,7 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 				date: d3.timeParse(config.essential.dateFormat)(d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
-					.map(([key, value]) => [key, +value])
+					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 			}
 		} else {
@@ -373,7 +374,7 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 				date: (+d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
-					.map(([key, value]) => [key, +value])
+					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 			}}
 		});

@@ -149,7 +149,7 @@ function drawGraphic() {
 				.y((d) => y(d[category]))
 				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null)
-				.defined(d => d[category] !== 0);
+				.defined(d => d[category] !== null) // Only plot lines where we have values
 
 				// console.log(data)
 
@@ -173,6 +173,7 @@ function drawGraphic() {
 			.x(d => x(d.date))
 			.y0(d => y(d[`${category}_lowerCI`]))
 			.y1(d => y(d[`${category}_upperCI`]))
+			.defined(d => d[`${category}_lowerCI`] !== null && d[`${category}_upperCI`] !== null) // Only plot areas where we have values
 
 		svg.append('path')
 			.attr('d', areaGenerator(data[1]))
@@ -374,7 +375,7 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 			date: d3.timeParse(config.essential.dateFormat)(d.date),
 			...Object.entries(d)
 				.filter(([key]) => key !== 'date')
-				.map(([key, value]) => key !== "series" ? [key, +value] : [key, value])
+				.map(([key, value]) => key !== "series" ? [key, value == "" ? null : +value] : [key, value]) // Checking for missing values so that they can be separated from zeroes
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 		};
 	});
