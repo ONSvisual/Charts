@@ -158,6 +158,7 @@ function drawGraphic() {
 			.line()
 			.x((d) => x(d.date))
 			.y((d) => y(d[category]))
+			.defined(d => d[category] !== null) // Only plot lines where we have values
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
 		// console.log(`Line generator created for category: ${category}`);
@@ -184,6 +185,7 @@ function drawGraphic() {
 			.x(d => x(d.date))
 			.y0(d => y(d[`${category}_lowerCI`]))
 			.y1(d => y(d[`${category}_upperCI`]))
+			.defined(d => d[`${category}_lowerCI`] !== null && d[`${category}_upperCI`] !== null) // Only plot areas where we have values
 
 		svg.append('path')
 			.attr('d', areaGenerator(graphic_data))
@@ -340,7 +342,7 @@ d3.csv(config.essential.graphic_data_url).then(data => {
 				date: d3.timeParse(config.essential.dateFormat)(d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
-					.map(([key, value]) => [key, +value])
+					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 			}
 		} else {
@@ -348,7 +350,7 @@ d3.csv(config.essential.graphic_data_url).then(data => {
 				date: (+d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
-					.map(([key, value]) => [key, +value])
+					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
 			}}
 		});
