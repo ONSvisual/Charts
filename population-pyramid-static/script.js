@@ -73,10 +73,7 @@ function drawGraphic() {
 
 	// set up widths
 	fullwidth = parseInt(graphic.style('width'));
-	chart_width =
-		(parseInt(graphic.style('width')) - margin.centre) / 2 -
-		margin.left -
-		margin.right;
+	chart_width = (parseInt(graphic.style('width')) - margin.centre - margin.left - margin.right) / 2;
 	height = (graphic_data_new.length / 2) * config.optional.seriesHeight[size];
 
 	// set up some scales, first the left scale
@@ -190,7 +187,7 @@ function drawGraphic() {
 		.attr(
 			'transform',
 			'translate(' +
-				(fullwidth - margin.left - margin.right) +
+				(fullwidth - margin.left) +
 				',' +
 				(height + 30) +
 				')'
