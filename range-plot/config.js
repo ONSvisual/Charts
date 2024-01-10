@@ -9,8 +9,9 @@ config = {
 			"Here is the screenreader text describing the chart.",
 		"numberFormat": ".0f",
 		"xAxisLabel": "x axis label",
-		"xDomain": [0, 100]
+		"xDomain": [0, 100],
 		// either auto or a custom domain as an array e.g [0,100]
+		"showDataLabels": true
 	},
 	"optional": {
 		"margin": {

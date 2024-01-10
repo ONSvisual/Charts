@@ -143,31 +143,35 @@ function drawGraphic() {
 		.attr('r', 6)
 		.attr('fill', colour('max'));
 
-	charts
-		.selectAll('text.min')
-		.data((d) => d[1])
-		.join('text')
-		.attr('class', 'dataLabels')
-		.attr('x', (d) => x(d.min))
-		.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-		.text((d) => d3.format(config.essential.numberFormat)(d.min))
-		.attr('fill', colour('min'))
-		.attr('dy', 6)
-		.attr('dx', (d) => (+d.min < +d.max ? -8 : 8))
-		.attr('text-anchor', (d) => (+d.min < +d.max ? 'end' : 'start'));
+	if (config.essential.showDataLabels) {
+		charts
+			.selectAll('text.min')
+			.data((d) => d[1])
+			.join('text')
+			.attr('class', 'dataLabels')
+			.attr('x', (d) => x(d.min))
+			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.text((d) => d3.format(config.essential.numberFormat)(d.min))
+			.attr('fill', colour('min'))
+			.attr('dy', 6)
+			.attr('dx', (d) => (+d.min < +d.max ? -8 : 8))
+			.attr('text-anchor', (d) => (+d.min < +d.max ? 'end' : 'start'));
 
-	charts
-		.selectAll('text.max')
-		.data((d) => d[1])
-		.join('text')
-		.attr('class', 'dataLabels')
-		.attr('x', (d) => x(d.max))
-		.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-		.text((d) => d3.format(config.essential.numberFormat)(d.max))
-		.attr('fill', colour('max'))
-		.attr('dy', 6)
-		.attr('dx', (d) => (+d.min > +d.max ? -8 : 8))
-		.attr('text-anchor', (d) => (+d.min > +d.max ? 'end' : 'start'));
+		charts
+			.selectAll('text.max')
+			.data((d) => d[1])
+			.join('text')
+			.attr('class', 'dataLabels')
+			.attr('x', (d) => x(d.max))
+			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.text((d) => d3.format(config.essential.numberFormat)(d.max))
+			.attr('fill', colour('max'))
+			.attr('dy', 6)
+			.attr('dx', (d) => (+d.min > +d.max ? -8 : 8))
+			.attr('text-anchor', (d) => (+d.min > +d.max ? 'end' : 'start'));
+	}
+
+
 
 	// This does the x-axis label
 	charts.each(function (d, i) {
