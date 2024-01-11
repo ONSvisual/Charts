@@ -64,6 +64,16 @@ function drawGraphic() {
 		.ticks(config.optional.yAxisTicks[size])
 		.tickFormat(d3.format('.0%'));
 
+		let xDataType;
+
+		if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+		  xDataType = 'date';
+		} else {
+		  xDataType = 'numeric';
+		}
+	  
+		// console.log(xDataType)
+		
 	let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
 
 	//set up xAxis generator
@@ -72,7 +82,8 @@ function drawGraphic() {
 		.tickSize(10)
 		.tickPadding(10)
 		.tickValues(tickValues) //Labelling the first and/or last bar if needed
-		.tickFormat(xTime);
+		.tickFormat((d) => xDataType == 'date' ? xTime(d)
+		: d3.format(config.essential.xAxisNumberFormat)(d));
 
 	//create svg for chart
 	svg = d3
@@ -182,7 +193,14 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 
 	let parseTime = d3.timeParse(config.essential.dateFormat);
 
-	data.forEach((d) => { d.date = parseTime(d.date) })
+    data.forEach((d, i) => {
+
+		//If the date column is has date data store it as dates
+		if (parseTime(data[i].date) !== null) {
+		  d.date = parseTime(d.date)
+		}
+
+	  });
 
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({

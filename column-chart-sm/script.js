@@ -30,6 +30,16 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
+	let xDataType;
+
+	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+		xDataType = 'date';
+	} else {
+		xDataType = 'numeric';
+	}
+
+	// console.log(xDataType)
+
 	function drawChart(container, data, chartIndex) {
 
 		function calculateChartWidth(size) {
@@ -85,7 +95,7 @@ function drawGraphic() {
 			.tickPadding(10)
 			.ticks(config.optional.yAxisTicks[size])
 			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
-			chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "");
+				chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "");
 
 		let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
 
@@ -94,7 +104,7 @@ function drawGraphic() {
 			.axisBottom(x)
 			.tickSize(10)
 			.tickPadding(10)
-			.tickValues(graphic_data
+			.tickValues(xDataType == 'date' ? graphic_data
 				.map(function (d) {
 					return d.date.getTime()
 				}) //just get dates as seconds past unix epoch
@@ -109,9 +119,10 @@ function drawGraphic() {
 				})
 				.filter(function (d, i) {
 					return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
-				})
+				}) : x.domain().filter((d, i) => { return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 })
 			)
-			.tickFormat(xTime);
+			.tickFormat((d) => xDataType == 'date' ? xTime(d)
+				: d3.format(config.essential.xAxisNumberFormat)(d));
 
 		//create svg for chart
 		svg = d3
@@ -239,7 +250,14 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 
 	let parseTime = d3.timeParse(config.essential.dateFormat);
 
-	data.forEach((d) => { d.date = parseTime(d.date) })
+	data.forEach((d, i) => {
+
+		//If the date column is has date data store it as dates
+		if (parseTime(data[i].date) !== null) {
+			d.date = parseTime(d.date)
+		}
+
+	});
 
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({

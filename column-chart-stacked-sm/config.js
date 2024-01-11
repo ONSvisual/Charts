@@ -9,6 +9,7 @@ config = {
 			"md": "%Y",
 			"lg": "%b-%y"
 		},
+		"xAxisNumberFormat": ".0f",
 		"yAxisFormat": ".0f",
 		"dateFormat": "%b-%y",
 		//the format your date data has in data.csv
