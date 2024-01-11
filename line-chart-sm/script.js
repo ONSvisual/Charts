@@ -280,6 +280,19 @@ function drawGraphic() {
 				.text(config.essential.yAxisLabel)
 				.attr('text-anchor', 'start');
 		}
+
+		// This does the x-axis label
+			if (index % chart_every === chart_every - 1 || index === [...chartContainers].length - 1) {
+				svg
+					.append('g')
+					.attr('transform', `translate(0, ${height})`)
+					.append('text')
+					.attr('x', chart_width)
+					.attr('y', 35)
+					.attr('class', 'axis--label')
+					.text(config.essential.xAxisLabel)
+					.attr('text-anchor', 'end');
+			}
 	}
 
 	// Draw the charts for each small multiple
