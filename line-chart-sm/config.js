@@ -30,7 +30,8 @@ config = {
 		},
 		"xAxisNumberFormat": ".0f",
 		"dateFormat": "%d/%m/%Y",
-		"yAxisLabel": "y axis label"
+		"yAxisLabel": "y axis label",
+		"zeroLine": "0"
 	},
 	"optional": {
 		"chart_every": {

@@ -42,7 +42,8 @@ config = {
 		"yAxisNumberFormat": ".0f",
 		"dateFormat": "%d-%m-%Y",
 		"yAxisLabel": "y axis label",
-		"xAxisLabel": ""
+		"xAxisLabel": "",
+		"zeroLine": "0"
 	},
 	"optional": {
 		"aspectRatio": {

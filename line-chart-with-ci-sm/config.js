@@ -32,9 +32,9 @@ config = {
 		"yAxisFormat": ",.0%",
 		"dateFormat": "%Y",
 		"yAxisLabel": "Pay Gap",
-		"zero_line": false,
 		"CI_legend": true,
-		"CI_legend_text": "95% confidence interval"
+		"CI_legend_text": "95% confidence interval",
+		"zeroLine": "0"
 	},
 	"optional": {
 		"chart_every": {

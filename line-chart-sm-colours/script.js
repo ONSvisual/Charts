@@ -159,6 +159,13 @@ function drawGraphic() {
 			)
 			.lower();
 
+		d3.selectAll('g.tick line')
+			.each(function (e) {
+				if (e == config.essential.zeroLine) {
+					d3.select(this).attr('class', 'zero-line');
+				}
+			})
+
 		// Add the x-axis
 		svg
 			.append('g')
@@ -186,15 +193,15 @@ function drawGraphic() {
 
 
 		//If dropYAxis == true Only draw the y axis tick labels on the first chart in each row
-			svg
-				.append('g')
-				.attr('class', 'y axis numeric')
-				.call(d3.axisLeft(y)
-					.ticks(config.optional.yAxisTicks[size])
-					.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
-						chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""))
-				.selectAll('.tick text')
-				.call(wrap, margin.left - 10);
+		svg
+			.append('g')
+			.attr('class', 'y axis numeric')
+			.call(d3.axisLeft(y)
+				.ticks(config.optional.yAxisTicks[size])
+				.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
+					chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""))
+			.selectAll('.tick text')
+			.call(wrap, margin.left - 10);
 
 
 
