@@ -218,7 +218,7 @@ function drawGraphic() {
 
 	d3.selectAll('g.tick line')
 		.each(function (e) {
-			if (e == 0) {
+			if (e == config.essential.zeroLine) {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})

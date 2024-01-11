@@ -19,7 +19,7 @@ function drawGraphic() {
 	}
 
 	const droppedMargin = 20;
-	
+
 	// var chart_width =
 	// 	((parseInt(graphic.style('width')) - margin.left + 10) / chartEvery) - margin.right -10;
 
@@ -46,7 +46,7 @@ function drawGraphic() {
 
 	const fulldataKeys = Object.keys(graphic_data[0]).slice(1).filter((k) => k !== 'series')
 
-	console.log(fulldataKeys);
+	// console.log(fulldataKeys);
 
 	// Nest the graphic_data by the 'series' column
 	let nested_data = d3.group(graphic_data, (d) => d.series);
@@ -87,7 +87,7 @@ function drawGraphic() {
 				margin.left = droppedMargin;
 			}
 		}
-		
+
 
 
 		const aspectRatio = config.optional.aspectRatio[size];
@@ -123,23 +123,7 @@ function drawGraphic() {
 			.style('background-color', '#fff')
 			.append('g')
 			.attr('transform', `translate(${margin.left},${margin.top})`);
-		
 
-		// add thick line to 0 on y axis
-
-		if (config.essential.zero_line) {
-
-			svg
-			.append('line')
-			.attr('class', 'zero')
-			.attr('y1', y(0))
-			.attr('y2', y(0))
-			.attr('x1', 0)
-			.attr('x2', chart_width)
-			.attr('stroke', "gray")
-			.attr("stroke-width", 2)
-		
-		}
 
 		// create lines and circles for each category
 		categories.forEach(function (category) {
@@ -151,7 +135,7 @@ function drawGraphic() {
 				.context(null)
 				.defined(d => d[category] !== null) // Only plot lines where we have values
 
-				// console.log(data)
+			// console.log(data)
 
 			svg
 				.append('path')
@@ -168,19 +152,19 @@ function drawGraphic() {
 				.style('stroke-linejoin', 'round')
 				.style('stroke-linecap', 'round')
 				.attr('class', 'line' + categories.indexOf(category));
-			
-		const areaGenerator = d3.area()
-			.x(d => x(d.date))
-			.y0(d => y(d[`${category}_lowerCI`]))
-			.y1(d => y(d[`${category}_upperCI`]))
-			.defined(d => d[`${category}_lowerCI`] !== null && d[`${category}_upperCI`] !== null) // Only plot areas where we have values
 
-		svg.append('path')
-			.attr('d', areaGenerator(data[1]))
-			.attr('fill', config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
-			])
-			.attr('opacity', 0.15)
+			const areaGenerator = d3.area()
+				.x(d => x(d.date))
+				.y0(d => y(d[`${category}_lowerCI`]))
+				.y1(d => y(d[`${category}_upperCI`]))
+				.defined(d => d[`${category}_lowerCI`] !== null && d[`${category}_upperCI`] !== null) // Only plot areas where we have values
+
+			svg.append('path')
+				.attr('d', areaGenerator(data[1]))
+				.attr('fill', config.essential.colour_palette[
+					categories.indexOf(category) % config.essential.colour_palette.length
+				])
+				.attr('opacity', 0.15)
 
 		});
 
@@ -197,6 +181,12 @@ function drawGraphic() {
 			)
 			.lower();
 
+		d3.selectAll('g.tick line')
+			.each(function (e) {
+				if (e == config.essential.zeroLine) {
+					d3.select(this).attr('class', 'zero-line');
+				}
+			})
 
 		// Add the x-axis
 		svg
@@ -225,15 +215,15 @@ function drawGraphic() {
 
 
 		//If dropYAxis == true Only draw the y axis tick labels on the first chart in each row
-			svg
-				.append('g')
-				.attr('class', 'y axis numeric')
-				.call(d3.axisLeft(y)
-					.ticks(config.optional.yAxisTicks[size])
-					.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
-						chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""))
-				.selectAll('.tick text')
-				.call(wrap, margin.left - 10);
+		svg
+			.append('g')
+			.attr('class', 'y axis numeric')
+			.call(d3.axisLeft(y)
+				.ticks(config.optional.yAxisTicks[size])
+				.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
+					chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""))
+			.selectAll('.tick text')
+			.call(wrap, margin.left - 10);
 
 
 
@@ -291,8 +281,8 @@ function drawGraphic() {
 			return d[1];
 		});
 
-	
-		legenditem
+
+	legenditem
 		.append('div')
 		.append('p')
 		.attr('class', 'legend--text')
@@ -300,26 +290,26 @@ function drawGraphic() {
 			return d[0];
 		});
 
-		if (config.essential.CI_legend) {
+	if (config.essential.CI_legend) {
 
-			// add confidence interval into legend as seperate div 
-			var legenditemCI = d3.select('#legend')
-			.selectAll('div.legend--item2') 
+		// add confidence interval into legend as seperate div 
+		var legenditemCI = d3.select('#legend')
+			.selectAll('div.legend--item2')
 			.data(d3.zip(0)) // creating a filler for the div to read in. 0 is meaningless
 			.enter()
 			.append('div')
 			.attr('class', 'legend--itemCI')
 
-			legenditemCI.append('div')
+		legenditemCI.append('div')
 			.attr('class', 'legend--icon--rect')
 			.style('background-color', '#C6C6C6');
-		
 
-			legenditemCI.append('div')
+
+		legenditemCI.append('div')
 			.append('p')
 			.attr('class', 'legend--text')
 			.html(config.essential.CI_legend_text);
-	
+
 	}
 
 
