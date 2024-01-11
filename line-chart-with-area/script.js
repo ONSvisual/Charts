@@ -49,11 +49,11 @@ function drawGraphic() {
 	let xDataType;
 
 	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
-	  xDataType = 'date';
+		xDataType = 'date';
 	} else {
-	  xDataType = 'numeric';
+		xDataType = 'numeric';
 	}
-  
+
 	// console.log(xDataType)
 
 	let x;
@@ -61,17 +61,17 @@ function drawGraphic() {
 
 
 	if (xDataType == 'date') {
-	  x = d3.scaleTime()
-	  .domain(d3.extent(graphic_data, (d) => d.date))
-	  .range([0, width]);
-	} else if (config.essential.xDomain == "auto"){
-	  x = d3.scaleLinear()
-	  .domain(d3.extent(graphic_data, (d) => +d.date))
-	  .range([0, width]);
+		x = d3.scaleTime()
+			.domain(d3.extent(graphic_data, (d) => d.date))
+			.range([0, width]);
+	} else if (config.essential.xDomain == "auto") {
+		x = d3.scaleLinear()
+			.domain(d3.extent(graphic_data, (d) => +d.date))
+			.range([0, width]);
 	} else {
 		x = d3.scaleLinear()
-		.domain(config.essential.xDomain)
-		.range([0, width]);
+			.domain(config.essential.xDomain)
+			.range([0, width]);
 	}
 	//console.log(`x defined`);
 
@@ -151,6 +151,12 @@ function drawGraphic() {
 				.tickFormat('')
 		);
 
+	d3.selectAll('g.tick line')
+		.each(function (e) {
+			if (e == config.essential.zeroLine) {
+				d3.select(this).attr('class', 'zero-line');
+			}
+		})
 
 	// create lines and areas for each category
 	categories.forEach(function (category) {
@@ -243,7 +249,7 @@ function drawGraphic() {
 					]
 				)
 				.text(category)
-				.attr("class","directLineLabel")
+				.attr("class", "directLineLabel")
 				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
 
 			svg
@@ -352,8 +358,9 @@ d3.csv(config.essential.graphic_data_url).then(data => {
 					.filter(([key]) => key !== 'date')
 					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-			}}
-		});
+			}
+		}
+	});
 
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic
