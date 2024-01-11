@@ -1,0 +1,81 @@
+.dataLabels {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* .container {
+    overflow: hidden; 
+  }
+  
+  .leftContainer {
+    float: left; 
+  }
+  
+.left1,
+.left2{
+  display: inline-block; 
+   vertical-align: top; 
+}
+.left2{
+  word-wrap: break-word; 
+}
+  .right {
+    float: right; 
+  }
+   */
+
+.right {
+  padding-right: 50px;
+}
+
+@media (max-width: 530px) {
+  #legend {
+    flex-flow: column;
+    font-size: 14px;
+  }
+
+  .legend--item {
+    padding-bottom: 8px;
+  }
+
+
+  .right {
+    padding-right: 0px;
+  }
+}
+
+.container {
+  display: flex;
+}
+
+.leftContainer {
+  display: flex;
+  /* flex-grow: 1; */
+}
+
+.left1,
+.left2 {
+  padding-right: 6px;
+  font-weight: 600;
+}
+
+.right {
+  margin-left: auto;
+
+}
+
+p {
+  margin-block-start: 0;
+  margin-block-end: 5px;
+  /* flex: 1;
+  white-space: normal; */
+}
+
+.legend--value--text {
+  color: #707070;
+  line-height: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  padding-right: 10px;
+  margin: 0;
+}
