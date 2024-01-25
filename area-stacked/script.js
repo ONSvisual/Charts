@@ -98,8 +98,8 @@ function drawGraphic() {
 	const stack = d3
 		.stack()
 		.keys(categories) // Use the category names as keys
-		.order(d3.stackOrderNone) // Use the stack order defined in the config later
-		.offset(d3.stackOffsetExpand); // Convert to percentage values
+		.order(d3[config.essential.stackOrder]) // Use the stack order defined in the config later
+		.offset(d3[config.essential.stackOffset]); // Convert to percentage values
 
 	// Generate the stacked data
 	const stackedData = stack(graphic_data);
@@ -154,6 +154,17 @@ function drawGraphic() {
 		.attr('class', 'axis--label')
 		.text(config.essential.xAxisLabel)
 		.attr('text-anchor', 'end');
+
+	// This does the y-axis label
+	svg
+		.append('g')
+		.attr('transform', 'translate(0,0)')
+		.append('text')
+		.attr('x', -(margin.left - 5))
+		.attr('y', -15)
+		.attr('class', 'axis--label')
+		.text(config.essential.yAxisLabel)
+		.attr('text-anchor', 'start');
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

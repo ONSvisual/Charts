@@ -121,7 +121,10 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.range([height, 0]);
 
 	// Define the stack generator
-	const stack = d3.stack().keys(categories);
+	const stack = d3.stack()
+		.keys(categories)
+		.order(d3[config.essential.stackOrder]) // Use the stack order defined in the config
+		.offset(d3[config.essential.stackOffset]); // Convert to percentage values
 
 	// Create an SVG for this chart
 	let svg = graphic
