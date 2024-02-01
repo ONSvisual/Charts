@@ -3,6 +3,10 @@ let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -26,10 +30,6 @@ function drawGraphic() {
 	//height is set by the aspect ratio
 	let height =
 		aspectRatio[1] / aspectRatio[0] * chart_width;
-
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll("*").remove();
 
 	//set up scales
 	const y = d3.scaleLinear().range([height, 0]);

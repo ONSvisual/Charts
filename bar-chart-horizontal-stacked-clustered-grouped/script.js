@@ -1,7 +1,12 @@
 let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -37,8 +42,6 @@ function drawGraphic() {
 
 	categoriesUnique = [...new Set(graphic_data.map((d) => d.sex))];
 
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
 
 	// create the y scale in groups
 	groups.map(function (d) {

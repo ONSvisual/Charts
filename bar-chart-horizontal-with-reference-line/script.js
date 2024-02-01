@@ -3,6 +3,10 @@ let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -26,11 +30,6 @@ function drawGraphic() {
 		config.optional.seriesHeight[size] * graphic_data.length +
 		10 * (graphic_data.length - 1) +
 		12;
-
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
-
 
 	//Set up the legend
 	legend

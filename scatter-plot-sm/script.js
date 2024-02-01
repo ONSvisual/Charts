@@ -1,8 +1,11 @@
 let graphic = d3.select('#graphic');
-let pymChild = null;
 let legend = d3.select('#legend');
+let pymChild = null;
 
 function drawGraphic() {
+	// Remove any existing chart elements
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
 
   //population accessible summmary
   d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
@@ -27,11 +30,6 @@ function drawGraphic() {
   let margin = config.optional.margin[size]
   let chart_width = (parseInt(graphic.style("width"))/chartEvery) - margin.left - margin.right;
   let height = 400 - margin.top - margin.bottom;
-
-  // clear out existing graphics
-  graphic.selectAll("*").remove();
-  legend.selectAll("*").remove();
-
 
   // lets move on to setting up the legend for this chart. 
 let legendGroups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
