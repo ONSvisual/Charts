@@ -1,9 +1,14 @@
 let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
 //console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 	//Accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
@@ -28,10 +33,6 @@ function drawGraphic() {
 	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = 400 - margin.top - margin.bottom;
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
-
-	// Remove any existing chart elements
-	graphic.selectAll('*').remove();
-	//console.log(`Removed existing chart elements`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');

@@ -1,13 +1,16 @@
 let pymChild = null;
 let graphic = d3.select('#graphic');
-legend = d3.select('#legend');
+let legend = d3.select('#legend');
 
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries) {
-	//population accessible summary
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
 
+	//population accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	//Was trying to be a little fancy but will need to workshop this.

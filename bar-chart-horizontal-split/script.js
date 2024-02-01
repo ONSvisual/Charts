@@ -1,10 +1,13 @@
 let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
 
-  // clear out existing graphics
-  graphic.selectAll("*").remove();
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 
   if (parseInt(graphic.style("width")) < config.essential.threshold_sm) {
     size = "sm"

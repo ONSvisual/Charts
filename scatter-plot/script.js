@@ -3,6 +3,9 @@ let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
+	// Remove any existing chart elements
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
 
   //population accessible summmary
   d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
@@ -25,10 +28,6 @@ function drawGraphic() {
   let margin = config.optional.margin[size]
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
   let height = 400 - margin.top - margin.bottom;
-
-  // clear out existing graphics
-  graphic.selectAll("*").remove();
-  legend.selectAll("*").remove();
 
   //set up scales
   const x = d3.scaleLinear()

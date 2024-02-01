@@ -3,6 +3,11 @@ let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+	d3.select('#slider-simple').selectAll('*').remove();
+
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -25,7 +30,7 @@ function drawGraphic() {
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height = Math.ceil(
 		(chart_width * config.optional.aspectRatio[size][1]) /
-			config.optional.aspectRatio[size][0]
+		config.optional.aspectRatio[size][0]
 	);
 
 	//Set the timepoints from the data for the slider labels and sort from oldest to newest
@@ -34,9 +39,6 @@ function drawGraphic() {
 	//Takes the last data point from the date series
 
 	let timeLoad = config.essential.timeLoad;
-
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
 
 	//set up scales
 	const x = d3.scaleLinear().range([0, chart_width]);
@@ -349,20 +351,20 @@ function drawGraphic() {
 				tooltip
 					.html(
 						'<span style ="color: #206095;font-size: 15px;">' +
-							d.group +
-							'</span>' +
-							'<br><br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Wage growth: ' +
-							data_format(d.y) +
-							' p.p.' +
-							'</span>' +
-							'<br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Median hourly pay (£): ' +
-							data_format(d.x) +
-							'%' +
-							'</span>'
+						d.group +
+						'</span>' +
+						'<br><br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Wage growth: ' +
+						data_format(d.y) +
+						' p.p.' +
+						'</span>' +
+						'<br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Median hourly pay (£): ' +
+						data_format(d.x) +
+						'%' +
+						'</span>'
 					)
 					.style(
 						'left',
@@ -381,20 +383,20 @@ function drawGraphic() {
 				tooltip
 					.html(
 						'<span style ="color: #206095; font-size: 15px;">' +
-							d.group +
-							'</span>' +
-							'<br><br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Wage growth: ' +
-							data_format(d.y) +
-							' p.p.' +
-							'</span>' +
-							'<br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Median hourly pay (£): ' +
-							data_format(d.x) +
-							'%' +
-							'</span>'
+						d.group +
+						'</span>' +
+						'<br><br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Wage growth: ' +
+						data_format(d.y) +
+						' p.p.' +
+						'</span>' +
+						'<br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Median hourly pay (£): ' +
+						data_format(d.x) +
+						'%' +
+						'</span>'
 					)
 					.style('right', 5 + 'px')
 					.style('top', 0 + 'px');

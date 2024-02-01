@@ -1,7 +1,12 @@
 let graphic = d3.select('#graphic');
+let legend = d3.select('#legend');
 let pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -22,9 +27,6 @@ function drawGraphic() {
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height
 	let height = config.optional.seriesHeight[size] * graphic_data.length;
-
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
 
 	//set up scales
 	let x = d3.scaleLinear().range([0, chart_width]);

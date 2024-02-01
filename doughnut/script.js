@@ -3,6 +3,10 @@ var legend = d3.select('#legend');
 var pymChild = null;
 
 function drawGraphic() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
     //population accessible summmary
     d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
@@ -23,10 +27,6 @@ function drawGraphic() {
         parseInt(graphic.style('width')) - margin.left - margin.right;
     //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
     var height = 400 - margin.top - margin.bottom;
-
-    // clear out existing graphics
-    graphic.selectAll('*').remove();
-    legend.selectAll('*').remove();
 
     const radius = Math.min(chart_width, height) / 2
     const outerRadius = radius * 1.1

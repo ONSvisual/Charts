@@ -6,8 +6,11 @@ let legend = d3.select('#legend');
 d3.select('#graphic').select('img').remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
-	//population accessible summary
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
 
+	//population accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	//Was trying to be a little fancy but will need to workshop this.
