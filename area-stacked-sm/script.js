@@ -6,9 +6,6 @@ let legend = d3.select('#legend');
 d3.select('#graphic').select('img').remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
 
 	//population accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -251,6 +248,10 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 
 function renderCallback() {
+	// clear out existing graphics
+	graphic.selectAll('*').remove();
+	legend.selectAll('*').remove();
+
 	// Load the data
 	d3.csv(config.essential.graphic_data_url)
 		.then((data) => {
