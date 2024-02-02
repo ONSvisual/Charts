@@ -106,7 +106,18 @@ function drawGraphic() {
 				.tickValues([firstDatum.date, lastDatum.date])
 				.tickSize(height + 10)
 		);
+		
+		// Add text labels to the right of the circles
+		let xOffset = 8;
+		let text_length;
+		let rightWrapWidth = parseInt(graphic.style('width')) - margin.left - width - xOffset - 75;
 
+		//Calculating where to place the category label
+		function textLength(thing) {
+			// text_length = thing._groups[0][0].clientWidth + xOffset; <-- this has some issues once in Florence/live - better method below
+			text_length = thing.node().getComputedTextLength() + xOffset;
+
+		}
 
 	// create lines and circles for each category
 	categories.forEach(function (category) {
@@ -133,52 +144,6 @@ function drawGraphic() {
 			.style('stroke-linejoin', 'round')
 			.style('stroke-linecap', 'round');
 		//console.log(`Path appended for category: ${category}`);
-
-
-
-		// console.log(`drawLegend: ${size}`);
-		// size === 'sm'
-
-		// if (config.essential.drawLegend || size === 'sm') {
-
-
-		// 	// Set up the legend
-		// 	let legenditem = d3
-		// 		.select('#legend')
-		// 		.selectAll('div.legend--item')
-		// 		.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-		// 		.enter()
-		// 		.append('div')
-		// 		.attr('class', 'legend--item');
-
-		// 	legenditem
-		// 		.append('div')
-		// 		.attr('class', 'legend--icon--circle')
-		// 		.style('background-color', function (d) {
-		// 			return d[1];
-		// 		});
-
-		// 	legenditem
-		// 		.append('div')
-		// 		.append('p')
-		// 		.attr('class', 'legend--text')
-		// 		.html(function (d) {
-		// 			return d[0];
-		// 		});
-
-		// } else {
-
-		// Add text labels to the right of the circles
-		let xOffset = 8;
-		let text_length;
-		let rightWrapWidth = parseInt(graphic.style('width')) - margin.left - width - xOffset - 75;
-
-		//Calculating where to place the category label
-		function textLength(thing) {
-			// text_length = thing._groups[0][0].clientWidth + xOffset; <-- this has some issues once in Florence/live - better method below
-			text_length = thing.node().getComputedTextLength() + xOffset;
-
-		}
 
 		// Add text labels to the right of the circles
 		svg
@@ -267,7 +232,6 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisLeft(y)
-				// .ticks(config.optional.yAxisTicks[size])
 				.tickValues([0])
 				.tickSize(-width)
 				.tickFormat('')
