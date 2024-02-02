@@ -6,9 +6,6 @@ let legend = d3.select('#legend');
 d3.select('#graphic').select('img').remove();
 
 function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries) {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
 
 	//population accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -327,6 +324,10 @@ d3.csv(config.essential.graphic_data_url)
 	.then((data) => {
 		// console.log('Original data:', data);
 
+		// clear out existing graphics
+		graphic.selectAll('*').remove();
+		legend.selectAll('*').remove();
+
 		// Group the data by the 'series' column
 		const groupedData = d3.groups(data, (d) => d.series);
 		// console.log('Grouped data:', groupedData[0][1]);
@@ -334,8 +335,8 @@ d3.csv(config.essential.graphic_data_url)
 		//Generate a list of categories based on the order in the first chart that we can use to order the subsequent charts
 		let namesArray = [...groupedData][0][1].map(d => d.name);
 
-		// Remove previous SVGs
-		graphic.selectAll('svg').remove();
+		// // Remove previous SVGs
+		// graphic.selectAll('svg').remove();
 
 		groupedData.forEach((group, i) => {
 			const seriesName = group[0];
