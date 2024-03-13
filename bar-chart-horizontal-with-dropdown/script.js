@@ -110,16 +110,23 @@ function changeData(selectedOption) {
 	bars
 		.enter()
 		.append('rect')
-		.attr('x', x(0))
+		// .attr('x', x(0))
+		.attr('x', d => d.value < 0 ? x(d.value) : x(0))
 		.attr('y', (d) => y(d.name))
-		.attr('width', 0)
+		// .attr('width', 0)
+		.attr('width', d =>  d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
 		.attr('height', y.bandwidth())
 		.attr('fill', config.essential.colour_palette)
 		.merge(bars)
 		.transition()
 		.duration(1250)
 		.ease(d3.easeCubic)
-		.attr('width', (d) => x(d.value) - x(0));
+		// .attr('width', (d) => x(d.value) - x(0));
+		.attr('width', d =>  d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
+		.attr('x', d => d.value < 0 ? x(d.value) : x(0));
+
+
+let labelPositionFactor = 7;
 
 	// Update the data labels
 	if (config.essential.dataLabels.show === true) {
@@ -128,15 +135,20 @@ function changeData(selectedOption) {
 			.data(filteredData)
 			.join('text')
 			.attr('class', 'dataLabels')
-			.attr('x', (d) => labelPositions.get(d.name) || x(0))  // Use the stored position or x(0) if not found
-			.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
+			.attr('x', (d) => 
+			Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
+			.attr('dx', (d) => d.value > 0 ?
+			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
+			-3)
 			.attr('y', (d) => y(d.name) + 19)
-			.attr('text-anchor', (d) =>
-				x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
-			)
-			.attr('fill', (d) =>
-				x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
-			)
+			.attr('text-anchor', (d) => d.value > 0 ?
+			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
+			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'end' : 'start')
+		)
+
+		.attr('fill', (d) =>
+			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
+		)
 			.text((d) =>
 				d3.format(config.essential.dataLabels.numberFormat)(d.value)
 			)
