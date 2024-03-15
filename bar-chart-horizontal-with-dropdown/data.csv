@@ -1,22 +1,22 @@
-name,value,average,option
-Other services,0.987848719, 0.5,option1
-Manufacturing,0.283661406, 0.5,option1
-Construction,0.681288045, 0.5,option1
-Arts,0.481757214, 0.5,option1
-Administrative,0.209665614, 0.5,option1
-Wholesale trade,0.176396639, 0.5,option1
-Administrative and supportive service activities,0.047910167, 0.5,option1
-Other services,0.787848719, 0.5,option2
-Manufacturing,0.783661406, 0.5,option2
-Construction,0.581288045, 0.5,option2
-Arts,0.381757214, 0.5,option2
-Administrative,0.109665614, 0.5,option2
-Wholesale trade,0.076396639, 0.5,option2
-Administrative and supportive service activities,0.947910167, 0.5,option2
-Other services,0.987848719, 0.5,option3
-Manufacturing,0.983661406, 0.5,option3
-Construction,0.681288045, 0.5,option3
-Arts,0.481757214, 0.5,option3
-Administrative,0.209665614, 0.5,option3
-Wholesale trade,0.176396639, 0.5,option3
-Administrative and supportive service activities,0.047910167, 0.5,option3
+name,value,option
+Other services,0.987848719,option1
+Manufacturing,0.283661406,option1
+Construction,0.681288045,option1
+Arts,0.481757214,option1
+Administrative,-0.209665614,option1
+Wholesale trade,0.176396639,option1
+Administrative and supportive service activities,0.047910167,option1
+Other services,0.787848719,option2
+Manufacturing,0.783661406,option2
+Construction,0.581288045,option2
+Arts,0.381757214,option2
+Administrative,-0.109665614,option2
+Wholesale trade,0.076396639,option2
+Administrative and supportive service activities,0.947910167,option2
+Other services,0.987848719,option3
+Manufacturing,0.983661406,option3
+Construction,0.681288045,option3
+Arts,0.481757214,option3
+Administrative,-0.209665614,option3
+Wholesale trade,0.176396639,option3
+Administrative and supportive service activities,-0.047910167,option3
