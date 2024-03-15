@@ -80,8 +80,13 @@ function changeData(selectedOption) {
 	
 	let filteredData = graphic_data.filter(
 		(d) => d.option === selectedOption
-	);
+	)
+
+	// Sort the data 
+	.sort((a,b)=>  y.domain().indexOf(a.name)-y.domain().indexOf(b.name));
+	
 	console.log('Filtered data:', filteredData);
+
 
 	// Update the y scale domain based on the filtered data
 	y.domain(filteredData.map((d) => d.name));
