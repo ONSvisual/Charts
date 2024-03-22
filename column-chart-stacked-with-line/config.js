@@ -10,6 +10,7 @@ config = {
 			"md": "%Y",
 			"lg": "%b-%y"
 		},
+		"yAxisTickFormat": ".0%",
 		"xAxisNumberFormat": ".0f",
 		"dateFormat": "%b-%y",
 		//the format your date data has in data.csv

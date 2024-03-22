@@ -14,7 +14,7 @@ config = {
     "yAxisLabel": "y axis label",
     "xAxisFormat": "%b %Y",
     "xAxisNumberFormat": ".0f",
-    "yAxisFormat": ".0%"
+    "yAxisTickFormat": ".0%"
   },
   "optional": {
     "chartEvery": {
