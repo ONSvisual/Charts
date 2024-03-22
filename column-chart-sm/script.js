@@ -190,8 +190,8 @@ function drawGraphic() {
 			.append('g')
 			.attr('transform', 'translate(0,0)')
 			.append('text')
-			.attr('x', -margin.left + 10)
-			.attr('y', -5)
+			.attr('x', 5 - margin.left)
+			.attr('y', -10)
 			.attr('class', 'axis--label')
 			.text(() => chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "")
 			.attr('text-anchor', 'start');
