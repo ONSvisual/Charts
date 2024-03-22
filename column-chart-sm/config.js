@@ -10,7 +10,7 @@ config = {
 			"lg": "%b-%y"
 		},
 		"xAxisNumberFormat": ".0f",
-		"yAxisFormat": ".0%",
+		"yAxisTickFormat": ".0%",
 		"dateFormat": "%b-%y",
 		//the format your date data has in data.csv
 		"yDomain": "auto",

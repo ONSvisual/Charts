@@ -70,7 +70,7 @@ function drawGraphic() {
 		.tickSize(-chart_width)
 		.tickPadding(10)
 		.ticks(config.optional.yAxisTicks[size])
-		.tickFormat(d3.format('.0f'));
+		.tickFormat(d3.format(config.essential.yAxisTickFormat));
 
 	const stack = d3
 		.stack()

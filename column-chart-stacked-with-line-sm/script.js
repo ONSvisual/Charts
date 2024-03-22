@@ -101,8 +101,8 @@ function drawGraphic() {
 			.tickSize(-chart_width)
 			.tickPadding(10)
 			.ticks(config.optional.yAxisTicks[size])
-			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
-				chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "");
+			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisTickFormat)(d) :
+				chartPosition == 0 ? d3.format(config.essential.yAxisTickFormat)(d) : "");
 
 		const stack = d3
 			.stack()
