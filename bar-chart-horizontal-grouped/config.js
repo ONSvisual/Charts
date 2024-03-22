@@ -12,7 +12,7 @@ config={
     },
     "xAxisFormat":".0%",
     "xAxisLabel":"x-axis label",
-    "xDomain":[0,1]
+    "xDomain":"auto"
     // either auto or a custom domain as an array e.g [0,100]
   },
   "optional": {

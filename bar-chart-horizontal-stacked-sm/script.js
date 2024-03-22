@@ -5,7 +5,7 @@ let legend = d3.select('#legend');
 //Remove previous SVGs
 d3.select('#graphic').select('img').remove();
 
-function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries) {
+function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries, fullData) {
 
 	//population accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -109,10 +109,11 @@ function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries) {
 	// console.table(series);
 
 	if (config.essential.xDomain === 'auto') {
-		x.domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))]); //removed.nice()
+		x.domain([Math.min(0, d3.min(stack(fullData), (d) => d3.min(d, (d) => d[1]))), d3.max(stack(fullData), (d) => d3.max(d, (d) => d[1]))]); //removed.nice()
 	} else {
 		x.domain(config.essential.xDomain);
 	}
+	
 	y.domain(graphic_data.map((d) => d.name));
 
 	// Set up the legend
@@ -328,8 +329,9 @@ d3.csv(config.essential.graphic_data_url)
 		graphic.selectAll('*').remove();
 		legend.selectAll('*').remove();
 
+		const fullData = data;
 		// Group the data by the 'series' column
-		const groupedData = d3.groups(data, (d) => d.series);
+		const groupedData = d3.groups(fullData, (d) => d.series);
 		// console.log('Grouped data:', groupedData[0][1]);
 
 		//Generate a list of categories based on the order in the first chart that we can use to order the subsequent charts
@@ -347,7 +349,7 @@ d3.csv(config.essential.graphic_data_url)
 
 			graphic_data.columns = data.columns;
 
-			pymChild = new pym.Child({ renderCallback: drawGraphic(seriesName, graphic_data, i, groupedData.length) });
+			pymChild = new pym.Child({ renderCallback: drawGraphic(seriesName, graphic_data, i, groupedData.length, fullData) });
 		});
 	})
 	.catch((error) => console.error(error));

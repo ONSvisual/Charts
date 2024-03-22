@@ -6,7 +6,7 @@ Flats and maisonettes,Property type,0.6556
 Owner-occupied,Tenure,0.5577
 Private rent,Tenure,0.449
 Social rent,Tenure,0.7512
-1929 and before,Property age,0.1005
+1929 and before,Property age,-0.08005
 1930 to 1982,Property age,0.6168
 1983 to 2011,Property age,0.9673
 2012 and after,Property age,0.9969

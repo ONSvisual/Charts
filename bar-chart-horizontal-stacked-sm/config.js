@@ -8,11 +8,11 @@ config = {
 		// either "auto" or an array for the x domain e.g. [0,100]
 		"xAxisTickFormat": ".0f",
 		"xAxisLabel": "x axis label",
-		"stackOffset": "stackOffsetNone",
+		"stackOffset": "stackOffsetDiverging",
 		// options include
 		// stackOffsetNone means the baseline is set at zero
 		// stackOffsetExpand to do 100% charts
-		// stackOffsetDivergine for data with positive and negative values
+		// stackOffsetDiverging for data with positive and negative values
 		"stackOrder": "stackOrderNone"
 		// other options include
 		// stackOrderNone means the order is taken from the datafile

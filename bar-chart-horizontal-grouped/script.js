@@ -28,7 +28,7 @@ function drawGraphic() {
   groups = d3.groups(graphic_data, (d) => d.group)
 
   if (config.essential.xDomain == "auto") {
-    let min = 1000000
+    let min = 0
     let max = 0
     for (i = 2; i < graphic_data.columns.length; i++) {
       min = d3.min([min, d3.min(graphic_data, (d) => +d[graphic_data.columns[i]])])
@@ -38,7 +38,6 @@ function drawGraphic() {
   } else {
     xDomain = config.essential.xDomain
   }
-
 
   //set up scales
   const x = d3.scaleLinear()
@@ -115,24 +114,32 @@ function drawGraphic() {
     charts.selectAll('rect')
     .data((d) => d[1])
     .join('rect')
-    .attr('x',x(0))
+		.attr('x', d => d.value < 0 ? x(d.value) : x(0))
     .attr('y', d => groups.filter(f => f[0] == d.group)[0][3](d.name))
-    .attr('width',(d) => x(d.value)-x(0))
+		.attr('width', (d) => Math.abs(x(d.value) - x(0)))
     .attr('height', (d) => groups.filter(f => f[0] == d.group)[0][3].bandwidth())
     .attr('fill', config.essential.colour_palette);
 
-
+		let labelPositionFactor = 7;
 
   if(config.essential.dataLabels.show==true){
     charts.selectAll('text.value')
     .data((d) => d[1])
     .join('text')
     .attr('class', 'dataLabels')
-    .attr('x', d => x(d.value))
-    .attr('dx', (d) => x(d.value)- x(0)<40 ? 3 : -3)
+    .attr('x', (d) => d.value > 0 ? x(d.value) :
+    Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
+  .attr('dx', (d) => d.value > 0 ?
+    (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
+    3)
     .attr('y', (d) => groups.filter(f => f[0] == d.group)[0][3](d.name)+19)
-    .attr('text-anchor',(d) => x(d.value)-x(0)<40 ? "start" : "end")
-    .attr('fill',(d) => x(d.value)-x(0)< 40 ? "#414042" : "#fff")
+    .attr('text-anchor', (d) => d.value > 0 ?
+    (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
+    "start"
+  )
+  .attr('fill', (d) =>
+    (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
+  )
       .text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
     }//end if for datalabels
 

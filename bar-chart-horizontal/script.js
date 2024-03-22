@@ -64,9 +64,13 @@ function drawGraphic() {
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 	if (config.essential.xDomain == 'auto') {
-		x.domain([
-			0,
-			d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
+			x.domain([
+				0,
+				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+		} else {
+			x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
+		}
 	} else {
 		x.domain(config.essential.xDomain);
 	}
@@ -94,11 +98,13 @@ function drawGraphic() {
 		.selectAll('rect')
 		.data(graphic_data)
 		.join('rect')
-		.attr('x', x(0))
+		.attr('x', d => d.value < 0 ? x(d.value) : x(0))
 		.attr('y', (d) => y(d.name))
-		.attr('width', (d) => x(d.value) - x(0))
+		.attr('width', (d) => Math.abs(x(d.value) - x(0)))
 		.attr('height', y.bandwidth())
 		.attr('fill', config.essential.colour_palette);
+
+	let labelPositionFactor = 7;
 
 	if (config.essential.dataLabels.show == true) {
 		svg
@@ -106,14 +112,18 @@ function drawGraphic() {
 			.data(graphic_data)
 			.join('text')
 			.attr('class', 'dataLabels')
-			.attr('x', (d) => x(d.value))
-			.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
+			.attr('x', (d) => d.value > 0 ? x(d.value) :
+				Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
+			.attr('dx', (d) => d.value > 0 ?
+				(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
+				3)
 			.attr('y', (d) => y(d.name) + 19)
-			.attr('text-anchor', (d) =>
-				x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
+			.attr('text-anchor', (d) => d.value > 0 ?
+				(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
+				"start"
 			)
 			.attr('fill', (d) =>
-				x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
+				(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
 			)
 			.text((d) =>
 				d3.format(config.essential.dataLabels.numberFormat)(d.value)

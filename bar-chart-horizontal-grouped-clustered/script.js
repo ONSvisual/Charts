@@ -63,9 +63,13 @@ function drawGraphic() {
 	const x = d3.scaleLinear().range([0, chart_width]);
 
 	if (config.essential.xDomain == 'auto') {
-		x.domain([
-			0,
-			d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
+			x.domain([
+				0,
+				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+		} else {
+			x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
+		}
 	} else {
 		x.domain(config.essential.xDomain);
 	}
@@ -124,11 +128,13 @@ function drawGraphic() {
 		d3.select(this).selectAll('rect')
 			.data((d) => d[1])
 			.join('rect')
-			.attr('x', x(0))
+			.attr('x', d => d.value < 0 ? x(d.value) : x(0))
 			.attr('y', (d) => groups[i][3](d.name) + groups[i][5](d.category))
-			.attr('width', (d) => x(d.value) - x(0))
+			.attr('width', (d) => Math.abs(x(d.value) - x(0)))
 			.attr('height', (d) => groups[i][5].bandwidth())
 			.attr("fill", (d) => colour(d.category));
+
+		let labelPositionFactor = 7;
 
 		//adding data labels to the bars - only if two categories or fewer
 		if (config.essential.dataLabels.show == true && categoriesUnique.length <= 2) {
@@ -137,14 +143,18 @@ function drawGraphic() {
 				.data((d) => d[1])
 				.join('text')
 				.attr('class', 'dataLabels')
-				.attr('x', (d) => x(d.value))
-				.attr('dx', (d) => (x(d.value) - x(0) < chart_width / 10 ? 3 : -3))
+				.attr('x', (d) => d.value > 0 ? x(d.value) :
+					Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
+				.attr('dx', (d) => d.value > 0 ?
+					(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
+					3)
 				.attr('y', (d) => groups[i][3](d.name) + groups[i][5](d.category) + 18)
-				.attr('text-anchor', (d) =>
-					x(d.value) - x(0) < chart_width / 10 ? 'start' : 'end'
+				.attr('text-anchor', (d) => d.value > 0 ?
+					(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
+					"start"
 				)
 				.attr('fill', (d) =>
-					x(d.value) - x(0) < chart_width / 10 ? '#414042' : '#ffffff'
+					(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
 				)
 				.text((d) =>
 					d3.format(config.essential.dataLabels.numberFormat)(d.value)
@@ -175,7 +185,7 @@ function drawGraphic() {
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-		d3.zip(config.essential.legendLabels, config.essential.colour_palette)
+			d3.zip(config.essential.legendLabels, config.essential.colour_palette)
 		)
 		.enter()
 		.append('div')
