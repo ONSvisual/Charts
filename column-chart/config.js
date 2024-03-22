@@ -19,26 +19,26 @@ config = {
 	"optional": {
 		"margin": {
 			"sm": {
-				"top": 15,
+				"top": 25,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			},
 			"md": {
-				"top": 15,
+				"top": 25,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			},
 			"lg": {
-				"top": 15,
+				"top": 25,
 				"right": 20,
 				"bottom": 50,
 				"left": 70
 			}
 		},
 		"aspectRatio": {
-			"sm": [1, 2],
+			"sm": [1, 1],
 			"md": [1, 1],
 			"lg": [2, 1]
 		},
