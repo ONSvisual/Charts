@@ -59,7 +59,7 @@ function drawGraphic() {
 
 			const chartMargin = config.optional.margin[size];
 
-			if (config.optional.dropYAxis) {
+			if (config.optional.dropYAxis && !config.optional.freeYAxisScales) {
 				// Chart width calculation allowing for droppedMargin px left margin between the charts
 				const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * droppedMargin)) / chartEvery) - chartMargin.right;
 				return chartWidth;
@@ -76,7 +76,7 @@ function drawGraphic() {
 		let margin = { ...config.optional.margin[size] };
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.optional.dropYAxis && !config.optional.freeYAxisScales) {
 			if (chartPosition !== 0) {
 				margin.left = droppedMargin;
 			}
@@ -99,8 +99,8 @@ function drawGraphic() {
 		const y = d3
 			.scaleLinear()
 			.domain([
-				0,
-				d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
+				0, //This should be a calculated rather than 0 to allow for negativ values
+				d3.max(config.optional.freeYAxisScales ? data[1] : graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
 			])
 			.nice()
 			.range([height, 0]);
@@ -198,8 +198,9 @@ function drawGraphic() {
 			.attr('class', 'y axis numeric')
 			.call(d3.axisLeft(y)
 				.ticks(config.optional.yAxisTicks[size])
-				.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
-					chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""))
+				.tickFormat((d) => config.optional.freeYAxisScales ? d3.format(config.essential.yAxisFormat)(d) :
+					config.optional.dropYAxis ? (chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "") :
+					d3.format(config.essential.yAxisFormat)(d)))
 			.selectAll('.tick text')
 			.call(wrap, margin.left - 10);
 
@@ -227,8 +228,9 @@ function drawGraphic() {
 			.attr('x', 0)
 			.attr('y', 35)
 			.attr('class', 'axis--label')
-			.text(() => chartIndex % chartEvery == 0 ?
-				config.essential.yAxisLabel : "")
+			.text(() => config.optional.freeYAxisScales ? config.essential.yAxisLabel : 
+			chartIndex % chartEvery == 0 ?
+				config.essential.yAxisLabel : "") //May need to make the y-axis label an array in the config?
 			.attr('text-anchor', 'start');
 	}
 
