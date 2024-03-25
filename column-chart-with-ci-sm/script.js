@@ -116,7 +116,7 @@ function drawGraphic() {
     //use the data to find unique entries in the date column
     x.domain([...new Set(graphic_data.map((d) => d.date))]);
 
-    console.log("x", d3.extent(graphic_data, (d) => +d.date))
+    // console.log("x", d3.extent(graphic_data, (d) => +d.date))
 
     const y = d3.scaleLinear()
       .range([height, 0])
@@ -131,11 +131,18 @@ function drawGraphic() {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
 
-    console.log(grouped_data)
+    // console.log(grouped_data)
 
     // both of these are need to be looked at.
     if (config.essential.yDomain == "auto") {
-      y.domain([0, d3.max(graphic_data, function (d) { return d.upperCI })]);
+      if (d3.min(graphic_data.map(({ lowerCI }) => Number(lowerCI))) >= 0) {
+        y.domain([
+          0,
+          d3.max(graphic_data.map(({ upperCI }) => Number(upperCI)))]); //modified so it converts string to number
+        } else {
+          y.domain([d3.min(graphic_data, function (d) { return d.lowerCI }), d3.max(graphic_data, function (d) { return d.upperCI })])
+        }
+
     } else {
       y.domain(config.essential.yDomain)
     }
@@ -177,8 +184,8 @@ function drawGraphic() {
       .data(data)
       .join('rect')
       .attr('x', (d) => x(d.date))
-      .attr('y', (d) => y(d.yvalue))
-      .attr('height', (d) => y(0) - y(d.yvalue))
+			.attr('y', (d) => y(Math.max(d.yvalue, 0)))
+			.attr('height', (d) => Math.abs(y(d.yvalue) - y(0)))
       .attr('width', x.bandwidth())
       // .attr('r', config.essential.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
@@ -290,7 +297,7 @@ function drawGraphic() {
 }
 
 function wrap(text, width) {
-  console.log(width)
+  // console.log(width)
   text.each(function () {
     let text = d3.select(this),
       words = text.text().split(/\s+/).reverse(),
