@@ -97,13 +97,17 @@ function drawGraphic() {
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 	if (config.essential.yDomain == 'auto') {
+		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
 		y.domain([
 			0,
 			d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+		} else {
+			y.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
+		}
 	} else {
 		y.domain(config.essential.yDomain);
 	}
-
+	
 	svg
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
@@ -127,7 +131,7 @@ function drawGraphic() {
 		.selectAll('rect')
 		.data(graphic_data)
 		.join('rect')
-		.attr('y', (d) => y(d.value))
+		.attr('y', (d) => y(Math.max(d.value, 0)))
 		.attr('x', (d) => x(d.date))
 		.attr('height', (d) => Math.abs(y(d.value) - y(0)))
 		.attr('width', x.bandwidth())
