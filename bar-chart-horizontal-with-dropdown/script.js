@@ -231,7 +231,7 @@ let labelPositionFactor = 7;
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.tickFormat(d3.format('.0%'))
+		.tickFormat(d3.format(config.essential.dataLabels.numberFormat))
 		.ticks(config.optional.xAxisTicks[size]);
 
 	//create svg for chart
