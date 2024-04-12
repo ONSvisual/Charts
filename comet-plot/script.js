@@ -217,7 +217,7 @@ function drawGraphic() {
 	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
-		.data(['Inc', 'Dec', 'No'])
+		.data(config.essential.legendItems)
 		.enter()
 		.append('div')
 		.attr('class', (d) => 'legend--item ' + [d]);
