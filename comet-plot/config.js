@@ -12,6 +12,8 @@ config = {
 		"xDomain": [0, 100],
 		// either auto or a custom domain as an array e.g [0,100]
 		"dotsize": 6,
+		"legendItems": ["Inc","Dec","No"],
+		//Choose which items to include in the legend, and the order that they appear
 		"legendLineLength": 60,
 		"legendItemWidth": 150,
 		"showDataLabels": true
