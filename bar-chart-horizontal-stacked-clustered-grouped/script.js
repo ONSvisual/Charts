@@ -172,10 +172,11 @@ function drawGraphic() {
 			.attr('x', 5)
 			.attr(
 				'y',
-				groups[i][3].paddingOuter() * groups[i][3].bandwidth() +
-					groups[i][6].paddingOuter() * groups[i][6].bandwidth()
+				groups[i][3].paddingOuter() * (1/(1-groups[i][3].paddingInner()))*groups[i][3].bandwidth() +
+				groups[i][6].paddingOuter() * (1/(1-groups[i][6].paddingInner()))*groups[i][6].bandwidth()
 			)
-			.attr('dy', 5 + groups[i][6].bandwidth() / 2)
+			.attr('dy', groups[i][6].bandwidth() / 2)
+			.attr('dominant-baseline', 'middle')
 			.attr('class', 'axis--label')
 			.text('Females')
 			.attr('text-anchor', 'start')
@@ -186,16 +187,18 @@ function drawGraphic() {
 		// This does the Males label
 		d3.select(this)
 			.append('g')
-			.attr('transform', 'translate(0,' + margin.top + ')')
+			.attr('transform', 'translate(0,0')
 			.append('text')
 			.attr('x', 5)
 			.attr(
 				'y',
-				groups[i][3].paddingOuter() * groups[i][3].bandwidth() +
-					groups[i][6].bandwidth() +
-					groups[i][6].paddingInner() * groups[i][6].bandwidth()
+				groups[i][3].paddingOuter() * (1/(1-groups[i][3].paddingInner()))*groups[i][3].bandwidth() +
+				groups[i][6].paddingOuter() * (1/(1-groups[i][6].paddingInner()))*groups[i][6].bandwidth() +
+				groups[i][6].bandwidth() +
+				groups[i][6].paddingInner() * (1/(1-groups[i][6].paddingInner()))*groups[i][6].bandwidth()
 			)
-			.attr('dy', groups[i][6].bandwidth() / 2 - 2)
+			.attr('dy', groups[i][6].bandwidth() / 2)
+			.attr('dominant-baseline', 'middle')
 			.attr('class', 'axis--label')
 			.text('Males')
 			.attr('text-anchor', 'start')
