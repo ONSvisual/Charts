@@ -143,17 +143,22 @@ function drawGraphic() {
 		.attr('text-anchor', 'end')
 		.call(wrap, chart_width);
 
+console.log(seriesAll)
+
 	// This does the Females label
 	svg
 		.append('g')
-		.attr('transform', 'translate(0,' + margin.top + ')')
+		.attr('transform', 'translate(0,0)')
 		.append('text')
 		.attr('x', 5)
 		.attr(
 			'y',
-			y.paddingOuter() * y.bandwidth() + y2.paddingOuter() * y2.bandwidth()
+			// y.paddingOuter() * (1/(1-y.paddingInner()))*y.bandwidth() +
+			// y2.paddingOuter() * (1/(1-y2.paddingInner()))*y2.bandwidth()
+			y(seriesAll[0][0].data.name) + y2(seriesAll[0][0].data.sex)
 		)
-		.attr('dy', 3 + y2.bandwidth() / 2)
+		.attr('dy', y2.bandwidth() / 2)
+		.attr('dominant-baseline', 'middle')
 		.attr('class', 'axis--label')
 		.text('Females')
 		.attr('text-anchor', 'start')
@@ -164,17 +169,19 @@ function drawGraphic() {
 	// This does the Males label
 	svg
 		.append('g')
-		.attr('transform', 'translate(0,' + margin.top + ')')
+		.attr('transform', 'translate(0,0)')
 		.append('text')
 		.attr('x', 5)
 		.attr(
 			'y',
-			y.paddingOuter() * y.bandwidth() +
-				y2.paddingOuter() * y2.bandwidth() +
-				y2.bandwidth() +
-				y2.paddingInner() * y2.bandwidth()
+			y(seriesAll[0][1].data.name) + y2(seriesAll[0][1].data.sex)
+			// y.paddingOuter() * (1/(1-y.paddingInner()))*y.bandwidth() +
+			// y2.paddingOuter() * (1/(1-y2.paddingInner()))*y2.bandwidth() +
+			// 	y2.bandwidth() +
+			// 	y2.paddingInner() * (1/(1-y2.paddingInner()))*y2.bandwidth() 
 		)
-		.attr('dy', 3 + y2.bandwidth() / 2)
+		.attr('dy', y2.bandwidth() / 2)
+		.attr('dominant-baseline', 'middle')
 		.attr('class', 'axis--label')
 		.text('Males')
 		.attr('text-anchor', 'start')

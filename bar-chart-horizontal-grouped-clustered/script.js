@@ -148,7 +148,8 @@ function drawGraphic() {
 				.attr('dx', (d) => d.value > 0 ?
 					(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
 					3)
-				.attr('y', (d) => groups[i][3](d.name) + groups[i][5](d.category) + 18)
+				.attr('y', (d) => groups[i][3](d.name) + groups[i][5](d.category) + groups[i][5].bandwidth()/2)
+				.attr('dominant-baseline', 'middle')
 				.attr('text-anchor', (d) => d.value > 0 ?
 					(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
 					"start"

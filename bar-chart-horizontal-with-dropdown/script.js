@@ -145,7 +145,8 @@ let labelPositionFactor = 7;
 			.attr('dx', (d) => d.value > 0 ?
 			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
 			-3)
-			.attr('y', (d) => y(d.name) + 19)
+			.attr('y', (d) => y(d.name) + y.bandwidth()/2)
+			.attr('dominant-baseline', 'middle')
 			.attr('text-anchor', (d) => d.value > 0 ?
 			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
 			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'end' : 'start')
