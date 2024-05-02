@@ -93,13 +93,13 @@ function drawGraphic() {
 		headers
 			.append('div')
 			.attr('class', 'rowLabel')
-			.style('width', config.essential.rowWidth + 'px');
+			.style('width', config.essential.rowWidth[size] + 'px');
 
 		// create divs for the rest of the column headers
 		headers
 			.append('div')
 			.attr('class', 'headers')
-			.style('width', `calc(100% - ${config.essential.rowWidth}px)`)
+			.style('width', `calc(100% - ${config.essential.rowWidth[size]}px)`)
 			.selectAll('div.column')
 			.data(xcategories)
 			.join('div')
@@ -120,7 +120,7 @@ function drawGraphic() {
 	rows
 		.append('div')
 		.attr('class', 'rowLabel')
-		.style('width', config.essential.rowWidth + 'px')
+		.style('width', config.essential.rowWidth[size] + 'px')
 		.append('span')
 		.style('text-align', 'right')
 		.html((d) => d[0]);
@@ -129,7 +129,7 @@ function drawGraphic() {
 	splitBar = rows
 		.append('div')
 		.attr('class', 'headers')
-		.style('width', `calc(100% - ${config.essential.rowWidth}px)`)
+		.style('width', `calc(100% - ${config.essential.rowWidth[size]}px)`)
 		.selectAll('div.splitBar')
 		.data((d) => d[1])
 		.join('div')
@@ -196,13 +196,13 @@ function drawGraphic() {
 	finalrow
 		.append('div')
 		.attr('class', 'rowLabel')
-		.style('width', config.essential.rowWidth + 'px');
+		.style('width', config.essential.rowWidth[size] + 'px');
 
 	finalrow
 		.append('div')
 		.attr('class', '')
 		.style('margin-right', '-10px')
-		.style('width', `calc(100% - ${config.essential.rowWidth}px)`)
+		.style('width', `calc(100% - ${config.essential.rowWidth[size]}px)`)
 		.style('display', 'inline-block')
 		.selectAll('div.column')
 		.data(xcategories)
