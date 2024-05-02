@@ -19,7 +19,6 @@ The official repository of all publication ready ONS charts. See the [chart menu
 | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------- | ---------- | --------------- |
 | Area stacked                                                | [View](https://onsvisual.github.io/Charts/area-stacked/)                                                | ❌           | ❌          | ✅               |
 | Area stacked small multiple                                 | [View](https://onsvisual.github.io/Charts/area-stacked-sm/)                                             | ❌           | ❌          | ✅               |
-| Bar chart Split                                             | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal-split/)                                  | ❌           | ❌          | ✅               |
 | Bar chart horizontal                                        | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal/)                                        | ❌           | ❌          | ✅               |
 | Bar chart horizontal with dropdrown                         | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal-with-dropdown/)                          | ❌           | ❌          | ✅               |
 | Bar chart horizontal small multiple                         | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal-sm/)                                     | ❌           | ❌          | ✅               |
@@ -66,3 +65,4 @@ The official repository of all publication ready ONS charts. See the [chart menu
 | Scatter plot small multiple                                 | [View](https://onsvisual.github.io/Charts/scatter-plot-sm/)                                             | ❌           | ❌          | ✅               |
 | Scatter plot animated                                       | [View](https://onsvisual.github.io/Charts/scatter-plot-animated/)                                       | ❌           | ❌          | ❌               |
 | Slope chart                                                 | [View](https://onsvisual.github.io/Charts/slope-chart/)                                                 | ❌           | ❌          | ✅               |
+| Split bar chart                                             | [View](https://onsvisual.github.io/Charts/split-bar-chart/)                                             | ❌           | ❌          | ✅               |

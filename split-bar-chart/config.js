@@ -15,12 +15,15 @@ config = {
 		// e.g if divergent you can use ["#206095","#F66068"]
 		// e.g if categorical ["#206095", "#27A0CC","#871A5B", "#A8BD3A","#F66068"]
 		"numberFormat": ".0f",
-		"rowWidth": "140",
+		"rowWidth": {
+			"sm": 100,
+			"not sm": 140
+		},
 		// rowWidth set the width of y category column in pixel
 		"accessibleSummary":
 			"This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
 		"sourceText": "Office for National Statistics",
-		"threshold_sm": 500
+		"threshold_sm": 510
 	},
 	//Don't adjust this part - it only affects the chart build tool
 	"chart_build": {
