@@ -40,7 +40,7 @@ function drawGraphic() {
 		.paddingOuter(0.0)
 		.paddingInner(0.1)
 		.range([0, chart_width])
-		.round(true);
+		.round(false);
 
 	const colour = d3
 		.scaleOrdinal()
