@@ -40,7 +40,7 @@ config = {
 		},
 		"xAxisNumberFormat": ".0f",
 		"yAxisNumberFormat": ".0f",
-		"dateFormat": "%d-%m-%Y",
+		"dateFormat": "%d/%m/%Y",
 		"yAxisLabel": "y axis label",
 		"xAxisLabel": "",
 		"zeroLine": "0"
