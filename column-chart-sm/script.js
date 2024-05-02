@@ -84,7 +84,7 @@ function drawGraphic() {
 			.paddingOuter(0.0)
 			.paddingInner(0.1)
 			.range([0, chart_width])
-			.round(true);
+			.round(false);
 
 		//use the data to find unique entries in the date column
 		x.domain([...new Set(graphic_data.map((d) => d.date))]);
