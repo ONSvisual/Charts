@@ -8,6 +8,8 @@ config = {
 		],
 		"labelFinalPoint": true,
 		"reference_category": "England",// Highlighted on each chart and doesn't get it's own chart - leave blank to turn off
+		"legendLabel": "selected group",
+		"allLabel": "all other groups",
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		"lineCurveType": "curveLinear", // Set the default line curve type
@@ -32,7 +34,8 @@ config = {
 		"dateFormat": "%d/%m/%Y",
 		"yAxisLabel": "y axis label",
 		"xAxisLabel": "x axis label",
-		"zeroLine": "0"
+		"zeroLine": "0",
+		"interpolateGaps": true
 
 	},
 	"optional": {
