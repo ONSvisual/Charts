@@ -123,27 +123,56 @@ function drawGraphic() {
 			const lineGenerator = d3
 				.line()
 				.x((d) => x(d.date))
-				.y((d) => y(d[category]))
-				.defined(d => d[category] !== null) // Only plot lines where we have values
+				.y((d) => y(d.amt))
+				.defined(d => d.amt !== null) // Only plot lines where we have values
 				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null);
 
+				var lines = {};
+				for (var column in graphic_data[0]) {
+					if (column == 'date') continue;
+					lines[column] = graphic_data.map(function(d) {
+						return {
+							'date': d.date,
+							'amt': d[column]
+						};
+					});
+				}
+
+				//This interpolates points when a cell contains no data (draws a line where there are no data points)
+
+				if (config.essential.interpolateGaps) {
+				
+					keys= Object.keys(lines)
+					for(i=0;i<keys.length;i++){
+						lines[keys[i]].forEach(function(d,j){
+						if(d.amt!=null){
+							counter = j;
+						}else{
+							d.date=lines[keys[i]][counter].date
+							d.amt=lines[keys[i]][counter].amt
+						}
+						})
+					}
+
+				}
+				
 			svg
 				.append('path')
-				.datum(graphic_data)
+				.datum(Object.entries(lines))
 				.attr('fill', 'none')
 				.attr(
-					'stroke', () => (categories.indexOf(category) == index) ? config.essential.colour_palette[0] :
+					'stroke', () => (categoriesToPlot.indexOf(category) == index) ? config.essential.colour_palette[0] :
 						category == reference ? config.essential.colour_palette[1] : config.essential.colour_palette[2]
 					// config.essential.colour_palette[
 					// categories.indexOf(category) % config.essential.colour_palette.length
 					// ]
 				)
 				.attr('stroke-width', 2)
-				.attr('d', lineGenerator)
+				.attr('d', (d,i) => lineGenerator(d[categoriesToPlot.indexOf(category)][1]))
 				.style('stroke-linejoin', 'round')
 				.style('stroke-linecap', 'round')
-				.attr('class', 'line' + categories.indexOf(category));
+				.attr('class', 'line' + categoriesToPlot.indexOf(category));
 
 			svg.selectAll('.line' + index).attr('stroke-width', 2.5).raise()
 
@@ -303,7 +332,7 @@ function drawGraphic() {
 	// Set up the legend
 	let legenditem = legend
 		.selectAll('div.legend--item')
-		.data([["Selected region", config.essential.colour_palette[0]], [reference, config.essential.colour_palette[1]], ["All other regions", config.essential.colour_palette[2]]])
+		.data([[config.essential.legendLabel, config.essential.colour_palette[0]], [reference, config.essential.colour_palette[1]], [config.essential.allLabel, config.essential.colour_palette[2]]])
 		.enter()
 		.append('div')
 		.attr('class', 'legend--item');
