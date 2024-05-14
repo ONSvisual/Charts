@@ -2,6 +2,8 @@
 
 The official repository for all publication ready ONS charts. See our [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and [service manual](https://service-manual.ons.gov.uk/data-visualisation) for more guidance on the use of these charts, and of charts more generally.
 
+We currently maintain a separate [map templates repository](https://github.com/ONSvisual/maptemplates).
+
 (NOTE: This repository is still a work in progress.)
 
 ## Guide to updating and placing an initial commit for a chart
