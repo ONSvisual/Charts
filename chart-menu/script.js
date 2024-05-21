@@ -29,7 +29,7 @@ let charts = [
 ];
 let urls = [
   "https://onsvisual.github.io/Charts/area-stacked-sm/",
-  "https://onsvisual.github.io/Charts/bar-chart-horizontal-split/",
+  "https://onsvisual.github.io/Charts/split-bar-chart/",
   "https://onsvisual.github.io/Charts/bar-chart-horizontal-sm/",
   "https://onsvisual.github.io/Charts/bar-chart-horizontal-with-reference-sm/",
   "https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-sm/",
@@ -302,9 +302,10 @@ function drawGraphic() {
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-      console.log(event);
-      if (event.target !== `div.modal-content`) {
-        modal.style("display", "none");
+      // console.log(event);
+      if (event.target.firstChild.className == `modal-content`) {
+        // console.log(event.target)
+        d3.select(event.target).style("display", "none");
       }
     };
 
