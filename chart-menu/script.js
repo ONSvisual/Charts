@@ -358,7 +358,7 @@ function drawGraphic() {
   d3.select("#dataSimplemap").html(
     `<a href=${urls[20]}data/data.csv download>Download the data csv file</a>`
   );
-
+//Issue fix
   d3.selectAll("iframe").attr("loading", "lazy");
 
   d3.select("#container21").remove();
