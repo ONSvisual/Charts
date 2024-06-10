@@ -93,6 +93,9 @@ function drawGraphic() {
 		.append('p')
 		.attr('class', 'groupLabels')
 		.html((d) => d[0]);
+		
+	//remove blank group headings
+	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
 	svgs = divs
 		.append('svg')
