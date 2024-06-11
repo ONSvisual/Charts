@@ -77,6 +77,9 @@ function drawGraphic() {
 
   divs.append('p').attr('class', 'groupLabels').html((d) => d[0])
 
+  //remove blank headings
+	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
+
   svgs = divs.append('svg')
     .attr('class', 'chart')
     .attr('height', (d) => d[2] + margin.top + margin.bottom)

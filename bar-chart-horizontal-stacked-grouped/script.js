@@ -85,6 +85,9 @@ function drawGraphic() {
 		.attr('class', 'groupLabels')
 		.html((d) => d[0]);
 
+	//remove blank headings
+	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
+
 	svgs = divs
 		.append('svg')
 		.attr('class', (d) => 'chart chart' + groups.indexOf(d))
