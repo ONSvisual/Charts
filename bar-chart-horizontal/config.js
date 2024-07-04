@@ -18,19 +18,19 @@ config = {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 150
 			},
 			"md": {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 180
 			},
 			"lg": {
 				"top": 15,
 				"right": 20,
 				"bottom": 50,
-				"left": 120
+				"left": 200
 			}
 		},
 		"seriesHeight": {
