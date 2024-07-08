@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -22,8 +23,8 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	namesUnique = [...new Set(graphic_data.map((d) => d.name))];
-	categoriesUnique = [...new Set(graphic_data.map((d) => d.category))];
+	let namesUnique = [...new Set(graphic_data.map((d) => d.name))];
+	let categoriesUnique = [...new Set(graphic_data.map((d) => d.category))];
 
 	let margin = config.optional.margin[size];
 	let chart_width =
@@ -35,7 +36,7 @@ function drawGraphic() {
 		(config.optional.seriesHeight[size] * categoriesUnique.length + 14) * 0.2;
 
 	//grouping the data
-	groups = d3.groups(graphic_data, (d) => d.group)
+	let groups = d3.groups(graphic_data, (d) => d.group)
 
 	// create the y scale in groups
 	groups.map(function (d) {
@@ -87,7 +88,7 @@ function drawGraphic() {
 		.tickFormat(d3.format(config.essential.dataLabels.numberFormat))
 		.ticks(config.optional.xAxisTicks[size]);
 
-	divs = graphic.selectAll('div.categoryLabels')
+	let divs = graphic.selectAll('div.categoryLabels')
 		.data(groups)
 		.join('div')
 
@@ -96,12 +97,12 @@ function drawGraphic() {
 	//remove any blank headings
 	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
-	svgs = divs.append('svg')
+	let svgs = divs.append('svg')
 		.attr('class', (d) => 'chart chart' + groups.indexOf(d))
 		.attr('height', (d) => d[2] + margin.top + margin.bottom)
 		.attr('width', chart_width + margin.left + margin.right)
 
-	charts = svgs.append('g')
+	let charts = svgs.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
 	charts.each(function (d, i) {

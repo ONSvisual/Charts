@@ -2,6 +2,7 @@ const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
 const legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, popTotal, graphic_data_new, maxPercentage, width, chart_width, height, xLeft, xRight, y, svg, widths, dataForLegend, titleDivs;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -72,8 +73,8 @@ function drawGraphic() {
 	maxPercentage = d3.max(graphic_data_new, (d) => d.value);
 
 	// set up widths
-	fullwidth = parseInt(graphic.style('width'));
-	chart_width = (parseInt(graphic.style('width')) - margin.centre - margin.left - margin.right) / 2;
+	width = parseInt(graphic.style('width'));
+	chart_width = (width - margin.centre - margin.left - margin.right) / 2;
 	height = (graphic_data_new.length / 2) * config.optional.seriesHeight[size];
 
 	// set up some scales, first the left scale
@@ -100,7 +101,7 @@ function drawGraphic() {
 		.append('svg')
 		.attr('class', 'chart')
 		.attr('height', height + margin.top + margin.bottom)
-		.attr('width', fullwidth)
+		.attr('width', width)
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -187,10 +188,10 @@ function drawGraphic() {
 		.attr(
 			'transform',
 			'translate(' +
-				(fullwidth - margin.left) +
-				',' +
-				(height + 30) +
-				')'
+			(width - margin.left) +
+			',' +
+			(height + 30) +
+			')'
 		)
 		.attr('class', 'axis--label')
 		.attr('text-anchor', 'end')

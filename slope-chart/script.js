@@ -2,6 +2,7 @@ let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
+let graphic_data, size;
 
 function drawGraphic() {
 	//Accessible summary

@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svgs, xDomain, divs, charts, var_group, var_group2, var_group3;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -26,7 +27,7 @@ function drawGraphic() {
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
-	groups = d3.groups(graphic_data, (d) => d.group);
+	let groups = d3.groups(graphic_data, (d) => d.group);
 
 	if (config.essential.xDomain == 'auto') {
 		let min = 1000000;

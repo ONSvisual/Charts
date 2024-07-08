@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let legend = d3.select('#legend');
+let graphic_data, size, svg;
 
 function drawGraphic() {
 
@@ -51,7 +52,7 @@ function drawGraphic() {
 
 
   //lets also try a new smallmultiple version here which will group data on the basis of plot
-  grouped_data = d3.group(graphic_data, d => d.plot)
+  let grouped_data = d3.group(graphic_data, d => d.plot)
 
   let xDataType;
 

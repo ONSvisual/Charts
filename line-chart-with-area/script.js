@@ -5,6 +5,8 @@ let graphic = d3.select('#graphic');
 let legend = d3.selectAll('#legend')
 let pymChild = null;
 
+let graphic_data, size;
+
 function drawGraphic() {
 	// Remove any existing chart elements
 	graphic.selectAll('*').remove();

@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
+let graphic_data, size;
 //console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;

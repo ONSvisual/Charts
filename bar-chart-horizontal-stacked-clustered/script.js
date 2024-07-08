@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -24,8 +25,8 @@ function drawGraphic() {
 
 	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;
-	fullwidth = parseInt(graphic.style('width'));
-	chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let width = parseInt(graphic.style('width'));
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
 		config.optional.seriesHeight[size] * (graphic_data.length / 2) +
@@ -40,7 +41,7 @@ function drawGraphic() {
 		.offset(d3[config.essential.stackOffset])
 		.order(d3[config.essential.stackOrder]);
 
-	categoriesUnique = [...new Set(graphic_data.map((d) => d.sex))];
+	let categoriesUnique = [...new Set(graphic_data.map((d) => d.sex))];
 
 
 	//y scale
@@ -61,7 +62,7 @@ function drawGraphic() {
 		.domain(categoriesUnique);
 
 	//y axis generator
-	yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
+	const yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
 	//set up x scale
 	const x = d3
@@ -88,7 +89,7 @@ function drawGraphic() {
 	svg = d3
 		.select('#graphic')
 		.append('svg')
-		.attr('width', fullwidth)
+		.attr('width', width)
 		.attr('height', height + margin.top + margin.bottom)
 		.attr('class', 'chart')
 		.style('background-color', '#fff')

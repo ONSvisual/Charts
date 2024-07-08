@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -24,15 +25,15 @@ function drawGraphic() {
 
 	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;
-	fullwidth = parseInt(graphic.style('width'));
-	chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
+
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
 		config.optional.seriesHeight[size] * graphic_data.length +
 		10 * (graphic_data.length - 1) +
 		12;
 
-	groups = d3.groups(graphic_data, (d) => d.group);
+	let groups = d3.groups(graphic_data, (d) => d.group);
 
 	const stack = d3
 		.stack()
@@ -78,7 +79,7 @@ function drawGraphic() {
 		// .tickFormat(d => d  + "%")
 		.ticks(config.optional.xAxisTicks[size]);
 
-	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
+	let divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
 	divs
 		.append('p')
@@ -88,13 +89,13 @@ function drawGraphic() {
 	//remove blank headings
 	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
-	svgs = divs
+	let svgs = divs
 		.append('svg')
 		.attr('class', (d) => 'chart chart' + groups.indexOf(d))
 		.attr('height', (d) => d[2] + margin.top + margin.bottom)
 		.attr('width', chart_width + margin.left + margin.right);
 
-	charts = svgs
+	let charts = svgs
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 

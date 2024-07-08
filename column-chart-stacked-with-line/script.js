@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -112,8 +113,8 @@ function drawGraphic() {
 
 	let counter;
 	// do some code to overwrite blanks with the last known point
-	keys = Object.keys(lines);
-	for (i = 0; i < keys.length; i++) {
+	let keys = Object.keys(lines);
+	for (let i = 0; i < keys.length; i++) {
 		// console.log(lines[keys[i]])
 		lines[keys[i]].forEach(function (d, j) {
 			if (d.amt != "null") {

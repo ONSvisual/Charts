@@ -1,5 +1,6 @@
 let pymChild = null;
 let graphic = d3.select("#graphic");
+let graphic_data, size, svg;
 
 //Remove previous SVGs
 d3.select("#graphic").select("img").remove();

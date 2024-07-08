@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, keys, counter;
 
 function drawGraphic() {
 	// Remove any existing chart elements
@@ -144,7 +145,7 @@ function drawGraphic() {
 				if (config.essential.interpolateGaps) {
 				
 					keys= Object.keys(lines)
-					for(i=0;i<keys.length;i++){
+					for(let i=0;i<keys.length;i++){
 						lines[keys[i]].forEach(function(d,j){
 						if(d.amt!=null){
 							counter = j;

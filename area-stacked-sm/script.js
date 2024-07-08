@@ -1,6 +1,7 @@
 let pymChild = null;
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
+let graphic_data, size, svg;
 
 //Remove fallback
 d3.select('#graphic').select('img').remove();
@@ -43,9 +44,6 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		size = 'lg';
 	}
 
-
-	// Calculate chart width here
-	calculatedChartWidth = calculateChartWidth(size);
 
 	const chartsPerRow = config.optional.chart_every[size];
 	const chartPosition = chartIndex % chartsPerRow;
@@ -105,7 +103,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	//End of legend code
 
-	let width = calculatedChartWidth;
+	// Calculate chart width here
+	let width = calculateChartWidth(size);;
 	let height =
 		width * (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) - margin.top - margin.bottom;
 

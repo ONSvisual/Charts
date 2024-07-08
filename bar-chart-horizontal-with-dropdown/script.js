@@ -1,7 +1,7 @@
 let graphic = d3.select('#graphic');
 let select = d3.select('#select');
 let pymChild = null;
-let x, y;
+let x, y, graphic_data, size, svg;
 
 
 function drawGraphic() {
@@ -11,7 +11,7 @@ function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
+	let uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
 
 	console.log(`dropdownData contains: ${JSON.stringify(uniqueOptions)}`);
 

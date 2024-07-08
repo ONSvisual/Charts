@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -24,7 +25,7 @@ function drawGraphic() {
 	let legendCategories = [...new Set(graphic_data.map((d) => d.category))]
 
 	//Set up the legend
-	legendItem = legend
+	let legendItem = legend
 		.selectAll('div')
 		.data(legendCategories)
 		.join('div')

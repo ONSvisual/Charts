@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, sliderDomain, sliderSimple, svg, animating;
 
 function drawGraphic() {
 	// Remove any existing chart elements
@@ -52,8 +53,8 @@ function drawGraphic() {
 
 		//Set the date format for the slider label
 
-		dateformat = d3.timeFormat(config.essential.dateFormat);
-		dateparse = d3.timeParse(config.essential.dateParse);
+		let dateformat = d3.timeFormat(config.essential.dateFormat);
+		let dateparse = d3.timeParse(config.essential.dateParse);
 
 		//Make the slider
 
@@ -406,7 +407,7 @@ function drawGraphic() {
 
 		//draw the circles with transition if slider is drawn
 
-		t = d3.transition().duration(750).ease(d3.easeCircle);
+		let t = d3.transition().duration(750).ease(d3.easeCircle);
 
 		svg
 			.selectAll('circle')

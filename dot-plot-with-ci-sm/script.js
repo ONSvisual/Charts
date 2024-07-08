@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg, grouped_data;
 
 function drawGraphic() {
 	// clear out existing graphics

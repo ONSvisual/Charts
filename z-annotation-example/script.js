@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
 

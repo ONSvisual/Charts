@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -22,8 +23,8 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	namesUnique = [...new Set(graphic_data.map((d) => d.name))];
-	categoriesUnique = [...new Set(graphic_data.map((d) => d.category))];
+	let namesUnique = [...new Set(graphic_data.map((d) => d.name))];
+	let categoriesUnique = [...new Set(graphic_data.map((d) => d.category))];
 
 	let margin = config.optional.margin[size];
 	let chart_width =

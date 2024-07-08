@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
+let graphic_data, size, svg, columnNames, numbers, dataPivoted, breaks, colour, key, legendx;
 
 function drawGraphic() {
 	//population accessible summmary

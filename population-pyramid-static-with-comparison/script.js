@@ -2,6 +2,7 @@ const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
 const legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, comparison_data, comparisonPopTotal, comparison_data_new, size, popTotal, graphic_data_new, maxPercentage, width, chart_width, height, xLeft, xRight, y, svg, widths, dataForLegend, titleDivs, lineLeft, lineRight, comparisons;
 
 function drawGraphic() {
 	// clear out existing graphics
@@ -97,7 +98,7 @@ function drawGraphic() {
 	]);
 
 	// set up widths
-	fullwidth = parseInt(graphic.style('width'));
+	width = parseInt(graphic.style('width'));
 	chart_width = (parseInt(graphic.style('width')) - margin.centre - margin.left - margin.right) / 2;
 	height = (graphic_data_new.length / 2) * config.optional.seriesHeight[size];
 
@@ -125,7 +126,7 @@ function drawGraphic() {
 		.append('svg')
 		.attr('class', 'chart')
 		.attr('height', height + margin.top + margin.bottom)
-		.attr('width', fullwidth)
+		.attr('width', width)
 		.append('g')
 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -242,7 +243,7 @@ function drawGraphic() {
 		.attr(
 			'transform',
 			'translate(' +
-				(fullwidth - margin.left) +
+				(width - margin.left) +
 				',' +
 				(height + 30) +
 				')'

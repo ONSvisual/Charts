@@ -1,5 +1,6 @@
 let graphic = d3.select('#graphic');
 let pymChild = null;
+let graphic_data, size, svg, xDomain;
 
 function drawGraphic() {
 
@@ -25,12 +26,12 @@ function drawGraphic() {
   let margin = config.optional.margin[size]
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
 
-  groups = d3.groups(graphic_data, (d) => d.group)
+  let groups = d3.groups(graphic_data, (d) => d.group)
 
   if (config.essential.xDomain == "auto") {
     let min = 0
     let max = 0
-    for (i = 2; i < graphic_data.columns.length; i++) {
+    for (let i = 2; i < graphic_data.columns.length; i++) {
       min = d3.min([min, d3.min(graphic_data, (d) => +d[graphic_data.columns[i]])])
       max = d3.max([max, d3.max(graphic_data, (d) => +d[graphic_data.columns[i]])])
     }
@@ -56,7 +57,7 @@ function drawGraphic() {
     // y scale
     d[3] = d3.scaleBand()
       .paddingOuter(0.2)
-      .paddingInner((graphic_data.length-1)*10/(graphic_data.length*30))
+      .paddingInner((graphic_data.length - 1) * 10 / (graphic_data.length * 30))
       .range([0, d[2]])
       .domain(d[1].map(d => d.name));
     //y axis generator
@@ -70,7 +71,7 @@ function drawGraphic() {
     .ticks(config.optional.xAxisTicks[size])
     .tickFormat(d3.format(config.essential.xAxisFormat));
 
-  divs = graphic.selectAll('div.categoryLabels')
+  let divs = graphic.selectAll('div.categoryLabels')
     .data(groups)
     .join('div')
 
@@ -78,14 +79,14 @@ function drawGraphic() {
   divs.append('p').attr('class', 'groupLabels').html((d) => d[0])
 
   //remove blank headings
-	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
+  divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
-  svgs = divs.append('svg')
+  let svgs = divs.append('svg')
     .attr('class', 'chart')
     .attr('height', (d) => d[2] + margin.top + margin.bottom)
     .attr('width', chart_width + margin.left + margin.right)
 
-  charts = svgs.append('g')
+  let charts = svgs.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
   charts.each(function (d) {
@@ -112,46 +113,46 @@ function drawGraphic() {
 
   })
 
- 
 
-    charts.selectAll('rect')
+
+  charts.selectAll('rect')
     .data((d) => d[1])
     .join('rect')
-		.attr('x', d => d.value < 0 ? x(d.value) : x(0))
+    .attr('x', d => d.value < 0 ? x(d.value) : x(0))
     .attr('y', d => groups.filter(f => f[0] == d.group)[0][3](d.name))
-		.attr('width', (d) => Math.abs(x(d.value) - x(0)))
+    .attr('width', (d) => Math.abs(x(d.value) - x(0)))
     .attr('height', (d) => groups.filter(f => f[0] == d.group)[0][3].bandwidth())
     .attr('fill', config.essential.colour_palette);
 
-		let labelPositionFactor = 7;
+  let labelPositionFactor = 7;
 
-  if(config.essential.dataLabels.show==true){
+  if (config.essential.dataLabels.show == true) {
     charts.selectAll('text.value')
-    .data((d) => d[1])
-    .join('text')
-    .attr('class', 'dataLabels')
-    .attr('x', (d) => d.value > 0 ? x(d.value) :
-    Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
-  .attr('dx', (d) => d.value > 0 ?
-    (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
-    3)
-    .attr('y', (d) => groups.filter(f => f[0] == d.group)[0][3](d.name)+groups.filter(f => f[0] == d.group)[0][3].bandwidth()/2)
-    .attr('dominant-baseline', 'middle')
-    .attr('text-anchor', (d) => d.value > 0 ?
-    (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
-    "start"
-  )
-  .attr('fill', (d) =>
-    (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
-  )
+      .data((d) => d[1])
+      .join('text')
+      .attr('class', 'dataLabels')
+      .attr('x', (d) => d.value > 0 ? x(d.value) :
+        Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
+      .attr('dx', (d) => d.value > 0 ?
+        (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
+        3)
+      .attr('y', (d) => groups.filter(f => f[0] == d.group)[0][3](d.name) + groups.filter(f => f[0] == d.group)[0][3].bandwidth() / 2)
+      .attr('dominant-baseline', 'middle')
+      .attr('text-anchor', (d) => d.value > 0 ?
+        (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
+        "start"
+      )
+      .attr('fill', (d) =>
+        (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
+      )
       .text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
-    }//end if for datalabels
+  }//end if for datalabels
 
 
 
   // This does the x-axis label
   charts.each(function (d, i) {
-    
+
     if (i == groups.length - 1) {
       d3.select(this)
         .append('text')
@@ -160,9 +161,9 @@ function drawGraphic() {
         .attr('class', 'axis--label')
         .text(config.essential.xAxisLabel)
         .attr('text-anchor', 'end')
-    
+
     }
-    })
+  })
 
 
 
