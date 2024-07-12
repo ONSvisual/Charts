@@ -1,3 +1,5 @@
+import { calculateChartWidth } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -11,7 +13,7 @@ function drawGraphic() {
 	//Accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-
+	
 	let threshold_md = config.optional.mediumBreakpoint;
 	let threshold_sm = config.optional.mobileBreakpoint;
 
@@ -24,7 +26,7 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	const droppedMargin = 20;
+	// const droppedMargin = 20;
 
 	// var chart_width =
 	// 	((parseInt(graphic.style('width')) - margin.left + 10) / chartEvery) - margin.right -10;
@@ -62,37 +64,34 @@ function drawGraphic() {
 
 	function drawChart(container, data, chartIndex) {
 
-		function calculateChartWidth(size) {
-
-			const chartMargin = config.optional.margin[size];
-
-			if (config.optional.dropYAxis) {
-				// Chart width calculation allowing for droppedMargin px left margin between the charts
-				const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * droppedMargin)) / chartEvery) - chartMargin.right;
-				return chartWidth;
-			} else {
-				const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-				return chartWidth;
-			}
-		}
-
 		const chartEvery = config.optional.chart_every[size];
 		const chartsPerRow = config.optional.chart_every[size];
 		let chartPosition = chartIndex % chartsPerRow;
 
 		let margin = { ...config.optional.margin[size] };
 
-		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
-			if (chartPosition !== 0) {
-				margin.left = droppedMargin;
-			}
+		// // If the chart is not in the first position in the row, reduce the left margin
+		// if (config.optional.dropYAxis) {
+		// 	if (chartPosition !== 0) {
+		// 		margin.left = droppedMargin;
+		// 	}
+		// }
+
+
+		let chartGap = config.optional?.chartGap || 10;
+
+		let chart_width = calculateChartWidth({
+			screenWidth: parseInt(graphic.style('width')),
+			chartEvery: chartsPerRow,
+			chartMargin: margin,
+			chartGap: chartGap
+		})
+
+		if (chartPosition !== 0) {
+			margin.left = chartGap;
 		}
 
-
-
 		const aspectRatio = config.optional.aspectRatio[size];
-		let chart_width = calculateChartWidth(size)
 
 		//height is set by the aspect ratio
 		var height =
@@ -377,3 +376,5 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	});
 
 });
+
+window.onresize = drawGraphic

@@ -66,6 +66,7 @@ config = {
 				"left": 50
 			}
 		},
+		"chartGap": 20,
 		"xAxisTicksEvery": {
 			"sm": 7,
 			"md": 5,

@@ -52,6 +52,7 @@ config = {
 				"left": 70
 			}
 		},
+		"chartGap": 10,
 		"chart_every": {
 			"sm": 1,
 			"md": 2,

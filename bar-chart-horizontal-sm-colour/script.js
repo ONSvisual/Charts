@@ -1,3 +1,5 @@
+import { calculateChartWidth } from "../lib/helpers.js";
+
 let pymChild = null;
 let graphic = d3.select("#graphic");
 let graphic_data, size, svg;
@@ -8,22 +10,22 @@ d3.select("#graphic").select("img").remove();
 function drawGraphic(seriesName, graphic_data, chartIndex) {
   d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
 
-  function calculateChartWidth(size) {
-    const chartEvery = config.optional.chart_every[size];
-    const aspectRatio = config.optional.aspectRatio[size];
-    const chartMargin = config.optional.margin[size];
+  // function calculateChartWidth(size) {
+  //   const chartEvery = config.optional.chart_every[size];
+  //   const aspectRatio = config.optional.aspectRatio[size];
+  //   const chartMargin = config.optional.margin[size];
 
-    const containerWidth = parseInt(graphic.style("width"));
-    const chartsPerRow = chartEvery;
-    // const chartWidth =
-    //   ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
-    //   (aspectRatio[0] / aspectRatio[1]);
+  //   const containerWidth = parseInt(graphic.style("width"));
+  //   const chartsPerRow = chartEvery;
+  //   // const chartWidth =
+  //   //   ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
+  //   //   (aspectRatio[0] / aspectRatio[1]);
 
-    // Chart width calculation allowing for 10px left margin between the charts
-    const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+  //   // Chart width calculation allowing for 10px left margin between the charts
+  //   const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
 
-    return chartWidth;
-  }
+  //   return chartWidth;
+  // }
 
   // size thresholds as defined in the config.js file
 
@@ -52,13 +54,21 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
     10 * (graphic_data.length - 1) +
     12;
 
+		let chartGap = config.optional?.chartGap || 10;
 
-  // If the chart is not in the first position in the row, reduce the left margin
-  if (chartPosition !== 0) {
-    margin.left = 10;
-  }
+		let chart_width = calculateChartWidth({
+			screenWidth: parseInt(graphic.style('width')),
+			chartEvery: chartsPerRow,
+			chartMargin: margin,
+			chartGap: chartGap
+		})
 
-  let chart_width = calculateChartWidth(size); // Calculate the initial chart width
+		// If the chart is not in the first position in the row, reduce the left margin
+		if (config.optional.dropYAxis) {
+			if (chartPosition !== 0) {
+				margin.left = chartGap;
+			}
+		}
 
   // Calculate the total available width for two charts in a row
   const containerWidth = parseInt(graphic.style("width"));

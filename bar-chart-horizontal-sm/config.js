@@ -43,6 +43,7 @@ config = {
 				"left": 200
 			}
 		},
+		"chartGap": 10,
 		"seriesHeight": {
 			"sm": 30,
 			"md": 30,

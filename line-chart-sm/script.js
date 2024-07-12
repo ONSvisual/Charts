@@ -1,3 +1,5 @@
+import { calculateChartWidth } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -25,21 +27,22 @@ function drawGraphic() {
 	}
 
 	const aspectRatio = config.optional.aspectRatio[size];
-	const chart_every = config.optional.chart_every[size];
-	const droppedMargin = 20;
+	const chartsPerRow = config.optional.chart_every[size];
+
+	// const droppedMargin = 20;
 	// let chart_width =
-	// 	((parseInt(graphic.style('width')) - margin.left + 10) / chart_every) - margin.right -10;
+	// 	((parseInt(graphic.style('width')) - margin.left + 10) / chartsPerRow) - margin.right -10;
 
 
-	function calculateChartWidth(size) {
-		const chartEvery = config.optional.chart_every[size];
-		// const aspectRatio = config.optional.aspectRatio[size];
-		const chartMargin = config.optional.margin[size];
+	// function calculateChartWidth(size) {
+	// 	const chartEvery = config.optional.chartsPerRow[size];
+	// 	// const aspectRatio = config.optional.aspectRatio[size];
+	// 	const chartMargin = config.optional.margin[size];
 
-		const chartWidth =
-			((parseInt(graphic.style('width')) - chartMargin.left + droppedMargin) / chartEvery) - chartMargin.right - droppedMargin;
-		return chartWidth;
-	}
+	// 	const chartWidth =
+	// 		((parseInt(graphic.style('width')) - chartMargin.left + droppedMargin) / chartEvery) - chartMargin.right - droppedMargin;
+	// 	return chartWidth;
+	// }
 
 	const reference = config.essential.reference_category;
 
@@ -54,16 +57,28 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, series, index) {
+	function drawChart(container, series, chartIndex) {
+
+		let chartPosition = chartIndex % chartsPerRow;
+
 		// Set dimensions
 		let margin = { ...config.optional.margin[size] };
 
-		// If the chart is not in the first position in the row, reduce the left margin
-		if (index % chart_every !== 0) {
-			margin.left = droppedMargin;
-		}
+		let chartGap = config.optional?.chartGap || 10;
 
-		let chart_width = calculateChartWidth(size);
+		let chart_width = calculateChartWidth({
+			screenWidth: parseInt(graphic.style('width')),
+			chartEvery: chartsPerRow,
+			chartMargin: margin,
+			chartGap: chartGap
+		})
+	
+		// If the chart is not in the first position in the row, reduce the left margin
+		if (config.optional.dropYAxis) {
+			if (chartPosition !== 0) {
+				margin.left = chartGap;
+			}
+		}
 
 		//height is set by the aspect ratio
 		let height =
@@ -163,7 +178,7 @@ function drawGraphic() {
 				.datum(Object.entries(lines))
 				.attr('fill', 'none')
 				.attr(
-					'stroke', () => (categoriesToPlot.indexOf(category) == index) ? config.essential.colour_palette[0] :
+					'stroke', () => (categoriesToPlot.indexOf(category) == chartIndex) ? config.essential.colour_palette[0] :
 						category == reference ? config.essential.colour_palette[1] : config.essential.colour_palette[2]
 					// config.essential.colour_palette[
 					// categories.indexOf(category) % config.essential.colour_palette.length
@@ -175,14 +190,14 @@ function drawGraphic() {
 				.style('stroke-linecap', 'round')
 				.attr('class', 'line' + categoriesToPlot.indexOf(category));
 
-			svg.selectAll('.line' + index).attr('stroke-width', 2.5).raise()
+			svg.selectAll('.line' + chartIndex).attr('stroke-width', 2.5).raise()
 
 			const lastDatum = graphic_data[graphic_data.length - 1];
 
 			//Labelling the final data point on each chart if option selected in the config
 			if (config.essential.labelFinalPoint == true) {
 				// Add text labels to the right of the circles
-				if (categories.indexOf(category) == index) {
+				if (categories.indexOf(category) == chartIndex) {
 					svg
 						.append('text')
 						.attr('class', 'dataLabel')
@@ -202,7 +217,7 @@ function drawGraphic() {
 						.text(d3.format(",.0f")(lastDatum[category]))
 				}
 
-				if (categories.indexOf(category) == index) {
+				if (categories.indexOf(category) == chartIndex) {
 					svg
 						.append('circle')
 						.attr('cx', x(lastDatum.date))
@@ -271,7 +286,7 @@ function drawGraphic() {
 
 
 		//Only draw the y axis tick labels on the first chart in each row
-		if (index % chart_every === 0) {
+		if (chartIndex % chartsPerRow === 0) {
 			svg
 				.append('g')
 				.attr('class', 'y axis')
@@ -298,7 +313,7 @@ function drawGraphic() {
 
 
 		// This does the y-axis label
-		if (index % chart_every === 0) {
+		if (chartIndex % chartsPerRow === 0) {
 			svg
 				.append('g')
 				.attr('transform', `translate(0, 0)`)
@@ -311,7 +326,7 @@ function drawGraphic() {
 		}
 
 		// This does the x-axis label
-			if (index % chart_every === chart_every - 1 || index === [...chartContainers].length - 1) {
+			if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...chartContainers].length - 1) {
 				svg
 					.append('g')
 					.attr('transform', `translate(0, ${height})`)

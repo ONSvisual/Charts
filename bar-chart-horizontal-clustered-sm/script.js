@@ -1,3 +1,5 @@
+import { calculateChartWidth } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -62,23 +64,23 @@ function drawGraphic() {
 
 		//Sort the data so that the bars in each chart are in the same order
 		data.sort((a, b) => namesArray.indexOf(a.name) - namesArray.indexOf(b.name))
-		
+
 		// Log the data being used for each small multiple
 		// console.log('Data for this small multiple:', data);
 
-		function calculateChartWidth(size) {
-			const chartEvery = config.optional.chart_every[size];
-			const chartMargin = config.optional.margin[size];
+		// function calculateChartWidth(size) {
+		// 	const chartEvery = config.optional.chart_every[size];
+		// 	const chartMargin = config.optional.margin[size];
 
-			if (config.optional.dropYAxis) {
-				// Chart width calculation allowing for 10px left margin between the charts
-				const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-				return chartWidth;
-			} else {
-				const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-				return chartWidth;
-			}
-		}
+		// 	if (config.optional.dropYAxis) {
+		// 		// Chart width calculation allowing for 10px left margin between the charts
+		// 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+		// 		return chartWidth;
+		// 	} else {
+		// 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+		// 		return chartWidth;
+		// 	}
+		// }
 
 
 		// Calculate the height based on the data
@@ -91,15 +93,22 @@ function drawGraphic() {
 		let chartPosition = chartIndex % chartsPerRow;
 
 		let margin = { ...config.optional.margin[size] };
+		let chartGap = config.optional?.chartGap || 10;
+
+		let chart_width = calculateChartWidth({
+			screenWidth: parseInt(graphic.style('width')),
+			chartEvery: chartsPerRow,
+			chartMargin: margin,
+			chartGap: chartGap
+		})
 
 		// If the chart is not in the first position in the row, reduce the left margin
 		if (config.optional.dropYAxis) {
 			if (chartPosition !== 0) {
-				margin.left = 10;
+				margin.left = chartGap;
 			}
 		}
 
-		let chart_width = calculateChartWidth(size)
 
 		//set up scales
 		const x = d3.scaleLinear().range([0, chart_width]);

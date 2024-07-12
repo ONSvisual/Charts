@@ -52,6 +52,7 @@ config = {
         left: 160,
       },
     },
+    chartGap: 10,
     seriesHeight: {
       sm: 30,
       md: 30,
@@ -64,6 +65,7 @@ config = {
     },
     mobileBreakpoint: 510,
     mediumBreakpoint: 1920,
+    dropYAxis: true
   },
   elements: { select: 0, nav: 0, legend: 1, titles: 0 },
 };

@@ -1,7 +1,9 @@
+import { calculateChartWidth } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
-let graphic_data, size;
+let graphic_data, size, chart_width;
 
 function drawGraphic() {
 	// Remove any existing chart elements
@@ -24,7 +26,7 @@ function drawGraphic() {
 		size = 'lg';
 	}
 
-	const droppedMargin = 20;
+	// const droppedMargin = 20;
 	// var chart_width =
 	// 	((parseInt(graphic.style('width')) - margin.left + 10) / chartEvery) - margin.right -10;
 
@@ -56,19 +58,19 @@ function drawGraphic() {
 
 	function drawChart(container, data, chartIndex) {
 
-		function calculateChartWidth(size) {
+		// function calculateChartWidth(size) {
 
-			const chartMargin = config.optional.margin[size];
+		// 	const chartMargin = config.optional.margin[size];
 
-			if (config.optional.dropYAxis && !config.optional.freeYAxisScales) {
-				// Chart width calculation allowing for droppedMargin px left margin between the charts
-				const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * droppedMargin)) / chartEvery) - chartMargin.right;
-				return chartWidth;
-			} else {
-				const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-				return chartWidth;
-			}
-		}
+		// 	if (config.optional.dropYAxis && !config.optional.freeYAxisScales) {
+		// 		// Chart width calculation allowing for droppedMargin px left margin between the charts
+		// 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * droppedMargin)) / chartEvery) - chartMargin.right;
+		// 		return chartWidth;
+		// 	} else {
+		// 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+		// 		return chartWidth;
+		// 	}
+		// }
 
 		const chartEvery = config.optional.chart_every[size];
 		const chartsPerRow = config.optional.chart_every[size];
@@ -76,15 +78,26 @@ function drawGraphic() {
 
 		let margin = { ...config.optional.margin[size] };
 
+		let chartGap = config.optional?.chartGap || 10;
+
 		// If the chart is not in the first position in the row, reduce the left margin
 		if (config.optional.dropYAxis && !config.optional.freeYAxisScales) {
+
+			chart_width = calculateChartWidth({
+				screenWidth: parseInt(graphic.style('width')),
+				chartEvery: chartsPerRow,
+				chartMargin: margin,
+				chartGap: chartGap
+			})
 			if (chartPosition !== 0) {
-				margin.left = droppedMargin;
+				margin.left = chartGap;
 			}
+		} else {
+			chart_width = ((parseInt(graphic.style('width')) / chartEvery) - margin.left - margin.right);
 		}
+		// }
 
 		const aspectRatio = config.optional.aspectRatio[size];
-		let chart_width = calculateChartWidth(size)
 
 		//height is set by the aspect ratio
 		var height =
@@ -201,7 +214,7 @@ function drawGraphic() {
 				.ticks(config.optional.yAxisTicks[size])
 				.tickFormat((d) => config.optional.freeYAxisScales ? d3.format(config.essential.yAxisFormat)(d) :
 					config.optional.dropYAxis ? (chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "") :
-					d3.format(config.essential.yAxisFormat)(d)))
+						d3.format(config.essential.yAxisFormat)(d)))
 			.selectAll('.tick text')
 			.call(wrap, margin.left - 10);
 
@@ -229,9 +242,9 @@ function drawGraphic() {
 			.attr('x', 0)
 			.attr('y', 35)
 			.attr('class', 'axis--label')
-			.text(() => config.optional.freeYAxisScales ? config.essential.yAxisLabel : 
-			chartIndex % chartEvery == 0 ?
-				config.essential.yAxisLabel : "") //May need to make the y-axis label an array in the config?
+			.text(() => config.optional.freeYAxisScales ? config.essential.yAxisLabel :
+				chartIndex % chartEvery == 0 ?
+					config.essential.yAxisLabel : "") //May need to make the y-axis label an array in the config?
 			.attr('text-anchor', 'start');
 	}
 

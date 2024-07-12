@@ -50,7 +50,7 @@ config = {
 		"margin": {
 			"sm": {
 				"top": 70,
-				"right": 10,
+				"right": 15,
 				"bottom": 50,
 				"left": 45
 			},
@@ -67,6 +67,7 @@ config = {
 				"left": 45
 			}
 		},
+		"chartGap": 20,
 		"xAxisTicksEvery": { // this is the interval of ticks on the x axis but it will always show the first and last date.
 			"sm": 2,
 			"md": 2,
