@@ -1,4 +1,4 @@
-import { calculateChartWidth } from "../lib/helpers.js";
+import { calculateChartWidth, addChartTitleLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');
@@ -214,16 +214,22 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		}
 	}
 
-	// todo: This needs to be moved to the gobal style css
 	// Add a title to each of the charts 
-	svg
-		.append('text')
-		.attr('x', 0)
-		.attr('y', -margin.top / 2)
-		.attr('text-anchor', 'start')
-		.style('font-size', '16px')
-		.attr('class', 'title')
-		.text(seriesName);
+	// svg
+	// 	.append('text')
+	// 	.attr('x', 0)
+	// 	.attr('y', -margin.top / 2)
+	// 	.attr('text-anchor', 'start')
+	// 	.style('font-size', '16px')
+	// 	.attr('class', 'title')
+	// 	.text(seriesName);
+
+	addChartTitleLabel({
+		svgContainer: svg,
+		yPosition: -margin.top / 2,
+		text: seriesName,
+		wrapWidth: width
+	})
 
 	// This does the x-axis label
 	if (chartIndex % chartsPerRow === chartsPerRow - 1) {

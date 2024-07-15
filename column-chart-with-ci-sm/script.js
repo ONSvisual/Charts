@@ -1,4 +1,4 @@
-import { calculateChartWidth } from "../lib/helpers.js";
+import { calculateChartWidth, addChartTitleLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -246,17 +246,23 @@ function drawGraphic() {
 
 
     // This does the chart title label
-    svg
-      .append('g')
-      .attr('transform', 'translate(0, 0)')
-      .append('text')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('dy', 5 - margin.top)
-      .attr('class', 'title')
-      .text(d => d[0])
-      .attr('text-anchor', 'start')
-      .call(wrap, chart_width);
+    // svg
+    //   .append('g')
+    //   .attr('transform', 'translate(0, 0)')
+    //   .append('text')
+    //   .attr('x', 0)
+    //   .attr('y', 0)
+    //   .attr('dy', 5 - margin.top)
+    //   .attr('class', 'title')
+    //   .text(d => d[0])
+    //   .attr('text-anchor', 'start')
+    //   .call(wrap, chart_width);
+    addChartTitleLabel({
+      svgContainer: svg,
+      yPosition: -margin.top/2,
+      text: d => d[0],
+      wrapWidth: chart_width
+    })
 
     // This does the x-axis label
     svg
