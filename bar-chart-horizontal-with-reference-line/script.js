@@ -1,3 +1,5 @@
+import { addDataLabels } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -160,28 +162,38 @@ function drawGraphic() {
 		let labelPositionFactor = 7;
 
 	if (config.essential.dataLabels.show == true) {
-		svg
-			.selectAll('text.dataLabels')
-			.data(graphic_data)
-			.join('text')
-			.attr('class', 'dataLabels')
-			.attr('x', (d) => d.value > 0 ? x(d.value) :
-			Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
-		  .attr('dx', (d) => d.value > 0 ?
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
-			3)
-			.attr('y', (d) => y(d.name) + y.bandwidth()/2)
-			.attr('dominant-baseline', 'middle')
-			.attr('text-anchor', (d) => d.value > 0 ?
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
-			"start"
-		  )
-		  .attr('fill', (d) =>
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
-		  )
-			.text((d) =>
-				d3.format(config.essential.dataLabels.numberFormat)(d.value)
-			);
+		// svg
+		// 	.selectAll('text.dataLabels')
+		// 	.data(graphic_data)
+		// 	.join('text')
+		// 	.attr('class', 'dataLabels')
+		// 	.attr('x', (d) => d.value > 0 ? x(d.value) :
+		// 	Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
+		//   .attr('dx', (d) => d.value > 0 ?
+		// 	(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
+		// 	3)
+		// 	.attr('y', (d) => y(d.name) + y.bandwidth()/2)
+		// 	.attr('dominant-baseline', 'middle')
+		// 	.attr('text-anchor', (d) => d.value > 0 ?
+		// 	(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
+		// 	"start"
+		//   )
+		//   .attr('fill', (d) =>
+		// 	(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
+		//   )
+		// 	.text((d) =>
+		// 		d3.format(config.essential.dataLabels.numberFormat)(d.value)
+		// 	);
+
+
+		addDataLabels({
+			svgContainer: svg,
+			data: graphic_data,
+			chart_width: chart_width,
+			labelPositionFactor: 7,
+			xScaleFunction: x,
+			yScaleFunction: y
+		})
 	} //end if for datalabels
 
 	// This does the x-axis label

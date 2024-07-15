@@ -1,3 +1,5 @@
+import { addDataLabels } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, svg;
@@ -98,16 +100,25 @@ function drawGraphic() {
 
 
   if (config.essential.dataLabels.show == true) {
-    svg.selectAll('text.dataLabels')
-      .data(graphic_data)
-      .join('text')
-      .attr('class', 'dataLabels')
-      .attr('x', (d) => x(d.value))
-      .attr('dx', (d) => x(d.value) - x(0) < chart_width / 10 ? 3 : -3)
-      .attr('y', (d) => y(d.name) + 19)
-      .attr('text-anchor', (d) => x(d.value) - x(0) < chart_width / 10 ? "start" : "end")
-      .attr('fill', (d) => x(d.value) - x(0) < chart_width / 10 ? "#414042" : "#ffffff")
-      .text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
+    // svg.selectAll('text.dataLabels')
+    //   .data(graphic_data)
+    //   .join('text')
+    //   .attr('class', 'dataLabels')
+    //   .attr('x', (d) => x(d.value))
+    //   .attr('dx', (d) => x(d.value) - x(0) < chart_width / 10 ? 3 : -3)
+    //   .attr('y', (d) => y(d.name) + 19)
+    //   .attr('text-anchor', (d) => x(d.value) - x(0) < chart_width / 10 ? "start" : "end")
+    //   .attr('fill', (d) => x(d.value) - x(0) < chart_width / 10 ? "#414042" : "#ffffff")
+    //   .text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
+
+    addDataLabels({
+			svgContainer: svg,
+			data: graphic_data,
+			chart_width: chart_width,
+			labelPositionFactor: 7,
+			xScaleFunction: x,
+			yScaleFunction: y
+		})
   }//end if for datalabels
 
   // This does the x-axis label
