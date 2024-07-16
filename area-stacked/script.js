@@ -1,4 +1,4 @@
-import { addAxisLabel } from "../lib/helpers.js";
+import { wrap, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');

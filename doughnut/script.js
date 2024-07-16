@@ -1,3 +1,5 @@
+import { wrap } from "../lib/helpers.js";
+
 var graphic = d3.select('#graphic');
 var legend = d3.select('#legend');
 var pymChild = null;
@@ -216,38 +218,38 @@ function drawGraphic() {
     }
 }
 
-function wrap(text, width) {
-    text.each(function () {
-        var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 1, // ems
-            // y = text.attr("y"),
-            x = text.attr('x'),
-            dy = parseFloat(text.attr('dy')),
-            tspan = text.text(null).append('tspan').attr('x', x);
-        while ((word = words.pop())) {
-            line.push(word);
-            tspan.text(line.join(' '));
-            if (tspan.node().getComputedTextLength() > width) {
-                line.pop();
-                tspan.text(line.join(' '));
-                line = [word];
-                tspan = text
-                    .append('tspan')
-                    .attr('x', x)
-                    .attr('dy', lineHeight + 'em')
-                    .text(word);
-            }
-        }
-        var breaks = text.selectAll('tspan').size();
-        text.attr('y', function () {
-            return -6 * (breaks - 1);
-        });
-    });
-}
+// function wrap(text, width) {
+//     text.each(function () {
+//         var text = d3.select(this),
+//             words = text.text().split(/\s+/).reverse(),
+//             word,
+//             line = [],
+//             lineNumber = 0,
+//             lineHeight = 1, // ems
+//             // y = text.attr("y"),
+//             x = text.attr('x'),
+//             dy = parseFloat(text.attr('dy')),
+//             tspan = text.text(null).append('tspan').attr('x', x);
+//         while ((word = words.pop())) {
+//             line.push(word);
+//             tspan.text(line.join(' '));
+//             if (tspan.node().getComputedTextLength() > width) {
+//                 line.pop();
+//                 tspan.text(line.join(' '));
+//                 line = [word];
+//                 tspan = text
+//                     .append('tspan')
+//                     .attr('x', x)
+//                     .attr('dy', lineHeight + 'em')
+//                     .text(word);
+//             }
+//         }
+//         var breaks = text.selectAll('tspan').size();
+//         text.attr('y', function () {
+//             return -6 * (breaks - 1);
+//         });
+//     });
+// }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
     //load chart data

@@ -1,4 +1,4 @@
-import { calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { wrap, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -329,35 +329,35 @@ function drawGraphic() {
   }
 }
 
-function wrap(text, width) {
-  // console.log(width)
-  text.each(function () {
-    let text = d3.select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      lineHeight = 1.1, // ems
-      // y = text.attr("y"),
-      x = text.attr("x"),
-      dy = parseFloat(text.attr("dy")),
-      tspan = text.text(null).append("tspan").attr('x', x);
-    if (x == undefined) { x = 0 }
-    while (word = words.pop()) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text.append("tspan").attr('x', x).attr("dy", lineHeight + "em").text(word);
-      }
-    }
-    let breaks = text.selectAll("tspan").size();
-    text.attr("y", function () { return 10 - 6 * (breaks - 1); });
-  });
+// function wrap(text, width) {
+//   // console.log(width)
+//   text.each(function () {
+//     let text = d3.select(this),
+//       words = text.text().split(/\s+/).reverse(),
+//       word,
+//       line = [],
+//       lineNumber = 0,
+//       lineHeight = 1.1, // ems
+//       // y = text.attr("y"),
+//       x = text.attr("x"),
+//       dy = parseFloat(text.attr("dy")),
+//       tspan = text.text(null).append("tspan").attr('x', x);
+//     if (x == undefined) { x = 0 }
+//     while (word = words.pop()) {
+//       line.push(word);
+//       tspan.text(line.join(" "));
+//       if (tspan.node().getComputedTextLength() > width) {
+//         line.pop();
+//         tspan.text(line.join(" "));
+//         line = [word];
+//         tspan = text.append("tspan").attr('x', x).attr("dy", lineHeight + "em").text(word);
+//       }
+//     }
+//     let breaks = text.selectAll("tspan").size();
+//     text.attr("y", function () { return 10 - 6 * (breaks - 1); });
+//   });
 
-}
+// }
 
 //load data 
 d3.csv(config.essential.graphic_data_url)

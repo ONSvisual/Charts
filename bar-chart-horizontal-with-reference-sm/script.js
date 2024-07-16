@@ -1,4 +1,4 @@
-import { calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel, wrap } from "../lib/helpers.js";
+import { wrap, calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');

@@ -1,4 +1,4 @@
-import { addAxisLabel } from "../lib/helpers.js";
+import { wrap, addAxisLabel } from "../lib/helpers.js";
 
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');

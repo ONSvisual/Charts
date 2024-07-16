@@ -1,4 +1,4 @@
-import { calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
+import { wrap, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');
@@ -199,7 +199,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries, fullD
 		.attr('class', 'y axis')
 		.call(yAxis)
 		.selectAll('.tick text')
-		.call(wrap, margin.left - 10, graphic_data);
+		.call(wrap, margin.left - 10);
 	// } else {
 	// 	svg.append('g').attr('class', 'y axis').call(yAxis.tickValues([]));
 	// }
@@ -295,46 +295,46 @@ function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries, fullD
 // }
 
 
-function wrap(text, width, graphic_data) {
-	text.each(function (d, i) {
-		let text = d3.select(this),
-			words = text.text().split(/\s+/).reverse(),
-			word,
-			line = [],
-			lineNumber = 0,
-			lineHeight = 1.1, // ems
-			x = text.attr('x'),
-			dy = parseFloat(text.attr('dy')),
-			tspan = text.text(null).append('tspan').attr('x', x);
-		while ((word = words.pop())) {
-			line.push(word);
-			tspan.text(line.join(' '));
-			if (tspan.node().getComputedTextLength() > width) {
-				line.pop();
-				tspan.text(line.join(' '));
-				line = [word];
-				tspan = text
-					.append('tspan')
-					.attr('x', x)
-					.attr('dy', lineHeight + 'em')
-					.text(word);
-			}
-		}
-		let breaks = text.selectAll('tspan').size();
-		text.attr('y', function () {
-			return -6 * (breaks - 1);
-		});
+// function wrap(text, width, graphic_data) {
+// 	text.each(function (d, i) {
+// 		let text = d3.select(this),
+// 			words = text.text().split(/\s+/).reverse(),
+// 			word,
+// 			line = [],
+// 			lineNumber = 0,
+// 			lineHeight = 1.1, // ems
+// 			x = text.attr('x'),
+// 			dy = parseFloat(text.attr('dy')),
+// 			tspan = text.text(null).append('tspan').attr('x', x);
+// 		while ((word = words.pop())) {
+// 			line.push(word);
+// 			tspan.text(line.join(' '));
+// 			if (tspan.node().getComputedTextLength() > width) {
+// 				line.pop();
+// 				tspan.text(line.join(' '));
+// 				line = [word];
+// 				tspan = text
+// 					.append('tspan')
+// 					.attr('x', x)
+// 					.attr('dy', lineHeight + 'em')
+// 					.text(word);
+// 			}
+// 		}
+// 		let breaks = text.selectAll('tspan').size();
+// 		text.attr('y', function () {
+// 			return -6 * (breaks - 1);
+// 		});
 
-		// Check if the corresponding data row has no data, and if so, make the y-axis label bold
-		const rowData = graphic_data[i];
-		const hasNoData = Object.values(rowData)
-			.slice(1, -1)
-			.every((value) => value === '');
-		if (hasNoData) {
-			text.style('font-weight', 'bold');
-		}
-	});
-}
+// 		// Check if the corresponding data row has no data, and if so, make the y-axis label bold
+// 		const rowData = graphic_data[i];
+// 		const hasNoData = Object.values(rowData)
+// 			.slice(1, -1)
+// 			.every((value) => value === '');
+// 		if (hasNoData) {
+// 			text.style('font-weight', 'bold');
+// 		}
+// 	});
+// }
 
 // Load the data
 d3.csv(config.essential.graphic_data_url)

@@ -1,3 +1,5 @@
+import { wrap } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, svg, columnNames, numbers, dataPivoted, breaks, colour, key, legendx;
@@ -177,38 +179,38 @@ function drawGraphic() {
 	}
 }
 
-function wrap(text, width) {
-	text.each(function () {
-		let text = d3.select(this),
-			words = text.text().split(/\s+/).reverse(),
-			word,
-			line = [],
-			lineNumber = 0,
-			lineHeight = 1.1, // ems
-			// y = text.attr("y"),
-			x = text.attr('x'),
-			dy = parseFloat(text.attr('dy')),
-			tspan = text.text(null).append('tspan').attr('x', x);
-		while ((word = words.pop())) {
-			line.push(word);
-			tspan.text(line.join(' '));
-			if (tspan.node().getComputedTextLength() > width) {
-				line.pop();
-				tspan.text(line.join(' '));
-				line = [word];
-				tspan = text
-					.append('tspan')
-					.attr('x', x)
-					.attr('dy', lineHeight + 'em')
-					.text(word);
-			}
-		}
-		let breaks = text.selectAll('tspan').size();
-		text.attr('y', function () {
-			return -6 * (breaks - 1);
-		});
-	});
-}
+// function wrap(text, width) {
+// 	text.each(function () {
+// 		let text = d3.select(this),
+// 			words = text.text().split(/\s+/).reverse(),
+// 			word,
+// 			line = [],
+// 			lineNumber = 0,
+// 			lineHeight = 1.1, // ems
+// 			// y = text.attr("y"),
+// 			x = text.attr('x'),
+// 			dy = parseFloat(text.attr('dy')),
+// 			tspan = text.text(null).append('tspan').attr('x', x);
+// 		while ((word = words.pop())) {
+// 			line.push(word);
+// 			tspan.text(line.join(' '));
+// 			if (tspan.node().getComputedTextLength() > width) {
+// 				line.pop();
+// 				tspan.text(line.join(' '));
+// 				line = [word];
+// 				tspan = text
+// 					.append('tspan')
+// 					.attr('x', x)
+// 					.attr('dy', lineHeight + 'em')
+// 					.text(word);
+// 			}
+// 		}
+// 		let breaks = text.selectAll('tspan').size();
+// 		text.attr('y', function () {
+// 			return -6 * (breaks - 1);
+// 		});
+// 	});
+// }
 
 // This is from bostock's notebook https://observablehq.com/d/ac2a320cf2b0adc4
 // which is turn comes from this thread on wide to long data https://github.com/d3/d3-array/issues/142

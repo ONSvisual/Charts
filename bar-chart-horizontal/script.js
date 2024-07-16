@@ -1,4 +1,4 @@
-import { addAxisLabel, addDataLabels, wrap } from "../lib/helpers.js";
+import { wrap, addAxisLabel, addDataLabels } from "../lib/helpers.js";
 
 let graphic = d3.select("#graphic");
 let pymChild = null;
