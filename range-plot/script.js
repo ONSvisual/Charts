@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -84,15 +84,21 @@ function drawGraphic() {
 		.attr('class', 'groupLabels')
 		.html((d) => d[0]);
 
-	svgs = divs
-		.append('svg')
-		.attr('class', 'chart')
-		.attr('height', (d) => d[2] + margin.top + margin.bottom)
-		.attr('width', chart_width + margin.left + margin.right);
+	// svgs = divs
+	// 	.append('svg')
+	// 	.attr('class', 'chart')
+	// 	.attr('height', (d) => d[2] + margin.top + margin.bottom)
+	// 	.attr('width', chart_width + margin.left + margin.right);
 
-	charts = svgs
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// charts = svgs
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	charts = addSvg({
+		svgParent: divs,
+		chart_width: chart_width,
+		height: (d) => d[2] + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	charts.each(function (d) {
 		d3.select(this)

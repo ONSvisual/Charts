@@ -1,4 +1,4 @@
-import { wrap, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select("#graphic");
@@ -128,15 +128,21 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   y.domain(graphic_data.map((d) => d.name));
 
   // Create SVG
-  let svg = d3
-    .select("#graphic")
-    .append("svg")
-    .attr("width", chart_width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("class", "chart")
-    .style("background-color", "#fff")
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  // let svg = d3
+  //   .select("#graphic")
+  //   .append("svg")
+  //   .attr("width", chart_width + margin.left + margin.right)
+  //   .attr("height", height + margin.top + margin.bottom)
+  //   .attr("class", "chart")
+  //   .style("background-color", "#fff")
+  //   .append("g")
+  //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  let svg = addSvg({
+    svgParent: graphic,
+    chart_width: chart_width,
+    height: height + margin.top + margin.bottom,
+    margin: margin
+  })
 
   // Add axes
   svg

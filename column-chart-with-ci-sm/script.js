@@ -1,4 +1,4 @@
-import { wrap, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -106,14 +106,14 @@ function drawGraphic() {
       chartMargin: margin,
       chartGap: chartGap
     })
-  
+
     // If the chart is not in the first position in the row, reduce the left margin
     if (config.optional.dropYAxis) {
       if (chartPosition !== 0) {
         margin.left = chartGap;
       }
     }
-    
+
     let height = 400 - margin.top - margin.bottom;
 
     const x = d3
@@ -132,14 +132,20 @@ function drawGraphic() {
       .range([height, 0])
 
     //create svg for chart
-    svg = container
-      .append('svg')
-      .attr("width", chart_width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .attr("class", "chart")
-      .style("background-color", "#fff")
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
+    // svg = container
+    //   .append('svg')
+    //   .attr("width", chart_width + margin.left + margin.right)
+    //   .attr("height", height + margin.top + margin.bottom)
+    //   .attr("class", "chart")
+    //   .style("background-color", "#fff")
+    //   .append("g")
+    //   .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
+    svg = addSvg({
+      svgParent: container,
+      chart_width: chart_width,
+      height: height + margin.top + margin.bottom,
+      margin: margin
+    })
 
     // console.log(grouped_data)
 
@@ -149,9 +155,9 @@ function drawGraphic() {
         y.domain([
           0,
           d3.max(graphic_data.map(({ upperCI }) => Number(upperCI)))]); //modified so it converts string to number
-        } else {
-          y.domain([d3.min(graphic_data, function (d) { return d.lowerCI }), d3.max(graphic_data, function (d) { return d.upperCI })])
-        }
+      } else {
+        y.domain([d3.min(graphic_data, function (d) { return d.lowerCI }), d3.max(graphic_data, function (d) { return d.upperCI })])
+      }
 
     } else {
       y.domain(config.essential.yDomain)
@@ -194,8 +200,8 @@ function drawGraphic() {
       .data(data)
       .join('rect')
       .attr('x', (d) => x(d.date))
-			.attr('y', (d) => y(Math.max(d.yvalue, 0)))
-			.attr('height', (d) => Math.abs(y(d.yvalue) - y(0)))
+      .attr('y', (d) => y(Math.max(d.yvalue, 0)))
+      .attr('height', (d) => Math.abs(y(d.yvalue) - y(0)))
       .attr('width', x.bandwidth())
       // .attr('r', config.essential.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
@@ -259,7 +265,7 @@ function drawGraphic() {
     //   .call(wrap, chart_width);
     addChartTitleLabel({
       svgContainer: svg,
-      yPosition: -margin.top/2,
+      yPosition: -margin.top / 2,
       text: d => d[0],
       wrapWidth: chart_width
     })
@@ -277,33 +283,33 @@ function drawGraphic() {
     //   .attr('text-anchor', 'end')
     // .call(wrap, chart_width);
     addAxisLabel({
-			svgContainer: svg,
-			xPosition: chart_width,
-			yPosition: height + margin.bottom,
-			text: chartIndex % chartEvery == chartEvery - 1 ?
-          config.essential.xAxisLabel : "",
-			textAnchor: "end",
-			wrapWidth: chart_width
-			});
+      svgContainer: svg,
+      xPosition: chart_width,
+      yPosition: height + margin.bottom,
+      text: chartIndex % chartEvery == chartEvery - 1 ?
+        config.essential.xAxisLabel : "",
+      textAnchor: "end",
+      wrapWidth: chart_width
+    });
 
     // This does the y-axis label
     // svg
     //   .append('g')
     //   .attr('transform', 'translate(0,0)')
     //   .append('text')
-		// 	.attr('x', 5 - margin.left)
-		// 	.attr('y', -10)
+    // 	.attr('x', 5 - margin.left)
+    // 	.attr('y', -10)
     //   .attr('class', 'axis--label')
     //   .text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
     //   .attr('text-anchor', 'start');
     addAxisLabel({
-			svgContainer: svg,
-			xPosition: 5 - margin.left,
-			yPosition: -10,
-			text: chartPosition == 0 ? config.essential.yAxisLabel : "",
-			textAnchor: "start",
-			wrapWidth: chart_width
-			});
+      svgContainer: svg,
+      xPosition: 5 - margin.left,
+      yPosition: -10,
+      text: chartPosition == 0 ? config.essential.yAxisLabel : "",
+      textAnchor: "start",
+      wrapWidth: chart_width
+    });
 
 
 

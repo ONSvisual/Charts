@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -64,14 +64,20 @@ function drawGraphic() {
 		.y0(y_scale(0))
 		.y1((d) => y_scale(d.value));
 
-	chart_g = graphic
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// chart_g = graphic
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	chart_g = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	chart_g
 		.append('g')

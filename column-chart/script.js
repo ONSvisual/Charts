@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -67,16 +67,16 @@ function drawGraphic() {
 		.ticks(config.optional.yAxisTicks[size])
 		.tickFormat(d3.format(config.essential.yAxisTickFormat));
 
-		let xDataType;
+	let xDataType;
 
-		if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
-		  xDataType = 'date';
-		} else {
-		  xDataType = 'numeric';
-		}
-	  
-		// console.log(xDataType)
-		
+	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+		xDataType = 'date';
+	} else {
+		xDataType = 'numeric';
+	}
+
+	// console.log(xDataType)
+
 	let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
 
 	//set up xAxis generator
@@ -86,31 +86,37 @@ function drawGraphic() {
 		.tickPadding(10)
 		.tickValues(tickValues) //Labelling the first and/or last bar if needed
 		.tickFormat((d) => xDataType == 'date' ? xTime(d)
-		: d3.format(config.essential.xAxisNumberFormat)(d));
+			: d3.format(config.essential.xAxisNumberFormat)(d));
 
 	//create svg for chart
-	svg = d3
-		.select('#graphic')
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// svg = d3
+	// 	.select('#graphic')
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	if (config.essential.yDomain == 'auto') {
 		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
-		y.domain([
-			0,
-			d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
+			y.domain([
+				0,
+				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
 		} else {
 			y.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
 		}
 	} else {
 		y.domain(config.essential.yDomain);
 	}
-	
+
 	svg
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
@@ -158,7 +164,7 @@ function drawGraphic() {
 		text: config.essential.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
-		});
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
@@ -208,14 +214,14 @@ d3.csv(config.essential.graphic_data_url).then((data) => {
 
 	let parseTime = d3.timeParse(config.essential.dateFormat);
 
-    data.forEach((d, i) => {
+	data.forEach((d, i) => {
 
 		//If the date column is has date data store it as dates
 		if (parseTime(data[i].date) !== null) {
-		  d.date = parseTime(d.date)
+			d.date = parseTime(d.date)
 		}
 
-	  });
+	});
 
 	//use pym to create iframed chart dependent on specified variables
 	pymChild = new pym.Child({

@@ -1,6 +1,6 @@
 //Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
 
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -34,10 +34,10 @@ function drawGraphic() {
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
-	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	// let height = 400 - margin.top - margin.bottom;
-	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * width
-	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
+	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
+	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 
 
@@ -67,15 +67,15 @@ function drawGraphic() {
 	if (xDataType == 'date') {
 		x = d3.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
-			.range([0, width]);
+			.range([0, chart_width]);
 	} else if (config.essential.xDomain == "auto") {
 		x = d3.scaleLinear()
 			.domain(d3.extent(graphic_data, (d) => +d.date))
-			.range([0, width]);
+			.range([0, chart_width]);
 	} else {
 		x = d3.scaleLinear()
 			.domain(config.essential.xDomain)
-			.range([0, width]);
+			.range([0, chart_width]);
 	}
 	//console.log(`x defined`);
 
@@ -112,14 +112,20 @@ function drawGraphic() {
 
 
 	// Create an SVG element
-	const svg = graphic
-		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left},${margin.top})`);
+	// const svg = graphic
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', `translate(${margin.left},${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 	//console.log(`SVG element created`);
 
 
@@ -151,7 +157,7 @@ function drawGraphic() {
 			d3
 				.axisLeft(y)
 				.ticks(config.optional.yAxisTicks[size])
-				.tickSize(-width)
+				.tickSize(-chart_width)
 				.tickFormat('')
 		);
 
@@ -302,7 +308,7 @@ function drawGraphic() {
 		yPosition: -10,
 		text: config.essential.yAxisLabel,
 		textAnchor: "start",
-		wrapWidth: width
+		wrapWidth: chart_width
 	});
 
 	//create link to source

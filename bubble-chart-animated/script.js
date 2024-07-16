@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -221,15 +221,21 @@ function drawGraphic() {
 		.ticks(config.optional.xAxisTicks[size]);
 
 	//create svg for chart
-	svg = d3
-		.select('#graphic')
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// svg = d3
+	// 	.select('#graphic')
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// Set the scales for the chart - auto calculates the scale from the data or you can select your own in the config
 	//X scale

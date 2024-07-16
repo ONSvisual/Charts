@@ -1,4 +1,4 @@
-import { wrap, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');
@@ -60,7 +60,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	let chartGap = config.optional?.chartGap || 10;
 
 	// Calculate chart width here
-	let width = calculateChartWidth({
+	let chart_width = calculateChartWidth({
 		screenWidth: parseInt(graphic.style('width')),
 		chartEvery: chartsPerRow,
 		chartMargin: margin,
@@ -118,13 +118,13 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 
 	let height =
-		width * (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) - margin.top - margin.bottom;
+		chart_width * (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) - margin.top - margin.bottom;
 
 	// Define the x and y scales
 	const xAxis = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
-		.range([0, width]);
+		.range([0, chart_width]);
 
 	const yAxis = d3
 		.scaleLinear()
@@ -138,14 +138,20 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.offset(d3[config.essential.stackOffset]); // Convert to percentage values
 
 	// Create an SVG for this chart
-	let svg = graphic
-		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('backgroud-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left}, ${margin.top})`);
+	// let svg = graphic
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('backgroud-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', `translate(${margin.left}, ${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// Add the areas
 	svg
@@ -228,18 +234,18 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		svgContainer: svg,
 		yPosition: -margin.top / 2,
 		text: seriesName,
-		wrapWidth: width
+		wrapWidth: chart_width
 	})
 
 	// This does the x-axis label
 	if (chartIndex % chartsPerRow === chartsPerRow - 1) {
 	  addAxisLabel({
 		svgContainer: svg,
-		xPosition: width,
+		xPosition: chart_width,
 		yPosition: height + 35,
 		text: config.essential.xAxisLabel,
 		textAnchor: "end",
-		wrapWidth: width
+		wrapWidth: chart_width
 	  });
 	}
 
@@ -259,7 +265,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		yPosition: -10,
 		text: chartPosition == 0 ? config.essential.yAxisLabel : "",
 		textAnchor: "start",
-		wrapWidth: width
+		wrapWidth: chart_width
 	  });
 		
 	//create link to source

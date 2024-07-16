@@ -1,4 +1,4 @@
-import { wrap, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -13,7 +13,7 @@ function drawGraphic() {
 	//Accessible summary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	
+
 	let threshold_md = config.optional.mediumBreakpoint;
 	let threshold_sm = config.optional.mobileBreakpoint;
 
@@ -115,14 +115,20 @@ function drawGraphic() {
 
 
 		// Create an SVG element
-		const svg = container
-			.append('svg')
-			.attr('width', chart_width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
-			.attr('class', 'chart')
-			.style('background-color', '#fff')
-			.append('g')
-			.attr('transform', `translate(${margin.left},${margin.top})`);
+		// const svg = container
+		// 	.append('svg')
+		// 	.attr('width', chart_width + margin.left + margin.right)
+		// 	.attr('height', height + margin.top + margin.bottom)
+		// 	.attr('class', 'chart')
+		// 	.style('background-color', '#fff')
+		// 	.append('g')
+		// 	.attr('transform', `translate(${margin.left},${margin.top})`);
+		const svg = addSvg({
+			svgParent: container,
+			chart_width: chart_width,
+			height: height + margin.top + margin.bottom,
+			margin: margin
+		})
 
 
 		// create lines and circles for each category
@@ -243,10 +249,10 @@ function drawGraphic() {
 		// 	.call(wrap, (chart_width + margin.right));
 		addChartTitleLabel({
 			svgContainer: svg,
-			yPosition: -margin.top/2,
+			yPosition: -margin.top / 2,
 			text: d => d[0],
 			wrapWidth: (chart_width + margin.right)
-		  })
+		})
 
 
 		// This does the y-axis label
@@ -265,7 +271,7 @@ function drawGraphic() {
 			xPosition: -margin.left,
 			yPosition: -15,
 			text: chartIndex % chartEvery == 0 ?
-					config.essential.yAxisLabel : "",
+				config.essential.yAxisLabel : "",
 			textAnchor: "start",
 			wrapWidth: chart_width
 		});

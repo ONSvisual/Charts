@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -27,7 +27,7 @@ function drawGraphic() {
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
-	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = 400 - margin.top - margin.bottom;
 
 	// Get categories from the keys used in the stack generator
@@ -63,20 +63,26 @@ function drawGraphic() {
 		});
 
 	// Create an SVG element
-	const svg = graphic
-		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left},${margin.top})`);
+	// const svg = graphic
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', `translate(${margin.left},${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// Define the x and y scales
 	const x = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
-		.range([0, width]);
+		.range([0, chart_width]);
 
 	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
 	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
@@ -154,7 +160,7 @@ function drawGraphic() {
 	// 	.append('g')
 	// 	.attr('transform', `translate(0, ${height})`)
 	// 	.append('text')
-	// 	.attr('x', width)
+	// 	.attr('x', chart_width)
 	// 	.attr('y', 35)
 	// 	.attr('class', 'axis--label')
 	// 	.text(config.essential.xAxisLabel)
@@ -163,11 +169,11 @@ function drawGraphic() {
 	  //This does the x-axis label
 	  addAxisLabel({
 		svgContainer: svg,
-		xPosition: width,
+		xPosition: chart_width,
 		yPosition: height + 35,
 		text: config.essential.xAxisLabel,
 		textAnchor: "end",
-		wrapWidth: width
+		wrapWidth: chart_width
 	  });
 
 	// This does the y-axis label
@@ -186,7 +192,7 @@ function drawGraphic() {
 		yPosition: -15,
 		text: config.essential.yAxisLabel,
 		textAnchor: "start",
-		wrapWidth: width
+		wrapWidth: chart_width
 	  });
 
 	//create link to source

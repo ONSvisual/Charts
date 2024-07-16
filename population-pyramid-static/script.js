@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
@@ -99,13 +99,19 @@ function drawGraphic() {
 		.paddingInner(0.1);
 
 	// create the svg
-	svg = graphic
-		.append('svg')
-		.attr('class', 'chart')
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('width', width)
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// svg = graphic
+	// 	.append('svg')
+	// 	.attr('class', 'chart')
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('width', width)
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	//add x-axis left
 	svg

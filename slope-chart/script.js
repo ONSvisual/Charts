@@ -1,4 +1,4 @@
-import { wrap } from "../lib/helpers.js";
+import { wrap, addSvg } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -82,14 +82,20 @@ function drawGraphic() {
 
 
 	// Create an SVG element
-	const svg = graphic
-		.append('svg')
-		.attr('width', parseInt(graphic.style('width')))
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left},${margin.top})`);
+	// const svg = graphic
+	// 	.append('svg')
+	// 	.attr('width', parseInt(graphic.style('width')))
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', `translate(${margin.left},${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: parseInt(graphic.style('width')) - margin.left - margin.right,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 	//console.log(`SVG element created`);
 
 	const lastDatum = graphic_data[graphic_data.length - 1];
@@ -109,18 +115,18 @@ function drawGraphic() {
 				.tickValues([firstDatum.date, lastDatum.date])
 				.tickSize(height + 10)
 		);
-		
-		// Add text labels to the right of the circles
-		let xOffset = 8;
-		let text_length;
-		let rightWrapWidth = parseInt(graphic.style('width')) - margin.left - width - xOffset - 75;
 
-		//Calculating where to place the category label
-		function textLength(thing) {
-			// text_length = thing._groups[0][0].clientWidth + xOffset; <-- this has some issues once in Florence/live - better method below
-			text_length = thing.node().getComputedTextLength() + xOffset;
+	// Add text labels to the right of the circles
+	let xOffset = 8;
+	let text_length;
+	let rightWrapWidth = parseInt(graphic.style('width')) - margin.left - width - xOffset - 75;
 
-		}
+	//Calculating where to place the category label
+	function textLength(thing) {
+		// text_length = thing._groups[0][0].clientWidth + xOffset; <-- this has some issues once in Florence/live - better method below
+		text_length = thing.node().getComputedTextLength() + xOffset;
+
+	}
 
 	// create lines and circles for each category
 	categories.forEach(function (category) {

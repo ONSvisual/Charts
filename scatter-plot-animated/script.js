@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -33,7 +33,7 @@ function drawGraphic() {
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height = Math.ceil(
 		(chart_width * config.optional.aspectRatio[size][1]) /
-			config.optional.aspectRatio[size][0]
+		config.optional.aspectRatio[size][0]
 	);
 
 	//Set the timepoints from the data for the slider labels and sort from oldest to newest
@@ -219,15 +219,21 @@ function drawGraphic() {
 		.ticks(config.optional.xAxisTicks[size]);
 
 	//create svg for chart
-	svg = d3
-		.select('#graphic')
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// svg = d3
+	// 	.select('#graphic')
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// Set the scales for the chart - auto calculates the scale from the data or you can select your own in the config
 	//X scale
@@ -295,12 +301,12 @@ function drawGraphic() {
 	// 	.attr('text-anchor', 'start');
 	addAxisLabel({
 		svgContainer: svg,
-		xPosition: -(margin.left-2),
+		xPosition: -(margin.left - 2),
 		yPosition: -20,
 		text: config.essential.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
-	  });
+	});
 
 	// // This does the x-axis label
 	// svg
@@ -312,14 +318,14 @@ function drawGraphic() {
 	// 	.attr('class', 'axis--label')
 	// 	.text(config.essential.xAxisLabel)
 	// 	.attr('text-anchor', 'end');
-    addAxisLabel({
+	addAxisLabel({
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 35,
 		text: config.essential.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
-	  });
+	});
 
 	//Initial draw of the chart with the data filtered on the timeLoad specified
 
@@ -354,20 +360,20 @@ function drawGraphic() {
 				tooltip
 					.html(
 						'<span style ="color: #206095;font-size: 15px;">' +
-							d.group +
-							'</span>' +
-							'<br><br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Wage growth: ' +
-							data_format(d.y) +
-							' p.p.' +
-							'</span>' +
-							'<br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Median hourly pay (£): ' +
-							data_format(d.x) +
-							'%' +
-							'</span>'
+						d.group +
+						'</span>' +
+						'<br><br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Wage growth: ' +
+						data_format(d.y) +
+						' p.p.' +
+						'</span>' +
+						'<br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Median hourly pay (£): ' +
+						data_format(d.x) +
+						'%' +
+						'</span>'
 					)
 					.style(
 						'left',
@@ -386,20 +392,20 @@ function drawGraphic() {
 				tooltip
 					.html(
 						'<span style ="color: #206095; font-size: 15px;">' +
-							d.group +
-							'</span>' +
-							'<br><br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Wage growth: ' +
-							data_format(d.y) +
-							' p.p.' +
-							'</span>' +
-							'<br>' +
-							'<span style="font-weight:500; opacity:1">' +
-							'Median hourly pay (£): ' +
-							data_format(d.x) +
-							'%' +
-							'</span>'
+						d.group +
+						'</span>' +
+						'<br><br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Wage growth: ' +
+						data_format(d.y) +
+						' p.p.' +
+						'</span>' +
+						'<br>' +
+						'<span style="font-weight:500; opacity:1">' +
+						'Median hourly pay (£): ' +
+						data_format(d.x) +
+						'%' +
+						'</span>'
 					)
 					.style('right', 5 + 'px')
 					.style('top', 0 + 'px');

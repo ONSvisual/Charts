@@ -1,4 +1,4 @@
-import { wrap, addDataLabels, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addDataLabels, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -55,13 +55,19 @@ function drawGraphic() {
     .ticks(config.optional.xAxisTicks[size]);
 
   //create svg for chart
-  svg = d3.select('#graphic').append('svg')
-    .attr("width", chart_width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("class", "chart")
-    .style("background-color", "#fff")
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
+  // svg = d3.select('#graphic').append('svg')
+  //   .attr("width", chart_width + margin.left + margin.right)
+  //   .attr("height", height + margin.top + margin.bottom)
+  //   .attr("class", "chart")
+  //   .style("background-color", "#fff")
+  //   .append("g")
+  //   .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
+  svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 
   if (config.essential.xDomain == "auto") {

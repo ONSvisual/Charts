@@ -1,4 +1,4 @@
-import { wrap, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -72,7 +72,7 @@ function drawGraphic() {
 			chartMargin: margin,
 			chartGap: chartGap
 		})
-	
+
 		// If the chart is not in the first position in the row, reduce the left margin
 		if (config.optional.dropYAxis) {
 			if (chartPosition !== 0) {
@@ -89,23 +89,23 @@ function drawGraphic() {
 		let xDataType;
 
 		if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
-		  xDataType = 'date';
+			xDataType = 'date';
 		} else {
-		  xDataType = 'numeric';
+			xDataType = 'numeric';
 		}
-	  
+
 		// console.log(xDataType)
 
 		let x;
 
 		if (xDataType == 'date') {
-		  x = d3.scaleTime()
-		  .domain(d3.extent(graphic_data, (d) => d.date))
-		  .range([0, chart_width]);
+			x = d3.scaleTime()
+				.domain(d3.extent(graphic_data, (d) => d.date))
+				.range([0, chart_width]);
 		} else {
-		  x = d3.scaleLinear()
-		  .domain(d3.extent(graphic_data, (d) => +d.date))
-		  .range([0, chart_width]);
+			x = d3.scaleLinear()
+				.domain(d3.extent(graphic_data, (d) => +d.date))
+				.range([0, chart_width]);
 		}
 
 
@@ -113,24 +113,30 @@ function drawGraphic() {
 			.scaleLinear()
 			.range([height, 0]);
 
-			if (config.essential.yDomain == "auto") {
-				let minY = d3.min(graphic_data, (d) => Math.min(...categoriesToPlot.map((c) => d[c])))
-				let maxY = d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
-				y.domain([minY, maxY])
-				// console.log(minY, maxY)
-			} else {
-				y.domain(config.essential.yDomain)
-			}
+		if (config.essential.yDomain == "auto") {
+			let minY = d3.min(graphic_data, (d) => Math.min(...categoriesToPlot.map((c) => d[c])))
+			let maxY = d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
+			y.domain([minY, maxY])
+			// console.log(minY, maxY)
+		} else {
+			y.domain(config.essential.yDomain)
+		}
 
 		// Create an SVG element
-		const svg = container
-			.append('svg')
-			.attr('width', chart_width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
-			.attr('class', 'chart')
-			.style('background-color', '#fff')
-			.append('g')
-			.attr('transform', `translate(${margin.left},${margin.top})`);
+		// const svg = container
+		// 	.append('svg')
+		// 	.attr('width', chart_width + margin.left + margin.right)
+		// 	.attr('height', height + margin.top + margin.bottom)
+		// 	.attr('class', 'chart')
+		// 	.style('background-color', '#fff')
+		// 	.append('g')
+		// 	.attr('transform', `translate(${margin.left},${margin.top})`);
+		const svg = addSvg({
+			svgParent: graphic,
+			chart_width: chart_width,
+			height: height + margin.top + margin.bottom,
+			margin: margin
+		})
 
 
 
@@ -144,35 +150,35 @@ function drawGraphic() {
 				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null);
 
-				var lines = {};
-				for (var column in graphic_data[0]) {
-					if (column == 'date') continue;
-					lines[column] = graphic_data.map(function(d) {
-						return {
-							'date': d.date,
-							'amt': d[column]
-						};
-					});
-				}
+			var lines = {};
+			for (var column in graphic_data[0]) {
+				if (column == 'date') continue;
+				lines[column] = graphic_data.map(function (d) {
+					return {
+						'date': d.date,
+						'amt': d[column]
+					};
+				});
+			}
 
-				//This interpolates points when a cell contains no data (draws a line where there are no data points)
+			//This interpolates points when a cell contains no data (draws a line where there are no data points)
 
-				if (config.essential.interpolateGaps) {
-				
-					keys= Object.keys(lines)
-					for(let i=0;i<keys.length;i++){
-						lines[keys[i]].forEach(function(d,j){
-						if(d.amt!=null){
+			if (config.essential.interpolateGaps) {
+
+				keys = Object.keys(lines)
+				for (let i = 0; i < keys.length; i++) {
+					lines[keys[i]].forEach(function (d, j) {
+						if (d.amt != null) {
 							counter = j;
-						}else{
-							d.date=lines[keys[i]][counter].date
-							d.amt=lines[keys[i]][counter].amt
+						} else {
+							d.date = lines[keys[i]][counter].date
+							d.amt = lines[keys[i]][counter].amt
 						}
-						})
-					}
-
+					})
 				}
-				
+
+			}
+
 			svg
 				.append('path')
 				.datum(Object.entries(lines))
@@ -185,7 +191,7 @@ function drawGraphic() {
 					// ]
 				)
 				.attr('stroke-width', 2)
-				.attr('d', (d,i) => lineGenerator(d[categoriesToPlot.indexOf(category)][1]))
+				.attr('d', (d, i) => lineGenerator(d[categoriesToPlot.indexOf(category)][1]))
 				.style('stroke-linejoin', 'round')
 				.style('stroke-linecap', 'round')
 				.attr('class', 'line' + categoriesToPlot.indexOf(category));
@@ -248,12 +254,12 @@ function drawGraphic() {
 			)
 			.lower();
 
-			d3.selectAll('g.tick line')
-				.each(function (e) {
-					if (e == config.essential.zeroLine) {
-						d3.select(this).attr('class', 'zero-line');
-					}
-				})
+		d3.selectAll('g.tick line')
+			.each(function (e) {
+				if (e == config.essential.zeroLine) {
+					d3.select(this).attr('class', 'zero-line');
+				}
+			})
 
 		// Add the x-axis
 		svg
@@ -264,8 +270,8 @@ function drawGraphic() {
 				d3
 					.axisBottom(x)
 					.tickValues(graphic_data
-						.map((d) => xDataType == 'date' ? 
-							 d.date.getTime() : d.date
+						.map((d) => xDataType == 'date' ?
+							d.date.getTime() : d.date
 						) //just get dates as seconds past unix epoch
 						.filter(function (d, i, arr) {
 							return arr.indexOf(d) == i
@@ -281,7 +287,7 @@ function drawGraphic() {
 						})
 					)
 					.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-					: d3.format(config.essential.xAxisNumberFormat)(d))
+						: d3.format(config.essential.xAxisNumberFormat)(d))
 			);
 
 
@@ -312,10 +318,10 @@ function drawGraphic() {
 		// 	.call(wrap, (chart_width + margin.right));
 		addChartTitleLabel({
 			svgContainer: svg,
-			yPosition: -margin.top/2,
+			yPosition: -margin.top / 2,
 			text: series,
 			wrapWidth: (chart_width + margin.right)
-		  })
+		})
 
 
 		// This does the y-axis label
@@ -340,25 +346,25 @@ function drawGraphic() {
 		}
 
 		// This does the x-axis label
-			if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...chartContainers].length - 1) {
-				// svg
-				// 	.append('g')
-				// 	.attr('transform', `translate(0, ${height})`)
-				// 	.append('text')
-				// 	.attr('x', chart_width)
-				// 	.attr('y', 35)
-				// 	.attr('class', 'axis--label')
-				// 	.text(config.essential.xAxisLabel)
-				// 	.attr('text-anchor', 'end');
-				addAxisLabel({
-					svgContainer: svg,
-					xPosition: chart_width,
-					yPosition: height + 35,
-					text: config.essential.xAxisLabel,
-					textAnchor: "end",
-					wrapWidth: chart_width
-				});
-			}
+		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...chartContainers].length - 1) {
+			// svg
+			// 	.append('g')
+			// 	.attr('transform', `translate(0, ${height})`)
+			// 	.append('text')
+			// 	.attr('x', chart_width)
+			// 	.attr('y', 35)
+			// 	.attr('class', 'axis--label')
+			// 	.text(config.essential.xAxisLabel)
+			// 	.attr('text-anchor', 'end');
+			addAxisLabel({
+				svgContainer: svg,
+				xPosition: chart_width,
+				yPosition: height + 35,
+				text: config.essential.xAxisLabel,
+				textAnchor: "end",
+				wrapWidth: chart_width
+			});
+		}
 	}
 
 	// Draw the charts for each small multiple
@@ -455,8 +461,9 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 					.filter(([key]) => key !== 'date')
 					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-			}}
-		});
+			}
+		}
+	});
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({

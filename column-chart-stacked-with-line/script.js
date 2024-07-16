@@ -1,4 +1,4 @@
-import { wrap, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -54,15 +54,15 @@ function drawGraphic() {
 		.ticks(config.optional.yAxisTicks[size])
 		.tickFormat(d3.format(config.essential.yAxisTickFormat));
 
-		let xDataType;
+	let xDataType;
 
-		if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
-		  xDataType = 'date';
-		} else {
-		  xDataType = 'numeric';
-		}
-	  
-		// console.log(xDataType)
+	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
+		xDataType = 'date';
+	} else {
+		xDataType = 'numeric';
+	}
+
+	// console.log(xDataType)
 
 	let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
 
@@ -88,7 +88,7 @@ function drawGraphic() {
 		.tickPadding(10)
 		.tickValues(tickValues)
 		.tickFormat((d) => xDataType == 'date' ? xTime(d)
-		: d3.format(config.essential.xAxisNumberFormat)(d));
+			: d3.format(config.essential.xAxisNumberFormat)(d));
 
 	const stack = d3
 		.stack()
@@ -172,15 +172,21 @@ function drawGraphic() {
 
 
 	//create svg for chart
-	svg = d3
-		.select('#graphic')
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	// svg = d3
+	// 	.select('#graphic')
+	// 	.append('svg')
+	// 	.attr('width', chart_width + margin.left + margin.right)
+	// 	.attr('height', height + margin.top + margin.bottom)
+	// 	.attr('class', 'chart')
+	// 	.style('background-color', '#fff')
+	// 	.append('g')
+	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	if (config.essential.yDomain == 'auto') {
 		// y.domain([
@@ -269,7 +275,7 @@ function drawGraphic() {
 		text: config.essential.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
-		});
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

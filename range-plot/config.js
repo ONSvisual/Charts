@@ -19,13 +19,13 @@ config = {
 			"sm": {
 				"top": 5,
 				"right": 20,
-				"bottom": 20,
+				"bottom": 40,
 				"left": 100
 			},
 			"md": {
 				"top": 5,
 				"right": 20,
-				"bottom": 20,
+				"bottom": 40,
 				"left": 100
 			},
 			"lg": {

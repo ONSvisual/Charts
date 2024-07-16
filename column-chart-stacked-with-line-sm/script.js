@@ -1,4 +1,4 @@
-import { wrap, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -75,7 +75,7 @@ function drawGraphic() {
 			chartMargin: margin,
 			chartGap: chartGap
 		})
-	
+
 		// If the chart is not in the first position in the row, reduce the left margin
 		if (config.optional.dropYAxis) {
 			if (chartPosition !== 0) {
@@ -159,14 +159,20 @@ function drawGraphic() {
 		// }
 
 		//create svg for chart
-		const svg = container
-			.append('svg')
-			.attr('width', chart_width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
-			.attr('class', 'chart')
-			.style('background-color', '#fff')
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		// const svg = container
+		// 	.append('svg')
+		// 	.attr('width', chart_width + margin.left + margin.right)
+		// 	.attr('height', height + margin.top + margin.bottom)
+		// 	.attr('class', 'chart')
+		// 	.style('background-color', '#fff')
+		// 	.append('g')
+		// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		const svg = addSvg({
+			svgParent: container,
+			chart_width: chart_width,
+			height: height + margin.top + margin.bottom,
+			margin: margin
+		})
 
 		if (config.essential.yDomain == 'auto') {
 			y.domain(d3.extent(seriesAll.flat(2))); //flatten the arrays and then get the extent
@@ -335,7 +341,7 @@ function drawGraphic() {
 			text: chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "",
 			textAnchor: "start",
 			wrapWidth: chart_width
-			});
+		});
 	};
 
 	// Draw the charts for each small multiple
