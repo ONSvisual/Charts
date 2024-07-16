@@ -1,4 +1,4 @@
-import { addChartTitleLabel } from "../lib/helpers.js";
+import { addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -162,27 +162,44 @@ svg
     })
 
   // This does the x-axis label - just on the rightmost chart of each row
-  svg
-    .append('g')
-    .attr('transform', 'translate(0,' + height + ')')
-    .append('text')
-    .attr('x', chart_width)
-    .attr('y', 40)
-    .attr('class', 'axis--label')
-    .text((d, i) => i % chartEvery == chartEvery - 1 || plots.indexOf(d[0]) === plots.length - 1 ?
-      config.essential.xAxisLabel : "")
-    .attr('text-anchor', 'end');
+  // svg
+  //   .append('g')
+  //   .attr('transform', 'translate(0,' + height + ')')
+  //   .append('text')
+  //   .attr('x', chart_width)
+  //   .attr('y', 40)
+  //   .attr('class', 'axis--label')
+  //   .text((d, i) => i % chartEvery == chartEvery - 1 || plots.indexOf(d[0]) === plots.length - 1 ?
+  //     config.essential.xAxisLabel : "")
+  //   .attr('text-anchor', 'end');
+  addAxisLabel({
+    svgContainer: svg,
+    xPosition: chart_width,
+    yPosition: height + 40,
+    text: (d, i) => i % chartEvery == chartEvery - 1 || plots.indexOf(d[0]) === plots.length - 1 ?
+        config.essential.xAxisLabel : "",
+    textAnchor: "end",
+    wrapWidth: chart_width
+  });
 
   // This does the y-axis label - just on the leftmost chart of each row
-  svg
-    .append('g')
-    .attr('transform', 'translate(0,0)')
-    .append('text')
-    .attr('x', -(margin.left - 5))
-    .attr('y', -10)
-    .attr('class', 'axis--label')
-    .text((d) => plots.indexOf(d[0]) % chartEvery == 0 ? config.essential.yAxisLabel : "")
-    .attr('text-anchor', 'start');
+  // svg
+  //   .append('g')
+  //   .attr('transform', 'translate(0,0)')
+  //   .append('text')
+  //   .attr('x', -(margin.left - 5))
+  //   .attr('y', -10)
+  //   .attr('class', 'axis--label')
+  //   .text((d) => plots.indexOf(d[0]) % chartEvery == 0 ? config.essential.yAxisLabel : "")
+  //   .attr('text-anchor', 'start');
+  addAxisLabel({
+		svgContainer: svg,
+		xPosition: -(margin.left-5),
+		yPosition: -10,
+		text: (d) => plots.indexOf(d[0]) % chartEvery == 0 ? config.essential.yAxisLabel : "",
+		textAnchor: "start",
+		wrapWidth: chart_width
+	  });
 
 
   //create link to source

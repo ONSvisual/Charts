@@ -1,4 +1,4 @@
-import { calculateChartWidth } from "../lib/helpers.js";
+import { calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select("#graphic");
@@ -54,21 +54,21 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
     10 * (graphic_data.length - 1) +
     12;
 
-		let chartGap = config.optional?.chartGap || 10;
+  let chartGap = config.optional?.chartGap || 10;
 
-		let chart_width = calculateChartWidth({
-			screenWidth: parseInt(graphic.style('width')),
-			chartEvery: chartsPerRow,
-			chartMargin: margin,
-			chartGap: chartGap
-		})
+  let chart_width = calculateChartWidth({
+    screenWidth: parseInt(graphic.style('width')),
+    chartEvery: chartsPerRow,
+    chartMargin: margin,
+    chartGap: chartGap
+  })
 
-		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
-			if (chartPosition !== 0) {
-				margin.left = chartGap;
-			}
-		}
+  // If the chart is not in the first position in the row, reduce the left margin
+  if (config.optional.dropYAxis) {
+    if (chartPosition !== 0) {
+      margin.left = chartGap;
+    }
+  }
 
   // Calculate the total available width for two charts in a row
   const containerWidth = parseInt(graphic.style("width"));
@@ -203,15 +203,23 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
   // This does the x-axis label
   if (chartIndex % chartsPerRow === chartsPerRow - 1) {
-    svg
-      .append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .append('text')
-      .attr('x', chart_width)
-      .attr('y', 35)
-      .attr('class', 'axis--label')
-      .text(config.essential.xAxisLabel)
-      .attr('text-anchor', 'end');
+    // svg
+    //   .append('g')
+    //   .attr('transform', `translate(0, ${height})`)
+    //   .append('text')
+    //   .attr('x', chart_width)
+    //   .attr('y', 35)
+    //   .attr('class', 'axis--label')
+    //   .text(config.essential.xAxisLabel)
+    //   .attr('text-anchor', 'end');
+    addAxisLabel({
+      svgContainer: svg,
+      xPosition: chart_width,
+      yPosition: height + 35,
+      text: config.essential.xAxisLabel,
+      textAnchor: "end",
+      wrapWidth: chart_width
+    });
   }
 
   //create link to source

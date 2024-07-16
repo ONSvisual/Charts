@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -204,13 +206,21 @@ function drawGraphic() {
 	// This does the x-axis label
 	charts.each(function (d, i) {
 		if (i == groups.length - 1) {
-			d3.select(this)
-				.append('text')
-				.attr('x', chart_width)
-				.attr('y', (d) => d[2] + 35)
-				.attr('class', 'axis--label')
-				.text(config.essential.xAxisLabel)
-				.attr('text-anchor', 'end');
+			// d3.select(this)
+			// 	.append('text')
+			// 	.attr('x', chart_width)
+			// 	.attr('y', (d) => d[2] + 35)
+			// 	.attr('class', 'axis--label')
+			// 	.text(config.essential.xAxisLabel)
+			// 	.attr('text-anchor', 'end');
+			addAxisLabel({
+				svgContainer: d3.select(this),
+				xPosition: chart_width,
+				yPosition: d[2] + 35,
+				text: config.essential.xAxisLabel,
+				textAnchor: "end",
+				wrapWidth: chart_width
+				});
 		}
 	});
 

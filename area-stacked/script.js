@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -147,27 +149,45 @@ function drawGraphic() {
 		.attr('class', 'y axis numeric')
 		.call(d3.axisLeft(y).tickFormat(d3.format('.0%')));
 
-	// This does the x-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, ${height})`)
-		.append('text')
-		.attr('x', width)
-		.attr('y', 35)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+	// // This does the x-axis label
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', `translate(0, ${height})`)
+	// 	.append('text')
+	// 	.attr('x', width)
+	// 	.attr('y', 35)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.xAxisLabel)
+	// 	.attr('text-anchor', 'end');
+
+	  //This does the x-axis label
+	  addAxisLabel({
+		svgContainer: svg,
+		xPosition: width,
+		yPosition: height + 35,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: width
+	  });
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,0)')
-		.append('text')
-		.attr('x', -(margin.left - 5))
-		.attr('y', -15)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,0)')
+	// 	.append('text')
+	// 	.attr('x', -(margin.left - 5))
+	// 	.attr('y', -15)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.yAxisLabel)
+	// 	.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: -(margin.left - 5),
+		yPosition: -15,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: width
+	  });
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

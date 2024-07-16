@@ -1,4 +1,4 @@
-import { calculateChartWidth, addChartTitleLabel } from "../lib/helpers.js";
+import { calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');
@@ -233,27 +233,35 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// This does the x-axis label
 	if (chartIndex % chartsPerRow === chartsPerRow - 1) {
-		svg
-			.append('g')
-			.attr('transform', `translate(0, ${height})`)
-			.append('text')
-			.attr('x', width)
-			.attr('y', 35)
-			.attr('class', 'axis--label')
-			.text(config.essential.xAxisLabel)
-			.attr('text-anchor', 'end');
+	  addAxisLabel({
+		svgContainer: svg,
+		xPosition: width,
+		yPosition: height + 35,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: width
+	  });
 	}
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,0)')
-		.append('text')
-		.attr('x', -(margin.left - 5))
-		.attr('y', -10)
-		.attr('class', 'axis--label')
-		.text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
-		.attr('text-anchor', 'start');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,0)')
+	// 	.append('text')
+	// 	.attr('x', -(margin.left - 5))
+	// 	.attr('y', -10)
+	// 	.attr('class', 'axis--label')
+	// 	.text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
+	// 	.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: -(margin.left - 5),
+		yPosition: -10,
+		text: chartPosition == 0 ? config.essential.yAxisLabel : "",
+		textAnchor: "start",
+		wrapWidth: width
+	  });
+		
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 

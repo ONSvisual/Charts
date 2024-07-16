@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
 const legend = d3.select('#legend');
@@ -321,31 +323,47 @@ function drawGraphic() {
 		.attr('stroke', config.essential.comparison_colour_palette[1])
 		.attr('stroke-width', '2px');
 
-	//add x-axis titles
-	svg
-		.append('text')
-		.attr(
-			'transform',
-			'translate(' +
-				(width - margin.left) +
-				',' +
-				(height + 30) +
-				')'
-		)
-		.attr('class', 'axis--label')
-		.attr('text-anchor', 'end')
-		.text(config.essential.xAxislabel);
+	//add x-axis label
+	// svg
+	// 	.append('text')
+	// 	.attr(
+	// 		'transform',
+	// 		'translate(' +
+	// 		(width - margin.left) +
+	// 		',' +
+	// 		(height + 30) +
+	// 		')'
+	// 	)
+	// 	.attr('class', 'axis--label')
+	// 	.attr('text-anchor', 'end')
+	// 	.text(config.essential.xAxislabel);
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: (width - margin.left),
+		yPosition: (height + 30),
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: width
+	});
 
-	//add y-axis title
-	svg
-		.append('text')
-		.attr(
-			'transform',
-			'translate(' + (chart_width + margin.centre / 2) + ',-15)'
-		)
-		.attr('class', 'axis--label')
-		.attr('text-anchor', 'middle')
-		.text(config.essential.yAxislabel);
+	//add y-axis label
+	// svg
+	// 	.append('text')
+	// 	.attr(
+	// 		'transform',
+	// 		'translate(' + (chart_width + margin.centre / 2) + ',-15)'
+	// 	)
+	// 	.attr('class', 'axis--label')
+	// 	.attr('text-anchor', 'middle')
+	// 	.text(config.essential.yAxislabel);
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: (chart_width + margin.centre / 2),
+		yPosition: -15,
+		text: config.essential.yAxisLabel,
+		textAnchor: "middle",
+		wrapWidth: width
+	});
 
 	// Set up the legend
 	widths = [chart_width + margin.left, chart_width + margin.right];

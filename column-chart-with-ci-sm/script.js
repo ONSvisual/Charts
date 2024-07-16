@@ -1,4 +1,4 @@
-import { calculateChartWidth, addChartTitleLabel } from "../lib/helpers.js";
+import { calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -265,28 +265,45 @@ function drawGraphic() {
     })
 
     // This does the x-axis label
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .append('text')
-      .attr('x', chart_width)
-      .attr('y', margin.bottom)
-      .attr('class', 'axis--label')
-      .text(() => chartIndex % chartEvery == chartEvery - 1 ?
-        config.essential.xAxisLabel : "")
-      .attr('text-anchor', 'end')
+    // svg
+    //   .append('g')
+    //   .attr('transform', 'translate(0,' + height + ')')
+    //   .append('text')
+    //   .attr('x', chart_width)
+    //   .attr('y', margin.bottom)
+    //   .attr('class', 'axis--label')
+    //   .text(() => chartIndex % chartEvery == chartEvery - 1 ?
+    //     config.essential.xAxisLabel : "")
+    //   .attr('text-anchor', 'end')
     // .call(wrap, chart_width);
+    addAxisLabel({
+			svgContainer: svg,
+			xPosition: chart_width,
+			yPosition: height + margin.bottom,
+			text: chartIndex % chartEvery == chartEvery - 1 ?
+          config.essential.xAxisLabel : "",
+			textAnchor: "end",
+			wrapWidth: chart_width
+			});
 
     // This does the y-axis label
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,0)')
-      .append('text')
-			.attr('x', 5 - margin.left)
-			.attr('y', -10)
-      .attr('class', 'axis--label')
-      .text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
-      .attr('text-anchor', 'start');
+    // svg
+    //   .append('g')
+    //   .attr('transform', 'translate(0,0)')
+    //   .append('text')
+		// 	.attr('x', 5 - margin.left)
+		// 	.attr('y', -10)
+    //   .attr('class', 'axis--label')
+    //   .text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
+    //   .attr('text-anchor', 'start');
+    addAxisLabel({
+			svgContainer: svg,
+			xPosition: 5 - margin.left,
+			yPosition: -10,
+			text: chartPosition == 0 ? config.essential.yAxisLabel : "",
+			textAnchor: "start",
+			wrapWidth: chart_width
+			});
 
 
 

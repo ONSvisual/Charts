@@ -1,5 +1,7 @@
 //Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
 
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
 let legend = d3.selectAll('#legend')
@@ -285,15 +287,23 @@ function drawGraphic() {
 
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, 0)`)
-		.append('text')
-		.attr('x', -margin.left + 10)
-		.attr('y', -10)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', `translate(0, 0)`)
+	// 	.append('text')
+	// 	.attr('x', -margin.left + 10)
+	// 	.attr('y', -10)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.yAxisLabel)
+	// 	.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: 10 - margin.left,
+		yPosition: -10,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: width
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

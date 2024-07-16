@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -141,6 +143,15 @@ function drawGraphic() {
 		.attr('cy', function (d) {
 			return y(d.name);
 		});
+
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: chart_width,
+		yPosition: height + 30,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: chart_width
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

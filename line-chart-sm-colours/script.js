@@ -1,4 +1,4 @@
-import { calculateChartWidth, addChartTitleLabel } from "../lib/helpers.js";
+import { calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -241,17 +241,27 @@ function drawGraphic() {
 
 
 		// This does the y-axis label
-		svg
-			.append('g')
-			.attr('transform', `translate(${-margin.left}, ${-margin.top})`)
-			.append('text')
-			.attr('x', 0)
-			.attr('y', 35)
-			.attr('class', 'axis--label')
-			.text(() => config.optional.freeYAxisScales ? config.essential.yAxisLabel :
-				chartIndex % chartEvery == 0 ?
-					config.essential.yAxisLabel : "") //May need to make the y-axis label an array in the config?
-			.attr('text-anchor', 'start');
+		// svg
+		// 	.append('g')
+		// 	.attr('transform', `translate(${-margin.left}, ${-margin.top})`)
+		// 	.append('text')
+		// 	.attr('x', 0)
+		// 	.attr('y', 35)
+		// 	.attr('class', 'axis--label')
+		// 	.text(() => config.optional.freeYAxisScales ? config.essential.yAxisLabel :
+		// 		chartIndex % chartEvery == 0 ?
+		// 			config.essential.yAxisLabel : "") //May need to make the y-axis label an array in the config?
+		// 	.attr('text-anchor', 'start');
+		addAxisLabel({
+			svgContainer: svg,
+			xPosition: -margin.left,
+			yPosition: 35-margin.top,
+			text: config.optional.freeYAxisScales ? config.essential.yAxisLabel :
+					chartIndex % chartEvery == 0 ?
+						config.essential.yAxisLabel : "", //May need to make the y-axis label an array in the config?
+			textAnchor: "start",
+			wrapWidth: chart_width
+		});
 	}
 
 

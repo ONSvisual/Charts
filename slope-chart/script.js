@@ -255,30 +255,6 @@ function drawGraphic() {
 	// 		.tickFormat(d3.format(config.essential.yAxisNumberFormat)))
 	// 	.attr('transform', "translate(" + margin.left + ", 0)");
 
-
-
-	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, 0)`)
-		.append('text')
-		.attr('x', -margin.left + 5)
-		.attr('y', -15)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
-
-	// This does the x-axis label
-	svg
-		.append('g')
-		.attr('transform', "translate(0, " + (height + margin.bottom) + ")")
-		.append('text')
-		.attr('x', width)
-		.attr('y', -25)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
-
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 	// console.log(`Link to source created`);

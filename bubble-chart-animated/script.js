@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -296,28 +298,44 @@ function drawGraphic() {
 
 	// // This does the y-axis label
 
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,0)')
-		.append('text')
-		.attr('x', -margin.left + 2)
-		.attr('y', -20)
-		.attr('class', 'axis--label')
-		.attr('id', 'yAxisLabel')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,0)')
+	// 	.append('text')
+	// 	.attr('x', -margin.left + 2)
+	// 	.attr('y', -20)
+	// 	.attr('class', 'axis--label')
+	// 	.attr('id', 'yAxisLabel')
+	// 	.text(config.essential.yAxisLabel)
+	// 	.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: -margin.left + 2,
+		yPosition: -20,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: chart_width
+		});
 
 	// // This does the x-axis label
 
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,' + height + ')')
-		.append('text')
-		.attr('x', chart_width)
-		.attr('y', 35)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,' + height + ')')
+	// 	.append('text')
+	// 	.attr('x', chart_width)
+	// 	.attr('y', 35)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.xAxisLabel)
+	// 	.attr('text-anchor', 'end');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: chart_width,
+		yPosition: height + 35,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: chart_width
+		});
 
 	//Initial draw of the chart with the data filtered on the timeLoad specified
 

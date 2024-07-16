@@ -1,4 +1,4 @@
-import { addXAxisLabel, addDataLabels, wrap } from "../lib/helpers.js";
+import { addAxisLabel, addDataLabels, wrap } from "../lib/helpers.js";
 
 let graphic = d3.select("#graphic");
 let pymChild = null;
@@ -168,11 +168,12 @@ function drawGraphic() {
   // 	.attr('text-anchor', 'end');
 
   //This does the x-axis label
-  addXAxisLabel({
+  addAxisLabel({
     svgContainer: svg,
     xPosition: chart_width,
     yPosition: height + 35,
     text: config.essential.xAxisLabel,
+    textAnchor: "end",
     wrapWidth: chart_width
   });
 

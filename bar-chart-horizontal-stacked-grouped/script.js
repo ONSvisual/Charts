@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -143,17 +145,25 @@ function drawGraphic() {
 
 		// This does the x-axis label - here only added to the last group
 		if (i == groups.length - 1) {
-			d3.select(this)
-				.append('g')
-				.attr('transform', 'translate(' + 0 + ',' + (d[2] + margin.top) + ')')
-				.append('text')
-				.attr('x', chart_width)
-				.attr('y', 0)
-				.attr('dy', 25)
-				.attr('class', 'axis--label')
-				.text(config.essential.xAxisLabel)
-				.attr('text-anchor', 'end')
-				.call(wrap, chart_width + margin.left);
+			// d3.select(this)
+			// 	.append('g')
+			// 	.attr('transform', 'translate(' + 0 + ',' + (d[2] + margin.top) + ')')
+			// 	.append('text')
+			// 	.attr('x', chart_width)
+			// 	.attr('y', 0)
+			// 	.attr('dy', 25)
+			// 	.attr('class', 'axis--label')
+			// 	.text(config.essential.xAxisLabel)
+			// 	.attr('text-anchor', 'end')
+			// 	.call(wrap, chart_width + margin.left);
+			addAxisLabel({
+				svgContainer: d3.select(this),
+				xPosition: chart_width,
+				yPosition: d[2] + 35,
+				text: config.essential.xAxisLabel,
+				textAnchor: "end",
+				wrapWidth: chart_width
+			});
 		}
 	});
 

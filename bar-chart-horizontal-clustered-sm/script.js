@@ -1,4 +1,4 @@
-import { calculateChartWidth, addDataLabels, addChartTitleLabel } from "../lib/helpers.js";
+import { calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -262,15 +262,23 @@ function drawGraphic() {
 
 		// This does the x-axis label
 		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...nested_data].length - 1) {
-			svg
-				.append('g')
-				.attr('transform', `translate(0, ${height})`)
-				.append('text')
-				.attr('x', chart_width)
-				.attr('y', 35)
-				.attr('class', 'axis--label')
-				.text(config.essential.xAxisLabel)
-				.attr('text-anchor', 'end');
+			// svg
+			// 	.append('g')
+			// 	.attr('transform', `translate(0, ${height})`)
+			// 	.append('text')
+			// 	.attr('x', chart_width)
+			// 	.attr('y', 35)
+			// 	.attr('class', 'axis--label')
+			// 	.text(config.essential.xAxisLabel)
+			// 	.attr('text-anchor', 'end');
+			addAxisLabel({
+				svgContainer: svg,
+				xPosition: chart_width,
+				yPosition: height + 35,
+				text: config.essential.xAxisLabel,
+				textAnchor: "end",
+				wrapWidth: chart_width
+			  });
 		}
 	}
 

@@ -31,9 +31,7 @@ config = {
 		},
 		"xAxisNumberFormat": ".0f",
 		"yAxisNumberFormat": ",.0f",
-		"dateFormat": "%d-%m-%Y",
-		"yAxisLabel": "",
-		"xAxisLabel": ""
+		"dateFormat": "%d-%m-%Y"
 	},
 	"optional": {
 		// default is 75

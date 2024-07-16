@@ -1,4 +1,4 @@
-import { calculateChartWidth, addDataLabels, addChartTitleLabel, addXAxisLabel, wrap } from "../lib/helpers.js";
+import { calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel, wrap } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -270,7 +270,7 @@ function drawGraphic() {
 			// }
 
 			//This does the x-axis label
-			addXAxisLabel({
+			addAxisLabel({
 				svgContainer: svg,
 				xPosition: chart_width,
 				yPosition: height + 35,

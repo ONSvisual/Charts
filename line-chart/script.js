@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let graphic_data, size;
@@ -42,11 +44,11 @@ function drawGraphic() {
 	let xDataType;
 
 	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
-	  xDataType = 'date';
+		xDataType = 'date';
 	} else {
-	  xDataType = 'numeric';
+		xDataType = 'numeric';
 	}
-  
+
 	// console.log(xDataType)
 
 	// Define the x and y scales
@@ -54,13 +56,13 @@ function drawGraphic() {
 	let x;
 
 	if (xDataType == 'date') {
-	  x = d3.scaleTime()
-	  .domain(d3.extent(graphic_data, (d) => d.date))
-	  .range([0, width]);
+		x = d3.scaleTime()
+			.domain(d3.extent(graphic_data, (d) => d.date))
+			.range([0, width]);
 	} else {
-	  x = d3.scaleLinear()
-	  .domain(d3.extent(graphic_data, (d) => +d.date))
-	  .range([0, width]);
+		x = d3.scaleLinear()
+			.domain(d3.extent(graphic_data, (d) => +d.date))
+			.range([0, width]);
 	}
 	//console.log(`x defined`);
 
@@ -182,7 +184,7 @@ function drawGraphic() {
 					]
 				)
 				.text(category)
-				.attr("class","directLineLabel")
+				.attr("class", "directLineLabel")
 				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
 
 		};
@@ -244,33 +246,49 @@ function drawGraphic() {
 		.append('g')
 		.attr('class', 'y axis')
 		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-		.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
-	
+			.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+
 
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, 0)`)
-		.append('text')
-		.attr('x', -margin.left + 5)
-		.attr('y', -15)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', `translate(0, 0)`)
+	// 	.append('text')
+	// 	.attr('x', -margin.left + 5)
+	// 	.attr('y', -15)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.yAxisLabel)
+	// 	.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: 5 - margin.left,
+		yPosition: -15,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: width
+	});
 
-// This does the x-axis label
-svg
-.append('g')
-.attr('transform', "translate(0, "+(height+margin.bottom)+")")
-.append('text')
-.attr('x',width)
-.attr('y', -25)
-.attr('class', 'axis--label')
-.text(config.essential.xAxisLabel)
-.attr('text-anchor', 'end');
+	// This does the x-axis label
+	// svg
+	// .append('g')
+	// .attr('transform', "translate(0, "+(height+margin.bottom)+")")
+	// .append('text')
+	// .attr('x',width)
+	// .attr('y', -25)
+	// .attr('class', 'axis--label')
+	// .text(config.essential.xAxisLabel)
+	// .attr('text-anchor', 'end');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: width,
+		yPosition: height + margin.bottom - 25,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: width
+	});
 
-//create link to source
+	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 	// console.log(`Link to source created`);
 
@@ -332,10 +350,11 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 				date: (+d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
-					.map(([key, value]) => [key,  value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
+					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-			}}
-		});
+			}
+		}
+	});
 
 	console.log(graphic_data);
 

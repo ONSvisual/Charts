@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -106,15 +108,23 @@ function drawGraphic() {
 		.attr('class', 'area') // forgot to specify class for your path
 		.attr('d', areaGenerator);
 
-	chart_g
-		.append('g')
-		.attr('transform', 'translate(0,' + height + ')')
-		.append('text')
-		.attr('x', chart_width)
-		.attr('y', 35)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+	// chart_g
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,' + height + ')')
+	// 	.append('text')
+	// 	.attr('x', chart_width)
+	// 	.attr('y', 35)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.xAxisLabel)
+	// 	.attr('text-anchor', 'end');
+	addAxisLabel({
+		svgContainer: chart_g,
+		xPosition: chart_width,
+		yPosition: height + 35,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: chart_width
+	});
 
 	//create link to source
 	d3.select('#source').text('Source – ' + config.essential.sourceText);

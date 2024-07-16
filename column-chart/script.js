@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, svg;
@@ -140,15 +142,23 @@ function drawGraphic() {
 
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,0)')
-		.append('text')
-		.attr('x', 5 - margin.left)
-		.attr('y', -10)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	// svg
+	// 	.append('g')
+	// 	.attr('transform', 'translate(0,0)')
+	// 	.append('text')
+	// 	.attr('x', 5 - margin.left)
+	// 	.attr('y', -10)
+	// 	.attr('class', 'axis--label')
+	// 	.text(config.essential.yAxisLabel)
+	// 	.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: 5 - margin.left,
+		yPosition: -10,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: chart_width
+		});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

@@ -6,6 +6,7 @@ config = {
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary":
 			"CHere is the screenreader text describing the chart.",
+		"xAxisLabel": "x axis label",
 		"xDomain": "auto"
 		// either auto or a custom domain as an array e.g [0,100]
 	},
@@ -14,19 +15,19 @@ config = {
 			"sm": {
 				"top": 15,
 				"right": 20,
-				"bottom": 20,
+				"bottom": 30,
 				"left": 100
 			},
 			"md": {
 				"top": 15,
 				"right": 20,
-				"bottom": 20,
+				"bottom": 30,
 				"left": 100
 			},
 			"lg": {
 				"top": 15,
 				"right": 20,
-				"bottom": 20,
+				"bottom": 30,
 				"left": 100
 			}
 		},

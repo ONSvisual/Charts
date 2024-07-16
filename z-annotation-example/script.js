@@ -1,4 +1,4 @@
-import { addDataLabels } from "../lib/helpers.js";
+import { addDataLabels, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -122,15 +122,23 @@ function drawGraphic() {
   }//end if for datalabels
 
   // This does the x-axis label
-  svg
-    .append('g')
-    .attr('transform', 'translate(0,' + height + ')')
-    .append('text')
-    .attr('x', chart_width)
-    .attr('y', 35)
-    .attr('class', 'axis--label')
-    .text(config.essential.xAxisLabel)
-    .attr('text-anchor', 'end');
+  // svg
+  //   .append('g')
+  //   .attr('transform', 'translate(0,' + height + ')')
+  //   .append('text')
+  //   .attr('x', chart_width)
+  //   .attr('y', 35)
+  //   .attr('class', 'axis--label')
+  //   .text(config.essential.xAxisLabel)
+  //   .attr('text-anchor', 'end');
+  addAxisLabel({
+    svgContainer: svg,
+    xPosition: chart_width,
+    yPosition: height + 35,
+    text: config.essential.xAxisLabel,
+    textAnchor: "end",
+    wrapWidth: chart_width
+  });
 
 
 

@@ -1,3 +1,5 @@
+import { addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -133,27 +135,43 @@ legenditem
 
 
 // This does the x-axis label
-    svg
-    .append('g')
-    .attr('transform', 'translate(0,' + height + ')')
-    .append('text')
-    .attr('x',chart_width)
-    .attr('y',40)
-    .attr('class','axis--label')
-    .text(config.essential.xAxisLabel)
-    .attr('text-anchor','end')
-    .call(wrap, chart_width);
+    // svg
+    // .append('g')
+    // .attr('transform', 'translate(0,' + height + ')')
+    // .append('text')
+    // .attr('x',chart_width)
+    // .attr('y',40)
+    // .attr('class','axis--label')
+    // .text(config.essential.xAxisLabel)
+    // .attr('text-anchor','end')
+    // .call(wrap, chart_width);
+    addAxisLabel({
+      svgContainer: svg,
+      xPosition: chart_width,
+      yPosition: height + 40,
+      text: config.essential.xAxisLabel,
+      textAnchor: "end",
+      wrapWidth: chart_width
+    });
 
 // This does the y-axis label
-svg
-.append('g')
-.attr('transform', 'translate(0,0)')
-.append('text')
-.attr('x',-(margin.left-5))
-.attr('y',-10)
-.attr('class','axis--label')
-.text(config.essential.yAxisLabel)
-.attr('text-anchor','start');
+// svg
+// .append('g')
+// .attr('transform', 'translate(0,0)')
+// .append('text')
+// .attr('x',-(margin.left-5))
+// .attr('y',-10)
+// .attr('class','axis--label')
+// .text(config.essential.yAxisLabel)
+// .attr('text-anchor','start');
+addAxisLabel({
+  svgContainer: svg,
+  xPosition: -(margin.left-5),
+  yPosition: -10,
+  text: config.essential.yAxisLabel,
+  textAnchor: "start",
+  wrapWidth: chart_width
+});
 
 
   //create link to source
