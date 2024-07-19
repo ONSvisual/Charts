@@ -21,6 +21,7 @@ line.refline {
   stroke: #222;
   stroke-width: 3px;
   stroke-linecap: round;
+  forced-color-adjust: auto;
 }
 
 div.legend--item--here {

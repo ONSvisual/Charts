@@ -36,13 +36,18 @@ function drawGraphic() {
 		.append('p').attr('class', 'legend--text')
 		.html("Value")
 
-	legend
+		legend
 		.append('div')
 		.attr("class", "legend--item--here refline")
-		.append('div')
-		.attr('class', 'legend--icon--refline')
-		.style('background-color', "#222")
-		.style('border-radius', '5px');
+		.append('svg')
+		.attr('height',14)
+		.attr('width',25)
+		.append('line')
+		.attr('x1',2)
+		.attr('x2',22)
+		.attr('y1',8)
+		.attr('y2',8)
+		.attr('class','refline')
 
 	d3.select(".legend--item--here.refline")
 		.append('div')
