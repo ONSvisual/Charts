@@ -6,26 +6,8 @@ var pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 
-    // //population accessible summmary
-    // d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-    // var threshold_md = config.optional.mediumBreakpoint;
-    // var threshold_sm = config.optional.mobileBreakpoint;
-
-    // //set variables for chart dimensions dependent on width of #graphic
-    // if (parseInt(graphic.style('width')) < threshold_sm) {
-    //     size = 'sm';
-    // } else if (parseInt(graphic.style('width')) < threshold_md) {
-    //     size = 'md';
-    // } else {
-    //     size = 'lg';
-    // }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
     var margin = config.optional.margin[size];
@@ -220,39 +202,6 @@ function drawGraphic() {
         pymChild.sendHeight();
     }
 }
-
-// function wrap(text, width) {
-//     text.each(function () {
-//         var text = d3.select(this),
-//             words = text.text().split(/\s+/).reverse(),
-//             word,
-//             line = [],
-//             lineNumber = 0,
-//             lineHeight = 1, // ems
-//             // y = text.attr("y"),
-//             x = text.attr('x'),
-//             dy = parseFloat(text.attr('dy')),
-//             tspan = text.text(null).append('tspan').attr('x', x);
-//         while ((word = words.pop())) {
-//             line.push(word);
-//             tspan.text(line.join(' '));
-//             if (tspan.node().getComputedTextLength() > width) {
-//                 line.pop();
-//                 tspan.text(line.join(' '));
-//                 line = [word];
-//                 tspan = text
-//                     .append('tspan')
-//                     .attr('x', x)
-//                     .attr('dy', lineHeight + 'em')
-//                     .text(word);
-//             }
-//         }
-//         var breaks = text.selectAll('tspan').size();
-//         text.attr('y', function () {
-//             return -6 * (breaks - 1);
-//         });
-//     });
-// }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
     //load chart data

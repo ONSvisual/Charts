@@ -8,13 +8,8 @@ let graphic_data, comparison_data, comparisonPopTotal, comparison_data_new, size
 
 function drawGraphic() {
 	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
 	titles.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 	d3.select('#nav').selectAll('*').remove();
-
-	// //population accessible summmary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	// build buttons
 	let fieldset = d3.select('#nav').append('fieldset');
@@ -79,19 +74,8 @@ function drawGraphic() {
 		);
 	});
 
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	let margin = config.optional.margin[size];
@@ -212,13 +196,6 @@ function drawGraphic() {
 		.paddingInner(0.1);
 
 	// create the svg
-	// svg = graphic
-	// 	.append('svg')
-	// 	.attr('class', 'chart')
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('width', width)
-	// 	.append('g')
-	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 	svg = addSvg({
 		svgParent: graphic,
 		chart_width: width,
@@ -336,19 +313,6 @@ function drawGraphic() {
 		.attr('stroke-width', '2px');
 
 	//add x-axis label
-	// svg
-	// 	.append('text')
-	// 	.attr(
-	// 		'transform',
-	// 		'translate(' +
-	// 		(width - margin.left) +
-	// 		',' +
-	// 		(height + 30) +
-	// 		')'
-	// 	)
-	// 	.attr('class', 'axis--label')
-	// 	.attr('text-anchor', 'end')
-	// 	.text(config.essential.xAxislabel);
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: (width - margin.left),
@@ -359,15 +323,6 @@ function drawGraphic() {
 	});
 
 	//add y-axis label
-	// svg
-	// 	.append('text')
-	// 	.attr(
-	// 		'transform',
-	// 		'translate(' + (chart_width + margin.centre / 2) + ',-15)'
-	// 	)
-	// 	.attr('class', 'axis--label')
-	// 	.attr('text-anchor', 'middle')
-	// 	.text(config.essential.yAxislabel);
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: (chart_width + margin.centre / 2),

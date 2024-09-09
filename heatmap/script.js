@@ -6,26 +6,8 @@ let pymChild = null;
 let graphic_data, size, svg, columnNames, numbers, dataPivoted, breaks, colour, key, legendx;
 
 function drawGraphic() {
-	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 
-	// //population accessible summmary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	let margin = config.optional.margin[size];
@@ -171,15 +153,6 @@ function drawGraphic() {
 	let xAxis = d3.axisTop(x).tickSize(0);
 
 	//create svg for chart
-	// svg = d3
-	// 	.select('#graphic')
-	// 	.append('svg')
-	// 	.attr('width', chart_width + margin.left + margin.right)
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('class', 'chart')
-	// 	.style('background-color', '#fff')
-	// 	.append('g')
-	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 	svg = addSvg({
 		svgParent: graphic,
 		chart_width: chart_width,
@@ -276,38 +249,6 @@ function mouseout() {
 	d3.select('#keysymbol path').attr('opacity', 0);
 }
 
-// function wrap(text, width) {
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			words = text.text().split(/\s+/).reverse(),
-// 			word,
-// 			line = [],
-// 			lineNumber = 0,
-// 			lineHeight = 1.1, // ems
-// 			// y = text.attr("y"),
-// 			x = text.attr('x'),
-// 			dy = parseFloat(text.attr('dy')),
-// 			tspan = text.text(null).append('tspan').attr('x', x);
-// 		while ((word = words.pop())) {
-// 			line.push(word);
-// 			tspan.text(line.join(' '));
-// 			if (tspan.node().getComputedTextLength() > width) {
-// 				line.pop();
-// 				tspan.text(line.join(' '));
-// 				line = [word];
-// 				tspan = text
-// 					.append('tspan')
-// 					.attr('x', x)
-// 					.attr('dy', lineHeight + 'em')
-// 					.text(word);
-// 			}
-// 		}
-// 		let breaks = text.selectAll('tspan').size();
-// 		text.attr('y', function () {
-// 			return -6 * (breaks - 1);
-// 		});
-// 	});
-// }
 
 // This is from bostock's notebook https://observablehq.com/d/ac2a320cf2b0adc4
 // which is turn comes from this thread on wide to long data https://github.com/d3/d3-array/issues/142

@@ -6,26 +6,8 @@ let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 
-	// //population accessible summmary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	// Nest the graphic_data by the 'series' column
@@ -49,20 +31,6 @@ function drawGraphic() {
 	// console.log(xDataType)
 
 	function drawChart(container, data, chartIndex) {
-
-		// function calculateChartWidth(size) {
-
-		// 	const chartMargin = config.optional.margin[size];
-
-		// 	if (config.optional.dropYAxis) {
-		// 		// Chart width calculation allowing for 10px left margin between the charts
-		// 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-		// 		return chartWidth;
-		// 	} else {
-		// 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-		// 		return chartWidth;
-		// 	}
-		// }
 
 		const chartEvery = config.optional.chart_every[size];
 		const chartsPerRow = config.optional.chart_every[size];
@@ -162,14 +130,6 @@ function drawGraphic() {
 		// }
 
 		//create svg for chart
-		// const svg = container
-		// 	.append('svg')
-		// 	.attr('width', chart_width + margin.left + margin.right)
-		// 	.attr('height', height + margin.top + margin.bottom)
-		// 	.attr('class', 'chart')
-		// 	.style('background-color', '#fff')
-		// 	.append('g')
-		// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 		const svg = addSvg({
 			svgParent: container,
 			chart_width: chart_width,
@@ -309,17 +269,6 @@ function drawGraphic() {
 			.attr("transform", "translate(" + x.bandwidth() / 2 + ",0)");
 
 		// This does the chart title label
-		// svg
-		// 	.append('g')
-		// 	.attr('transform', 'translate(0, 0)')
-		// 	.append('text')
-		// 	.attr('x', 0)
-		// 	.attr('y', 0)
-		// 	.attr('dy', -30)
-		// 	.attr('class', 'title')
-		// 	.text(data[0].series)
-		// 	.attr('text-anchor', 'start')
-		// 	.call(wrap, chart_width);
 		addChartTitleLabel({
 			svgContainer: svg,
 			yPosition: -30,
@@ -328,15 +277,6 @@ function drawGraphic() {
 		})
 
 		// This does the y-axis label
-		// svg
-		// 	.append('g')
-		// 	.attr('transform', 'translate(0,0)')
-		// 	.append('text')
-		// 	.attr('x', 5 - margin.left)
-		// 	.attr('y', -10)
-		// 	.attr('class', 'axis--label')
-		// 	.text(() => chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "")
-		// 	.attr('text-anchor', 'start');
 		addAxisLabel({
 			svgContainer: svg,
 			xPosition: 5 - margin.left,
@@ -372,39 +312,6 @@ function drawGraphic() {
 		pymChild.sendHeight();
 	}
 }
-
-// function wrap(text, width) {
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			words = text.text().split(/\s+/).reverse(),
-// 			word,
-// 			line = [],
-// 			lineNumber = 0,
-// 			lineHeight = 1.1, // ems
-// 			// y = text.attr("y"),
-// 			x = text.attr('x'),
-// 			dy = parseFloat(text.attr('dy')),
-// 			tspan = text.text(null).append('tspan').attr('x', x);
-// 		while ((word = words.pop())) {
-// 			line.push(word);
-// 			tspan.text(line.join(' '));
-// 			if (tspan.node().getComputedTextLength() > width) {
-// 				line.pop();
-// 				tspan.text(line.join(' '));
-// 				line = [word];
-// 				tspan = text
-// 					.append('tspan')
-// 					.attr('x', x)
-// 					.attr('dy', lineHeight + 'em')
-// 					.text(word);
-// 			}
-// 		}
-// 		let breaks = text.selectAll('tspan').size();
-// 		text.attr('y', function () {
-// 			return -6 * (breaks - 1);
-// 		});
-// 	});
-// }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data

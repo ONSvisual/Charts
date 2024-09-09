@@ -3,57 +3,16 @@ import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addA
 let pymChild = null;
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
-// let graphic_data, size, svg;
+let size;
 
-//Remove fallback
-d3.select('#graphic').select('img').remove();
+//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+size = initialise(size);
+
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
 
-	//population accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	//Was trying to be a little fancy but will need to workshop this.
-	// var size = window.innerWidth > config.optional.mobileBreakpoint ? "lg" : "sm";
-
-	// function calculateChartWidth(size) {
-	// 	const chartEvery = config.optional.chart_every[size];
-	// 	const aspectRatio = config.optional.aspectRatio[size];
-	// 	const chartMargin = config.optional.margin[size];
-
-	// 	if (config.optional.dropYAxis) {
-	// 		// Chart width calculation allowing for 10px left margin between the charts
-	// 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 20)) / chartEvery) - chartMargin.right;
-	// 		return chartWidth;
-	// 	} else {
-	// 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-	// 		return chartWidth;
-	// 	}
-	// }
-
-
-
-
-	// size thresholds as defined in the config.js file
-
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	let size;
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
-
-
 	const chartsPerRow = config.optional.chart_every[size];
 	const chartPosition = chartIndex % chartsPerRow;
-
-	// console.log(chartIndex);
 
 	// Set dimensions
 	let margin = { ...config.optional.margin[size] };
@@ -138,14 +97,6 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		.offset(d3[config.essential.stackOffset]); // Convert to percentage values
 
 	// Create an SVG for this chart
-	// let svg = graphic
-	// 	.append('svg')
-	// 	.attr('width', chart_width + margin.left + margin.right)
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('class', 'chart')
-	// 	.style('backgroud-color', '#fff')
-	// 	.append('g')
-	// 	.attr('transform', `translate(${margin.left}, ${margin.top})`);
 	const svg = addSvg({
 		svgParent: graphic,
 		chart_width: chart_width,
@@ -221,15 +172,6 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 	}
 
 	// Add a title to each of the charts 
-	// svg
-	// 	.append('text')
-	// 	.attr('x', 0)
-	// 	.attr('y', -margin.top / 2)
-	// 	.attr('text-anchor', 'start')
-	// 	.style('font-size', '16px')
-	// 	.attr('class', 'title')
-	// 	.text(seriesName);
-
 	addChartTitleLabel({
 		svgContainer: svg,
 		yPosition: -margin.top / 2,
@@ -239,26 +181,17 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 	// This does the x-axis label
 	if (chartIndex % chartsPerRow === chartsPerRow - 1) {
-	  addAxisLabel({
-		svgContainer: svg,
-		xPosition: chart_width,
-		yPosition: height + 35,
-		text: config.essential.xAxisLabel,
-		textAnchor: "end",
-		wrapWidth: chart_width
-	  });
+		addAxisLabel({
+			svgContainer: svg,
+			xPosition: chart_width,
+			yPosition: height + 35,
+			text: config.essential.xAxisLabel,
+			textAnchor: "end",
+			wrapWidth: chart_width
+		});
 	}
 
 	// This does the y-axis label
-	// svg
-	// 	.append('g')
-	// 	.attr('transform', 'translate(0,0)')
-	// 	.append('text')
-	// 	.attr('x', -(margin.left - 5))
-	// 	.attr('y', -10)
-	// 	.attr('class', 'axis--label')
-	// 	.text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
-	// 	.attr('text-anchor', 'start');
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: -(margin.left - 5),
@@ -266,8 +199,8 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 		text: chartPosition == 0 ? config.essential.yAxisLabel : "",
 		textAnchor: "start",
 		wrapWidth: chart_width
-	  });
-		
+	});
+
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 

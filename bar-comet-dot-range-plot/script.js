@@ -7,28 +7,7 @@ let graphic_data, size, svg, divs, svgs, charts; //need to set the values to wor
 
 function drawGraphic() {
 
-	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
-
-	// //populates accessible summmary from config
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	// //CREATE VARS TO BE USED ACROSS MULTIPLE CHART TYPES
-
-	// //screensize threshold values from the config
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	//set margin

@@ -7,24 +7,8 @@ let pymChild = null;
 let graphic_data, size;
 
 function drawGraphic() {
-	// //Accessible summary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	// //	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
 
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-	// // console.log(`Size set: ${size}`);
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
@@ -34,10 +18,6 @@ function drawGraphic() {
 	let width = config.optional.chartwidth[size];
 	// console.log(parseInt(graphic.style('width')) - width - margin.left - 75)
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
-
-	// // Remove any existing chart elements
-	// graphic.selectAll('*').remove();
-	// //console.log(`Removed existing chart elements`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
@@ -83,14 +63,6 @@ function drawGraphic() {
 
 
 	// Create an SVG element
-	// const svg = graphic
-	// 	.append('svg')
-	// 	.attr('width', parseInt(graphic.style('width')))
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('class', 'chart')
-	// 	.style('background-color', '#fff')
-	// 	.append('g')
-	// 	.attr('transform', `translate(${margin.left},${margin.top})`);
 	const svg = addSvg({
 		svgParent: graphic,
 		chart_width: parseInt(graphic.style('width')) - margin.left - margin.right,
@@ -275,40 +247,6 @@ function drawGraphic() {
 	// console.log(`PymChild height sent`);
 }
 
-//text wrap function for the direct labelling
-
-// function wrap(text, width) {
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			words = text.text().split(/\s+/).reverse(),
-// 			word,
-// 			line = [],
-// 			lineNumber = 0,
-// 			lineHeight = 1.1, // ems
-// 			// y = text.attr("y"),
-// 			x = parseFloat(text.attr('x')),
-// 			dy = parseFloat(text.attr('dy')),
-// 			tspan = text.text(null).append('tspan').attr('x', x);
-// 		while ((word = words.pop())) {
-// 			line.push(word);
-// 			tspan.text(line.join(' '));
-// 			if (tspan.node().getComputedTextLength() > width) {
-// 				line.pop();
-// 				tspan.text(line.join(' '));
-// 				line = [word];
-// 				tspan = text
-// 					.append('tspan')
-// 					.attr('x', x)
-// 					.attr('dy', lineHeight + 'em')
-// 					.text(word);
-// 			}
-// 		}
-// 		let breaks = text.selectAll('tspan').size();
-// 		text.attr('y', function () {
-// 			return -6 * (breaks - 1);
-// 		});
-// 	});
-// }
 
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {

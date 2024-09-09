@@ -8,28 +8,8 @@ let graphic_data, size;
 let pymChild = null;
 
 function drawGraphic() {
-	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 
-	// //Accessible summary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	// //	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
-
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-	// // console.log(`Size set: ${size}`);
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
@@ -93,15 +73,8 @@ function drawGraphic() {
 		console.log("Last date added")
 	}
 console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 12))
+
 	// Create an SVG element
-	// const svg = graphic
-	// 	.append('svg')
-	// 	.attr('width', chart_width + margin.left + margin.right)
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('class', 'chart')
-	// 	.style('background-color', '#fff')
-	// 	.append('g')
-	// 	.attr('transform', `translate(${margin.left},${margin.top})`);
 	const svg = addSvg({
 		svgParent: graphic,
 		chart_width: chart_width,
@@ -109,8 +82,6 @@ console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length
 		margin: margin
 	})
 	//console.log(`SVG element created`);
-
-
 
 	// create lines and circles for each category
 	categories.forEach(function (category) {
@@ -259,15 +230,6 @@ console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 
 
 	// This does the y-axis label
-	// svg
-	// 	.append('g')
-	// 	.attr('transform', `translate(0, 0)`)
-	// 	.append('text')
-	// 	.attr('x', -margin.left + 5)
-	// 	.attr('y', -15)
-	// 	.attr('class', 'axis--label')
-	// 	.text(config.essential.yAxisLabel)
-	// 	.attr('text-anchor', 'start');
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: 5 - margin.left,
@@ -278,15 +240,6 @@ console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	});
 
 	// This does the x-axis label
-	// svg
-	// .append('g')
-	// .attr('transform', "translate(0, "+(height+margin.bottom)+")")
-	// .append('text')
-	// .attr('x',chart_width)
-	// .attr('y', -25)
-	// .attr('class', 'axis--label')
-	// .text(config.essential.xAxisLabel)
-	// .attr('text-anchor', 'end');
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: chart_width,
@@ -307,40 +260,6 @@ console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	// console.log(`PymChild height sent`);
 }
 
-//text wrap function for the direct labelling
-
-// function wrap(text, width) {
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			words = text.text().split(/\s+/).reverse(),
-// 			word,
-// 			line = [],
-// 			lineNumber = 0,
-// 			lineHeight = 1.1, // ems
-// 			// y = text.attr("y"),
-// 			x = text.attr('x'),
-// 			dy = parseFloat(text.attr('dy')),
-// 			tspan = text.text(null).append('tspan').attr('x', x);
-// 		while ((word = words.pop())) {
-// 			line.push(word);
-// 			tspan.text(line.join(' '));
-// 			if (tspan.node().getComputedTextLength() > width) {
-// 				line.pop();
-// 				tspan.text(line.join(' '));
-// 				line = [word];
-// 				tspan = text
-// 					.append('tspan')
-// 					.attr('x', x)
-// 					.attr('dy', lineHeight + 'em')
-// 					.text(word);
-// 			}
-// 		}
-// 		let breaks = text.selectAll('tspan').size();
-// 		text.attr('y', function () {
-// 			return -6 * (breaks - 1);
-// 		});
-// 	});
-// }
 
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {

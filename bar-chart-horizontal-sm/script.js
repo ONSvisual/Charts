@@ -5,24 +5,8 @@ let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-	// //population accessible summmary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	// // Clear out existing graphics
-	// graphic.selectAll('*').remove();
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	// Nest the graphic_data by the 'series' column
@@ -45,21 +29,6 @@ function drawGraphic() {
 
 		//Sort the data so that the bars in each chart are in the same order
 		data.sort((a, b) => namesArray.indexOf(a.name) - namesArray.indexOf(b.name))
-
-		// function calculateChartWidth(size) {
-		// 	const chartEvery = config.optional.chart_every[size];
-		// 	const chartMargin = config.optional.margin[size];
-
-		// 	if (config.optional.dropYAxis) {
-		// 		// Chart width calculation allowing for 10px left margin between the charts
-		// 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-		// 		return chartWidth;
-		// 	} else {
-		// 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-		// 		return chartWidth;
-		// 	}
-		// }
-
 
 		// Calculate the height based on the data
 		let height = config.optional.seriesHeight[size] * data.length +
@@ -101,7 +70,6 @@ function drawGraphic() {
 		y.domain([...new Set(data.map((d) => d.name))]);
 
 		//set up yAxis generator - if dropYAxis is true only adding labels to the leftmost chart
-
 		let yAxis = d3.axisLeft(y)
 			.tickSize(0)
 			.tickPadding(10)
@@ -116,14 +84,6 @@ function drawGraphic() {
 			.ticks(config.optional.xAxisTicks[size]);
 
 		//create svg for chart
-		// svg = container
-		// 	.append('svg')
-		// 	.attr('width', chart_width + margin.left + margin.right)
-		// 	.attr('height', height + margin.top + margin.bottom)
-		// 	.attr('class', 'chart')
-		// 	.style('background-color', '#fff')
-		// 	.append('g')
-		// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 		svg = addSvg({
 			svgParent: container,
 			chart_width: chart_width,
@@ -175,32 +135,7 @@ function drawGraphic() {
 			.attr('height', y.bandwidth())
 			.attr('fill', config.essential.colour_palette);
 
-			let labelPositionFactor = 7;
-
 		if (config.essential.dataLabels.show == true) {
-			// svg
-			// 	.selectAll('text.dataLabels')
-			// 	.data(data)
-			// 	.join('text')
-			// 	.attr('class', 'dataLabels')
-			// 	.attr('x', (d) => d.value > 0 ? x(d.value) :
-			// 		Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
-			// 	.attr('dx', (d) => d.value > 0 ?
-			// 		(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
-			// 		3)
-			// 	.attr('y', (d) => y(d.name) + y.bandwidth()/2)
-			// 	.attr('dominant-baseline', 'middle')
-			// 	.attr('text-anchor', (d) => d.value > 0 ?
-			// 		(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
-			// 		"start"
-			// 	)
-			// 	.attr('fill', (d) =>
-			// 		(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
-			// 	)
-			// 	.text((d) =>
-			// 		d3.format(config.essential.dataLabels.numberFormat)(d.value)
-			// 	);
-
 			addDataLabels({
 				svgContainer: svg,
 				data: data,
@@ -212,17 +147,6 @@ function drawGraphic() {
 		} //end if for datalabels
 
 		// This does the chart title label
-		// svg
-		// 	.append('g')
-		// 	.attr('transform', 'translate(0, 0)')
-		// 	.append('text')
-		// 	.attr('x', 0)
-		// 	.attr('y', 0)
-		// 	.attr('dy', -15)
-		// 	.attr('class', 'title')
-		// 	.text(d => d[0])
-		// 	.attr('text-anchor', 'start')
-		// 	.call(wrap, chart_width);
 		addChartTitleLabel({
 			svgContainer: svg,
 			yPosition: -15,
@@ -232,15 +156,6 @@ function drawGraphic() {
 
 		// This does the x-axis label
 		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...nested_data].length - 1) {
-			// svg
-			// 	.append('g')
-			// 	.attr('transform', `translate(0, ${height})`)
-			// 	.append('text')
-			// 	.attr('x', chart_width)
-			// 	.attr('y', 35)
-			// 	.attr('class', 'axis--label')
-			// 	.text(config.essential.xAxisLabel)
-			// 	.attr('text-anchor', 'end');
 			addAxisLabel({
 				svgContainer: svg,
 				xPosition: chart_width,
@@ -265,38 +180,6 @@ function drawGraphic() {
 		pymChild.sendHeight();
 	}
 }
-
-// function wrap(text, width) {
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			words = text.text().split(/\s+/).reverse(),
-// 			word,
-// 			line = [],
-// 			lineNumber = 0,
-// 			lineHeight = 1.1, // ems
-// 			x = text.attr('x'),
-// 			dy = parseFloat(text.attr('dy')),
-// 			tspan = text.text(null).append('tspan').attr('x', x);
-// 		while ((word = words.pop())) {
-// 			line.push(word);
-// 			tspan.text(line.join(' '));
-// 			if (tspan.node().getComputedTextLength() > width) {
-// 				line.pop();
-// 				tspan.text(line.join(' '));
-// 				line = [word];
-// 				tspan = text
-// 					.append('tspan')
-// 					.attr('x', x)
-// 					.attr('dy', lineHeight + 'em')
-// 					.text(word);
-// 			}
-// 		}
-// 		let breaks = text.selectAll('tspan').size();
-// 		text.attr('y', function () {
-// 			return -6 * (breaks - 1);
-// 		});
-// 	});
-// }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data

@@ -7,26 +7,9 @@ let graphic_data, size, svg, sliderSimple, animating;
 
 function drawGraphic() {
 	// clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 	d3.select('#slider-simple').selectAll('*').remove();
 
-	// //population accessible summmary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	let margin = config.optional.margin[size];
@@ -224,15 +207,6 @@ function drawGraphic() {
 		.ticks(config.optional.xAxisTicks[size]);
 
 	//create svg for chart
-	// svg = d3
-	// 	.select('#graphic')
-	// 	.append('svg')
-	// 	.attr('width', chart_width + margin.left + margin.right)
-	// 	.attr('height', height + margin.top + margin.bottom)
-	// 	.attr('class', 'chart')
-	// 	.style('background-color', '#fff')
-	// 	.append('g')
-	// 	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 	svg = addSvg({
 		svgParent: graphic,
 		chart_width: chart_width,
@@ -305,18 +279,7 @@ function drawGraphic() {
 		d3.selectAll('.dots').attr('stroke', config.essential.colour_palette);
 	}
 
-	// // This does the y-axis label
-
-	// svg
-	// 	.append('g')
-	// 	.attr('transform', 'translate(0,0)')
-	// 	.append('text')
-	// 	.attr('x', -margin.left + 2)
-	// 	.attr('y', -20)
-	// 	.attr('class', 'axis--label')
-	// 	.attr('id', 'yAxisLabel')
-	// 	.text(config.essential.yAxisLabel)
-	// 	.attr('text-anchor', 'start');
+	// This does the y-axis label
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: -margin.left + 2,
@@ -326,17 +289,7 @@ function drawGraphic() {
 		wrapWidth: chart_width
 		});
 
-	// // This does the x-axis label
-
-	// svg
-	// 	.append('g')
-	// 	.attr('transform', 'translate(0,' + height + ')')
-	// 	.append('text')
-	// 	.attr('x', chart_width)
-	// 	.attr('y', 35)
-	// 	.attr('class', 'axis--label')
-	// 	.text(config.essential.xAxisLabel)
-	// 	.attr('text-anchor', 'end');
+	// This does the x-axis label
 	addAxisLabel({
 		svgContainer: svg,
 		xPosition: chart_width,
@@ -625,87 +578,6 @@ function drawGraphic() {
 		pymChild.sendHeight();
 	}
 } ///END DRAW GRAPHIC
-
-// function wrap(
-// 	text,
-// 	width,
-// 	dyAdjust,
-// 	lineHeightEms,
-// 	lineHeightSquishFactor,
-// 	splitOnHyphen,
-// 	centreVertically
-// ) {
-// 	// Use default values for the last three parameters if values are not provided.
-// 	if (!lineHeightEms) lineHeightEms = 1.15;
-// 	if (!lineHeightSquishFactor) lineHeightSquishFactor = 1;
-// 	if (splitOnHyphen == null) splitOnHyphen = true;
-// 	if (centreVertically == null) centreVertically = true;
-
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			x = text.attr('x'),
-// 			y = text.attr('y');
-
-// 		let words = [];
-// 		text
-// 			.text()
-// 			.split(/\s+/)
-// 			.forEach(function (w) {
-// 				if (splitOnHyphen) {
-// 					let subWords = w.split('-');
-// 					for (let i = 0; i < subWords.length - 1; i++)
-// 						words.push(subWords[i] + '-');
-// 					words.push(subWords[subWords.length - 1] + ' ');
-// 				} else {
-// 					words.push(w + ' ');
-// 				}
-// 			});
-
-// 		text.text(null); // Empty the text element
-
-// 		// `tspan` is the tspan element that is currently being added to
-// 		let tspan = text.append('tspan');
-
-// 		let line = ''; // The current value of the line
-// 		let prevLine = ''; // The value of the line before the last word (or sub-word) was added
-// 		let nWordsInLine = 0; // Number of words in the line
-// 		for (let i = 0; i < words.length; i++) {
-// 			let word = words[i];
-// 			prevLine = line;
-// 			line = line + word;
-// 			++nWordsInLine;
-// 			tspan.text(line.trim());
-// 			if (tspan.node().getComputedTextLength() > width && nWordsInLine > 1) {
-// 				// The tspan is too long, and it contains more than one word.
-// 				// Remove the last word and add it to a new tspan.
-// 				tspan.text(prevLine.trim());
-// 				prevLine = '';
-// 				line = word;
-// 				nWordsInLine = 1;
-// 				tspan = text.append('tspan').text(word.trim());
-// 			}
-// 		}
-
-// 		let tspans = text.selectAll('tspan');
-
-// 		let h = lineHeightEms;
-// 		// Reduce the line height a bit if there are more than 2 lines.
-// 		if (tspans.size() > 2)
-// 			for (let i = 0; i < tspans.size(); i++) h *= lineHeightSquishFactor;
-
-// 		tspans.each(function (d, i) {
-// 			// Calculate the y offset (dy) for each tspan so that the vertical centre
-// 			// of the tspans roughly aligns with the text element's y position.
-// 			let dy = i * h;
-
-// 			if (centreVertically) dy -= ((tspans.size() - 1) * h) / 2;
-// 			d3.select(this)
-// 				.attr('y', y)
-// 				.attr('x', x)
-// 				.attr('dy', dy + 'em');
-// 		});
-// 	});
-// } //end wrap
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data

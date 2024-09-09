@@ -6,26 +6,8 @@ let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-	// // clear out existing graphics
-	// graphic.selectAll('*').remove();
-	// legend.selectAll('*').remove();
 
-	// //population accessible summmary
-	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	// let threshold_md = config.optional.mediumBreakpoint;
-	// let threshold_sm = config.optional.mobileBreakpoint;
-
-	// //set variables for chart dimensions dependent on width of #graphic
-	// if (parseInt(graphic.style('width')) < threshold_sm) {
-	// 	size = 'sm';
-	// } else if (parseInt(graphic.style('width')) < threshold_md) {
-	// 	size = 'md';
-	// } else {
-	// 	size = 'lg';
-	// }
-
-	//Set up some of the basics and return the size value
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
 	let namesUnique = [...new Set(graphic_data.map((d) => d.name))];
@@ -102,13 +84,6 @@ function drawGraphic() {
 	//remove any blank headings
 	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
-	// let svgs = divs.append('svg')
-	//   .attr('class', 'chart')
-	//   .attr('height', (d) => d[2] + margin.top + margin.bottom)
-	//   .attr('width', chart_width + margin.left + margin.right)
-
-	// let charts = svgs.append('g')
-	//   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 	let charts = addSvg({
 		svgParent: divs,
 		chart_width: chart_width,
@@ -149,32 +124,8 @@ function drawGraphic() {
 			.attr('height', (d) => groups[i][5].bandwidth())
 			.attr("fill", (d) => colour(d.category));
 
-		let labelPositionFactor = 7;
-
 		//adding data labels to the bars - only if two categories or fewer
 		if (config.essential.dataLabels.show == true && categoriesUnique.length <= 2) {
-			// d3.select(this)
-			// 	.selectAll('text.dataLabels')
-			// 	.data((d) => d[1])
-			// 	.join('text')
-			// 	.attr('class', 'dataLabels')
-			// 	.attr('x', (d) => d.value > 0 ? x(d.value) :
-			// 		Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
-			// 	.attr('dx', (d) => d.value > 0 ?
-			// 		(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
-			// 		3)
-			// 	.attr('y', (d) => groups[i][3](d.name) + groups[i][5](d.category) + groups[i][5].bandwidth()/2)
-			// 	.attr('dominant-baseline', 'middle')
-			// 	.attr('text-anchor', (d) => d.value > 0 ?
-			// 		(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
-			// 		"start"
-			// 	)
-			// 	.attr('fill', (d) =>
-			// 		(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
-			// 	)
-			// 	.text((d) =>
-			// 		d3.format(config.essential.dataLabels.numberFormat)(d.value)
-			// 	);
 
 			addDataLabels({
 				svgContainer: d3.select(this),
@@ -190,17 +141,6 @@ function drawGraphic() {
 
 		// This does the x-axis label - here only added to the last group
 		if (i == (groups.length - 1)) {
-			// d3.select(this)
-			// 	.append('g')
-			// 	.attr('transform', 'translate(' + 0 + ',' + (d[2] + margin.top) + ')')
-			// 	.append('text')
-			// 	.attr('x', chart_width)
-			// 	.attr('y', 0)
-			// 	.attr('dy', 25)
-			// 	.attr('class', 'axis--label')
-			// 	.text(config.essential.xAxisLabel)
-			// 	.attr('text-anchor', 'end')
-			// 	.call(wrap, (chart_width + margin.left));
 			addAxisLabel({
 				svgContainer: d3.select(this),
 				xPosition: chart_width,
@@ -248,39 +188,6 @@ function drawGraphic() {
 		pymChild.sendHeight();
 	}
 }
-
-// function wrap(text, width) {
-// 	text.each(function () {
-// 		let text = d3.select(this),
-// 			words = text.text().split(/\s+/).reverse(),
-// 			word,
-// 			line = [],
-// 			lineNumber = 0,
-// 			lineHeight = 1.1, // ems
-// 			// y = text.attr("y"),
-// 			x = text.attr('x'),
-// 			dy = parseFloat(text.attr('dy')),
-// 			tspan = text.text(null).append('tspan').attr('x', x);
-// 		while ((word = words.pop())) {
-// 			line.push(word);
-// 			tspan.text(line.join(' '));
-// 			if (tspan.node().getComputedTextLength() > width) {
-// 				line.pop();
-// 				tspan.text(line.join(' '));
-// 				line = [word];
-// 				tspan = text
-// 					.append('tspan')
-// 					.attr('x', x)
-// 					.attr('dy', lineHeight + 'em')
-// 					.text(word);
-// 			}
-// 		}
-// 		let breaks = text.selectAll('tspan').size();
-// 		text.attr('y', function () {
-// 			return -6 * (breaks - 1);
-// 		});
-// 	});
-// }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data
