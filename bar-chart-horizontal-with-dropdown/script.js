@@ -1,4 +1,4 @@
-import { wrap, addSvg, addDataLabels, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let select = d3.select('#select');
@@ -7,11 +7,14 @@ let x, y, graphic_data, size, svg;
 
 
 function drawGraphic() {
-	graphic.selectAll('*').remove();
-	select.selectAll('*').remove();
+	// graphic.selectAll('*').remove();
+	// select.selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	let uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
 
@@ -200,17 +203,17 @@ function drawGraphic() {
 
 	}
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
 
 	let margin = config.optional.margin[size];
 	let chart_width =

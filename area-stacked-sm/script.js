@@ -1,4 +1,4 @@
-import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');

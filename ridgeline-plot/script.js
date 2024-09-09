@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -6,24 +6,27 @@ let pymChild = null;
 let graphic_data, size, chart_g;
 
 function drawGraphic() {
-	// Remove any existing chart elements
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// // Remove any existing chart elements
+	// graphic.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	let chart_width =
@@ -34,7 +37,7 @@ function drawGraphic() {
 
 	let height = config.optional.seriesHeight[size] * keys.length + 10 * (keys.length - 1) + 12;
 
-	let layers = keys.map(key => graphic_data.map(d => ({date: d.date, value: d[key]})));
+	let layers = keys.map(key => graphic_data.map(d => ({ date: d.date, value: d[key] })));
 
 	const x = d3.scaleTime()
 		.range([0, chart_width])
@@ -92,15 +95,15 @@ function drawGraphic() {
 			}
 		});
 
-		chart_g
+	chart_g
 		.append('g')
 		.attr('class', 'y axis')
 		.call(yAxis)
 		.selectAll('text')
 		.attr('dy', '15px') // Adjust the vertical position of the labels using pixels
 		.attr('transform', 'translate(-5, 0)') // Adjust the horizontal position of the labels
-		.call(wrap, margin.left); 
-	
+		.call(wrap, margin.left);
+
 
 	let series = chart_g.selectAll('.series')
 		.data(layers)

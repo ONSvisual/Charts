@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
@@ -7,14 +7,14 @@ let pymChild = null;
 let graphic_data, comparison_data, comparisonPopTotal, comparison_data_new, size, popTotal, graphic_data_new, maxPercentage, width, chart_width, height, xLeft, xRight, y, svg, widths, dataForLegend, titleDivs, lineLeft, lineRight, comparisons, time_comparison_data, time_comparison_data_new, timeComparisonPopTotal;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
+	// // clear out existing graphics
+	// graphic.selectAll('*').remove();
 	titles.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 	d3.select('#nav').selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	// build buttons
 	let fieldset = d3.select('#nav').append('fieldset');
@@ -79,17 +79,20 @@ function drawGraphic() {
 		);
 	});
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;

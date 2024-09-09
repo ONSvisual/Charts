@@ -1,6 +1,6 @@
 //Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
 
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -10,27 +10,29 @@ let pymChild = null;
 let graphic_data, size;
 
 function drawGraphic() {
-	// Remove any existing chart elements
-	graphic.selectAll('*').remove();
-	//console.log(`Removed existing chart elements`);
-	legend.selectAll('*').remove();
-	//Accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
+	// // Remove any existing chart elements
+	// graphic.selectAll('*').remove();
+	// //console.log(`Removed existing chart elements`);
+	// legend.selectAll('*').remove();
+	// //Accessible summary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
-	// console.log(`Size set: ${size}`);
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+	// // console.log(`Size set: ${size}`);
 
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];

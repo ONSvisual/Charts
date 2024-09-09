@@ -1,49 +1,53 @@
-import { wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
+let size;
 
-//Remove previous SVGs
-d3.select('#graphic').select('img').remove();
+// //Remove previous SVGs
+// d3.select('#graphic').select('img').remove();
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 function drawGraphic(seriesName, graphic_data, chartIndex, numberOfSeries, fullData) {
 
-	//population accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	//Was trying to be a little fancy but will need to workshop this.
-	// let size = window.innerWidth > config.optional.mobileBreakpoint ? "lg" : "sm";
+	// //Was trying to be a little fancy but will need to workshop this.
+	// // let size = window.innerWidth > config.optional.mobileBreakpoint ? "lg" : "sm";
 
-	// function calculateChartWidth(size) {
-	// 	const chartEvery = config.optional.chart_every[size];
-	// 	const aspectRatio = config.optional.aspectRatio[size];
-	// 	const chartMargin = config.optional.margin[size];
+	// // function calculateChartWidth(size) {
+	// // 	const chartEvery = config.optional.chart_every[size];
+	// // 	const aspectRatio = config.optional.aspectRatio[size];
+	// // 	const chartMargin = config.optional.margin[size];
 
-	// 	if (config.optional.dropYAxis) {
-	// 		// Chart width calculation allowing for 10px left margin between the charts
-	// 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-	// 		return chartWidth;
-	// 	} else {
-	// 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-	// 		return chartWidth;
-	// 	}
+	// // 	if (config.optional.dropYAxis) {
+	// // 		// Chart width calculation allowing for 10px left margin between the charts
+	// // 		const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+	// // 		return chartWidth;
+	// // 	} else {
+	// // 		const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
+	// // 		return chartWidth;
+	// // 	}
+	// // }
+
+	// // size thresholds as defined in the config.js file
+
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
+
+	// //set variables for chart dimensions dependent on width of #graphic
+	// let size;
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
 	// }
-
-	// size thresholds as defined in the config.js file
-
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	let size;
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
 
 	const chartsPerRow = config.optional.chart_every[size];
 	const chartPosition = chartIndex % chartsPerRow;

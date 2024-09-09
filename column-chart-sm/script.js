@@ -1,27 +1,32 @@
-import { wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
+let legend = d3.select('#legend')
 let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
 
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
+	// // clear out existing graphics
+	// graphic.selectAll('*').remove();
+	// legend.selectAll('*').remove();
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	// Nest the graphic_data by the 'series' column
 	let nested_data = d3.groups(graphic_data, (d) => d.series);
@@ -72,7 +77,7 @@ function drawGraphic() {
 			chartMargin: margin,
 			chartGap: chartGap
 		})
-	
+
 		// If the chart is not in the first position in the row, reduce the left margin
 		if (config.optional.dropYAxis) {
 			if (chartPosition !== 0) {
@@ -152,17 +157,17 @@ function drawGraphic() {
 			margin: margin
 		})
 
-			if (config.essential.yDomain == 'auto') {
-				if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
+		if (config.essential.yDomain == 'auto') {
+			if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
 				y.domain([
 					0,
 					d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
-				} else {
-					y.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
-				}
 			} else {
-				y.domain(config.essential.yDomain);
+				y.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
 			}
+		} else {
+			y.domain(config.essential.yDomain);
+		}
 
 		svg
 			.append('g')
@@ -229,7 +234,7 @@ function drawGraphic() {
 			text: chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "",
 			textAnchor: "start",
 			wrapWidth: chart_width
-			});
+		});
 	}
 
 	// Draw the charts for each small multiple

@@ -1,4 +1,4 @@
-import { wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -7,24 +7,25 @@ let pymChild = null;
 let graphic_data, size;
 
 function drawGraphic() {
-	//Accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
+	// //Accessible summary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
-	// console.log(`Size set: ${size}`);
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+	// // console.log(`Size set: ${size}`);
 
-
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
@@ -34,9 +35,9 @@ function drawGraphic() {
 	// console.log(parseInt(graphic.style('width')) - width - margin.left - 75)
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
 
-	// Remove any existing chart elements
-	graphic.selectAll('*').remove();
-	//console.log(`Removed existing chart elements`);
+	// // Remove any existing chart elements
+	// graphic.selectAll('*').remove();
+	// //console.log(`Removed existing chart elements`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');

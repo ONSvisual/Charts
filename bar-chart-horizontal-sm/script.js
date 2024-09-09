@@ -1,26 +1,29 @@
-import { wrap, addSvg, calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
 
-	// Clear out existing graphics
-	graphic.selectAll('*').remove();
+	// // Clear out existing graphics
+	// graphic.selectAll('*').remove();
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	// Nest the graphic_data by the 'series' column
 	let nested_data = d3.group(graphic_data, (d) => d.series);

@@ -1,4 +1,4 @@
-import { wrap, addSvg, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -6,27 +6,30 @@ let pymChild = null;
 let graphic_data, size, svg, grouped_data;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
+  // // clear out existing graphics
+  // graphic.selectAll('*').remove();
+  // legend.selectAll('*').remove();
 
-  //population accessible summmary
-  d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
+  // //population accessible summmary
+  // d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
-  let colour = d3.scaleOrdinal(config.essential.colour_palette); //
+  // let threshold_md = config.optional.mediumBreakpoint;
+  // let threshold_sm = config.optional.mobileBreakpoint;
+  let colour = d3.scaleOrdinal(config.essential.colour_palette);
+
+  //Set up some of the basics and return the size value
+  size = initialise(size);
 
 
 
-  //set variables for chart dimensions dependent on width of #graphic
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm"
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md"
-  } else {
-    size = "lg"
-  }
+  // //set variables for chart dimensions dependent on width of #graphic
+  // if (parseInt(graphic.style("width")) < threshold_sm) {
+  //   size = "sm"
+  // } else if (parseInt(graphic.style("width")) < threshold_md) {
+  //   size = "md"
+  // } else {
+  //   size = "lg"
+  // }
 
   const chartEvery = config.optional.chartEvery[size];
 
@@ -99,19 +102,19 @@ function drawGraphic() {
     .selectAll('div')
     .data(grouped_data)
     .enter()
-    // .append('svg')
-    // .attr("width", chart_width + margin.left + margin.right)
-    // .attr("height", height + margin.top + margin.bottom)
-    // .attr("class", "chart")
-    // .style("background-color", "#fff")
-    // .append("g")
-    // .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
-    svg = addSvg({
-      svgParent: svg,
-      chart_width: chart_width,
-      height: height + margin.top + margin.bottom,
-      margin: margin
-    })
+  // .append('svg')
+  // .attr("width", chart_width + margin.left + margin.right)
+  // .attr("height", height + margin.top + margin.bottom)
+  // .attr("class", "chart")
+  // .style("background-color", "#fff")
+  // .append("g")
+  // .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
+  svg = addSvg({
+    svgParent: svg,
+    chart_width: chart_width,
+    height: height + margin.top + margin.bottom,
+    margin: margin
+  })
 
   // both of these are need to be looked at.
 
@@ -210,7 +213,7 @@ function drawGraphic() {
   //   .call(wrap, chart_width);
   addChartTitleLabel({
     svgContainer: svg,
-    yPosition: -margin.top/2,
+    yPosition: -margin.top / 2,
     text: d => d[0],
     wrapWidth: chart_width
   })
@@ -231,10 +234,10 @@ function drawGraphic() {
     xPosition: chart_width,
     yPosition: height + 40,
     text: (d, i) => i % chartEvery == chartEvery - 1 || plots.indexOf(d[0]) === plots.length - 1 ?
-        config.essential.xAxisLabel : "",
+      config.essential.xAxisLabel : "",
     textAnchor: "end",
     wrapWidth: chart_width
-    });
+  });
 
   // This does the y-axis label - just on the leftmost chart of each row
   // svg
@@ -253,7 +256,7 @@ function drawGraphic() {
     text: (d) => plots.indexOf(d[0]) % chartEvery == 0 ? config.essential.yAxisLabel : "",
     textAnchor: "start",
     wrapWidth: chart_width
-    });
+  });
 
 
   //create link to source

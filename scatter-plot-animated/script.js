@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -7,24 +7,28 @@ let graphic_data, size, sliderDomain, sliderSimple, svg, animating;
 
 function drawGraphic() {
 	// Remove any existing chart elements
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// graphic.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 	d3.select('#slider-simple').selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
+
 
 	let margin = config.optional.margin[size];
 	let chart_width =
@@ -284,7 +288,7 @@ function drawGraphic() {
 		.call(wrap, margin.left - 10);
 
 	//remove the highlight stroke on mobile
-	if (parseInt(graphic.style('width')) < threshold_md) {
+	if (size == 'sm') {
 		d3.selectAll('.dots').attr('stroke', config.essential.colour_palette);
 	}
 
@@ -461,7 +465,7 @@ function drawGraphic() {
 		//if screen is larger than medium threshold and highlight is true in config, add the labels
 
 		if (
-			(parseInt(graphic.style('width')) > threshold_md &&
+			(size == 'lg' &&
 				config.essential.highlight === true) === true
 		) {
 			drawHighlight();

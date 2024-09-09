@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -11,24 +11,27 @@ let graphic_data, size, svg, xDomain;
 
 function drawGraphic() {
 	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// graphic.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 	legendTop.selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	let chart_width =
@@ -94,19 +97,19 @@ function drawGraphic() {
 	//remove blank headings
 	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
-  // let svgs = divs.append('svg')
-  //   .attr('class', 'chart')
-  //   .attr('height', (d) => d[2] + margin.top + margin.bottom)
-  //   .attr('width', chart_width + margin.left + margin.right)
+	// let svgs = divs.append('svg')
+	//   .attr('class', 'chart')
+	//   .attr('height', (d) => d[2] + margin.top + margin.bottom)
+	//   .attr('width', chart_width + margin.left + margin.right)
 
-  // let charts = svgs.append('g')
-  //   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-  let charts = addSvg({
-    svgParent: divs,
-    chart_width: chart_width,
-    height: (d) => d[2] + margin.top + margin.bottom,
-    margin: margin
-  })
+	// let charts = svgs.append('g')
+	//   .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+	let charts = addSvg({
+		svgParent: divs,
+		chart_width: chart_width,
+		height: (d) => d[2] + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	charts.each(function (d) {
 		d3.select(this)
@@ -282,7 +285,7 @@ function drawGraphic() {
 				text: config.essential.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
-				});
+			});
 		}
 	});
 

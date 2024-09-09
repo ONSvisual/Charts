@@ -1,4 +1,4 @@
-import { wrap, addSvg, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -6,27 +6,28 @@ let pymChild = null;
 let graphic_data, size, grouped_data, svg;
 
 function drawGraphic() {
-  // Remove any existing chart elements
-  graphic.selectAll('*').remove();
-  legend.selectAll('*').remove();
+  // // Remove any existing chart elements
+  // graphic.selectAll('*').remove();
+  // legend.selectAll('*').remove();
 
-  //population accessible summmary
-  d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
+  // //population accessible summmary
+  // d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
+  // let threshold_md = config.optional.mediumBreakpoint;
+  // let threshold_sm = config.optional.mobileBreakpoint;
   let colour = d3.scaleOrdinal(config.essential.colour_palette); //
 
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
-
-  //set variables for chart dimensions dependent on width of #graphic
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm"
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md"
-  } else {
-    size = "lg"
-  }
+  // //set variables for chart dimensions dependent on width of #graphic
+  // if (parseInt(graphic.style("width")) < threshold_sm) {
+  //   size = "sm"
+  // } else if (parseInt(graphic.style("width")) < threshold_md) {
+  //   size = "md"
+  // } else {
+  //   size = "lg"
+  // }
 
   const chartEvery = config.optional.chartEvery[size];
 

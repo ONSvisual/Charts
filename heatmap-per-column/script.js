@@ -1,24 +1,27 @@
-import { wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, svg, columnNames, numbers, dataPivoted, breaks, colour, key, legendx;
 
 function drawGraphic() {
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	let chart_width =
@@ -28,8 +31,8 @@ function drawGraphic() {
 		config.optional.seriesHeight[size] * graphic_data.length +
 		3 * (graphic_data.length - 1);
 
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
+	// // clear out existing graphics
+	// graphic.selectAll('*').remove();
 
 	columnNames = graphic_data.columns.slice(1);
 

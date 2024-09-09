@@ -1,46 +1,51 @@
-import { wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select("#graphic");
 let graphic_data, size, svg;
 
-//Remove previous SVGs
-d3.select("#graphic").select("img").remove();
+// //Remove previous SVGs
+// d3.select("#graphic").select("img").remove();
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
-  d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
+  // d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
 
-  // function calculateChartWidth(size) {
-  //   const chartEvery = config.optional.chart_every[size];
-  //   const aspectRatio = config.optional.aspectRatio[size];
-  //   const chartMargin = config.optional.margin[size];
+  // // function calculateChartWidth(size) {
+  // //   const chartEvery = config.optional.chart_every[size];
+  // //   const aspectRatio = config.optional.aspectRatio[size];
+  // //   const chartMargin = config.optional.margin[size];
 
-  //   const containerWidth = parseInt(graphic.style("width"));
-  //   const chartsPerRow = chartEvery;
-  //   // const chartWidth =
-  //   //   ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
-  //   //   (aspectRatio[0] / aspectRatio[1]);
+  // //   const containerWidth = parseInt(graphic.style("width"));
+  // //   const chartsPerRow = chartEvery;
+  // //   // const chartWidth =
+  // //   //   ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
+  // //   //   (aspectRatio[0] / aspectRatio[1]);
 
-  //   // Chart width calculation allowing for 10px left margin between the charts
-  //   const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
+  // //   // Chart width calculation allowing for 10px left margin between the charts
+  // //   const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
 
-  //   return chartWidth;
+  // //   return chartWidth;
+  // // }
+
+  // // size thresholds as defined in the config.js file
+
+  // let threshold_md = config.optional.mediumBreakpoint;
+  // let threshold_sm = config.optional.mobileBreakpoint;
+
+  // //set variables for chart dimensions dependent on width of #graphic
+  // let size;
+  // if (parseInt(graphic.style("width")) < threshold_sm) {
+  //   size = "sm";
+  // } else if (parseInt(graphic.style("width")) < threshold_md) {
+  //   size = "md";
+  // } else {
+  //   size = "lg";
   // }
 
-  // size thresholds as defined in the config.js file
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
-
-  //set variables for chart dimensions dependent on width of #graphic
-  let size;
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm";
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md";
-  } else {
-    size = "lg";
-  }
 
   const chartsPerRow = config.optional.chart_every[size];
   const chartPosition = chartIndex % chartsPerRow;

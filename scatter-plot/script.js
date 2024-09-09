@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -6,27 +6,30 @@ let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-  // Remove any existing chart elements
-  graphic.selectAll('*').remove();
-  legend.selectAll('*').remove();
+  // // Remove any existing chart elements
+  // graphic.selectAll('*').remove();
+  // legend.selectAll('*').remove();
 
-  //population accessible summmary
-  d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
+  // //population accessible summmary
+  // d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
+  // let threshold_md = config.optional.mediumBreakpoint;
+  // let threshold_sm = config.optional.mobileBreakpoint;
   let colour = d3.scaleOrdinal(config.essential.colour_palette); //
 
 
 
-  //set variables for chart dimensions dependent on width of #graphic
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm"
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md"
-  } else {
-    size = "lg"
-  }
+  // //set variables for chart dimensions dependent on width of #graphic
+  // if (parseInt(graphic.style("width")) < threshold_sm) {
+  //   size = "sm"
+  // } else if (parseInt(graphic.style("width")) < threshold_md) {
+  //   size = "md"
+  // } else {
+  //   size = "lg"
+  // }
+
+  //Set up some of the basics and return the size value
+  size = initialise(size);
 
   let margin = config.optional.margin[size]
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
@@ -49,11 +52,11 @@ function drawGraphic() {
   //   .append("g")
   //   .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
   svg = addSvg({
-		svgParent: graphic,
-		chart_width: chart_width,
-		height: height + margin.top + margin.bottom,
-		margin: margin
-	})
+    svgParent: graphic,
+    chart_width: chart_width,
+    height: height + margin.top + margin.bottom,
+    margin: margin
+  })
 
 
   // lets move on to setting up the legend for this chart. 

@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
@@ -9,14 +9,14 @@ let graphic_data, comparison_data, dropdownData, size, allAges, tidydata, rolled
 	widths, dataForLegend, titleDivs, tidydatacomparison, rolledUpComparison, tidydataComparisonPercentage;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
+	// // clear out existing graphics
+	// graphic.selectAll('*').remove();
 	titles.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 	d3.select('#select').selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //population accessible summmary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
 	// build dropdown, first unique areas
 	// https://stackoverflow.com/questions/38613654/javascript-find-unique-objects-in-array-based-on-multiple-properties
@@ -107,8 +107,8 @@ function drawGraphic() {
 							.filter((d) => d.AREACD == $('#areaselect').val())
 							.filter((d) => d.sex == 'female')
 					) +
-						'l 0 ' +
-						-y.bandwidth()
+					'l 0 ' +
+					-y.bandwidth()
 				)
 				.attr('stroke', config.essential.comparison_colour_palette[0])
 				.attr('stroke-width', '2px');
@@ -123,8 +123,8 @@ function drawGraphic() {
 							.filter((d) => d.AREACD == $('#areaselect').val())
 							.filter((d) => d.sex == 'male')
 					) +
-						'l 0 ' +
-						-y.bandwidth()
+					'l 0 ' +
+					-y.bandwidth()
 				)
 				.attr('stroke', config.essential.comparison_colour_palette[1]) // set alternative colour here
 				.attr('stroke-width', '2px');
@@ -142,17 +142,20 @@ function drawGraphic() {
 		}
 	});
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;
@@ -370,7 +373,7 @@ function drawGraphic() {
 		.attr('stroke', config.essential.colour_palette[3]) // set alternative colour here
 		.attr('stroke-width', '2px');
 
-//add x-axis label
+	//add x-axis label
 	// svg
 	// 	.append('text')
 	// 	.attr(

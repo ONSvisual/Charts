@@ -1,24 +1,27 @@
-import { wrap, addSvg, addAxisLabel, addDataLabels } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addDataLabels } from "../lib/helpers.js";
 
 let graphic = d3.select("#graphic");
 let pymChild = null;
 let graphic_data, size, svg;
 
 function drawGraphic() {
-  //population accessible summmary
-  d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
+  // //population accessible summmary
+  // d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
+  // let threshold_md = config.optional.mediumBreakpoint;
+  // let threshold_sm = config.optional.mobileBreakpoint;
 
-  //set variables for chart dimensions dependent on width of #graphic
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm";
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md";
-  } else {
-    size = "lg";
-  }
+  // //set variables for chart dimensions dependent on width of #graphic
+  // if (parseInt(graphic.style("width")) < threshold_sm) {
+  //   size = "sm";
+  // } else if (parseInt(graphic.style("width")) < threshold_md) {
+  //   size = "md";
+  // } else {
+  //   size = "lg";
+  // }
+
+  //Set up some of the basics and return the size value
+  size = initialise(size);
 
   let margin = config.optional.margin[size];
   let chart_width =
@@ -29,8 +32,8 @@ function drawGraphic() {
     10 * (graphic_data.length - 1) +
     12;
 
-  // clear out existing graphics
-  graphic.selectAll("*").remove();
+  // // clear out existing graphics
+  // graphic.selectAll("*").remove();
 
   //set up scales
   const x = d3.scaleLinear().range([0, chart_width]);
@@ -66,11 +69,11 @@ function drawGraphic() {
   //   .append("g")
   //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   svg = addSvg({
-		svgParent: graphic,
-		chart_width: chart_width,
-		height: height + margin.top + margin.bottom,
-		margin: margin
-	})
+    svgParent: graphic,
+    chart_width: chart_width,
+    height: height + margin.top + margin.bottom,
+    margin: margin
+  })
 
   if (config.essential.xDomain == "auto") {
     if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {

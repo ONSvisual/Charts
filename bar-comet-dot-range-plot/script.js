@@ -1,4 +1,4 @@
-import { calculateChartWidth, addDataLabels, addChartTitleLabel, addXAxisLabel, wrap } from "../lib/helpers.js";
+import { initialise, calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel, wrap } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -7,26 +7,29 @@ let graphic_data, size, svg, divs, svgs, charts; //need to set the values to wor
 
 function drawGraphic() {
 
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// // clear out existing graphics
+	// graphic.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 
-	//populates accessible summmary from config
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //populates accessible summmary from config
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	//CREATE VARS TO BE USED ACROSS MULTIPLE CHART TYPES
+	// //CREATE VARS TO BE USED ACROSS MULTIPLE CHART TYPES
 
-	//screensize threshold values from the config
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// //screensize threshold values from the config
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	//set margin
 
@@ -233,7 +236,7 @@ function drawGraphic() {
 		// This does the x-axis label
 		if (chartIndex % chartsPerRow === chartsPerRow - 1 || chartIndex === [...nested_data].length - 1) {
 			//This does the x-axis label
-			addXAxisLabel({
+			addAxisLabel({
 				svgContainer: svg,
 				xPosition: chart_width,
 				yPosition: height + 35,

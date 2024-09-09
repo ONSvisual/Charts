@@ -1,4 +1,4 @@
-import { wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -8,28 +8,29 @@ let graphic_data, size;
 let pymChild = null;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
+	// // clear out existing graphics
+	// graphic.selectAll('*').remove();
+	// legend.selectAll('*').remove();
 
-	//Accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
+	// //Accessible summary
+	// d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	// //	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+	// let threshold_md = config.optional.mediumBreakpoint;
+	// let threshold_sm = config.optional.mobileBreakpoint;
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
-	// console.log(`Size set: ${size}`);
+	// //set variables for chart dimensions dependent on width of #graphic
+	// if (parseInt(graphic.style('width')) < threshold_sm) {
+	// 	size = 'sm';
+	// } else if (parseInt(graphic.style('width')) < threshold_md) {
+	// 	size = 'md';
+	// } else {
+	// 	size = 'lg';
+	// }
+	// // console.log(`Size set: ${size}`);
 
-
+	//Set up some of the basics and return the size value
+	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
@@ -91,7 +92,7 @@ function drawGraphic() {
 		tickValues.push(graphic_data[graphic_data.length - 1].date)
 		console.log("Last date added")
 	}
-
+console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 12))
 	// Create an SVG element
 	// const svg = graphic
 	// 	.append('svg')
@@ -232,7 +233,7 @@ function drawGraphic() {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
-
+		// console.log(x.ticks(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 5))
 	// Add the x-axis
 	svg
 		.append('g')
@@ -241,12 +242,13 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(x)
-				.tickValues(tickValues)
+				.tickValues(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, (130/config.optional.xAxisTicks[size])))
+				// .ticks(d3.timeYear.every(2))
+				// .ticks(d3.timeMonth.every(12))
 				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
 					: d3.format(config.essential.xAxisNumberFormat)(d))
 		);
-
-
+console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	// Add the y-axis
 	svg
 		.append('g')
