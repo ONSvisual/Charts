@@ -315,7 +315,7 @@ function drawGraphic() {
 		};
 		let mousemove = function (event, d) {
 			// console.log(d3.pointer(event))
-			if (parseInt(graphic.style('width')) > threshold_md) {
+			if (size == 'lg') {
 				tooltip
 					.html(
 						'<span style ="color: #206095;font-size: 15px;">' +
@@ -371,7 +371,7 @@ function drawGraphic() {
 			}
 		};
 		let mouseleave = function (d) {
-			if (parseInt(graphic.style('width')) > threshold_md) {
+			if (size == 'lg') {
 				tooltip.style('opacity', 0);
 				d3.select(this)
 					.style('opacity', 0.75)
