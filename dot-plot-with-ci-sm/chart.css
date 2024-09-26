@@ -17,3 +17,8 @@
   font-weight: 600;
   fill: #414042;
 }
+
+.chart-container {
+  display: inline-block;
+  vertical-align: top;
+}

@@ -10,7 +10,7 @@ function drawGraphic() {
 	size = initialise(size);
 
 	// Nest the graphic_data by the 'series' column
-	let nested_data = d3.group(graphic_data, (d) => d.series);
+	let nested_data = d3.groups(graphic_data, (d) => d.series);
 
 	//Generate a list of categories based on the order in the first chart that we can use to order the subsequent charts
 	let namesArray = [...nested_data][0][1].map(d => d.name);
@@ -22,7 +22,7 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, data, chartIndex) {
+	function drawChart(container, seriesName, data, chartIndex) {
 		// Log the data being used for each small multiple
 		// console.log('Data for this small multiple:', data);
 		// console.log(chartIndex);
@@ -150,7 +150,7 @@ function drawGraphic() {
 		addChartTitleLabel({
 			svgContainer: svg,
 			yPosition: -15,
-			text: d => d[0],
+			text: seriesName,
 			wrapWidth: chart_width
 		})
 
@@ -169,7 +169,7 @@ function drawGraphic() {
 
 	// Draw the charts for each small multiple
 	chartContainers.each(function ([key, value], i) {
-		drawChart(d3.select(this), value, i);
+		drawChart(d3.select(this), key, value, i);
 	});
 
 	//create link to source

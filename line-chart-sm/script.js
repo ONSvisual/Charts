@@ -19,14 +19,19 @@ function drawGraphic() {
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== reference);
 	const categoriesToPlot = Object.keys(graphic_data[0]).filter((k) => k !== 'date')
 
+	//This template works differently from the other small multiple templates in that we plot all the data on every chart,
+	//so we don't need to slice the data up - we use graphic_data every time. 
+	//This step shapes the input for the data join to be consistent with the other templates.
+	const categoriesWithNullData = categories.map(d => [d, null])
+
 	// Create a container div for each small multiple
 	let chartContainers = graphic
 		.selectAll('.chart-container')
-		.data(categories)
+		.data(categoriesWithNullData)
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, series, chartIndex) {
+	function drawChart(container, seriesName, data, chartIndex) {
 
 		let chartPosition = chartIndex % chartsPerRow;
 
@@ -269,7 +274,7 @@ function drawGraphic() {
 		addChartTitleLabel({
 			svgContainer: svg,
 			yPosition: -margin.top / 2,
-			text: series,
+			text: seriesName,
 			wrapWidth: (chart_width + margin.right)
 		})
 
@@ -300,8 +305,8 @@ function drawGraphic() {
 	}
 
 	// Draw the charts for each small multiple
-	chartContainers.each(function (chart, i) {
-		drawChart(d3.select(this), chart, i);
+	chartContainers.each(function ([key, value], i) {
+		drawChart(d3.select(this), key, value, i);
 	});
 
 
@@ -342,6 +347,7 @@ function drawGraphic() {
 
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
+	console.log(rawData)
 	graphic_data = rawData.map((d) => {
 		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
 			return {

@@ -57,7 +57,7 @@ function drawGraphic() {
     .join('div')
     .attr('class', 'chart-container');
 
-  function drawChart(container, data, chartIndex) {
+  function drawChart(container, seriesName, data, chartIndex) {
 
     let chartsPerRow = chartEvery;
     let chartPosition = chartIndex % chartsPerRow;
@@ -213,7 +213,7 @@ function drawGraphic() {
     addChartTitleLabel({
       svgContainer: svg,
       yPosition: -margin.top / 2,
-      text: d => d[0],
+      text: seriesName,
       wrapWidth: chart_width
     })
 
@@ -246,7 +246,7 @@ function drawGraphic() {
 
   // Draw the charts for each small multiple
   chartContainers.each(function ([key, value], i) {
-    drawChart(d3.select(this), value, i);
+    drawChart(d3.select(this), key, value, i);
   });
 
 

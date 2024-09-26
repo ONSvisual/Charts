@@ -53,7 +53,7 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, data, chartIndex) {
+	function drawChart(container, seriesName, data, chartIndex) {
 		// Log the data being used for each small multiple
 		// console.log('Data for this small multiple:', data);
 		// console.log(chartIndex);
@@ -189,7 +189,7 @@ function drawGraphic() {
 		// This does the chart title label
 		addChartTitleLabel({
 			svgContainer: svg,
-			text: data[0].series,
+			text: seriesName,
 			wrapWidth: chart_width
 		});
 
@@ -207,7 +207,7 @@ function drawGraphic() {
 
 	// Draw the charts for each small multiple
 	chartContainers.each(function ([key, value], i) {
-		drawChart(d3.select(this), value, i);
+		drawChart(d3.select(this), key, value, i);
 	});
 
 	//create link to source

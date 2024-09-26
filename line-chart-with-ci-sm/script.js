@@ -30,7 +30,7 @@ function drawGraphic() {
 		.join('div')
 		.attr('class', 'chart-container');
 
-	function drawChart(container, data, chartIndex) {
+	function drawChart(container, seriesName, data, chartIndex) {
 
 		const chartEvery = config.optional.chart_every[size];
 		const chartsPerRow = config.optional.chart_every[size];
@@ -97,7 +97,7 @@ function drawGraphic() {
 
 			svg
 				.append('path')
-				.datum(data[1])
+				.datum(data)
 				.attr('fill', 'none')
 				.attr(
 					'stroke', /*() => (categories.indexOf(category) == chartIndex) ? "#206095" : "#dadada"*/
@@ -118,7 +118,7 @@ function drawGraphic() {
 				.defined(d => d[`${category}_lowerCI`] !== null && d[`${category}_upperCI`] !== null) // Only plot areas where we have values
 
 			svg.append('path')
-				.attr('d', areaGenerator(data[1]))
+				.attr('d', areaGenerator(data))
 				.attr('fill', config.essential.colour_palette[
 					categories.indexOf(category) % config.essential.colour_palette.length
 				])
@@ -165,7 +165,7 @@ function drawGraphic() {
 							return a - b
 						})
 						.filter(function (d, i) {
-							return i % config.optional.xAxisTicksEvery[size] === 0 && i <= data[1].length - config.optional.xAxisTicksEvery[size] || i == data[1].length - 1 //Rob's fussy comment about labelling the last date
+							return i % config.optional.xAxisTicksEvery[size] === 0 && i <= data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
 						})
 					)
 					.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
@@ -191,7 +191,7 @@ function drawGraphic() {
 		addChartTitleLabel({
 			svgContainer: svg,
 			yPosition: -margin.top / 2,
-			text: d => d[0],
+			text: seriesName,
 			wrapWidth: (chart_width + margin.right)
 		})
 
@@ -210,8 +210,8 @@ function drawGraphic() {
 
 
 	// Draw the charts for each small multiple
-	chartContainers.each(function (chart, i) {
-		drawChart(d3.select(this), chart, i);
+	chartContainers.each(function ([key, value], i) {
+		drawChart(d3.select(this), key, value, i);
 	});
 
 
