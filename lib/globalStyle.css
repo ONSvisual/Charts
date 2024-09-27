@@ -115,6 +115,7 @@ text
   font-family: 'Open Sans', sans-serif;
   font-feature-settings: "salt" 1;
   font-weight: 400;
+  forced-color-adjust: auto;
 }
 
 /* chart */
@@ -223,6 +224,7 @@ h5#source {
   border-radius: 50%;
   align-self: center;
   flex-shrink: 0;
+  forced-color-adjust: none;
 }
 
 
@@ -235,7 +237,8 @@ h5#source {
   border-radius: 50%;
   align-self: center;
   flex-shrink: 0;
-  border: 2px solid
+  border: 2px solid;
+  forced-color-adjust: none;
 }
 
 .legend--icon--refline {
@@ -243,6 +246,7 @@ h5#source {
   width: 20px;
   align-self: center;
   flex-shrink: 0;
+  forced-color-adjust: none;
 }
 
 .legend--text {
@@ -298,6 +302,25 @@ h5#source {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2px;
+}
+
+/* Adjusted colours for high-contrast mode */
+@media (forced-colors: active) {
+  .annotation_arrow {
+    stroke: #D9D9D9;
+  }
+
+  .annotation-line {
+    stroke: #D9D9D9;
+  }
+
+  .annotation-range {
+    fill: #757575;
+  }
+
+  .direction-arrow {
+    stroke: #D9D9D9
+  }
 }
 
 /* for content that needs to be visible to a screenreader but invisible and take no space for users viewing the chart */

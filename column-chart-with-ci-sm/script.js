@@ -1,33 +1,18 @@
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let legend = d3.select('#legend');
+let graphic_data, size, svg;
 
 function drawGraphic() {
 
-  //population accessible summmary
-  d3.select('#accessibleSummary').html(config.essential.accessibleSummary)
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
-  let colour = d3.scaleOrdinal(config.essential.colour_palette); //
-
-
-
-  //set variables for chart dimensions dependent on width of #graphic
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm"
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md"
-  } else {
-    size = "lg"
-  }
+  let colour = d3.scaleOrdinal(config.essential.colour_palette);
 
   const chartEvery = config.optional.chartEvery[size];
-
-
-  // clear out existing graphics
-  graphic.selectAll("*").remove();
-  legend.selectAll("*").remove();
 
 
   // let legenditem = d3
@@ -51,7 +36,7 @@ function drawGraphic() {
 
 
   //lets also try a new smallmultiple version here which will group data on the basis of plot
-  grouped_data = d3.group(graphic_data, d => d.plot)
+  let grouped_data = d3.group(graphic_data, d => d.plot)
 
   let xDataType;
 
@@ -72,38 +57,29 @@ function drawGraphic() {
     .join('div')
     .attr('class', 'chart-container');
 
-  function drawChart(container, data, chartIndex) {
-
-    function calculateChartWidth(size) {
-      const chartEvery = config.optional.chartEvery[size];
-      const chartMargin = config.optional.margin[size];
-
-      if (config.optional.dropYAxis) {
-        // Chart width calculation allowing for 10px left margin between the charts
-        const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-        return chartWidth;
-      } else {
-        const chartWidth = ((parseInt(graphic.style('width')) / chartEvery) - chartMargin.left - chartMargin.right);
-        return chartWidth;
-      }
-
-
-    }
+  function drawChart(container, seriesName, data, chartIndex) {
 
     let chartsPerRow = chartEvery;
     let chartPosition = chartIndex % chartsPerRow;
 
     let margin = { ...config.optional.margin[size] };
 
+    let chartGap = config.optional?.chartGap || 10;
+
+    let chart_width = calculateChartWidth({
+      screenWidth: parseInt(graphic.style('width')),
+      chartEvery: chartsPerRow,
+      chartMargin: margin,
+      chartGap: chartGap
+    })
+
+    // If the chart is not in the first position in the row, reduce the left margin
     if (config.optional.dropYAxis) {
-      // If the chart is not in the first position in the row, reduce the left margin
       if (chartPosition !== 0) {
-        margin.left = 10;
+        margin.left = chartGap;
       }
     }
 
-
-    let chart_width = calculateChartWidth(size)
     let height = 400 - margin.top - margin.bottom;
 
     const x = d3
@@ -122,14 +98,12 @@ function drawGraphic() {
       .range([height, 0])
 
     //create svg for chart
-    svg = container
-      .append('svg')
-      .attr("width", chart_width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .attr("class", "chart")
-      .style("background-color", "#fff")
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + (margin.top) + ")")
+    svg = addSvg({
+      svgParent: container,
+      chart_width: chart_width,
+      height: height + margin.top + margin.bottom,
+      margin: margin
+    })
 
     // console.log(grouped_data)
 
@@ -139,9 +113,9 @@ function drawGraphic() {
         y.domain([
           0,
           d3.max(graphic_data.map(({ upperCI }) => Number(upperCI)))]); //modified so it converts string to number
-        } else {
-          y.domain([d3.min(graphic_data, function (d) { return d.lowerCI }), d3.max(graphic_data, function (d) { return d.upperCI })])
-        }
+      } else {
+        y.domain([d3.min(graphic_data, function (d) { return d.lowerCI }), d3.max(graphic_data, function (d) { return d.upperCI })])
+      }
 
     } else {
       y.domain(config.essential.yDomain)
@@ -184,8 +158,8 @@ function drawGraphic() {
       .data(data)
       .join('rect')
       .attr('x', (d) => x(d.date))
-			.attr('y', (d) => y(Math.max(d.yvalue, 0)))
-			.attr('height', (d) => Math.abs(y(d.yvalue) - y(0)))
+      .attr('y', (d) => y(Math.max(d.yvalue, 0)))
+      .attr('height', (d) => Math.abs(y(d.yvalue) - y(0)))
       .attr('width', x.bandwidth())
       // .attr('r', config.essential.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
@@ -236,41 +210,33 @@ function drawGraphic() {
 
 
     // This does the chart title label
-    svg
-      .append('g')
-      .attr('transform', 'translate(0, 0)')
-      .append('text')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('dy', 5 - margin.top)
-      .attr('class', 'title')
-      .text(d => d[0])
-      .attr('text-anchor', 'start')
-      .call(wrap, chart_width);
+    addChartTitleLabel({
+      svgContainer: svg,
+      yPosition: -margin.top / 2,
+      text: seriesName,
+      wrapWidth: chart_width
+    })
 
     // This does the x-axis label
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .append('text')
-      .attr('x', chart_width)
-      .attr('y', margin.bottom)
-      .attr('class', 'axis--label')
-      .text(() => chartIndex % chartEvery == chartEvery - 1 ?
-        config.essential.xAxisLabel : "")
-      .attr('text-anchor', 'end')
-    // .call(wrap, chart_width);
+    addAxisLabel({
+      svgContainer: svg,
+      xPosition: chart_width,
+      yPosition: height + margin.bottom,
+      text: chartIndex % chartEvery == chartEvery - 1 ?
+        config.essential.xAxisLabel : "",
+      textAnchor: "end",
+      wrapWidth: chart_width
+    });
 
     // This does the y-axis label
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,0)')
-      .append('text')
-			.attr('x', 5 - margin.left)
-			.attr('y', -10)
-      .attr('class', 'axis--label')
-      .text(() => chartPosition == 0 ? config.essential.yAxisLabel : "")
-      .attr('text-anchor', 'start');
+    addAxisLabel({
+      svgContainer: svg,
+      xPosition: 5 - margin.left,
+      yPosition: -10,
+      text: chartPosition == 0 ? config.essential.yAxisLabel : "",
+      textAnchor: "start",
+      wrapWidth: chart_width
+    });
 
 
 
@@ -280,7 +246,7 @@ function drawGraphic() {
 
   // Draw the charts for each small multiple
   chartContainers.each(function ([key, value], i) {
-    drawChart(d3.select(this), value, i);
+    drawChart(d3.select(this), key, value, i);
   });
 
 
@@ -294,36 +260,6 @@ function drawGraphic() {
   if (pymChild) {
     pymChild.sendHeight();
   }
-}
-
-function wrap(text, width) {
-  // console.log(width)
-  text.each(function () {
-    let text = d3.select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      lineHeight = 1.1, // ems
-      // y = text.attr("y"),
-      x = text.attr("x"),
-      dy = parseFloat(text.attr("dy")),
-      tspan = text.text(null).append("tspan").attr('x', x);
-    if (x == undefined) { x = 0 }
-    while (word = words.pop()) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text.append("tspan").attr('x', x).attr("dy", lineHeight + "em").text(word);
-      }
-    }
-    let breaks = text.selectAll("tspan").size();
-    text.attr("y", function () { return 10 - 6 * (breaks - 1); });
-  });
-
 }
 
 //load data 

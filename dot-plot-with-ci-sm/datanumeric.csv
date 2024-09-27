@@ -1,4 +1,4 @@
-date,plot,group,yvalue,lowerCI,upperCI
+date,series,group,yvalue,lowerCI,upperCI
 1.00,series1,group1,0.9,0.762140582,0.91544367
 2.00,series1,group1,0.986,0.953756323,1.113716766
 3.00,series1,group1,0.4,0.252092563,0.469616388

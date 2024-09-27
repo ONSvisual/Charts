@@ -43,6 +43,7 @@ div.splitBar-inner--background{
     background: #ececec;
     height:30px;
     position: relative;
+    forced-color-adjust: none;
 }
 
 

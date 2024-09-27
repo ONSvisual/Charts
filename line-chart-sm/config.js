@@ -69,6 +69,7 @@ config = {
 				"left": 60
 			}
 		},
+		"chartGap": 20,
 		"xAxisTicksEvery": { // this is the interval of ticks on the x axis - always including the first and last date
 			"sm": 4,
 			"md": 2,
@@ -81,6 +82,7 @@ config = {
 		},
 		"addFirstDate": false,
 		"addFinalDate": false,
+		"dropYAxis": true,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},

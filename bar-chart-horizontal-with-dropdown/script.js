@@ -1,17 +1,17 @@
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let select = d3.select('#select');
 let pymChild = null;
-let x, y;
+let x, y, graphic_data, size, svg;
 
 
 function drawGraphic() {
-	graphic.selectAll('*').remove();
-	select.selectAll('*').remove();
-	
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
+
+	let uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
 
 	console.log(`dropdownData contains: ${JSON.stringify(uniqueOptions)}`);
 
@@ -34,168 +34,141 @@ function drawGraphic() {
 		.attr('value', (d) => d)
 		.text((d) => d);
 
-	
 
-			//add some more accessibility stuff
+	//add some more accessibility stuff
 	d3.select('input.chosen-search-input').attr('id', 'chosensearchinput');
 	d3.select('div.chosen-search')
 		.insert('label', 'input.chosen-search-input')
 		.attr('class', 'visuallyhidden')
 		.attr('for', 'chosensearchinput')
 		.html('Type to select an area');
-		
-
-		$('#optionsSelect').trigger('chosen:updated');  // Initialize Chosen
-
-		let labelPositions = new Map();  // Create a map to store label positions
-		
-		$('#optionsSelect').chosen().change(function () {
-			const selectedOption = $(this).val();
-			console.log(`Selected option: ${selectedOption}`);
-		
-			if (selectedOption) {
-				changeData(selectedOption);
-
-    } else {
-        // Clear the chart if no option is selected
-        clearChart();
-    }
-});
-
-// Clear the chart if no option is selected
-
-function clearChart() {
-    // Clear the chart graphics
-    svg.selectAll('rect').transition().duration(2000).attr('width', 0).remove();
-
-    svg
-        .selectAll('text.dataLabels')
-        .transition()
-        .duration(1000)
-        .attr('x', -100)
-        .remove();
-};
-
-function changeData(selectedOption) {
-	
-	let filteredData = graphic_data.filter(
-		(d) => d.option === selectedOption
-	)
-
-	// Sort the data 
-	.sort((a,b)=>  y.domain().indexOf(a.name)-y.domain().indexOf(b.name));
-	
-	console.log('Filtered data:', filteredData);
 
 
-	// Update the y scale domain based on the filtered data
-	y.domain(filteredData.map((d) => d.name));
+	$('#optionsSelect').trigger('chosen:updated');  // Initialize Chosen
 
-	// Update the y axis with the new domain
-	svg
-		.select('y axis')
-		.transition()
-		.duration(2000)
-		.call(yAxis)
-		.selectAll('text')
-		.call(wrap, margin.left - 10);
+	let labelPositions = new Map();  // Create a map to store label positions
 
-	// Store the current positions of the labels in the map
-	svg.selectAll('text.dataLabels').each(function(d) {
-		labelPositions.set(d.name, x(d.value));
+	$('#optionsSelect').chosen().change(function () {
+		const selectedOption = $(this).val();
+		console.log(`Selected option: ${selectedOption}`);
+
+		if (selectedOption) {
+			changeData(selectedOption);
+
+		} else {
+			// Clear the chart if no option is selected
+			clearChart();
+		}
 	});
 
-	// Enter and update
-	let bars = svg.selectAll('rect').data(filteredData, (d) => d.name);
+	// Clear the chart if no option is selected
 
-	// Exit
-	bars.exit().transition().duration(400).ease(d3.easeCubic).attr('width', 0).remove();
+	function clearChart() {
+		// Clear the chart graphics
+		svg.selectAll('rect').transition().duration(2000).attr('width', 0).remove();
 
-	// Enter and update
-	bars
-		.enter()
-		.append('rect')
-		// .attr('x', x(0))
-		.attr('x', d => d.value < 0 ? x(d.value) : x(0))
-		.attr('y', (d) => y(d.name))
-		// .attr('width', 0)
-		.attr('width', d =>  d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
-		.attr('height', y.bandwidth())
-		.attr('fill', config.essential.colour_palette)
-		.merge(bars)
-		.transition()
-		.duration(1250)
-		.ease(d3.easeCubic)
-		// .attr('width', (d) => x(d.value) - x(0));
-		.attr('width', d =>  d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
-		.attr('x', d => d.value < 0 ? x(d.value) : x(0));
-
-
-let labelPositionFactor = 7;
-
-	// Update the data labels
-	if (config.essential.dataLabels.show === true) {
 		svg
 			.selectAll('text.dataLabels')
-			.data(filteredData)
-			.join('text')
-			.attr('class', 'dataLabels')
-			.attr('x', (d) => 
-			Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? x(0) : x(d.value))
-			.attr('dx', (d) => d.value > 0 ?
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 3 : -3) :
-			-3)
-			.attr('y', (d) => y(d.name) + y.bandwidth()/2)
-			.attr('dominant-baseline', 'middle')
-			.attr('text-anchor', (d) => d.value > 0 ?
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'start' : 'end') :
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? 'end' : 'start')
-		)
-
-		.attr('fill', (d) =>
-			(Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
-		)
-			.text((d) =>
-				d3.format(config.essential.dataLabels.numberFormat)(d.value)
-			)
 			.transition()
-			.duration(1200)
+			.duration(1000)
+			.attr('x', -100)
+			.remove();
+	};
+
+	function changeData(selectedOption) {
+
+		let filteredData = graphic_data.filter(
+			(d) => d.option === selectedOption
+		)
+
+			// Sort the data 
+			.sort((a, b) => y.domain().indexOf(a.name) - y.domain().indexOf(b.name));
+
+		console.log('Filtered data:', filteredData);
+
+
+		// Update the y scale domain based on the filtered data
+		y.domain(filteredData.map((d) => d.name));
+
+		// Update the y axis with the new domain
+		svg
+			.select('y axis')
+			.transition()
+			.duration(2000)
+			.call(yAxis)
+			.selectAll('text')
+			.call(wrap, margin.left - 10);
+
+		// Store the current positions of the labels in the map
+		svg.selectAll('text.dataLabels').each(function (d) {
+			labelPositions.set(d.name, x(d.value));
+		});
+
+		// Enter and update
+		let bars = svg.selectAll('rect').data(filteredData, (d) => d.name);
+
+		// Exit
+		bars.exit().transition().duration(400).ease(d3.easeCubic).attr('width', 0).remove();
+
+		// Enter and update
+		bars
+			.enter()
+			.append('rect')
+			// .attr('x', x(0))
+			.attr('x', d => d.value < 0 ? x(d.value) : x(0))
+			.attr('y', (d) => y(d.name))
+			// .attr('width', 0)
+			.attr('width', d => d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
+			.attr('height', y.bandwidth())
+			.attr('fill', config.essential.colour_palette)
+			.merge(bars)
+			.transition()
+			.duration(1250)
 			.ease(d3.easeCubic)
-							.tween('text', function(d) {
-		// Parse this.textContent as a float and multiply it by 0.001 to get the start value. This need to match the data.
-		let startValue = parseFloat(this.textContent)*0.001;
+			// .attr('width', (d) => x(d.value) - x(0));
+			.attr('width', d => d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
+			.attr('x', d => d.value < 0 ? x(d.value) : x(0));
 
-		// Create an interpolator
-		const i = d3.interpolate(startValue, d.value);
 
-		// Create a position interpolator
-		const xi = d3.interpolate(labelPositions.get(d.name) || x(0), x(d.value) - (x(d.value) - x(0) < chart_width / 10 ? -3 : 3));
+		// Update the data labels
+		if (config.essential.dataLabels.show === true) {
+			addDataLabels({
+				svgContainer: svg,
+				data: filteredData,
+				chart_width: chart_width,
+				labelPositionFactor: 7,
+				xScaleFunction: x,
+				yScaleFunction: y
+			})
 
-		return function(t) {
-			// Calculate the interpolated value
-			let interpolatedValue = i(t);
+			svg
+				.selectAll('text.dataLabels')
+				.transition()
+				.duration(1200)
+				.ease(d3.easeCubic)
+				.tween('text', function (d) {
+					// Parse this.textContent as a float and multiply it by 0.001 to get the start value. This need to match the data.
+					let startValue = parseFloat(this.textContent) * 0.001;
 
-			// Update the label's text
-			this.textContent = d3.format(config.essential.dataLabels.numberFormat)(interpolatedValue);
+					// Create an interpolator
+					const i = d3.interpolate(startValue, d.value);
 
-			// Update the label's x position
-			d3.select(this).attr('x', xi(t));
-		};
-	});
-}
+					// Create a position interpolator
+					const xi = d3.interpolate(labelPositions.get(d.name) || x(0), x(d.value) - (x(d.value) - x(0) < chart_width / 10 ? -3 : 3));
 
-}
+					return function (t) {
+						// Calculate the interpolated value
+						let interpolatedValue = i(t);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
+						// Update the label's text
+						this.textContent = d3.format(config.essential.dataLabels.numberFormat)(interpolatedValue);
 
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
+						// Update the label's x position
+						d3.select(this).attr('x', xi(t));
+					};
+				});
+		}
+
 	}
 
 	let margin = config.optional.margin[size];
@@ -208,9 +181,6 @@ let labelPositionFactor = 7;
 		config.optional.seriesHeight[size] * uniqueNames.length +
 		10 * (uniqueNames.length - 1) +
 		12;
-
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
 
 	//set up scales
 	x = d3.scaleLinear().range([0, chart_width]);
@@ -236,15 +206,12 @@ let labelPositionFactor = 7;
 		.ticks(config.optional.xAxisTicks[size]);
 
 	//create svg for chart
-	svg = d3
-		.select('#graphic')
-		.append('svg')
-		.attr('width', chart_width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// Append y-axis to SVG
 	svg
@@ -254,17 +221,17 @@ let labelPositionFactor = 7;
 		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
-		if (config.essential.xDomain == 'auto') {
-			if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
-				x.domain([
-					0,
-					d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
-			} else {
-				x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
-			}
+	if (config.essential.xDomain == 'auto') {
+		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
+			x.domain([
+				0,
+				d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
 		} else {
-			x.domain(config.essential.xDomain);
+			x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
 		}
+	} else {
+		x.domain(config.essential.xDomain);
+	}
 
 
 	svg
@@ -283,15 +250,14 @@ let labelPositionFactor = 7;
 
 
 	// This does the x-axis label
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,' + height + ')')
-		.append('text')
-		.attr('x', chart_width)
-		.attr('y', 35)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: chart_width,
+		yPosition: height + 35,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: chart_width
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
@@ -304,40 +270,6 @@ let labelPositionFactor = 7;
 	if (pymChild) {
 		pymChild.sendHeight();
 	}
-}
-
-
-function wrap(text, width) {
-	text.each(function () {
-		let text = d3.select(this),
-			words = text.text().split(/\s+/).reverse(),
-			word,
-			line = [],
-			lineNumber = 0,
-			lineHeight = 1.1, // ems
-			// y = text.attr("y"),
-			x = text.attr('x'),
-			dy = parseFloat(text.attr('dy')),
-			tspan = text.text(null).append('tspan').attr('x', x);
-		while ((word = words.pop())) {
-			line.push(word);
-			tspan.text(line.join(' '));
-			if (tspan.node().getComputedTextLength() > width) {
-				line.pop();
-				tspan.text(line.join(' '));
-				line = [word];
-				tspan = text
-					.append('tspan')
-					.attr('x', x)
-					.attr('dy', lineHeight + 'em')
-					.text(word);
-			}
-		}
-		let breaks = text.selectAll('tspan').size();
-		text.attr('y', function () {
-			return -6 * (breaks - 1);
-		});
-	});
 }
 
 d3.csv(config.essential.graphic_data_url).then((data) => {

@@ -42,6 +42,7 @@ config = {
         "left": 50
       }
     },
+    "chartGap": 20,
     "xAxisTicks": {
       "sm": 4,
       "md": 4,

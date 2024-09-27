@@ -1,38 +1,22 @@
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
+let graphic_data, size;
 //console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
 
-	//Accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
-
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
-	// console.log(`Size set: ${size}`);
-
-
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
-	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = 400 - margin.top - margin.bottom;
-	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
+	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
@@ -41,11 +25,11 @@ function drawGraphic() {
 	let xDataType;
 
 	if (Object.prototype.toString.call(graphic_data[0].date) === '[object Date]') {
-	  xDataType = 'date';
+		xDataType = 'date';
 	} else {
-	  xDataType = 'numeric';
+		xDataType = 'numeric';
 	}
-  
+
 	// console.log(xDataType)
 
 	// Define the x and y scales
@@ -53,13 +37,13 @@ function drawGraphic() {
 	let x;
 
 	if (xDataType == 'date') {
-	  x = d3.scaleTime()
-	  .domain(d3.extent(graphic_data, (d) => d.date))
-	  .range([0, width]);
+		x = d3.scaleTime()
+			.domain(d3.extent(graphic_data, (d) => d.date))
+			.range([0, chart_width]);
 	} else {
-	  x = d3.scaleLinear()
-	  .domain(d3.extent(graphic_data, (d) => +d.date))
-	  .range([0, width]);
+		x = d3.scaleLinear()
+			.domain(d3.extent(graphic_data, (d) => +d.date))
+			.range([0, chart_width]);
 	}
 	//console.log(`x defined`);
 
@@ -88,19 +72,16 @@ function drawGraphic() {
 		tickValues.push(graphic_data[graphic_data.length - 1].date)
 		console.log("Last date added")
 	}
+console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 12))
 
 	// Create an SVG element
-	const svg = graphic
-		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left},${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 	//console.log(`SVG element created`);
-
-
 
 	// create lines and circles for each category
 	categories.forEach(function (category) {
@@ -181,7 +162,7 @@ function drawGraphic() {
 					]
 				)
 				.text(category)
-				.attr("class","directLineLabel")
+				.attr("class", "directLineLabel")
 				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
 
 		};
@@ -212,7 +193,7 @@ function drawGraphic() {
 			d3
 				.axisLeft(y)
 				.ticks(config.optional.yAxisTicks[size])
-				.tickSize(-width)
+				.tickSize(-chart_width)
 				.tickFormat('')
 		)
 		.lower();
@@ -223,7 +204,7 @@ function drawGraphic() {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
-
+		// console.log(x.ticks(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 5))
 	// Add the x-axis
 	svg
 		.append('g')
@@ -232,44 +213,43 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(x)
-				.tickValues(tickValues)
+				.tickValues(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, (130/config.optional.xAxisTicks[size])))
+				// .ticks(d3.timeYear.every(2))
+				// .ticks(d3.timeMonth.every(12))
 				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
 					: d3.format(config.essential.xAxisNumberFormat)(d))
 		);
-
-
+console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	// Add the y-axis
 	svg
 		.append('g')
 		.attr('class', 'y axis')
 		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-		.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
-	
+			.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+
 
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, 0)`)
-		.append('text')
-		.attr('x', -margin.left + 5)
-		.attr('y', -15)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: 5 - margin.left,
+		yPosition: -15,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: chart_width
+	});
 
-// This does the x-axis label
-svg
-.append('g')
-.attr('transform', "translate(0, "+(height+margin.bottom)+")")
-.append('text')
-.attr('x',width)
-.attr('y', -25)
-.attr('class', 'axis--label')
-.text(config.essential.xAxisLabel)
-.attr('text-anchor', 'end');
+	// This does the x-axis label
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: chart_width,
+		yPosition: height + margin.bottom - 25,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: chart_width
+	});
 
-//create link to source
+	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
 	// console.log(`Link to source created`);
 
@@ -280,40 +260,6 @@ svg
 	// console.log(`PymChild height sent`);
 }
 
-//text wrap function for the direct labelling
-
-function wrap(text, width) {
-	text.each(function () {
-		let text = d3.select(this),
-			words = text.text().split(/\s+/).reverse(),
-			word,
-			line = [],
-			lineNumber = 0,
-			lineHeight = 1.1, // ems
-			// y = text.attr("y"),
-			x = text.attr('x'),
-			dy = parseFloat(text.attr('dy')),
-			tspan = text.text(null).append('tspan').attr('x', x);
-		while ((word = words.pop())) {
-			line.push(word);
-			tspan.text(line.join(' '));
-			if (tspan.node().getComputedTextLength() > width) {
-				line.pop();
-				tspan.text(line.join(' '));
-				line = [word];
-				tspan = text
-					.append('tspan')
-					.attr('x', x)
-					.attr('dy', lineHeight + 'em')
-					.text(word);
-			}
-		}
-		let breaks = text.selectAll('tspan').size();
-		text.attr('y', function () {
-			return -6 * (breaks - 1);
-		});
-	});
-}
 
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
@@ -331,10 +277,11 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 				date: (+d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
-					.map(([key, value]) => [key,  value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
+					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
 					.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {})
-			}}
-		});
+			}
+		}
+	});
 
 	console.log(graphic_data);
 

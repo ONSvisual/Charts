@@ -1,30 +1,18 @@
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
 
-	//Accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
-	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = 400 - margin.top - margin.bottom;
 
 	// Get categories from the keys used in the stack generator
@@ -60,20 +48,18 @@ function drawGraphic() {
 		});
 
 	// Create an SVG element
-	const svg = graphic
-		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left},${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// Define the x and y scales
 	const x = d3
 		.scaleTime()
 		.domain(d3.extent(graphic_data, (d) => d.date))
-		.range([0, width]);
+		.range([0, chart_width]);
 
 	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
 	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
@@ -146,27 +132,25 @@ function drawGraphic() {
 		.attr('class', 'y axis numeric')
 		.call(d3.axisLeft(y).tickFormat(d3.format('.0%')));
 
-	// This does the x-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, ${height})`)
-		.append('text')
-		.attr('x', width)
-		.attr('y', 35)
-		.attr('class', 'axis--label')
-		.text(config.essential.xAxisLabel)
-		.attr('text-anchor', 'end');
+	//This does the x-axis label
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: chart_width,
+		yPosition: height + 35,
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: chart_width
+	});
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,0)')
-		.append('text')
-		.attr('x', -(margin.left - 5))
-		.attr('y', -15)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: -(margin.left - 5),
+		yPosition: -15,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: chart_width
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

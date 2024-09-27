@@ -1,43 +1,13 @@
+import { initialise, wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
+
 let pymChild = null;
 let graphic = d3.select("#graphic");
+let graphic_data, size, svg;
 
-//Remove previous SVGs
-d3.select("#graphic").select("img").remove();
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
-  d3.select("#accessibleSummary").html(config.essential.accessibleSummary);
-
-  function calculateChartWidth(size) {
-    const chartEvery = config.optional.chart_every[size];
-    const aspectRatio = config.optional.aspectRatio[size];
-    const chartMargin = config.optional.margin[size];
-
-    const containerWidth = parseInt(graphic.style("width"));
-    const chartsPerRow = chartEvery;
-    // const chartWidth =
-    //   ((containerWidth - chartMargin.left - chartMargin.right) / chartsPerRow) *
-    //   (aspectRatio[0] / aspectRatio[1]);
-
-    // Chart width calculation allowing for 10px left margin between the charts
-    const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 10)) / chartEvery) - chartMargin.right;
-
-    return chartWidth;
-  }
-
-  // size thresholds as defined in the config.js file
-
-  let threshold_md = config.optional.mediumBreakpoint;
-  let threshold_sm = config.optional.mobileBreakpoint;
-
-  //set variables for chart dimensions dependent on width of #graphic
-  let size;
-  if (parseInt(graphic.style("width")) < threshold_sm) {
-    size = "sm";
-  } else if (parseInt(graphic.style("width")) < threshold_md) {
-    size = "md";
-  } else {
-    size = "lg";
-  }
 
   const chartsPerRow = config.optional.chart_every[size];
   const chartPosition = chartIndex % chartsPerRow;
@@ -51,13 +21,21 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
     10 * (graphic_data.length - 1) +
     12;
 
+  let chartGap = config.optional?.chartGap || 10;
+
+  let chart_width = calculateChartWidth({
+    screenWidth: parseInt(graphic.style('width')),
+    chartEvery: chartsPerRow,
+    chartMargin: margin,
+    chartGap: chartGap
+  })
 
   // If the chart is not in the first position in the row, reduce the left margin
-  if (chartPosition !== 0) {
-    margin.left = 10;
+  if (config.optional.dropYAxis) {
+    if (chartPosition !== 0) {
+      margin.left = chartGap;
+    }
   }
-
-  let chart_width = calculateChartWidth(size); // Calculate the initial chart width
 
   // Calculate the total available width for two charts in a row
   const containerWidth = parseInt(graphic.style("width"));
@@ -117,15 +95,12 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   y.domain(graphic_data.map((d) => d.name));
 
   // Create SVG
-  let svg = d3
-    .select("#graphic")
-    .append("svg")
-    .attr("width", chart_width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("class", "chart")
-    .style("background-color", "#fff")
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  let svg = addSvg({
+    svgParent: graphic,
+    chart_width: chart_width,
+    height: height + margin.top + margin.bottom,
+    margin: margin
+  })
 
   // Add axes
   svg
@@ -152,7 +127,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
       .attr("class", "y axis")
       .call(yAxis)
       .selectAll(".tick text")
-      .call(wrap, margin.left - 10, graphic_data);
+      .call(wrap, margin.left - 10);
   } else {
     svg.append("g").attr("class", "y axis").call(yAxis.tickValues([]));
   }
@@ -169,7 +144,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
     .style("font-size", "16px")
     //.style("fill", "#707071")
     .style("fill", colorsArray[chartIndex % colorsArray.length])
-    .call(wrap, 150, graphic_data);
+    .call(wrap, 150);
 
 
   // Draw chart
@@ -192,15 +167,14 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
   // This does the x-axis label
   if (chartIndex % chartsPerRow === chartsPerRow - 1) {
-    svg
-      .append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .append('text')
-      .attr('x', chart_width)
-      .attr('y', 35)
-      .attr('class', 'axis--label')
-      .text(config.essential.xAxisLabel)
-      .attr('text-anchor', 'end');
+    addAxisLabel({
+      svgContainer: svg,
+      xPosition: chart_width,
+      yPosition: height + 35,
+      text: config.essential.xAxisLabel,
+      textAnchor: "end",
+      wrapWidth: chart_width
+    });
   }
 
   //create link to source
@@ -210,47 +184,6 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   if (pymChild) {
     pymChild.sendHeight(height + margin.top + margin.bottom);
   }
-}
-
-function wrap(text, width, graphic_data) {
-  text.each(function (d, i) {
-    let text = d3.select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
-      lineHeight = 1.1, // ems
-      x = text.attr("x"),
-      dy = parseFloat(text.attr("dy")),
-      tspan = text.text(null).append("tspan").attr("x", x);
-    while ((word = words.pop())) {
-      line.push(word);
-      tspan.text(line.join(" "));
-      if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text
-          .append("tspan")
-          .attr("x", x)
-          .attr("dy", lineHeight + "em")
-          .text(word);
-      }
-    }
-    let breaks = text.selectAll("tspan").size();
-    text.attr("y", function () {
-      return -6 * (breaks - 1);
-    });
-
-    // Check if the corresponding data row has no data, and if so, make the y-axis label bold
-    const rowData = graphic_data[i];
-    const hasNoData = Object.values(rowData)
-      .slice(1, -1)
-      .every((value) => value === "");
-    if (hasNoData) {
-      text.style("font-weight", "bold");
-    }
-  });
 }
 
 function renderCallback() {

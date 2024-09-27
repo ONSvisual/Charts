@@ -81,7 +81,7 @@ config = {
 			"md": 5,
 			"lg":8
 		},
-		"addFirstDate": false,
+		"addFirstDate": true,
 		"addFinalDate": false,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600

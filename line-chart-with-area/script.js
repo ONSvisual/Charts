@@ -1,39 +1,25 @@
 //Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
 
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
 let legend = d3.selectAll('#legend')
 let pymChild = null;
 
+let graphic_data, size;
+
 function drawGraphic() {
-	// Remove any existing chart elements
-	graphic.selectAll('*').remove();
-	//console.log(`Removed existing chart elements`);
-	legend.selectAll('*').remove();
-	//Accessible summary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-	//	console.log(`Accessible summary set: ${config.essential.accessibleSummary}`);
 
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
-	// console.log(`Size set: ${size}`);
-
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
-	let width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	// let height = 400 - margin.top - margin.bottom;
-	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * width
-	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
+	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
+	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 
 
@@ -63,15 +49,15 @@ function drawGraphic() {
 	if (xDataType == 'date') {
 		x = d3.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
-			.range([0, width]);
+			.range([0, chart_width]);
 	} else if (config.essential.xDomain == "auto") {
 		x = d3.scaleLinear()
 			.domain(d3.extent(graphic_data, (d) => +d.date))
-			.range([0, width]);
+			.range([0, chart_width]);
 	} else {
 		x = d3.scaleLinear()
 			.domain(config.essential.xDomain)
-			.range([0, width]);
+			.range([0, chart_width]);
 	}
 	//console.log(`x defined`);
 
@@ -108,14 +94,12 @@ function drawGraphic() {
 
 
 	// Create an SVG element
-	const svg = graphic
-		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('class', 'chart')
-		.style('background-color', '#fff')
-		.append('g')
-		.attr('transform', `translate(${margin.left},${margin.top})`);
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 	//console.log(`SVG element created`);
 
 
@@ -147,7 +131,7 @@ function drawGraphic() {
 			d3
 				.axisLeft(y)
 				.ticks(config.optional.yAxisTicks[size])
-				.tickSize(-width)
+				.tickSize(-chart_width)
 				.tickFormat('')
 		);
 
@@ -283,15 +267,14 @@ function drawGraphic() {
 
 
 	// This does the y-axis label
-	svg
-		.append('g')
-		.attr('transform', `translate(0, 0)`)
-		.append('text')
-		.attr('x', -margin.left + 10)
-		.attr('y', -10)
-		.attr('class', 'axis--label')
-		.text(config.essential.yAxisLabel)
-		.attr('text-anchor', 'start');
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: 10 - margin.left,
+		yPosition: -10,
+		text: config.essential.yAxisLabel,
+		textAnchor: "start",
+		wrapWidth: chart_width
+	});
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
@@ -302,41 +285,6 @@ function drawGraphic() {
 		pymChild.sendHeight();
 	}
 	// console.log(`PymChild height sent`);
-}
-
-//text wrap function for the direct labelling
-
-function wrap(text, width) {
-	text.each(function () {
-		let text = d3.select(this),
-			words = text.text().split(/\s+/).reverse(),
-			word,
-			line = [],
-			lineNumber = 0,
-			lineHeight = 1.1, // ems
-			// y = text.attr("y"),
-			x = text.attr('x'),
-			dy = parseFloat(text.attr('dy')),
-			tspan = text.text(null).append('tspan').attr('x', x);
-		while ((word = words.pop())) {
-			line.push(word);
-			tspan.text(line.join(' '));
-			if (tspan.node().getComputedTextLength() > width) {
-				line.pop();
-				tspan.text(line.join(' '));
-				line = [word];
-				tspan = text
-					.append('tspan')
-					.attr('x', x)
-					.attr('dy', lineHeight + 'em')
-					.text(word);
-			}
-		}
-		let breaks = text.selectAll('tspan').size();
-		text.attr('y', function () {
-			return -6 * (breaks - 1);
-		});
-	});
 }
 
 // Load the data

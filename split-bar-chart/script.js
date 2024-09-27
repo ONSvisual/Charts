@@ -1,6 +1,7 @@
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, colour, plots, chart, headers, rows, splitBar, splitBarInner, finalrow;
 
 function drawGraphic() {
 	// Remove any existing chart elements
@@ -16,10 +17,10 @@ function drawGraphic() {
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
 
-	formatNo = d3.format(config.essential.numberFormat);
+	let formatNo = d3.format(config.essential.numberFormat);
 
 	// set up scale
-	x = d3
+	let x = d3
 		.scaleLinear()
 		.range([0, 100])
 		.domain([
@@ -28,14 +29,14 @@ function drawGraphic() {
 		]);
 
 	// nest data
-	groupedData = d3.groups(
+	let groupedData = d3.groups(
 		graphic_data,
 		(d) => d.plot,
 		(d) => d.ycategory
 	);
 
 	// unique columns
-	xcategories = [...new Set(graphic_data.map((d) => d.xcategory))];
+	let xcategories = [...new Set(graphic_data.map((d) => d.xcategory))];
 
 	if (config.essential.colour_palette_type == 'categorical') {
 		colour = d3

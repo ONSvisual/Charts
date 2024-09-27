@@ -7,3 +7,6 @@ p.groupLabels{
   padding-top:15px;
   font-weight: 600;
 }
+ text{
+  forced-color-adjust: auto;
+ }

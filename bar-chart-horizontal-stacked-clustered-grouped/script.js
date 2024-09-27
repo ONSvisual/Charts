@@ -1,38 +1,25 @@
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, size, svg;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
-	legend.selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;
-	fullwidth = parseInt(graphic.style('width'));
-	chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
 		config.optional.seriesHeight[size] * (graphic_data.length / 2) +
 		10 * (graphic_data.length / 2 - 1) +
 		12;
 
-	groups = d3.groups(graphic_data, (d) => d.group);
+	let groups = d3.groups(graphic_data, (d) => d.group);
 
 	const stack = d3
 		.stack()
@@ -40,7 +27,7 @@ function drawGraphic() {
 		.offset(d3[config.essential.stackOffset])
 		.order(d3[config.essential.stackOrder]);
 
-	categoriesUnique = [...new Set(graphic_data.map((d) => d.sex))];
+	let categoriesUnique = [...new Set(graphic_data.map((d) => d.sex))];
 
 
 	// create the y scale in groups
@@ -87,25 +74,22 @@ function drawGraphic() {
 		// .tickFormat(d => d  + "%")
 		.ticks(config.optional.xAxisTicks[size]);
 
-	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
+	let divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
 	divs
 		.append('p')
 		.attr('class', 'groupLabels')
 		.html((d) => d[0]);
-		
+
 	//remove blank group headings
 	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
 
-	svgs = divs
-		.append('svg')
-		.attr('class', (d) => 'chart chart' + groups.indexOf(d))
-		.attr('height', (d) => d[2] + margin.top + margin.bottom)
-		.attr('width', chart_width + margin.left + margin.right);
-
-	charts = svgs
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	let charts = addSvg({
+		svgParent: divs,
+		chart_width: chart_width,
+		height: (d) => d[2] + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	charts.each(function (d, i) {
 		d3.select(this)
@@ -154,17 +138,14 @@ function drawGraphic() {
 
 		// This does the x-axis label - here only added to the last group
 		if (i == groups.length - 1) {
-			d3.select(this)
-				.append('g')
-				.attr('transform', 'translate(' + 0 + ',' + (d[2] + margin.top) + ')')
-				.append('text')
-				.attr('x', chart_width)
-				.attr('y', 0)
-				.attr('dy', 25)
-				.attr('class', 'axis--label')
-				.text(config.essential.xAxisLabel)
-				.attr('text-anchor', 'end')
-				.call(wrap, chart_width + margin.left);
+			addAxisLabel({
+				svgContainer: d3.select(this),
+				xPosition: chart_width,
+				yPosition: d[2] + 35,
+				text: config.essential.xAxisLabel,
+				textAnchor: "end",
+				wrapWidth: chart_width
+			});
 		}
 
 		// This does the Females label
@@ -175,8 +156,8 @@ function drawGraphic() {
 			.attr('x', 5)
 			.attr(
 				'y',
-				groups[i][3].paddingOuter() * (1/(1-groups[i][3].paddingInner()))*groups[i][3].bandwidth() +
-				groups[i][6].paddingOuter() * (1/(1-groups[i][6].paddingInner()))*groups[i][6].bandwidth()
+				groups[i][3].paddingOuter() * (1 / (1 - groups[i][3].paddingInner())) * groups[i][3].bandwidth() +
+				groups[i][6].paddingOuter() * (1 / (1 - groups[i][6].paddingInner())) * groups[i][6].bandwidth()
 			)
 			.attr('dy', groups[i][6].bandwidth() / 2)
 			.attr('dominant-baseline', 'middle')
@@ -190,15 +171,15 @@ function drawGraphic() {
 		// This does the Males label
 		d3.select(this)
 			.append('g')
-			.attr('transform', 'translate(0,0')
+			.attr('transform', 'translate(0,0)')
 			.append('text')
 			.attr('x', 5)
 			.attr(
 				'y',
-				groups[i][3].paddingOuter() * (1/(1-groups[i][3].paddingInner()))*groups[i][3].bandwidth() +
-				groups[i][6].paddingOuter() * (1/(1-groups[i][6].paddingInner()))*groups[i][6].bandwidth() +
+				groups[i][3].paddingOuter() * (1 / (1 - groups[i][3].paddingInner())) * groups[i][3].bandwidth() +
+				groups[i][6].paddingOuter() * (1 / (1 - groups[i][6].paddingInner())) * groups[i][6].bandwidth() +
 				groups[i][6].bandwidth() +
-				groups[i][6].paddingInner() * (1/(1-groups[i][6].paddingInner()))*groups[i][6].bandwidth()
+				groups[i][6].paddingInner() * (1 / (1 - groups[i][6].paddingInner())) * groups[i][6].bandwidth()
 			)
 			.attr('dy', groups[i][6].bandwidth() / 2)
 			.attr('dominant-baseline', 'middle')
@@ -241,38 +222,6 @@ function drawGraphic() {
 	}
 }
 
-function wrap(text, width) {
-	text.each(function () {
-		let text = d3.select(this),
-			words = text.text().split(/\s+/).reverse(),
-			word,
-			line = [],
-			lineNumber = 0,
-			lineHeight = 1.1, // ems
-			// y = text.attr("y"),
-			x = text.attr('x'),
-			dy = parseFloat(text.attr('dy')),
-			tspan = text.text(null).append('tspan').attr('x', x);
-		while ((word = words.pop())) {
-			line.push(word);
-			tspan.text(line.join(' '));
-			if (tspan.node().getComputedTextLength() > width) {
-				line.pop();
-				tspan.text(line.join(' '));
-				line = [word];
-				tspan = text
-					.append('tspan')
-					.attr('x', x)
-					.attr('dy', lineHeight + 'em')
-					.text(word);
-			}
-		}
-		let breaks = text.selectAll('tspan').size();
-		text.attr('y', function () {
-			return -6 * (breaks - 1);
-		});
-	});
-}
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data

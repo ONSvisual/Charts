@@ -1,28 +1,17 @@
+import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
 const legend = d3.select('#legend');
 let pymChild = null;
+let graphic_data, comparison_data, comparisonPopTotal, comparison_data_new, size, popTotal, graphic_data_new, maxPercentage, width, chart_width, height, xLeft, xRight, y, svg, widths, dataForLegend, titleDivs, lineLeft, lineRight, comparisons;
 
 function drawGraphic() {
-	// clear out existing graphics
-	graphic.selectAll('*').remove();
+	// // clear out existing graphics
 	titles.selectAll('*').remove();
-	legend.selectAll('*').remove();
 
-	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
-
-	let threshold_md = config.optional.mediumBreakpoint;
-	let threshold_sm = config.optional.mobileBreakpoint;
-
-	//set variables for chart dimensions dependent on width of #graphic
-	if (parseInt(graphic.style('width')) < threshold_sm) {
-		size = 'sm';
-	} else if (parseInt(graphic.style('width')) < threshold_md) {
-		size = 'md';
-	} else {
-		size = 'lg';
-	}
+	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
+	size = initialise(size);
 
 	let margin = config.optional.margin[size];
 	margin.centre = config.optional.margin.centre;
@@ -97,7 +86,7 @@ function drawGraphic() {
 	]);
 
 	// set up widths
-	fullwidth = parseInt(graphic.style('width'));
+	width = parseInt(graphic.style('width'));
 	chart_width = (parseInt(graphic.style('width')) - margin.centre - margin.left - margin.right) / 2;
 	height = (graphic_data_new.length / 2) * config.optional.seriesHeight[size];
 
@@ -121,13 +110,12 @@ function drawGraphic() {
 		.paddingInner(0.1);
 
 	// create the svg
-	svg = graphic
-		.append('svg')
-		.attr('class', 'chart')
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('width', fullwidth)
-		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	svg = addSvg({
+		svgParent: graphic,
+		chart_width: width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	// create line generators
 	lineLeft = d3
@@ -236,31 +224,25 @@ function drawGraphic() {
 		.attr('stroke', config.essential.comparison_colour_palette[1])
 		.attr('stroke-width', '2px');
 
-	//add x-axis titles
-	svg
-		.append('text')
-		.attr(
-			'transform',
-			'translate(' +
-				(fullwidth - margin.left) +
-				',' +
-				(height + 30) +
-				')'
-		)
-		.attr('class', 'axis--label')
-		.attr('text-anchor', 'end')
-		.text(config.essential.xAxislabel);
+	//add x-axis label
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: (width - margin.left),
+		yPosition: (height + 30),
+		text: config.essential.xAxisLabel,
+		textAnchor: "end",
+		wrapWidth: width
+	});
 
-	//add y-axis title
-	svg
-		.append('text')
-		.attr(
-			'transform',
-			'translate(' + (chart_width + margin.centre / 2) + ',-15)'
-		)
-		.attr('class', 'axis--label')
-		.attr('text-anchor', 'middle')
-		.text(config.essential.yAxislabel);
+	//add y-axis label
+	addAxisLabel({
+		svgContainer: svg,
+		xPosition: (chart_width + margin.centre / 2),
+		yPosition: -15,
+		text: config.essential.yAxisLabel,
+		textAnchor: "middle",
+		wrapWidth: width
+	});
 
 	widths = [chart_width + margin.left, chart_width + margin.right];
 

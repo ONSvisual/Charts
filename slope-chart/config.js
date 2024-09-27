@@ -31,9 +31,7 @@ config = {
 		},
 		"xAxisNumberFormat": ".0f",
 		"yAxisNumberFormat": ",.0f",
-		"dateFormat": "%d-%m-%Y",
-		"yAxisLabel": "",
-		"xAxisLabel": ""
+		"dateFormat": "%d-%m-%Y"
 	},
 	"optional": {
 		// default is 75
@@ -45,17 +43,19 @@ config = {
 		"margin": {
 			"sm": {
 				"top": 30,
-				// "right": //Not needed - right margin calculated from chartwidth etc.
+				"right": 0, //Not needed - right margin calculated from chartwidth etc.
 				"bottom": 25,
 				"left": 70
 			},
 			"md": {
 				"top": 30,
+				"right": 0, //Not needed - right margin calculated from chartwidth etc.
 				"bottom": 15,
 				"left": 70
 			},
 			"lg": {
 				"top": 30,
+				"right": 0, //Not needed - right margin calculated from chartwidth etc.
 				"bottom": 15,
 				"left": 70
 			}
