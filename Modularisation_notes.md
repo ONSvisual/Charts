@@ -37,9 +37,8 @@ Becomes:
     wrapWidth: chart_width 
     }); 
 
-## Charts that have been modularised so far
+## General notes
 
-Please add to this list any that you have done.
+- The aim of passing an object of variables to the function is to make things readable and allows for default values – if one of the variables isn’t passed to the function it will use the default value from helpers.js instead, where one exists. 
 
-- Bar-chart-horizontal
-- Bar-chart-horizontal-with-reference-sm
+- This modular approach to templates has been tested in all major browser + OS combinations as set out in https://www.gov.uk/service-manual/technology/designing-for-different-browsers-and-devices
