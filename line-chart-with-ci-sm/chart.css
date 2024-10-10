@@ -48,10 +48,17 @@
     width: 12px;
     align-self: center;
     flex-shrink: 0;
+    forced-color-adjust: none;
   }
 
   .legend--itemCI {
   display: flex;
   padding-right: 40px;
   padding-bottom: 12px;
+}
+
+@media (forced-colors: active) {
+  .shaded {
+    opacity: 0.5
+  }
 }

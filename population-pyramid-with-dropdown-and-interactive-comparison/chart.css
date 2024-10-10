@@ -18,6 +18,7 @@ div#titles {
 /* buttons */
 div#select{
     margin-bottom: 20px;
+    forced-color-adjust: none;
 }
 
 .legend--icon--circle{

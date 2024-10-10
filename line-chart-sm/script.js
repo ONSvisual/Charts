@@ -160,7 +160,9 @@ function drawGraphic() {
 				.attr('d', (d, i) => lineGenerator(d[categoriesToPlot.indexOf(category)][1]))
 				.style('stroke-linejoin', 'round')
 				.style('stroke-linecap', 'round')
-				.attr('class', 'line' + categoriesToPlot.indexOf(category));
+				.attr('class', 'line' + categoriesToPlot.indexOf(category) + 
+				((categoriesToPlot.indexOf(category) == chartIndex) ? " selected" :
+				category == reference ? " reference" : " other"));
 
 			svg.selectAll('.line' + chartIndex).attr('stroke-width', 2.5).raise()
 
@@ -192,6 +194,7 @@ function drawGraphic() {
 				if (categories.indexOf(category) == chartIndex) {
 					svg
 						.append('circle')
+						.attr('class', 'selected')
 						.attr('cx', x(lastDatum.date))
 						.attr('cy', y(lastDatum[category]))
 						.attr('r', 3)
@@ -316,11 +319,11 @@ function drawGraphic() {
 		.data([[config.essential.legendLabel, config.essential.colour_palette[0]], [reference, config.essential.colour_palette[1]], [config.essential.allLabel, config.essential.colour_palette[2]]])
 		.enter()
 		.append('div')
-		.attr('class', 'legend--item');
+		.attr('class','legend--item');
 
 	legenditem
 		.append('div')
-		.attr('class', 'legend--icon--refline')
+		.attr('class', (d,i) =>  'legend--icon--refline legend--icon--refline' + i)
 		.style('background-color', function (d) {
 			return d[1];
 		});

@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		"colour_palette": [
-			"#003C57",
+			"#206095",
 			"#27A0CC",
 			"#dadada"
 		],

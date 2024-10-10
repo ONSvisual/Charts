@@ -179,6 +179,7 @@ function drawGraphic() {
 		.attr("fill", "#414042")
 		.attr("font-size", "14px")
 		.attr("pointer-events", "none")
+		.attr('class', 'tooltip-text')
 
 	// This does the x-axis label
 	addAxisLabel({

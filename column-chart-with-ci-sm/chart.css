@@ -26,3 +26,13 @@
   font-weight: 600;
   fill: #414042;
 }
+
+.CI {
+  forced-color-adjust: auto;
+}
+
+@media (forced-colors: active) {
+  .CI {
+    stroke-width: 3px;
+  }
+}

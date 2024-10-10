@@ -118,6 +118,7 @@ function drawGraphic() {
 				.defined(d => d[`${category}_lowerCI`] !== null && d[`${category}_upperCI`] !== null) // Only plot areas where we have values
 
 			svg.append('path')
+				.attr('class', 'shaded')
 				.attr('d', areaGenerator(data))
 				.attr('fill', config.essential.colour_palette[
 					categories.indexOf(category) % config.essential.colour_palette.length
