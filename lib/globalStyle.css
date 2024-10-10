@@ -257,6 +257,10 @@ h5#source {
   margin: 0;
 }
 
+.title {
+  font-weight: 600;
+  fill: #414042;
+}
 
 @media (max-width: 400px) {
   #legend {
