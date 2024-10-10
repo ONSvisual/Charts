@@ -90,12 +90,12 @@ function drawGraphic() {
 			chart_width * (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) - margin.top - margin.bottom;
 
 		// Define the x and y scales
-		const xAxis = d3
+		const x = d3
 			.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
 			.range([0, chart_width]);
 
-		const yAxis = d3
+		const y = d3
 			.scaleLinear()
 			.domain([0, d3.max(graphic_data, (d) => d3.sum(categories, (c) => d[c]))])
 			.range([height, 0]);
@@ -125,9 +125,9 @@ function drawGraphic() {
 				'd',
 				d3
 					.area()
-					.x((d) => xAxis(d.data.date))
-					.y0((d) => yAxis(d[0]))
-					.y1((d) => yAxis(d[1]))
+					.x((d) => x(d.data.date))
+					.y0((d) => y(d[0]))
+					.y1((d) => y(d[1]))
 			)
 			.attr('fill', (d) => colorScale(d.key));
 
@@ -138,7 +138,7 @@ function drawGraphic() {
 			.attr('transform', `translate(0, ${height})`)
 			.call(
 				d3
-					.axisBottom(xAxis)
+					.axisBottom(x)
 					.tickValues(data
 						.map(function (d) {
 							return d.date.getTime()
@@ -164,7 +164,7 @@ function drawGraphic() {
 		svg
 			.append('g')
 			.attr('class', 'y axis numeric')
-			.call(d3.axisLeft(yAxis)
+			.call(d3.axisLeft(y)
 				.tickSize(calculateTickSize())
 				.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
 					chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""));

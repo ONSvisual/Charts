@@ -59,7 +59,7 @@ function drawGraphic() {
 			aspectRatio[1] / aspectRatio[0] * chart_width;
 
 		// Define the x and y scales
-		const xAxis = d3
+		const x = d3
 			.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
 			.range([0, chart_width]);
@@ -89,7 +89,7 @@ function drawGraphic() {
 		categories.forEach(function (category) {
 			const lineGenerator = d3
 				.line()
-				.x((d) => xAxis(d.date))
+				.x((d) => x(d.date))
 				.y((d) => y(d[category]))
 				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null)
@@ -140,7 +140,7 @@ console.log(data)
 			.attr('transform', `translate(0, ${height})`)
 			.call(
 				d3
-					.axisBottom(xAxis)
+					.axisBottom(x)
 					.tickValues([...new Set(graphic_data
 						.map(function (d) {
 							return d.date.getTime()
