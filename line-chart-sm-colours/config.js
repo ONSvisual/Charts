@@ -68,7 +68,7 @@ config = {
 		"chartGap": 20,
 		"xAxisTicksEvery": { // this is the interval of ticks on the x axis but it will always show the first and last date.
 			"sm": 4,
-			"md": 2,
+			"md": 4,
 			"lg": 3
 		},
 		"yAxisTicks": {
