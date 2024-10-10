@@ -58,7 +58,9 @@ function drawGraphic() {
 	});
 
 	//set up xAxis generator
-	let xAxis = d3.axisBottom(x).ticks(config.optional.xAxisTicks[size]);
+	let xAxis = d3.axisBottom(x)
+		.ticks(config.optional.xAxisTicks[size])
+		.tickFormat(d3.format(config.essential.xAxisNumberFormat));
 
 	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 

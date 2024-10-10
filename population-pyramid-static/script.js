@@ -100,7 +100,7 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(xLeft)
-				.tickFormat(d3.format('.1%'))
+				.tickFormat(d3.format(config.essential.xAxisNumberFormat))
 				.ticks(config.optional.xAxisTicks[size])
 				.tickSize(-height)
 		)
@@ -119,7 +119,7 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(xRight)
-				.tickFormat(d3.format('.1%'))
+				.tickFormat(d3.format(config.essential.xAxisNumberFormat))
 				.ticks(config.optional.xAxisTicks[size])
 				.tickSize(-height)
 		)

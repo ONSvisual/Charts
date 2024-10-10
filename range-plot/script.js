@@ -60,7 +60,7 @@ function drawGraphic() {
 	//set up xAxis generator
 	let xAxis = d3.axisBottom(x)
 		.ticks(config.optional.xAxisTicks[size])
-		.tickFormat(d => d3.format(config.essential.xAxisTickFormat)(d));
+		.tickFormat(d3.format(config.essential.xAxisTickFormat));
 
 	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 

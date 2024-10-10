@@ -18,6 +18,7 @@ config = {
 			"md": "%Y",
 			"lg": "%Y"
 		},
+		"yAxisTickFormat": ".0%",
 		"dateFormat": "%Y",
 		"xAxisLabel": "x axis label",
 		"yAxisLabel": "y axis label",

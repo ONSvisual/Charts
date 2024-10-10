@@ -5,7 +5,8 @@ config = {
 		"colour_palette": ["#A09FA0", "#206095"],
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary":
-			"CHere is the screenreader text describing the chart.",
+			"Here is the screenreader text describing the chart.",
+		"xAxisNumberFormat": ".0f",
 		"xAxisLabel": "x axis label",
 		"xDomain": "auto"
 		// either auto or a custom domain as an array e.g [0,100]

@@ -130,7 +130,8 @@ function drawGraphic() {
 	svg
 		.append('g')
 		.attr('class', 'y axis numeric')
-		.call(d3.axisLeft(y).tickFormat(d3.format('.0%')));
+		.call(d3.axisLeft(y)
+			.tickFormat(d3.format(config.essential.yAxisTickFormat)));
 
 	//This does the x-axis label
 	addAxisLabel({
