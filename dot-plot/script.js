@@ -31,7 +31,8 @@ function drawGraphic() {
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.ticks(config.optional.xAxisTicks[size]);
+		.ticks(config.optional.xAxisTicks[size])
+		.tickFormat(d3.format(config.essential.xAxisNumberFormat));
 
 	// Set up the legend
 	let legenditem = d3

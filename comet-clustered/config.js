@@ -11,6 +11,7 @@ config = {
 		"accessibleSummary":
 			"The chart canvas is hidden from screen readers. The main message is summarised by the chart title and the data behind the chart is available to download below.",
 		"numberFormat": ".1f",
+		"xAxisNumberFormat": ".0f",
 		"numberSuffix": "",
 		"xAxisLabel": "£ billion",
 		// "xDomain": "auto",
