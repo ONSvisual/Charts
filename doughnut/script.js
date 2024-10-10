@@ -43,7 +43,6 @@ function drawGraphic() {
         .attr('width', chart_width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .attr('class', 'chart')
-        .style('background-color', '#fff')
         .append('g')
         .attr('transform', 'translate(' + 0 + ',' + (margin.top) + ')');
 

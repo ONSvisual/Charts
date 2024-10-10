@@ -19,6 +19,7 @@ div#titles {
 fieldset {
     border: none;
     padding: 0 0 0 0;
+    forced-color-adjust: none;
 }
 
 input[type="radio"] {
@@ -48,6 +49,7 @@ input[type="radio"] {
     padding-bottom: 4px;
     margin-right:-1px;
     color: #206095;
+    background: white;
 }
 
 input[type="radio"]:checked+label {

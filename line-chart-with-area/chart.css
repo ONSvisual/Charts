@@ -25,4 +25,11 @@
     /* border-radius: 50%; */
     align-self: center;
     flex-shrink: 0;
+    forced-color-adjust: none;
+  }
+
+  @media (forced-colors: active) {
+    .shaded {
+      opacity: 0.5
+    }
   }

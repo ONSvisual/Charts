@@ -18,6 +18,7 @@ div#titles {
 /* dropdown */
 div#select{
     margin-bottom: 20px;
+    forced-color-adjust: none;
 }
 
 .legend--icon--circle{
