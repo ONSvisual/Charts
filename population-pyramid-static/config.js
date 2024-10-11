@@ -10,6 +10,7 @@ config = {
 		// this is the darker palette when there are no comparison lines  ["#6749A6","#2EA1A4"]
 		"legend": ["Variable name"],
 		"xAxisNumberFormat": ".1%",
+		"yAxisTicksEvery": 10,
 		"xAxisLabel": "Percentage",
 		"yAxisLabel": "Age"
 	},

@@ -286,7 +286,7 @@ function drawGraphic() {
 			d3
 				.axisRight(y)
 				.tickSize(0)
-				.tickValues(y.domain().filter((d, i) => !(i % 10)))
+				.tickValues(y.domain().filter((d, i) => !(i % config.essential.yAxisTicksEvery)))
 		)
 		.selectAll('text')
 		.each(function () {
