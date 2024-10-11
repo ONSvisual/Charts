@@ -263,6 +263,12 @@ h5#source {
   fill: #414042;
 }
 
+/* Chart titles for grouped charts */
+p.groupLabels {
+  padding-top:15px;
+  font-weight: 600;
+  margin: 0;
+}
 @media (max-width: 400px) {
   #legend {
     flex-flow: column;

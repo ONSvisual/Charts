@@ -1,12 +1,8 @@
-.dataLabels{
+.dataLabels {
   font-weight: 600;
   font-size: 14px;
 }
 
-p.groupLabels{
-  padding-top:15px;
-  font-weight: 600;
-}
- text{
+text {
   forced-color-adjust: auto;
- }
+}
