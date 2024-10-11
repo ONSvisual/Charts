@@ -223,7 +223,7 @@ console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	// Add the y-axis
 	svg
 		.append('g')
-		.attr('class', 'y axis')
+		.attr('class', 'y axis numeric')
 		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
 			.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
 

@@ -264,12 +264,12 @@ function drawGraphic() {
 		if (chartIndex % chartsPerRow === 0) {
 			svg
 				.append('g')
-				.attr('class', 'y axis')
+				.attr('class', 'y axis numeric')
 				.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]))
 				.selectAll('.tick text')
 				.call(wrap, margin.left - 10);
 		} else {
-			svg.append('g').attr('class', 'y axis').call(d3.axisLeft(y).tickValues([]));
+			svg.append('g').attr('class', 'y axis numeric').call(d3.axisLeft(y).tickValues([]));
 		}
 
 

@@ -257,6 +257,7 @@ h5#source {
   margin: 0;
 }
 
+/* Chart titles for small multiples */
 .title {
   font-weight: 600;
   fill: #414042;

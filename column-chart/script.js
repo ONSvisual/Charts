@@ -101,7 +101,7 @@ function drawGraphic() {
 
 	svg
 		.append('g')
-		.attr('class', 'y axis')
+		.attr('class', 'y axis numeric')
 		.call(yAxis)
 		.selectAll('line')
 		.each(function (d) {

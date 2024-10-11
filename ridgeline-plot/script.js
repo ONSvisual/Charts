@@ -71,7 +71,7 @@ function drawGraphic() {
 
 	chart_g
 		.append('g')
-		.attr('class', 'y axis')
+		.attr('class', 'y axis numeric')
 		.call(yAxis)
 		.selectAll('text')
 		.attr('dy', '15px') // Adjust the vertical position of the labels using pixels
