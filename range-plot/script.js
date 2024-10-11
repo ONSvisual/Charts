@@ -115,7 +115,7 @@ function drawGraphic() {
 		.join('circle')
 		.attr('class', 'min')
 		.attr('cx', (d) => x(d.min))
-		.attr('cy', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+		.attr('cy', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) - 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 		.attr('r', 6)
 		.attr('fill', colour('min'));
 
@@ -125,7 +125,7 @@ function drawGraphic() {
 		.join('circle')
 		.attr('class', 'max')
 		.attr('cx', (d) => x(d.max))
-		.attr('cy', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+		.attr('cy', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) + 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 		.attr('r', 6)
 		.attr('fill', colour('max'));
 
@@ -136,7 +136,7 @@ function drawGraphic() {
 			.join('text')
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.min))
-			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.attr('y', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) - 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 			.text((d) => d3.format(config.essential.numberFormat)(d.min))
 			.attr('fill', colour('min'))
 			.attr('dy', 6)
@@ -149,7 +149,7 @@ function drawGraphic() {
 			.join('text')
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.max))
-			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.attr('y', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) + 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 			.text((d) => d3.format(config.essential.numberFormat)(d.max))
 			.attr('fill', colour('max'))
 			.attr('dy', 6)

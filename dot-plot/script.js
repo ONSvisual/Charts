@@ -109,7 +109,7 @@ function drawGraphic() {
 			return x(d.min);
 		})
 		.attr('cy', function (d) {
-			return y(d.name);
+			return Math.abs(x(d.max) - x(d.min)) < 3 ? y(d.name) - 3 : y(d.name);
 		});
 
 	svg
@@ -124,7 +124,7 @@ function drawGraphic() {
 			return x(d.max);
 		})
 		.attr('cy', function (d) {
-			return y(d.name);
+			return Math.abs(x(d.max) - x(d.min)) < 3 ? y(d.name) + 3 : y(d.name);
 		});
 
 	addAxisLabel({
