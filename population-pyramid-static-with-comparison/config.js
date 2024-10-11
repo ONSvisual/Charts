@@ -12,6 +12,7 @@ config = {
 		"comparison_colour_palette": ["#5c5185", "#306970"],
 		"legend": ["Area name", "England and Wales"],
 		"xAxisNumberFormat": ".1%",
+		"yAxisTicksEvery": 10,
 		"xAxisLabel": "Percentage",
 		"yAxisLabel": "Age"
 	},
