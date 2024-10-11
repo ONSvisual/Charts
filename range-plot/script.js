@@ -64,10 +64,7 @@ function drawGraphic() {
 
 	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
-	divs
-		.append('p')
-		.attr('class', 'groupLabels')
-		.html((d) => d[0]);
+	if (groups.length > 1) { divs.append('p').attr('class', 'groupLabels').html((d) => d[0]) }
 
 	charts = addSvg({
 		svgParent: divs,

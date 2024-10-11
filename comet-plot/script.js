@@ -64,17 +64,14 @@ function drawGraphic() {
 
 	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
-	divs
-		.append('p')
-		.attr('class', 'groupLabels')
-		.html((d) => d[0]);
+	if (groups.length > 1) { divs.append('p').attr('class', 'groupLabels').html((d) => d[0]) }
 
-  let charts = addSvg({
-    svgParent: divs,
-    chart_width: chart_width,
-    height: (d) => d[2] + margin.top + margin.bottom,
-    margin: margin
-  })
+	let charts = addSvg({
+		svgParent: divs,
+		chart_width: chart_width,
+		height: (d) => d[2] + margin.top + margin.bottom,
+		margin: margin
+	})
 
 	charts.each(function (d) {
 		d3.select(this)
@@ -113,8 +110,8 @@ function drawGraphic() {
 			+d.min > +d.max
 				? config.essential.colour_palette[1]
 				: +d.min < +d.max
-				? config.essential.colour_palette[0]
-				: config.essential.colour_palette[2]
+					? config.essential.colour_palette[0]
+					: config.essential.colour_palette[2]
 		)
 		.attr('stroke-width', '3px');
 
@@ -139,8 +136,8 @@ function drawGraphic() {
 			+d.min > +d.max
 				? config.essential.colour_palette[1]
 				: +d.min < +d.max
-				? config.essential.colour_palette[0]
-				: config.essential.colour_palette[2]
+					? config.essential.colour_palette[0]
+					: config.essential.colour_palette[2]
 		);
 
 	if (config.essential.showDataLabels == true) {
@@ -156,8 +153,8 @@ function drawGraphic() {
 				+d.min > +d.max
 					? config.essential.colour_palette[1]
 					: +d.min < +d.max
-					? config.essential.colour_palette[0]
-					: 'none'
+						? config.essential.colour_palette[0]
+						: 'none'
 			)
 			.attr('dy', 6)
 			.attr('dx', (d) => (+d.min < +d.max ? -5 : 5))
@@ -175,8 +172,8 @@ function drawGraphic() {
 				+d.min > +d.max
 					? config.essential.colour_palette[1]
 					: +d.min < +d.max
-					? config.essential.colour_palette[0]
-					: config.essential.colour_palette[2]
+						? config.essential.colour_palette[0]
+						: config.essential.colour_palette[2]
 			)
 			.attr('dy', 6)
 			.attr('dx', (d) =>
@@ -197,7 +194,7 @@ function drawGraphic() {
 				text: config.essential.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
-				});
+			});
 		}
 	});
 
@@ -267,9 +264,9 @@ function drawGraphic() {
 			.attr(
 				'x',
 				minTextWidth +
-					config.essential.legendLineLength +
-					config.essential.dotsize +
-					5
+				config.essential.legendLineLength +
+				config.essential.dotsize +
+				5
 			)
 			.attr('text-anchor', 'start')
 			.attr('class', 'maxtext legendLabel')
@@ -288,7 +285,7 @@ function drawGraphic() {
 					config.essential.legendLineLength +
 					config.essential.dotsize +
 					maxTextWidth) /
-					2
+				2
 			)
 			.attr('text-anchor', 'middle')
 			.attr('class', 'legendLabel')
@@ -306,8 +303,8 @@ function drawGraphic() {
 			.attr(
 				'x2',
 				maxTextWidth +
-					config.essential.dotsize +
-					config.essential.legendLineLength
+				config.essential.dotsize +
+				config.essential.legendLineLength
 			);
 
 		var_group2
@@ -332,9 +329,9 @@ function drawGraphic() {
 			.attr(
 				'x',
 				maxTextWidth +
-					config.essential.legendLineLength +
-					config.essential.dotsize +
-					5
+				config.essential.legendLineLength +
+				config.essential.dotsize +
+				5
 			)
 			.attr('text-anchor', 'start')
 			.attr('class', 'legendLabel')
@@ -350,7 +347,7 @@ function drawGraphic() {
 					config.essential.legendLineLength +
 					config.essential.dotsize +
 					minTextWidth) /
-					2
+				2
 			)
 			.attr('text-anchor', 'middle')
 			.attr('class', 'legendLabel')

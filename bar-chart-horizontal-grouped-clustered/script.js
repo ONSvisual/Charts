@@ -79,7 +79,7 @@ function drawGraphic() {
 		.data(groups)
 		.join('div')
 
-	divs.append('p').attr('class', 'groupLabels').html((d) => d[0])
+	if (groups.length > 1) { divs.append('p').attr('class', 'groupLabels').html((d) => d[0]) }
 
 	//remove any blank headings
 	divs.selectAll('p').filter((d) => (d[0] == "")).remove()
