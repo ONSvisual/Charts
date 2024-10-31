@@ -1,4 +1,5 @@
 import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical } from "../lib/helpers.js";
+import { AnnotationGUI } from "../lib/annotations-gui.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -111,177 +112,186 @@ function drawGraphic() {
   // ("svg") is the reference for the object you are appending to. In most of our templates it will be svg 
   setupArrowhead(d3.select("svg"));
 
+  const svg2 = document.querySelector('svg');
+  const chartConfig = {
+    height: height,
+    xScale: x,
+    yScale: y
+  };
 
-  // adds annoation arrow and text 
-  // note - you need to add the setupArrowhead line above
-  addAnnotationArrow(
-
-    //name of the svg you're adding to 
-    svg,
-
-    //x and y values of your data point
-
-    x(0.48),
-
-    y("Arts") + y.bandwidth() / 2,
-
-    //offset from your data point to arrowhead (x and y values)
-    10, 10,
-
-    //arrow length x and y
-    60, 80,
-
-    //curve direction (choose 'left' or 'right'). If blank the default is left
-    "left",
-
-    //annotation text
-    "An arrow annotation, also known as a point annotation",
-
-    //annotation text position - 'above', 'left', 'below' or 'right' 
-    //this determines the position and alignment of the text relative to the arrow
-    "below",
-
-    //wrap width
-    x(1) - x(0.5)
-  );
+const annotationGui = new AnnotationGUI(svg2, chartConfig);
 
 
-  //adds vertical annotation line and text
-  addAnnotationLineVertical(
+  // // adds annoation arrow and text 
+  // // note - you need to add the setupArrowhead line above
+  // addAnnotationArrow(
 
-    //name of the svg you're adding to 
-    svg,
+  //   //name of the svg you're adding to 
+  //   svg,
 
-    // chart height. Will normally be height
-    height,
+  //   //x and y values of your data point
 
-    //x postion
-    x(0.20),
+  //   x(0.48),
 
-    // text
-    'A vertical annotation line',
+  //   y("Arts") + y.bandwidth() / 2,
 
-    //text position ('left' or 'right' of the line)
-    'right',
+  //   //offset from your data point to arrowhead (x and y values)
+  //   10, 10,
 
-    //y positon of text
-    20,
+  //   //arrow length x and y
+  //   60, 80,
 
-    //wrap width
-    150,
-    //Move the line to the back (default should be false)
-    false
-  )
-  //   ;
+  //   //curve direction (choose 'left' or 'right'). If blank the default is left
+  //   "left",
 
+  //   //annotation text
+  //   "An arrow annotation, also known as a point annotation",
 
-  // adds vertical annotation range and text
-  //// n.b. adds band like the other annotations after plotting your chart (the rectangle is moved below the chart, while text remains on top)
+  //   //annotation text position - 'above', 'left', 'below' or 'right' 
+  //   //this determines the position and alignment of the text relative to the arrow
+  //   "below",
 
-  addAnnotationRangeVertical(
-    //name of the svg you're adding to 
-    svg,
-
-    // chart height. Will normally be height
-    height,
-
-    //band start value
-    x(0.6),
-
-    //band end value
-    x(1),
-
-    // text
-    'A vertical annotation range',
-
-    //text position relative to the band (choose 'left' or 'right')
-    'left',
-
-    //text position inside or outside band (chose 'inside' or 'outside' )
-    'inside',
-
-    //y positon of text
-    height - 20,
-
-    //wrap width
-
-    x(1) - x(0.6),
+  //   //wrap width
+  //   x(1) - x(0.5)
+  // );
 
 
-  )
+  // //adds vertical annotation line and text
+  // addAnnotationLineVertical(
+
+  //   //name of the svg you're adding to 
+  //   svg,
+
+  //   // chart height. Will normally be height
+  //   height,
+
+  //   //x postion
+  //   x(0.20),
+
+  //   // text
+  //   'A vertical annotation line',
+
+  //   //text position ('left' or 'right' of the line)
+  //   'right',
+
+  //   //y positon of text
+  //   20,
+
+  //   //wrap width
+  //   150,
+  //   //Move the line to the back (default should be false)
+  //   false
+  // )
+  // //   ;
+
+
+  // // adds vertical annotation range and text
+  // //// n.b. adds band like the other annotations after plotting your chart (the rectangle is moved below the chart, while text remains on top)
+
+  // addAnnotationRangeVertical(
+  //   //name of the svg you're adding to 
+  //   svg,
+
+  //   // chart height. Will normally be height
+  //   height,
+
+  //   //band start value
+  //   x(0.6),
+
+  //   //band end value
+  //   x(1),
+
+  //   // text
+  //   'A vertical annotation range',
+
+  //   //text position relative to the band (choose 'left' or 'right')
+  //   'left',
+
+  //   //text position inside or outside band (chose 'inside' or 'outside' )
+  //   'inside',
+
+  //   //y positon of text
+  //   height - 20,
+
+  //   //wrap width
+
+  //   x(1) - x(0.6),
+
+
+  // )
 
 
 
-  //adds direction arrow
-  addDirectionArrow(
-    //name of your svg, normally just SVG
-    svg,
-    //direction of arrow: left, right, up or down
-    'right',
+  // //adds direction arrow
+  // addDirectionArrow(
+  //   //name of your svg, normally just SVG
+  //   svg,
+  //   //direction of arrow: left, right, up or down
+  //   'right',
 
-    //anchor end or start (end points the arrow towards your x value, start points away)
-    'end',
+  //   //anchor end or start (end points the arrow towards your x value, start points away)
+  //   'end',
 
-    //x value
-    x(1),
+  //   //x value
+  //   x(1),
 
-    //y value
-    10,
+  //   //y value
+  //   10,
 
-    //alignment - left or right for vertical arrows, above or below for horizontal arrows
-    'right',
+  //   //alignment - left or right for vertical arrows, above or below for horizontal arrows
+  //   'right',
 
-    //annotation text
-    "A direction arrow, with end anchor",
+  //   //annotation text
+  //   "A direction arrow, with end anchor",
 
-    //wrap width
-    200,
+  //   //wrap width
+  //   200,
 
-    //text adjust y
-    0,
+  //   //text adjust y
+  //   0,
 
-    //Text vertical align: top, middle or bottom (default is middle)
-    'bottom',
-    //
+  //   //Text vertical align: top, middle or bottom (default is middle)
+  //   'bottom',
+  //   //
 
-    // you can also optionally add a colour here to make the arrow (but not text) a different colour
-  )
+  //   // you can also optionally add a colour here to make the arrow (but not text) a different colour
+  // )
 
 
-  //adds direction arrow
-  addDirectionArrow(
-    //name of your svg, normally just SVG
-    svg,
-    //direction of arrow: left, right, up or down
-    'right',
+  // //adds direction arrow
+  // addDirectionArrow(
+  //   //name of your svg, normally just SVG
+  //   svg,
+  //   //direction of arrow: left, right, up or down
+  //   'right',
 
-    //anchor end or start (end points the arrow towards your x value, start points away)
-    'start',
+  //   //anchor end or start (end points the arrow towards your x value, start points away)
+  //   'start',
 
-    //x value
-    x(0.2),
+  //   //x value
+  //   x(0.2),
 
-    //y value
-    height - 15,
+  //   //y value
+  //   height - 15,
 
-    //alignment - left or right for vertical arrows, above or below for horizontal arrows
-    'right',
+  //   //alignment - left or right for vertical arrows, above or below for horizontal arrows
+  //   'right',
 
-    //annotation text
-    "A direction anchor",
+  //   //annotation text
+  //   "A direction anchor",
 
-    //wrap width
-    200,
+  //   //wrap width
+  //   200,
 
-    //text adjust y (probably not needed but if you need to adjust the vertical position of the text if it's not looking aligned)
-    0,
+  //   //text adjust y (probably not needed but if you need to adjust the vertical position of the text if it's not looking aligned)
+  //   0,
 
-    //Text vertical align: top, middle or bottom (default is middle)
-    'middle',
-    //
+  //   //Text vertical align: top, middle or bottom (default is middle)
+  //   'middle',
+  //   //
 
-    // you can also optionally add a colour here to make the arrow a different colour. This won't change the text colour
-  )
+  //   // you can also optionally add a colour here to make the arrow a different colour. This won't change the text colour
+  // )
 
   //create link to source
   d3.select("#source")
