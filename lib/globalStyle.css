@@ -176,8 +176,8 @@ svg.chart .axis line {
 /* this sets zero line */
 
 g.tick line.zero-line {
-  stroke: #B3B3B3;
-  stroke-width: 1.5px;
+  stroke: #a0a0a0;
+  stroke-width: 2px;
   shape-rendering: crispEdges;
 }
 
@@ -257,18 +257,7 @@ h5#source {
   margin: 0;
 }
 
-/* Chart titles for small multiples */
-.title {
-  font-weight: 600;
-  fill: #414042;
-}
 
-/* Chart titles for grouped charts */
-p.groupLabels {
-  padding-top:15px;
-  font-weight: 600;
-  margin: 0;
-}
 @media (max-width: 400px) {
   #legend {
     flex-flow: column;
@@ -313,6 +302,24 @@ p.groupLabels {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2px;
+}
+
+.mobile-annotation-circle{
+  stroke: #414042;
+  stroke-width:1px ;
+  fill:white;
+}
+
+.mobile-annotation-circle-text{
+  fill: #414042 ;
+  font-weight:400;
+  font-size:14px;
+  
+}
+
+
+.mobile-annotation-footnote-row{
+  padding-bottom:3px;
 }
 
 /* Adjusted colours for high-contrast mode */

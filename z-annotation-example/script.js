@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical, addAnnotationText } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -107,44 +107,6 @@ function drawGraphic() {
 
 
 
-  //setup the arrowhead marker
-  // ("svg") is the reference for the object you are appending to. In most of our templates it will be svg 
-  setupArrowhead(d3.select("svg"));
-
-
-  // adds annoation arrow and text 
-  // note - you need to add the setupArrowhead line above
-  addAnnotationArrow(
-
-    //name of the svg you're adding to 
-    svg,
-
-    //x and y values of your data point
-
-    x(0.48),
-
-    y("Arts") + y.bandwidth() / 2,
-
-    //offset from your data point to arrowhead (x and y values)
-    10, 10,
-
-    //arrow length x and y
-    60, 80,
-
-    //curve direction (choose 'left' or 'right'). If blank the default is left
-    "left",
-
-    //annotation text
-    "An arrow annotation, also known as a point annotation",
-
-    //annotation text position - 'above', 'left', 'below' or 'right' 
-    //this determines the position and alignment of the text relative to the arrow
-    "below",
-
-    //wrap width
-    x(1) - x(0.5)
-  );
-
 
   //adds vertical annotation line and text
   addAnnotationLineVertical(
@@ -169,10 +131,112 @@ function drawGraphic() {
 
     //wrap width
     150,
+  
+    //turn on mobile alternative annotations
+    true,
+
+    //number of the annotation (will be the number in the circle and the coresponding footnote.) Note: we are looking at a way to automate this. 
+    1,
+
+    //adjusts the position of the mobile circle (x,y)
+    0, 0,
+ 
     //Move the line to the back (default should be false)
-    false
+    false,
+   //leave as 'size' - you shouldn't have to change this. It's a condition to ensure that the 'size' variable is brought back into the helper function
+   size
+
   )
   //   ;
+
+
+
+  //setup the arrowhead marker
+  // ("svg") is the reference for the object you are appending to. In most of our templates it will be svg 
+  setupArrowhead(d3.select("svg"));
+
+
+  // adds annoation arrow and text 
+  // note - you need to add the setupArrowhead line above
+  addAnnotationArrow(
+
+    //name of the svg you're adding to 
+    svg,
+
+    //x and y values of your data point
+
+    x(0.48),
+
+    y("Arts") + y.bandwidth() / 2,
+
+    //offset from your data point to arrowhead (x and y values)
+    10, 10,
+
+    //arrow length x and y
+    50, 50,
+
+    //curve direction (choose 'left' or 'right'). If blank the default is left
+    "left",
+
+    //annotation text
+    "An arrow annotation, also known as a point annotation",
+
+    //annotation text position - 'above', 'left', 'below' or 'right' 
+    //this determines the position and alignment of the text relative to the arrow
+    "below",
+
+    //wrap width
+    x(1) - x(0.5),
+
+
+    //turn on mobile alternative annotations
+    true,
+
+    //number of the annotation (will be the number in the circle and the coresponding footnote.) Note: we are looking at a way to automate this. 
+    2,
+
+    //adjusts the position of the mobile circle (x,y)
+    14, 0,
+
+
+    //leave as 'size' - you shouldn't have to change this. It's a condition to ensure that the 'size' variable is brought back into the helper function
+    size
+
+
+    
+  );
+
+// text with no arrow, but with mobile alternative
+  addAnnotationText(
+    //name of the svg
+    svg, 
+
+    //x and y position
+    x(0.38),y('A few more')-5,
+
+    //text position adjustment x and y  
+    0,0,
+    
+    //your text here
+    'A free text annotation',
+    
+    //text anchor, start or end (should normally be 'start' i.e. left aligned)
+    'start',
+    
+    //wrap size
+    150,
+    
+    //mobile alternative on and off
+    true,
+    // the number in the circle on mobile
+    3,
+    
+  //adjust the circle position - x and y
+    0,0,
+    
+    
+    //size (should always be size)
+    size)
 
 
   // adds vertical annotation range and text
@@ -207,9 +271,21 @@ function drawGraphic() {
 
     x(1) - x(0.6),
 
+    //turn on mobile alternative annotations
+    true,
+
+    //number of the annotation (will be the number in the circle and the coresponding footnote.) Note: we are looking at a way to automate this. 
+    4,
+
+    //adjusts the position of the mobile circle (x,y)
+    10, -30,
+
+
+    //leave as 'size' - you shouldn't have to change this. It's a condition to ensure that the 'size' variable is brought back into the helper function
+    size
+
 
   )
-
 
 
   //adds direction arrow
@@ -235,7 +311,7 @@ function drawGraphic() {
     "A direction arrow, with end anchor",
 
     //wrap width
-    200,
+    x(0.5),
 
     //text adjust y
     0,
