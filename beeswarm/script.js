@@ -2,10 +2,10 @@ import { initialise, addSvg, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
-let graphic_data, size, xDomain, circleDist;
+let graphic_data, size, xDomain, circleDist, radius;
 
 function drawGraphic() {
-
+  console.log(graphic_data)
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
@@ -40,7 +40,12 @@ function drawGraphic() {
     .ticks(config.optional.xAxisTicks[size])
     .tickFormat(d3.format(config.essential.xAxisFormat));
 
-  const radius = (x(x.domain()[1]) - x(x.domain()[0])) / (config.essential.numBands * 1.1);
+  if(config.essential.radius=="auto"){
+    radius = (x(x.domain()[1]) - x(x.domain()[0])) / (config.essential.numBands * 1.1);
+  } else {
+    radius = config.essential.radius
+  } 
+  
 
   if (config.essential.circleDist == "auto") {
     circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data,d=>d.y) ;
@@ -95,7 +100,7 @@ function drawGraphic() {
     .selectAll("circle")
     .data([...graphic_data].reverse())
     .join("circle")
-    .attr("cx", d => x(d.valueRound / 100))
+    .attr("cx", d => x(d.valueRound ))
     .attr("cy", d => y(d.group) + y.bandwidth() * 0.95 - circleDist * d.y)
     .attr("r", radius / 2)
     .append("title")
@@ -122,23 +127,37 @@ function drawGraphic() {
 
 d3.csv(config.essential.graphic_data_url)
   .then(data => {
-    //load chart data
-
-    var bins = {};
+    // First convert string values to numbers if needed
     data.forEach(d => {
-      d.valueRound = (Math.round(d.value * config.essential.numBands) / config.essential.numBands) * 100;
-      var binName = d.group + d.valueRound;
-      if (binName in bins) {
-        d.y = bins[binName]++;
+      d.value = +d.value;  // Convert to number if it's a string
+    });
+
+    // Calculate the binned values
+    const minValue = d3.min(data, d => d.value);
+    const maxValue = d3.max(data, d => d.value);
+    const binSize = (maxValue - minValue) / config.essential.numBands;
+
+    // Create bins and assign vertical positions
+    const bins = {};
+    data.forEach(d => {
+      const binNumber = Math.floor((d.value - minValue) / binSize);
+      d.valueRound = minValue + (binNumber * binSize) + (binSize / 2);
+      
+      // Create unique key for this group and bin combination
+      const binKey = d.group + '_' + d.valueRound;
+      
+      // Assign vertical position
+      if (binKey in bins) {
+        d.y = bins[binKey]++;
       } else {
         d.y = 0;
-        bins[binName] = 1;
+        bins[binKey] = 1;
       }
-    })
+    });
 
     graphic_data = data;
 
-    //use pym to create iframed chart dependent on specified variables
+    // Create visualization using pym
     pymChild = new pym.Child({
       renderCallback: drawGraphic
     });
