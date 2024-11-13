@@ -5,7 +5,7 @@ let pymChild = null;
 let graphic_data, size, xDomain, circleDist, radius;
 
 function drawGraphic() {
-  console.log(graphic_data)
+
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
@@ -13,6 +13,30 @@ function drawGraphic() {
   let groups = d3.groups(graphic_data, (d) => d.group)
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
   let height = config.optional.seriesHeight[size] * groups.length
+
+  // Set up the legend
+  const legenditem = d3
+  .select('#legend')
+  .selectAll('div.legend--item')
+  .data([["Country average",config.essential.averages.colour]])
+  .enter()
+  .append('div')
+  .attr('class', 'legend--item');
+
+  legenditem
+  .append('div')
+  .attr('class', 'legend--icon--refline')
+  .style('background-color', function (d) {
+    return d[1];
+  });
+
+  legenditem
+  .append('div')
+  .append('p')
+  .attr('class', 'legend--text')
+  .html(function (d) {
+    return d[0];
+  });
 
 
   const min = d3.min(graphic_data, (d) => +d["value"])

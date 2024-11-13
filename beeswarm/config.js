@@ -5,16 +5,16 @@ config = {
     "sourceText": "Office for National Statistics",
     "accessibleSummary": "This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
     "xAxisFormat": ".0f",
-    "xAxisLabel": "x-axis label",
-    "radius": 10,//either auto which is x-range / number of bins
+    "xAxisLabel": "Percentage",
+    "radius": 'auto',//either auto which is x-range / number of bins
     "xDomain": [5,22.5],// either auto or a custom domain as an array e.g [0,100]
     "circleDist": 'auto', //Vertical distance between centres of circles as a diameter of the radius or 'auto'
-    "numBands": 50, //number of bins,
+    "numBands": 75, //number of bins,
     "averages": {
       "show": true,  // Whether to show average lines
       "showLabels": false,  // Whether to show labels for the average lines
       "colour": "#444",  // Color of the average lines
-      "strokeWidth": 2,  // Width of the average lines
+      "strokeWidth": 3,  // Width of the average lines
       "strokeDash": "",  // Dash pattern for the lines
       "labelColour": "#444",  // Color of the labels
       "labelFormat": ".1f",  // Format for the label numbers
@@ -35,7 +35,8 @@ config = {
         { group: "East Midlands", value: 13.7 },
         { group: "East of England", value: 13.1 },
         { group: "West Midlands", value: 13.6 },
-        { group: "London", value: 12.1 }
+        { group: "London", value: 12.1 },
+        { group: "England", value: 13.0}
         // ... add more groups as needed
       ]
     }
@@ -55,10 +56,10 @@ config = {
         "left": 120
       },
       "lg": {
-        "top": 5,
-        "right": 20,
-        "bottom": 20,
-        "left": 10
+        "top": 0,
+        "right": 0,
+        "bottom": 25,
+        "left": 0
       }
     },
     "seriesHeight": {
