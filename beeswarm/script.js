@@ -101,10 +101,45 @@ function drawGraphic() {
     .data([...graphic_data].reverse())
     .join("circle")
     .attr("cx", d => x(d.valueRound ))
-    .attr("cy", d => y(d.group) + y.bandwidth() * 0.95 - circleDist * d.y)
+    .attr("cy", d => y(d.group) + y.bandwidth() - radius/2 - circleDist * d.y)
     .attr("r", radius / 2)
     .append("title")
     .text(d => d.areanm + ' ' + d.value);
+
+    // Add average lines if they're defined in config
+  if (config.essential.averages && config.essential.averages.show) {
+    // Create average lines
+    chart.append("g")
+      .attr("class", "average-lines")
+      .selectAll("line")
+      .data(config.essential.averages.values)
+      .join("line")
+      .attr("x1", d => x(d.value))
+      .attr("x2", d => x(d.value))
+      .attr("y1", d => y(d.group))
+      .attr("y2", d => y(d.group) + y.bandwidth())
+      .attr("stroke", config.essential.averages.colour || "#444")
+      .attr("stroke-width", config.essential.averages.strokeWidth || 2)
+      .attr("stroke-dasharray", config.essential.averages.strokeDash || "");
+
+    // Add average labels if enabled
+    if (config.essential.averages.showLabels) {
+      chart.append("g")
+        .attr("class", "average-labels")
+        .selectAll("text")
+        .data(config.essential.averages.values)
+        .join("text")
+        .attr("x", d => x(d.value) + (config.essential.averages.labelOffset?.x || 5))
+        .attr("y", d => y(d.group) + y.bandwidth() / 2 + (config.essential.averages.labelOffset?.y || 0))
+        .attr("dy", "0.35em")
+        .attr("fill", config.essential.averages.labelColour || "#444")
+        .text(d => {
+          const format = d3.format(config.essential.averages.labelFormat || config.essential.xAxisFormat);
+          const prefix = config.essential.averages.labelPrefix || "Mean: ";
+          return `${prefix}${format(d.value)}`;
+        });
+    }
+  }
 
   addAxisLabel({
     svgContainer: chart,
@@ -141,7 +176,7 @@ d3.csv(config.essential.graphic_data_url)
     const bins = {};
     data.forEach(d => {
       const binNumber = Math.floor((d.value - minValue) / binSize);
-      d.valueRound = minValue + (binNumber * binSize) + (binSize / 2);
+      d.valueRound = minValue + (binNumber * binSize)// + (binSize / 2);
       
       // Create unique key for this group and bin combination
       const binKey = d.group + '_' + d.valueRound;
