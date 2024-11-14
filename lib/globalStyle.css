@@ -170,7 +170,6 @@ svg.chart g.axis path.domain
 /* this sets the ticks */
 svg.chart .axis line {
   stroke: #d9d9d9;
-  shape-rendering: crispEdges;
 }
 
 /* this sets zero line */
@@ -178,7 +177,6 @@ svg.chart .axis line {
 g.tick line.zero-line {
   stroke: #a0a0a0;
   stroke-width: 2px;
-  shape-rendering: crispEdges;
 }
 
 
