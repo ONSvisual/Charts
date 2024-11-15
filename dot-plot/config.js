@@ -1,8 +1,8 @@
 config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
-		"legendLabels": ["2015-2019", "2020"],
-		"colour_palette": ["#A09FA0", "#206095"],
+		"legendLabels": ["2015-2019", "2020","Average","Another series"],
+		"colour_palette": ["#A09FA0", "#206095","#871A5B","#A8BD3A"],
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary":
 			"Here is the screenreader text describing the chart.",
