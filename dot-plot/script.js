@@ -16,13 +16,30 @@ function drawGraphic() {
 	//height is set by unique options in column name * a fixed height
 	let height = config.optional.seriesHeight[size] * graphic_data.length;
 
+	// Get the column headers with numbers in
+	const keys = Object.keys(graphic_data[0]).slice(1)
+
 	//set up scales
 	let x = d3.scaleLinear().range([0, chart_width]);
 
 	let y = d3.scalePoint().padding(0.5).range([0, height]);
 
+	const colour = d3.scaleOrdinal()
+		.domain(keys)
+		.range(config.essential.colour_palette);
+
+	if (config.essential.xDomain == 'auto') {
+		let max = d3.max(graphic_data, d => d3.max(keys, col => parseFloat(d[col])));
+		let min = d3.min([0,d3.min(graphic_data,d => d3.min(keys, col => parseFloat(d[col])))])
+		x.domain([min, max]);
+	} else {
+		x.domain(config.essential.xDomain);
+	}
+
 	//use the data to find unique entries in the name column
 	y.domain(graphic_data.map((d) => d.name));
+
+	const processedData = handleMetricOverlap(graphic_data, x, y, keys);
 
 	//set up yAxis generator
 	let yAxis = d3.axisLeft(y).tickSize(-chart_width).tickPadding(10);
@@ -68,15 +85,6 @@ function drawGraphic() {
 		margin: margin
 	})
 
-	if (config.essential.xDomain == 'auto') {
-		let max = d3.max(graphic_data, function (d) {
-			return d3.max([+d.min, +d.max]);
-		});
-		x.domain([0, max]);
-	} else {
-		x.domain(config.essential.xDomain);
-	}
-
 	svg
 		.append('g')
 		.attr('transform', 'translate(0,' + height + ')')
@@ -98,34 +106,79 @@ function drawGraphic() {
 		.call(wrap, margin.left - 5);
 
 	svg
-		.selectAll('circle.min')
-		.data(graphic_data)
-		.enter()
-		.append('circle')
-		.attr('class', 'min')
-		.attr('r', 6)
-		.attr('fill', config.essential.colour_palette[0])
-		.attr('cx', function (d) {
-			return x(d.min);
-		})
-		.attr('cy', function (d) {
-			return Math.abs(x(d.max) - x(d.min)) < 3 ? y(d.name) - 3 : y(d.name);
-		});
+		.selectAll('.dot')
+		.data(processedData)
+		.join('circle')
+		.attr('class', 'dot')
+		.attr('cx', d => x(d.value))
+		.attr('cy', d => d.adjustedY)
+		.attr('r', 4)
+		.style('fill', d => colour(d.metric))
+		.append('title')  // Add tooltip
+		.text(d => `${d.name}\n${d.metric}: ${d.value}`);
 
-	svg
-		.selectAll('circle.max')
-		.data(graphic_data)
-		.enter()
-		.append('circle')
-		.attr('class', 'max')
-		.attr('r', 6)
-		.attr('fill', config.essential.colour_palette[1])
-		.attr('cx', function (d) {
-			return x(d.max);
-		})
-		.attr('cy', function (d) {
-			return Math.abs(x(d.max) - x(d.min)) < 3 ? y(d.name) + 3 : y(d.name);
+	// AI generated function to handle overlaps
+	function handleMetricOverlap(data, xScale, yScale, metrics, radius = 4) {
+		const processedData = [];
+		const overlapMap = new Map();
+		
+		data.forEach(d => {
+		  const baseYPos = yScale(d.name) + yScale.bandwidth() / 2;  // Center of the band
+		  
+		  if (!overlapMap.has(d.name)) {
+			overlapMap.set(d.name, {
+			  points: [],
+			  counter: 0
+			});
+		  }
+		  
+		  const yTracker = overlapMap.get(d.name);
+		  
+		  metrics.forEach(metric => {
+			const value = parseFloat(d[metric]);
+			if (!isNaN(value)) {
+			  const xPos = xScale(value);
+			  
+			  // Check for overlaps with existing points
+			  const overlap = yTracker.points.some(point => 
+				Math.abs(point - xPos) < radius * 2.5  // Increased spacing
+			  );
+			  
+			  let finalYPos = baseYPos;
+			  
+			  if (overlap) {
+				yTracker.counter++;
+				const offset = Math.ceil(yTracker.counter / 2) * (radius * 2);
+				finalYPos = baseYPos + (yTracker.counter % 2 === 0 ? offset : -offset);
+			  } else {
+				// Only reset counter if this point is far from others
+				const farFromAll = yTracker.points.every(point => 
+				  Math.abs(point - xPos) > radius * 4
+				);
+				if (farFromAll) {
+				  yTracker.counter = 0;
+				}
+			  }
+			  
+			  // Store point position for overlap checking
+			  yTracker.points.push(xPos);
+			  
+			  processedData.push({
+				name: d.name,
+				metric,
+				value,
+				adjustedY: finalYPos,
+				originalY: baseYPos
+			  });
+			}
+		  });
+		  
+		  // Sort points for this name by x position
+		  yTracker.points.sort((a, b) => a - b);
 		});
+		
+		return processedData;
+	  }
 
 	addAxisLabel({
 		svgContainer: svg,
