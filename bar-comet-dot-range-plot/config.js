@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		//either bar, comet, dot or range
-		"chartType": "bar",
+		"chartType": "range",
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screen reader text describing the chart.",
 		// either "auto" or an array for the x domain e.g. [0,100]
@@ -34,11 +34,11 @@ config = {
 			"md": 1,
 			"lg": 2
 		},
-		"aspectRatio": {
-			"sm": [1, 2],
-			"md": [1, 2],
-			"lg": [1, 2]
-		},
+		// "aspectRatio": {
+		// 	"sm": [1, 2],
+		// 	"md": [1, 2],
+		// 	"lg": [1, 2]
+		// },
 		"margin": {
 			"sm": {
 				"top": 30,

@@ -18,11 +18,11 @@ config = {
 			"md": 1,
 			"lg": 2
 		},
-		"aspectRatio": {
-			"sm": [1, 2],
-			"md": [1, 2],
-			"lg": [1, 2]
-		},
+		// "aspectRatio": {
+		// 	"sm": [1, 2],
+		// 	"md": [1, 2],
+		// 	"lg": [1, 2]
+		// },
 		"margin": {
 			"sm": {
 				"top": 30,
