@@ -14,7 +14,7 @@ function drawGraphic() {
 
   let margin = config.optional.margin[size]
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-  let height = 400 - margin.top - margin.bottom;
+	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
 
   //set up scales
   const x = d3.scaleLinear()
