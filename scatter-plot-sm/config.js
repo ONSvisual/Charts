@@ -21,6 +21,12 @@ config={
       "md":1,
       "lg":2
     },
+    "aspectRatio": {
+			"sm": [16, 14],
+			"md": [16, 12],
+			"lg": [16, 12]
+		},
+         
     "margin": {
       "sm": {
         "top": 50,
