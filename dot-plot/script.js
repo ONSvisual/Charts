@@ -39,7 +39,7 @@ function drawGraphic() {
 	//use the data to find unique entries in the name column
 	y.domain(graphic_data.map((d) => d.name));
 
-	const processedData = handleMetricOverlap(graphic_data, x, y, keys);
+	const processedData = handleMetricOverlap(graphic_data, x, y, keys, { specialCategories: config.essential.categoriesToMakeDiamonds });
 
 	//set up yAxis generator
 	let yAxis = d3.axisLeft(y).tickSize(-chart_width).tickPadding(10);
@@ -64,7 +64,7 @@ function drawGraphic() {
 
 	legenditem
 		.append('div')
-		.attr('class', 'legend--icon--circle')
+		.attr('class', (d,i)=>config.essential.categoriesToMakeDiamonds.includes(keys[i]) ? 'legend--icon--diamond' : 'legend--icon--circle')
 		.style('background-color', function (d) {
 			return d[1];
 		});
@@ -105,80 +105,106 @@ function drawGraphic() {
 		.selectAll('text')
 		.call(wrap, margin.left - 5);
 
+	// Updated dot rendering code
 	svg
-		.selectAll('.dot')
-		.data(processedData)
-		.join('circle')
-		.attr('class', 'dot')
+	.selectAll('.dot')
+	.data(processedData)
+	.join(enter => {
+	const dots = enter.append(d => 
+		d.isSpecialCategory 
+		? document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+		: document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+	)
+	.attr('class', 'dot');
+
+	// Handle circles (normal points)
+	dots.filter(d => !d.isSpecialCategory)
 		.attr('cx', d => x(d.value))
 		.attr('cy', d => d.adjustedY)
 		.attr('r', 4)
-		.style('fill', d => colour(d.metric))
-		.append('title')  // Add tooltip
+		.style('fill', d => colour(d.metric));
+
+	// Handle rectangles (special category points)
+	dots.filter(d => d.isSpecialCategory)
+		.attr('x', d => x(d.value) - 4)
+		.attr('y', d => d.adjustedY - 4)
+		.attr('width', 8)
+		.attr('height', 8)
+		.attr('transform', d => `rotate(45 ${x(d.value)} ${d.adjustedY})`)
+		.style('fill', d => colour(d.metric));
+
+	// Add tooltip to both
+	dots.append('title')
 		.text(d => `${d.name}\n${d.metric}: ${d.value}`);
 
-	// AI generated function to handle overlaps
-	function handleMetricOverlap(data, xScale, yScale, metrics, radius = 4) {
+	return dots;
+	});
+
+	function handleMetricOverlap(data, xScale, yScale, metrics, config = {}, radius = 4) {
 		const processedData = [];
 		const overlapMap = new Map();
 		
 		data.forEach(d => {
-		  const baseYPos = yScale(d.name) + yScale.bandwidth() / 2;  // Center of the band
-		  
-		  if (!overlapMap.has(d.name)) {
+			const baseYPos = yScale(d.name) + yScale.bandwidth() / 2; // Center of the band
+			
+			if (!overlapMap.has(d.name)) {
 			overlapMap.set(d.name, {
-			  points: [],
-			  counter: 0
+				points: [],
+				counter: 0
 			});
-		  }
-		  
-		  const yTracker = overlapMap.get(d.name);
-		  
-		  metrics.forEach(metric => {
+			}
+			
+			const yTracker = overlapMap.get(d.name);
+			
+			metrics.forEach(metric => {
 			const value = parseFloat(d[metric]);
 			if (!isNaN(value)) {
-			  const xPos = xScale(value);
-			  
-			  // Check for overlaps with existing points
-			  const overlap = yTracker.points.some(point => 
-				Math.abs(point - xPos) < radius * 2.5  // Increased spacing
-			  );
-			  
-			  let finalYPos = baseYPos;
-			  
-			  if (overlap) {
+				const xPos = xScale(value);
+				
+				// Check for overlaps with existing points
+				const overlap = yTracker.points.some(point => 
+				Math.abs(point - xPos) < radius * 2.5 // Increased spacing
+				);
+				
+				let finalYPos = baseYPos;
+				if (overlap) {
 				yTracker.counter++;
 				const offset = Math.ceil(yTracker.counter / 2) * (radius * 2);
 				finalYPos = baseYPos + (yTracker.counter % 2 === 0 ? offset : -offset);
-			  } else {
+				} else {
 				// Only reset counter if this point is far from others
 				const farFromAll = yTracker.points.every(point => 
-				  Math.abs(point - xPos) > radius * 4
+					Math.abs(point - xPos) > radius * 4
 				);
 				if (farFromAll) {
-				  yTracker.counter = 0;
+					yTracker.counter = 0;
 				}
-			  }
-			  
-			  // Store point position for overlap checking
-			  yTracker.points.push(xPos);
-			  
-			  processedData.push({
+				}
+				
+				// Store point position for overlap checking
+				yTracker.points.push(xPos);
+				
+				// Check if this metric is in the special category configuration
+				const isSpecialCategory = config.specialCategories && 
+				config.specialCategories.includes(metric);
+				
+				processedData.push({
 				name: d.name,
 				metric,
 				value,
 				adjustedY: finalYPos,
-				originalY: baseYPos
-			  });
+				originalY: baseYPos,
+				isSpecialCategory: isSpecialCategory
+				});
 			}
-		  });
-		  
-		  // Sort points for this name by x position
-		  yTracker.points.sort((a, b) => a - b);
+			});
+			
+			// Sort points for this name by x position
+			yTracker.points.sort((a, b) => a - b);
 		});
 		
 		return processedData;
-	  }
+	}
 
 	addAxisLabel({
 		svgContainer: svg,
