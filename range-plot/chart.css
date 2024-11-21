@@ -7,3 +7,12 @@ line.between{
   font-weight: 600;
   font-size: 14px;
 }
+
+div.legend--icon--diamond{
+  height: 12px;
+  width: 12px;
+  align-self: center;
+  flex-shrink: 0;
+  forced-color-adjust: none;
+  transform: rotate(45deg);
+}

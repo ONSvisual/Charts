@@ -12,7 +12,8 @@ config = {
 		"xAxisLabel": "x axis label",
 		"xDomain": [0, 100],
 		// either auto or a custom domain as an array e.g [0,100]
-		"showDataLabels": true
+		"showDataLabels": true,
+		"useDiamonds": true
 	},
 	"optional": {
 		"margin": {

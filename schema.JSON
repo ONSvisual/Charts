@@ -1,0 +1,261 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "dataUrl": {"type": "string"},
+          "dateFormat": {"type": "string"},
+          "isDateTime": {"type": "boolean"}
+        }
+      },
+      "margin": {
+        "type": "object",
+        "properties": {
+          "sm": {
+            "type": "object",
+            "properties": {
+              "top": {"type": ["number", "string"]},
+              "right": {"type": ["number", "string"]},
+              "bottom": {"type": ["number", "string"]},
+              "left": {"type": ["number", "string"]}
+            }
+          },
+          "md": {
+            "type": "object",
+            "properties": {
+              "top": {"type": ["number", "string"]},
+              "right": {"type": ["number", "string"]},
+              "bottom": {"type": ["number", "string"]},
+              "left": {"type": ["number", "string"]}
+            }
+          },
+          "lg": {
+            "type": "object",
+            "properties": {
+              "top": {"type": ["number", "string"]},
+              "right": {"type": ["number", "string"]},
+              "bottom": {"type": ["number", "string"]},
+              "left": {"type": ["number", "string"]}
+            }
+          }
+        }
+      },
+      "aspectRatio": {
+        "type": "object",
+        "properties": {
+          "sm": {"type": ["array","number"]},
+          "md": {"type": ["array","number"]},
+          "lg": {"type": ["array","number"]}
+        }
+      },
+      "axes": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "object",
+            "oneOf": [
+                {
+                "properties": {
+                    "chartType": {"enum": ["lineChart", "scatterBubbleChart", "rangeCometDot", "columnChart","groupedColumnChart","stackedColumnChart"]},
+                    "axisLabel": {"type": "string"},
+                    "tickFormat": {"type": "string"},
+                    "ticks": {
+                    "type": "object",
+                    "properties": {
+                        "sm": {"type": ["number", "string"]},
+                        "md": {"type": ["number", "string"]},
+                        "lg": {"type": ["number", "string"]}
+                    }
+                    },
+                    "domain": {"type": ["array", "string"],"default":"auto"},
+                    "showFirst": {"type": "boolean"},
+                    "showLast": {"type": "boolean"}
+                },
+                "required": ["chartType"]
+                },
+                {
+                "properties": {
+                    "chartType": {"enum": ["barChart", "groupedBarChart", "stackedBarChart"]},
+                    "axisLabel": {"type": "string"},
+                    "tickFormat": {"type": "string"},
+                    "ticks": {
+                    "type": "object",
+                    "properties": {
+                        "sm": {"type": ["number", "string"]},
+                        "md": {"type": ["number", "string"]},
+                        "lg": {"type": ["number", "string"]}
+                    }
+                    },
+                    "domain": {"type": ["array", "string"]}
+                },
+                "required": ["chartType"]
+                }
+            ]
+          },
+          "y": {
+            "type": "object",
+            "properties": {
+              "axisLabel": {"type": "string"},
+              "tickFormat": {"type": "string"},
+              "ticks": {
+                "type": "object",
+                "properties": {
+                  "sm": {"type": ["number", "string"]},
+                  "md": {"type": ["number", "string"]},
+                  "lg": {"type": ["number", "string"]}
+                }
+              },
+              "domain": {"type": ["array", "string"]},
+              "showFirst": {"type": "boolean"},
+              "showLast": {"type": "boolean"}
+            }
+          }
+        }
+      },
+      "smallMultiple": {
+        "type": "object",
+        "properties": {
+            "useSmallMultiple": {"type": "boolean"},
+            "chartEvery": {
+                "type": "object",
+                "properties": {
+                    "sm": {"type": ["number", "string"]},
+                    "md": {"type": ["number", "string"]},
+                    "lg": {"type": ["number", "string"]}
+                }
+            },
+            "chartGap": {"type": ["number", "string"]},
+            "dropAxis": {"type": "boolean"},
+            "freeAxis": {"type": "boolean"}
+        }
+      },
+      "legend": {
+        "type": "object",
+        "properties": {
+          "showLegend": {"type": "boolean"},
+          "legendLabels": {"type": ["array", "string"]},
+          "shape": {"type": ["string","array"]},
+          "legendLineLength": {"type": ["number", "string"]},
+          "legendItemWidth": {"type": ["number", "string"]},
+          "includeNoChange": {"type": "boolean"},
+          "ciLegend": {"type": "boolean"},
+          "height": {
+            "type": "object",
+            "properties": {
+              "sm": {"type": ["number", "string"]},
+              "md": {"type": ["number", "string"]},
+              "lg": {"type": ["number", "string"]}
+            }
+          },
+          "scaleRadius": {"type": ["number", "string"]}
+        }
+      },
+      "dataLabels": {
+        "type": "object",
+        "properties": {
+          "showDataLabels": {"type": "boolean"},
+          "numberFormat": {"type": "string"}
+        }
+      },
+      "breakPoints": {"type": ["array", "string", "number"]},
+      "colourPalette": {"type": ["array", "string"]},
+      "chartType": {
+        "type": "object",
+        "properties": {
+          "lineChart": {
+            "type": "object",
+            defaults: {
+              "showDataLabels": {"type": "boolean", "default":false}
+            },
+            "properties": {
+              "lineCurveType": {"type": "string", "default":"curveLinear"},
+              "referenceCategory": {"type": "string", "default":""},
+              "interpolateGaps": {"type": "boolean", "default":true},
+              "zeroLine": {"type": ["number","string"], "default":0}
+            }
+          },
+          "barChart": {
+            "type": "object",
+            "defaults": {
+              "showDataLabels": {"type": "boolean", "default":true},
+              "numberFormat": {"type": "string", "default":".,0f"}
+            },
+            "properties": {
+              "referenceLine": {
+                "type": "object",
+                "properties": {
+                  "showReferenceLine": {"type": "boolean", "default":false},
+                  "categoryName": {"type": "string", "default":""}
+                }
+              }
+            }
+          },
+          "groupedBarChart": {
+            "type": "object",
+            "properties": {
+              "groupOnCategory": {"type": "string", "default":"group"}
+            }
+          },
+          "stackedBarChart": {
+            "type": "object",
+            "properties": {
+              "stackOrder": {"type": "string", "default":"stackOrderNone"},
+              "stackOffset": {"type": "string", "default":"stackOffsetNone"},
+              "tooltip": {
+                "type": "object",
+                "properties": {
+                  "showTooltip": {"type": "boolean", "default":false},
+                  "numberFormat": {"type": "string", "default":".,0f"}
+                }
+              }
+            }
+          },
+          "columnChart": {
+            "type": "object",
+            "properties": {
+              "axes": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "showFirst": {"type": "boolean", "default": false},
+                    "showLast": {"type": "boolean", "default": false}
+                  }
+                }
+              }
+            }
+          },
+          "groupedColumnChart": {
+            "type": "object",
+            "properties": {
+              "groupOnCategory": {"type": "string", "default":"group"}
+            }
+          },
+          "stackedColumnChart": {
+            "type": "object",
+            "properties": {
+              "stackOrder": {"type": "string", "default":"stackOrderNone"},
+              "stackOffset": {"type": "string", "default":"stackOffsetNone"}
+            }
+          },
+          "scatterBubbleChart": {
+            "type": "object",
+            "properties": {
+              "scaleRadius": {"type": ["number", "string"], "default":false}
+            }
+          },
+          "rangeCometDot": {
+            "type": "object",
+            "properties": {
+              "showDataLabels": {"type": "boolean"},
+              "startMarker": {"type": "string", "enum": ["none", "circle", "arrowhead"]},
+              "endMarker": {"type": "string", "enum": ["none", "circle", "arrowhead"]},
+              "avoidOverlapping": {"type": "boolean", "default":true},
+              "showConfidenceIntervals": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    }
+  }
