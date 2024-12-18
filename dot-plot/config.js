@@ -8,7 +8,8 @@ config = {
 			"Here is the screenreader text describing the chart.",
 		"xAxisNumberFormat": ".0f",
 		"xAxisLabel": "x axis label",
-		"xDomain": "auto"
+		"xDomain": "auto",
+		"categoriesToMakeDiamonds": ["min",'average'],
 		// either auto or a custom domain as an array e.g [0,100]
 	},
 	"optional": {
