@@ -14,7 +14,7 @@ function drawGraphic() {
     var chart_width =
         parseInt(graphic.style('width')) - margin.left - margin.right;
     //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-    var height = 400 - margin.top - margin.bottom;
+    var height = config.optional.chartHeight[size];
 
     const radius = Math.min(chart_width, height) / 2
     const outerRadius = radius * 1.1
