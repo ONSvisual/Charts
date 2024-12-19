@@ -42,6 +42,11 @@ config = {
         "left": 50
       }
     },
+    "aspectRatio":{
+      "sm": [1, 1],
+      "md": [1, 1],
+      "lg": [1, 1]
+    },
     "chartGap": 20,
     "xAxisTicks": {
       "sm": 4,

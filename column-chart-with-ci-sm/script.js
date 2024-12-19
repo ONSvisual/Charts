@@ -79,8 +79,8 @@ function drawGraphic() {
         margin.left = chartGap;
       }
     }
-
-    let height = 400 - margin.top - margin.bottom;
+    let aspectRatio = config.optional.aspectRatio[size];
+    let height = (aspectRatio[0]*chart_width/aspectRatio[1] )- margin.top - margin.bottom;
 
     const x = d3
       .scaleBand()
