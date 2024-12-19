@@ -11,6 +11,11 @@ config = {
 		"centreLabel": "Sikh identity"
 	},
 	"optional": {
+		"chartHeight": {
+			"sm": 400,
+			"md": 400,
+			"lg": 400
+		},
 		"margin": {
 			"sm": {
 				"top": 15,

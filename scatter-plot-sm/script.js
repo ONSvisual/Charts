@@ -19,7 +19,7 @@ function drawGraphic() {
 
   let margin = config.optional.margin[size]
   let chart_width = (parseInt(graphic.style("width")) / chartEvery) - margin.left - margin.right;
-  let height = 400 - margin.top - margin.bottom;
+	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
 
 
   //set up scales

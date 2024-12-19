@@ -14,8 +14,8 @@ function drawGraphic() {
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
 	// let width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = 400 - margin.top - margin.bottom;
-	let width = config.optional.chartwidth[size];
+	let height = config.optional.chartHeight[size];
+	let width = config.optional.chartWidth[size];
 	// console.log(parseInt(graphic.style('width')) - width - margin.left - 75)
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
 

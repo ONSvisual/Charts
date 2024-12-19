@@ -11,11 +11,12 @@ function drawGraphic() {
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
+	const aspectRatio = config.optional.aspectRatio[size]
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = 400 - margin.top - margin.bottom;
+	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 	// Get categories from the keys used in the stack generator

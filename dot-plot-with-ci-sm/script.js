@@ -20,8 +20,9 @@ function drawGraphic() {
   const chartEvery = config.optional.chartEvery[size];
 
   let margin = config.optional.margin[size]
+  let aspectRatio = config.optional.aspectRatio[size];
   let chart_width = (parseInt(graphic.style("width")) / chartEvery) - margin.left - margin.right;
-  let height = 400 - margin.top - margin.bottom;
+	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 
   let xDataType;
 

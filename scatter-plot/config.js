@@ -16,6 +16,11 @@ config={
     "yAxisFormat":".0%"
   },
   "optional": {
+    "aspectRatio": {
+			"sm": [1, 1],
+			"md": [1, 1],
+			"lg": [1, 1]
+		},
     "margin": {
       "sm": {
         "top": 30,
