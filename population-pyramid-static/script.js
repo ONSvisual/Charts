@@ -18,7 +18,7 @@ function drawGraphic() {
 
 	// calculate percentage if we have numbers
 	// percentages are based of total populations as is common practice amongst pop pyramids
-	if (config.essential.dataType == 'numbers') {
+	if (config.essential.xAxisDisplayFormat == 'percentage') {
 		popTotal = d3.sum(graphic_data, (d) => d.maleBar + d.femaleBar);
 
 		// turn into tidy data
@@ -191,44 +191,57 @@ function drawGraphic() {
 
 	widths = [chart_width + margin.left, chart_width + margin.right];
 
-	legend
-		.append('div')
-		.attr('class', 'flex-row')
-		.style('gap', margin.centre + 'px')
-		.selectAll('div')
-		.data(['Females', 'Males'])
-		.join('div')
-		.style('width', (d, i) => widths[i] + 'px')
-		.append('div')
-		.attr('class', 'chartLabel')
-		.append('p')
-		.text((d) => d);
+	const legendData = ['Females', 'Males'];
+	const dummyData = [['x', 'x']]; // dummy data
 
-	dataForLegend = [['x', 'x']]; //dummy data
+	const createLegend = (justify) => {
+		const legendDiv = legend.append('div').attr('class', 'flex-row').style('gap', margin.centre + 'px');
+		const titleDiv = titles.selectAll('div').data(dummyData).join('div').attr('class', 'flex-row').style('gap', margin.centre + 'px');
 
-	titleDivs = titles
-		.selectAll('div')
-		.data(dataForLegend)
-		.join('div')
-		.attr('class', 'flex-row')
-		.style('gap', margin.centre + 'px')
-		.selectAll('div')
-		.data((d) => d)
-		.join('div')
-		.style('width', (d, i) => widths[i] + 'px')
-		.append('div')
-		.attr('class', 'legend--item');
+		legendDiv.selectAll('div')
+			.data(legendData)
+			.join('div')
+			.style('width', (d, i) => widths[i] + 'px')
+			.append('div')
+			.attr('class', 'chartLabel')
+			.style('text-align', (d, i) => justify === 'centre' && i === 0 ? 'right' : 'left')
+			.append('p')
+			.text((d) => d);
 
-	titleDivs
-		.append('div')
-		.style('background-color', (d, i) => config.essential.colour_palette[i])
-		.attr('class', 'legend--icon--circle');
+		titleDiv.selectAll('div')
+			.data((d) => d)
+			.join('div')
+			.style('width', (d, i) => widths[i] + 'px')
+			.append('div')
+			.attr('class', (d, i) => i === 0 && justify === 'centre' ? 'legend--item legend--item--right' : 'legend--item') // Apply CSS class for alignment and padding
+			.each(function (d, i) {
+				const div = d3.select(this);
+				if (justify === 'centre' && i === 0) {
+					div.append('div')
+						.append('p')
+						.attr('class', 'legend--text')
+						.html(d == 'x' ? config.essential.legend[0] : config.essential.legend[1])
+						.style("padding-right", "8px")
+						.attr("class", "legend--text");
+					div.append('div')
+						.style('background-color', d == 'x' ? config.essential.colour_palette[i] : config.essential.comparison_colour_palette[i])
+						.attr('class', d == 'x' ? 'legend--icon--circle' : 'legend--icon--refline');
+					d3.select('.legend--icon--circle')
+						.style('margin-right', '0px')
+						.style('margin-left', '8px');
+				} else {
+					div.append('div')
+						.style('background-color', d == 'x' ? config.essential.colour_palette[i] : config.essential.comparison_colour_palette[i])
+						.attr('class', d == 'x' ? 'legend--icon--circle' : 'legend--icon--refline');
+					div.append('div')
+						.append('p')
+						.attr('class', 'legend--text')
+						.html(d == 'x' ? config.essential.legend[0] : config.essential.legend[1]);
+				}
+			});
+	};
 
-	titleDivs
-		.append('div')
-		.append('p')
-		.attr('class', 'legend--text')
-		.html(config.essential.legend);
+	createLegend(config.essential.legendJustify);
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);

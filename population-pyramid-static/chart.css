@@ -15,3 +15,10 @@ div#titles {
     flex-direction: row;
 }
 
+.legend--item--right{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 2px;
+}

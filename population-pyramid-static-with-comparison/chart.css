@@ -22,3 +22,12 @@ div.legend--item div:last-child{
 .legend--icon--circle{
     margin-right: 8px;
 }
+
+.legend--item--right{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 2px;
+}
+
