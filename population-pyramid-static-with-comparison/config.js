@@ -10,7 +10,7 @@ config = {
 		"comparison_colour_palette": ["#5c5185", "#306970"],
 		"legend": ["Area name", "England and Wales"],
 		"legendJustify": "centre", // "start" or "centre"
-		"xAxisDisplayFormat": "percentage", //"raw" or "percentage" (currently anything other than percentage is broken and has been for a while on this template)
+		"xAxisDisplayFormat": "percentage", //"raw" or "percentage"
 		"xAxisNumberFormat": ".1%",
 		"yAxisTicksEvery": 10,
 		"xAxisLabel": "Percentage",

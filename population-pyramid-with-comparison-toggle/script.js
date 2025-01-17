@@ -156,7 +156,7 @@ function drawGraphic() {
 			};
 		});
 
-		time_comparison_data = time_comparison_data.map(function (d) {
+		time_comparison_data_new = time_comparison_data.map(function (d) {
 			return {
 				age: d.age,
 				malePercent: d.maleBar,
