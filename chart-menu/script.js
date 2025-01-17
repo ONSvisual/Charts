@@ -99,7 +99,7 @@ function downloadImage(el) {
   </button> |
 */
 
-function filterSelection(c) {
+window.filterSelection = function(c) {
   var x, i;
   x = document.getElementsByClassName("container");
   if (c == "all") c = "";
