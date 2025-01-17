@@ -29,8 +29,6 @@ function drawGraphic() {
 		}, Object.create(null))
 		.sort((a, b) => d3.ascending(a.label, b.label)); //sorted alphabetically
 
-console.log(graphic_data)
-
 	const select = new EnhancedSelect({
 		containerId: 'select',
 		options: dropdownData,
@@ -39,7 +37,6 @@ console.log(graphic_data)
 		idKey: 'id',
 		labelKey: 'label',
 		onChange: (selectedValue) => {
-			console.log('Selected:', selectedValue);
 			if (selectedValue !== null) {
 				d3.select('#bars')
 					.selectAll('rect')
