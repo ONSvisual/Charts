@@ -6,6 +6,12 @@ We currently maintain a separate [map templates repository](https://github.com/O
 
 (NOTE: This repository is still a work in progress.)
 
+## If you want to make a change
+Make a branch and name it something descriptive e.g. feature/new-autocomplete. Once you are happy, do a pull request and someone else will review it before it gets merged into main.
+
+## If there's a problem with a template
+Please raise an [issue](https://github.com/ONSvisual/Charts/issues) and the team will have a look.
+
 ## Guide to updating and placing an initial commit for a chart
 
 - All missing charts can be found in the issues section of the repository. They will have the following format, "[descriptive chart name]: Initial Commit".
@@ -39,6 +45,7 @@ We currently maintain a separate [map templates repository](https://github.com/O
 | Bar chart horizontal grouped                                | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal-grouped/)                                | [`</>`](https://github.com/ONSvisual/Charts/tree/main/bar-chart-horizontal-grouped/)                                |             |
 | Bar chart horizontal grouped clustered                      | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal-grouped-clustered/)                      | [`</>`](https://github.com/ONSvisual/Charts/tree/main/bar-chart-horizontal-grouped-clustered/)                      |             |
 | Bar chart horizontal stacked clustered grouped              | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal-stacked-clustered-grouped/)              | [`</>`](https://github.com/ONSvisual/Charts/tree/main/bar-chart-horizontal-stacked-clustered-grouped/)              |             |
+| Beeswarm  | [View](https://onsvisual.github.io/Charts/beeswarm/)| [`</>`](https://github.com/ONSvisual/Charts/tree/main/beeswarm)| |
 | Bubble plot animated                                        | [View](https://onsvisual.github.io/Charts/bubble-chart-animated/)                                       | [`</>`](https://github.com/ONSvisual/Charts/tree/main/bubble-chart-animated/)                                       |             |
 | Comet plot                                                  | [View](https://onsvisual.github.io/Charts/comet-plot/)                                                  | [`</>`](https://github.com/ONSvisual/Charts/tree/main/comet-plot/)                                                  |             |
 | Comet clustered / dumbell                                   | [View](https://onsvisual.github.io/Charts/comet-clustered/)                                             | [`</>`](https://github.com/ONSvisual/Charts/tree/main/comet-clustered/)                                             |             |
@@ -66,6 +73,7 @@ We currently maintain a separate [map templates repository](https://github.com/O
 | Population pyramid with dropdown                            | [View](https://onsvisual.github.io/Charts/population-pyramid-with-dropdown/)                            | [`</>`](https://github.com/ONSvisual/Charts/tree/main/population-pyramid-with-dropdown/)                            |             |
 | Population pyramid with dropdown and interactive comparison | [View](https://onsvisual.github.io/Charts/population-pyramid-with-dropdown-and-interactive-comparison/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/population-pyramid-with-dropdown-and-interactive-comparison/) |             |
 | Range plot                                                  | [View](https://onsvisual.github.io/Charts/range-plot/)                                                  | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-plot/)                                                  |             |
+| Range plot small multiple |[View](https://onsvisual.github.io/Charts/range-plot-sm/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-plot-sm) | | 
 | Scatter plot                                                | [View](https://onsvisual.github.io/Charts/scatter-plot/)                                                | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot/)                                                |             |
 | Scatter plot small multiple                                 | [View](https://onsvisual.github.io/Charts/scatter-plot-sm/)                                             | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot-sm/)                                             |             |
 | Scatter plot animated                                       | [View](https://onsvisual.github.io/Charts/scatter-plot-animated/)                                       | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot-animated/)                                       |             |
