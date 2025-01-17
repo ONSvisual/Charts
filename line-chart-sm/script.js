@@ -257,7 +257,12 @@ function drawGraphic() {
 					)
 					.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
 						: d3.format(config.essential.xAxisNumberFormat)(d))
-			);
+			).each(function(d){
+				d3.select(this).selectAll('.tick text')
+				.attr('text-anchor', function(e,j,arr){
+					return j==0 ? 'start' : j==arr.length-1 ? 'end' : 'middle'
+				})
+			});
 
 
 		//Only draw the y axis tick labels on the first chart in each row
@@ -350,7 +355,6 @@ function drawGraphic() {
 
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
-	console.log(rawData)
 	graphic_data = rawData.map((d) => {
 		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
 			return {
