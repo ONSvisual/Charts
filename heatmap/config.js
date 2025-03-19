@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		"colour_palette": "YlGnBu",
-		// must be a colour brewer palette
+		// colour brewer palette or custom array of colours
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "Here is the screenreader text describing the chart.",
 		"dataLabelsNumberFormat": ".0f",
