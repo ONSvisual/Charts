@@ -1,119 +1,134 @@
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
-
+import { initialise, wrap, addSvg, addAxisLabel, diamondShape } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
 let graphic_data, size, svg;
+
+const circleSize = 105; // Define size for circles in pixels
+const squareSize = 90; // Define size for squares in pixels
+const triangleSize = 75; // Define size for triangles in pixels
+const diamondSize = 95; // Define size for diamonds in pixels
 
 function drawGraphic() {
 
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
-  let colour = d3.scaleOrdinal(config.essential.colour_palette); //
+  let colour = d3.scaleOrdinal(config.essential.colour_palette);
 
-  let margin = config.optional.margin[size]
+  let margin = config.optional.margin[size];
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
+  let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width;
 
-  //set up scales
-  const x = d3.scaleLinear()
-    .range([0, chart_width]);
+  const x = d3.scaleLinear().range([0, chart_width]);
+  const y = d3.scaleLinear().range([height, 0]);
 
-  const y = d3.scaleLinear()
-    .range([height, 0])
-
-
-  //create svg for chart
   svg = addSvg({
     svgParent: graphic,
     chart_width: chart_width,
     height: height + margin.top + margin.bottom,
     margin: margin
-  })
+  });
 
+  let groups = [...new Set(graphic_data.map(item => item.group))];
 
-  // lets move on to setting up the legend for this chart. 
-  let groups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
+  let shape = d3.scaleOrdinal()
+    .domain(groups)
+    .range(['circle', 'square', 'triangle', 'diamond']);
 
-
-  // This code is meant to create a legend in the style of the scatterplot circle.
-
-  let legenditem = d3
-    .select('#legend')
-    .selectAll('div.legend-item')
+  let legenditem = legend.selectAll('div.legend-item')
     .data(groups)
     .enter()
     .append('div')
-    .attr('class', 'legend--item');
+    .attr('class', 'legend--item')
+    .style('display', 'flex')
+    .style('align-items', 'center');
 
-  legenditem
-    .append('div')
-    .attr('class', 'legend--icon--circle2')
-    .style('background-color', (d) => {
-      let color = d3.color(colour(d));
-      color.opacity = 0.5;
-      return color;
+  legenditem.append('svg')
+    .attr('width', 20)
+    .attr('height', 20)
+    .append('path')
+    .attr('stroke-width','1px')
+      .attr('d', d => {
+      switch (shape(d)) {
+        case 'circle': return d3.symbol().type(d3.symbolCircle).size(circleSize)();
+        case 'square': return d3.symbol().type(d3.symbolSquare).size(squareSize)();
+        case 'triangle': return d3.symbol().type(d3.symbolTriangle).size(triangleSize)();
+        case 'diamond': return diamondShape(diamondSize / 10); // Use the custom diamond shape
+      }
     })
-    .style('border-color', (d) => colour(d));
+    .attr('transform', 'translate(10,10)')
+    .attr('fill', d => colour(d))
+    .attr('stroke', '#fff');
 
-  legenditem
-    .append('div')
-    .append('p')
+  legenditem.append('p')
     .attr('class', 'legend--text')
-    .html((d) => d);
-
-
-
-  // both of these are need to be looked at.
+    .style('margin-left', '5px')
+    .text(d => d);
 
   if (config.essential.xDomain == "auto") {
-    x.domain([0, d3.max(graphic_data, function (d) { return d.xvalue })]);
+    x.domain([d3.min(graphic_data, d => d.xvalue), d3.max(graphic_data, d => d.xvalue)]);
   } else {
-    x.domain(config.essential.xDomain)
+    x.domain(config.essential.xDomain);
   }
 
 
   if (config.essential.yDomain == "auto") {
-    y.domain([0, d3.max(graphic_data, function (d) { return d.yvalue })]);
+    y.domain([d3.min(graphic_data, d => d.yvalue), d3.max(graphic_data, d => d.yvalue)]);
   } else {
-    y.domain(config.essential.yDomain)
+    y.domain(config.essential.yDomain);
   }
 
-  svg
-    .append('g')
+  svg.append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0,${height})`)
-    .call(
-      d3.axisBottom(x)
-        .ticks(config.optional.xAxisTicks[size])
-        .tickSize(-height)
-        .tickPadding(10)
-        .tickFormat(d3.format(config.essential.xAxisFormat))
+    .call(d3.axisBottom(x)
+      .ticks(config.optional.xAxisTicks[size])
+      .tickSize(-height)
+      .tickPadding(10)
+      .tickFormat(d3.format(config.essential.xAxisFormat))
     )
+    .selectAll('line')
+       .each(function (d) {
+            if (d === 0) {
+                d3.select(this).attr('class', 'zero-line');
+            }
+        });
+    ;
 
   svg
     .append('g')
     .attr('class', 'axis numeric')
     .call(
       d3.axisLeft(y)
-        .ticks(config.optional.yAxisTicks[size])
-        .tickSize(-chart_width)
-        .tickPadding(10)
-        .tickFormat(d3.format(config.essential.yAxisFormat))
-    );
+      .ticks(config.optional.yAxisTicks[size])
+      .tickSize(-chart_width)
+      .tickPadding(10)
+      .tickFormat(d3.format(config.essential.yAxisFormat))
+    ) .selectAll('line')
+       .each(function (d) {
+            if (d === 0) {
+                d3.select(this).attr('class', 'zero-line');
+            }
+        });
 
-
-
-  svg.selectAll('circle')
+  svg.selectAll('path')
     .data(graphic_data)
-    .join('circle')
-    .attr('cx', (d) => x(d.xvalue))
-    .attr('cy', (d) => y(d.yvalue))
-    .attr('r', config.essential.radius)
-    .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
+    .join('path')
+    .attr('d', d => {
+      switch (shape(d.group)) {
+        case 'circle': return d3.symbol().type(d3.symbolCircle).size(circleSize)();
+        case 'square': return d3.symbol().type(d3.symbolSquare).size(squareSize)();
+        case 'triangle': return d3.symbol().type(d3.symbolTriangle).size(triangleSize)();
+        case 'diamond': return diamondShape(diamondSize / 10); // Use the custom diamond shape
+      }
+    })
+    .attr('transform', d => `translate(${x(d.xvalue)},${y(d.yvalue)})`)
+    .attr('fill', d => colour(d.group))
     .attr('fill-opacity', config.essential.fillOpacity)
-    .attr('stroke', (d) => colour(d.group))
+    .attr('stroke', d => d.highlight === 'y' ? '#222' : "#fff")
+    .attr('stroke-width', d => d.highlight === 'y' ? '1.5px' : '1px')
+    .attr('stroke-linejoin', 'round')
     .attr('stroke-opacity', config.essential.strokeOpacity);
 
 
@@ -156,7 +171,7 @@ d3.csv(config.essential.graphic_data_url)
     graphic_data = data
 
     //use pym to create iframed chart dependent on specified variables
-    pymChild = new pym.Child({
-      renderCallback: drawGraphic
-    });
+  pymChild = new pym.Child({
+    renderCallback: drawGraphic
   });
+});
