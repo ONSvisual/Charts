@@ -8,7 +8,7 @@ config={
     "sourceText": "Office for National Statistics",
     "accessibleSummary":"Here is the screenreader text describing the chart.",
     "xDomain":[0,0.85],
-    "yDomain":[0,0.85],
+    "yDomain":[-0.14,0.85],
     // either "auto" or an array for the x/y domain e.g. [0,100]
     "xAxisLabel":"Change since last month",
     "yAxisLabel":"Difference from trend",
