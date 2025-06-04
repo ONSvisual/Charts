@@ -16,7 +16,7 @@ jobs:
 
       - name: Install rmarkdown
         run: |
-          install.packages('rmarkdown', 'knitr')
+          install.packages(c("knitr", "rmarkdown"))
         shell: Rscript {0}
 
       - name: Render README.Rmd
