@@ -1,4 +1,4 @@
-<!-- README.md is auto-generated from README.Rmd. Do not edit directly. -->
+# Charts
 
 The official repository for all publication ready ONS charts. See our
 [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and
