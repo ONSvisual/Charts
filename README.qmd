@@ -1,10 +1,11 @@
+<!-- README.md is auto-generated from README.qmd. Do not edit directly. -->
+
 ---
+title: "Charts"
 format: gfm
 execute:
   echo: false
 ---
-
-# Charts
 
 The official repository for all publication ready ONS charts. See our [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and [service manual](https://service-manual.ons.gov.uk/data-visualisation) for more guidance on the use of these charts, and of charts more generally.
 
