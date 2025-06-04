@@ -1,5 +1,4 @@
 ---
-title: "Charts"
 output:
   md_document:
     variant: markdown_github
@@ -7,6 +6,7 @@ output:
 
 <!-- README.md is auto-generated from README.Rmd. Do not edit directly. -->
 
+# Charts
 
 ```{r setup, echo = F}
 knitr::opts_chunk$set(echo = F)
