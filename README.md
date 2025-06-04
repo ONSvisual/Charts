@@ -1,8 +1,4 @@
-
-
-<!-- README.md is auto-generated from README.qmd. Do not edit directly. -->
-
-# Charts
+<!-- README.md is auto-generated from README.Rmd. Do not edit directly. -->
 
 The official repository for all publication ready ONS charts. See our
 [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and
@@ -28,27 +24,27 @@ the team will have a look.
 
 ## Guide to updating and placing an initial commit for a chart
 
-- All missing charts can be found in the issues section of the
-  repository. They will have the following format, “\[descriptive chart
-  name\]: Initial Commit”.
+-   All missing charts can be found in the issues section of the
+    repository. They will have the following format, “\[descriptive
+    chart name\]: Initial Commit”.
 
-- If this issue does not have an active branch and you would like to
-  update and upload the chart please create a branch and you will be
-  responsible for updating and making a pull request for the chart.
+-   If this issue does not have an active branch and you would like to
+    update and upload the chart please create a branch and you will be
+    responsible for updating and making a pull request for the chart.
 
 ### Initial chart commit checklist
 
-- All initial commits of charts must must follow [JavaScript
-  ES6](https://www.w3schools.com/js/js_es6.asp) standards and use [D3
-  v6](https://observablehq.com/@d3/d3v6-migration-guide) or higher.
-- Before making additions to the `lib` folder please do check the [ONS
-  CDN](https://github.com/ONSdigital/cdn.ons.gov.uk-vendor) as your
-  addition to the lib folder may already to uploaded.
+-   All initial commits of charts must must follow [JavaScript
+    ES6](https://www.w3schools.com/js/js_es6.asp) standards and use [D3
+    v6](https://observablehq.com/@d3/d3v6-migration-guide) or higher.
+-   Before making additions to the `lib` folder please do check the [ONS
+    CDN](https://github.com/ONSdigital/cdn.ons.gov.uk-vendor) as your
+    addition to the lib folder may already to uploaded.
 
 ### Charts uploaded so far
 
 | Chart.Name | Preview | Code |
-|:---|:---|:---|
+|:--------------------------------------------------------|:--------|:------|
 | Area stacked | [View](https://onsvisual.github.io/Charts/area-stacked/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/area-stacked/) |
 | Area stacked sm | [View](https://onsvisual.github.io/Charts/area-stacked-sm/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/area-stacked-sm/) |
 | Bar chart horizontal | [View](https://onsvisual.github.io/Charts/bar-chart-horizontal/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/bar-chart-horizontal/) |
@@ -98,6 +94,7 @@ the team will have a look.
 | Population pyramid with dropdown and interactive comparison | [View](https://onsvisual.github.io/Charts/population-pyramid-with-dropdown-and-interactive-comparison/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/population-pyramid-with-dropdown-and-interactive-comparison/) |
 | Range plot | [View](https://onsvisual.github.io/Charts/range-plot/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-plot/) |
 | Range plot sm | [View](https://onsvisual.github.io/Charts/range-plot-sm/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-plot-sm/) |
+| README.html | [View](https://onsvisual.github.io/Charts/README.html/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/README.html/) |
 | Ridgeline plot | [View](https://onsvisual.github.io/Charts/ridgeline-plot/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/ridgeline-plot/) |
 | Scatter plot | [View](https://onsvisual.github.io/Charts/scatter-plot/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot/) |
 | Scatter plot animated | [View](https://onsvisual.github.io/Charts/scatter-plot-animated/) | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot-animated/) |

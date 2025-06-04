@@ -1,11 +1,16 @@
-<!-- README.md is auto-generated from README.qmd. Do not edit directly. -->
-
 ---
 title: "Charts"
-format: gfm
-execute:
-  echo: false
+output:
+  md_document:
+    variant: markdown_github
 ---
+
+<!-- README.md is auto-generated from README.Rmd. Do not edit directly. -->
+
+
+```{r setup, echo = F}
+knitr::opts_chunk$set(echo = F)
+```
 
 The official repository for all publication ready ONS charts. See our [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and [service manual](https://service-manual.ons.gov.uk/data-visualisation) for more guidance on the use of these charts, and of charts more generally.
 
@@ -40,7 +45,7 @@ Please raise an [issue](https://github.com/ONSvisual/Charts/issues) and the team
 
 
 ```{r}
-to_exclude <- c("lib", "Modularisation_notes.md", "README.md", "README.rmarkdown", "refresh.bat", "schema.JSON", "ONSCharts.Rproj", "README.qmd")
+to_exclude <- c("lib", "Modularisation_notes.md", "README.md", "README.rmarkdown", "refresh.bat", "schema.JSON", "ONSCharts.Rproj", "README.Rmd")
 folders <- dir()
 folders <- folders[!(folders %in% to_exclude)]
 chart_names <- .simpleCap(gsub("-", " ", folders))
