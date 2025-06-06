@@ -1,0 +1,15 @@
+name,value,category
+Other services,0.987848719,one
+Manufacturing,0.983661406,one
+Construction,0.681288045,one
+Arts,-0.048175721,one
+Administrative,0.209665614,one
+Wholesale trade,0.176396639,one
+Administrative and supportive service activities,0.047910167,one
+Other services,0.1987848719,two
+Manufacturing,0.2983661406,two
+Construction,0.3681288045,two
+Arts,-0.4048175721,two
+Administrative,0.5209665614,two
+Wholesale trade,0.6176396639,two
+Administrative and supportive service activities,0.7047910167,two
