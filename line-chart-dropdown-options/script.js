@@ -10,6 +10,8 @@ let pymChild = null;
 
 function drawGraphic() {
 
+	select.selectAll('*').remove(); // Remove the select element if it exists
+
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 	const aspectRatio = config.optional.aspectRatio[size]
