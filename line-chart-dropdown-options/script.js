@@ -30,10 +30,9 @@ function drawGraphic() {
 		.append('select')
 		.attr('id', 'optionsSelect')
 		.attr('style', 'width:calc(100% - 6px)')
-		.attr('class', 'chosen-select');
+		.attr('class', 'chosen-select')
+		.attr('data-placeholder', 'Select an option');
 
-	// Add the placeholder option
-	optns.append('option').attr('value', '').text('Select an option'); // Placeholder text
 
 	optns
 		.selectAll('option.option')
@@ -100,6 +99,8 @@ function changeData(selectedOption) {
 	svg.selectAll('circle.line-end').remove();
 	svg.selectAll('text.directLineLabel').remove();
 	svg.selectAll('line.label-leader-line').remove();
+
+	d3.selectAll('.y.axis .tick').attr('opacity', 1); // Reveal y-axis ticks
 
 	// Clear existing legend
 	d3.select('#legend').selectAll('div.legend--item').remove();
@@ -515,6 +516,8 @@ console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	} else {
 		// If no default option, clear the chart
 		clearChart();
+		$('#optionsSelect').val('').trigger('chosen:updated');
+		d3.selectAll('.y.axis .tick').attr('opacity', 0); // Hide y-axis ticks
 	}
 
 	//use pym to calculate chart dimensions
