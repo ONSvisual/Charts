@@ -291,7 +291,7 @@ function drawGraphic() {
 		//alignment - left or right for vertical arrows, above or below for horizontal arrows
 		'below',
 		//annotation text
-		"Likely range (95% confidence interval)",
+		config.essential.CI_legend_interval_text,
 		//wrap width
 		150,
 		//text adjust y
@@ -314,7 +314,7 @@ function drawGraphic() {
 		//alignment - left or right for vertical arrows, above or below for horizontal arrows
 		'right',
 		//annotation text
-		"Estimated value",
+		config.essential.CI_legend_text,
 		//wrap width
 		1500,
 		//text adjust y
