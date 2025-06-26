@@ -254,6 +254,7 @@ function drawGraphic() {
 
 	});
 
+	if (config.essential.CI_legend) {
 	const ciSvg = d3.select('#legend')
 		.append('div')
 		.attr('class', 'legend--item')
@@ -322,6 +323,7 @@ function drawGraphic() {
 		//Text vertical align: top, middle or bottom (default is middle)
 		'bottom'
 	)
+}
 
 
 	// This does the y-axis label
