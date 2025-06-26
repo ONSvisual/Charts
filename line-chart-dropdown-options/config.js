@@ -39,8 +39,8 @@ config = {
 			"md": "%y",
 			"lg": "%Y"
 		},
-		"xAxisNumberFormat": ".0f",
-		"yAxisNumberFormat": ".0f",
+		"xAxisNumberFormat": ",.0f",
+		"yAxisNumberFormat": ",.0f",
 		"dateFormat": "%m/%d/%Y",
 		"yAxisLabel": "y axis label",
 		"xAxisLabel": "",
