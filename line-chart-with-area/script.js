@@ -1,6 +1,6 @@
 //Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
 
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addDirectionArrow } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -254,16 +254,74 @@ function drawGraphic() {
 
 	});
 
-	d3.select('#legend')
+	const ciSvg = d3.select('#legend')
 		.append('div')
-		.attr('class', 'legend--item CI')
-		.append('div')
-		.attr('class', 'legend--icon--square')
+		.attr('class', 'legend--item')
+		.append('svg')
+		.attr('width', 205)
+		.attr('height', 70);
 
-	d3.select('.legend--item.CI')
-		.append('div')
-		.attr('class', 'legend--text')
-		.text('95% confidence interval')
+	ciSvg.append('rect')
+		.attr('x', 0)
+		.attr('y', 0)
+		.attr('width', 50)
+		.attr('height', 25)
+		.attr('fill', "#959495")
+		.attr('fill-opacity', 0.3);
+
+	ciSvg.append('line')
+		.attr('x1', 0)
+		.attr('y1', 12.5)
+		.attr('x2', 50)
+		.attr('y2', 12.5)
+		.attr('stroke', "#666666")
+		.attr('stroke-width', 2);
+
+	addDirectionArrow(
+		//name of your svg, normally just SVG
+		ciSvg,
+		//direction of arrow: left, right, up or down
+		'up',
+		//anchor end or start (end points the arrow towards your x value, start points away)
+		'end',
+		//x value
+		20,
+		//y value
+		18,
+		//alignment - left or right for vertical arrows, above or below for horizontal arrows
+		'below',
+		//annotation text
+		"Likely range (95% confidence interval)",
+		//wrap width
+		150,
+		//text adjust y
+		15,
+		//Text vertical align: top, middle or bottom (default is middle)
+		'left'
+	)
+
+	addDirectionArrow(
+		//name of your svg, normally just SVG
+		ciSvg,
+		//direction of arrow: left, right, up or down
+		'left',
+		//anchor end or start (end points the arrow towards your x value, start points away)
+		'end',
+		//x value
+		50,
+		//y value
+		7,
+		//alignment - left or right for vertical arrows, above or below for horizontal arrows
+		'right',
+		//annotation text
+		"Estimated value",
+		//wrap width
+		1500,
+		//text adjust y
+		0,
+		//Text vertical align: top, middle or bottom (default is middle)
+		'bottom'
+	)
 
 
 	// This does the y-axis label
