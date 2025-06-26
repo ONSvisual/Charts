@@ -35,13 +35,13 @@ config = {
 		// "yDomain": [-10000,30000],
 		// either "auto", "autoAll" or an array for the x domain e.g. [0,2000]
 		"xAxisTickFormat": {
-			"sm": "%b %y",
-			"md": "%b %y",
-			"lg": "%B %Y"
+			"sm": "%y",
+			"md": "%y",
+			"lg": "%Y"
 		},
 		"xAxisNumberFormat": ".0f",
 		"yAxisNumberFormat": ".0f",
-		"dateFormat": "%d/%m/%Y",
+		"dateFormat": "%Y",
 		"yAxisLabel": "y axis label",
 		"xAxisLabel": "",
 		"defaultOption": "option1",
@@ -73,10 +73,20 @@ config = {
 				"left": 60
 			}
 		},
-		"xAxisTicks": { // this is the number of ticks on the x axis - add the first and last date with the options below
+		// New tick config
+		"xAxisTickMethod": "total", // "interval" or "total"
+		"xAxisTickCount": { // for "total" method
 			"sm": 2,
 			"md": 2,
-			"lg": 5
+			"lg": 6
+		},
+		"xAxisTickInterval": { // for "interval" method
+			"unit": "year", // "year", "month", "quarter", "day"
+			"step":  { // every x "units"
+				"sm": 3,
+				"md": 3, 
+				"lg": 3
+			}
 		},
 		"yAxisTicks": {
 			"sm": 7,
@@ -84,7 +94,7 @@ config = {
 			"lg":8
 		},
 		"addFirstDate": true,
-		"addFinalDate": false,
+		"addFinalDate": true,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},

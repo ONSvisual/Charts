@@ -9,12 +9,22 @@ let graphic_data, size;
 let pymChild = null;
 
 function drawGraphic() {
-
 	select.selectAll('*').remove(); // Remove the select element if it exists
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 	const aspectRatio = config.optional.aspectRatio[size]
+	let margin = config.optional.margin[size];
+	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
+	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
+
+	// Create an SVG element at the top so all functions can use it
+	const svg = addSvg({
+		svgParent: graphic,
+		chart_width: chart_width,
+		height: height + margin.top + margin.bottom,
+		margin: margin
+	});
 
 	let uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
 
@@ -89,8 +99,6 @@ function drawGraphic() {
 			// .attr('x', -100)
 			.remove();
 	};
-
-	// Function to change the data based on the selected option
 
 // Function to change the data based on the selected option
 function changeData(selectedOption) {
@@ -341,10 +349,7 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	}
 }
 	// Define the dimensions and margin, width and height of the chart.
-	let margin = config.optional.margin[size];
-	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
-	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
+	// Remove duplicate declarations of margin, chart_width, and height in drawGraphic
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== 'option');
@@ -389,79 +394,81 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		y.domain(config.essential.yDomain);
 	} // else "auto" will be handled in changeData
 
-	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
-	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
-
-	if (config.optional.addFirstDate == true) {
-		tickValues.push(graphic_data[0].date)
-		console.log("First date added")
+	// Helper to generate x-axis ticks based on config
+	function getXAxisTicks({
+	    data,
+	    xDataType,
+	    size,
+	    config
+	}) {
+	    let ticks = [];
+	    const method = config.optional.xAxisTickMethod || "interval";
+	    if (xDataType === 'date') {
+	        const start = data[0].date;
+	        const end = data[data.length - 1].date;
+	        if (method === "total") {
+	            // Use d3.ticks for total number of ticks
+	            const count = config.optional.xAxisTickCount[size] || 5;
+	            ticks = d3.scaleTime().domain([start, end]).ticks(count);
+	        } else if (method === "interval") {
+	            // Use d3.time* for interval ticks
+	            const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+	            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+	            let d3Interval;
+	            switch (interval.unit) {
+	                case "year":
+	                    d3Interval = d3.timeYear.every(step);
+	                    break;
+	                case "month":
+	                    d3Interval = d3.timeMonth.every(step);
+	                    break;
+	                case "quarter":
+	                    d3Interval = d3.timeMonth.every(step * 3);
+	                    break;
+	                case "day":
+	                    d3Interval = d3.timeDay.every(step);
+	                    break;
+	                default:
+	                    d3Interval = d3.timeYear.every(1);
+	            }
+	            ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
+	        }
+	        // Only add first/last if not present by value
+	        if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
+	            ticks.unshift(start);
+	        }
+	        if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
+	            ticks.push(end);
+	        }
+	    } else {
+	        // Numeric axis
+	        if (method === "total") {
+	            const count = config.optional.xAxisTickCount[size] || 5;
+	            const extent = d3.extent(data, d => d.date);
+	            ticks = d3.ticks(extent[0], extent[1], count);
+	        } else if (method === "interval") {
+	            const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+	            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+	            const extent = d3.extent(data, d => d.date);
+	            let current = extent[0];
+	            while (current <= extent[1]) {
+	                ticks.push(current);
+	                current += step;
+	            }
+	        }
+	        if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
+	            ticks.unshift(data[0].date);
+	        }
+	        if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+	            ticks.push(data[data.length - 1].date);
+	        }
+	    }
+	    // Remove duplicates and sort
+	    ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
+	    return ticks;
 	}
 
-	if (config.optional.addFinalDate == true) {
-		tickValues.push(graphic_data[graphic_data.length - 1].date)
-		console.log("Last date added")
-	}
-console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 12))
-
-	// Create an SVG element
-	const svg = addSvg({
-		svgParent: graphic,
-		chart_width: chart_width,
-		height: height + margin.top + margin.bottom,
-		margin: margin
-	})
-
-		if (config.essential.drawLegend || size === 'sm') {
-
-
-			// Set up the legend
-			let legenditem = d3
-				.select('#legend')
-				.selectAll('div.legend--item')
-				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-				.enter()
-				.append('div')
-				.attr('class', 'legend--item');
-
-			legenditem
-				.append('div')
-				.attr('class', 'legend--icon--circle')
-				.style('background-color', function (d) {
-					return d[1];
-				});
-
-			legenditem
-				.append('div')
-				.append('p')
-				.attr('class', 'legend--text')
-				.html(function (d) {
-					return d[0];
-				});
-
-		};
-
-
-	// add grid lines to y axis
-	svg
-		.append('g')
-		.attr('class', 'grid')
-		.call(
-			d3
-				.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
-				.tickSize(-chart_width)
-				.tickFormat('')
-		)
-		.lower();
-
-	d3.selectAll('g.tick line')
-		.each(function (e) {
-			if (e == config.essential.zeroLine) {
-				d3.select(this).attr('class', 'zero-line');
-			}
-		})
-		// console.log(x.ticks(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 5))
-	// Add the x-axis
+	// In drawGraphic, replace the x-axis tickValues logic:
 	svg
 		.append('g')
 		.attr('class', 'x axis')
@@ -469,13 +476,16 @@ console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length
 		.call(
 			d3
 				.axisBottom(x)
-				.tickValues(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, (130/config.optional.xAxisTicks[size])))
-				// .ticks(d3.timeYear.every(2))
-				// .ticks(d3.timeMonth.every(12))
+				.tickValues(getXAxisTicks({
+					data: graphic_data,
+					xDataType,
+					size,
+					config
+				}))
 				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
 					: d3.format(config.essential.xAxisNumberFormat)(d))
 		);
-console.log(Math.floor(30/config.optional.xAxisTicks[size]))
+
 	// Add the y-axis
 	svg
 		.append('g')
