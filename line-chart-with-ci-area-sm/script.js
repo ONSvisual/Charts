@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel, addDirectionArrow } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel, addDirectionArrow, addElbowArrow } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -268,27 +268,20 @@ function drawGraphic() {
 		.attr('stroke', "#666666")
 		.attr('stroke-width', 2);
 
-	addDirectionArrow(
-		//name of your svg, normally just SVG
-		ciSvg,
-		//direction of arrow: left, right, up or down
-		'up',
-		//anchor end or start (end points the arrow towards your x value, start points away)
-		'end',
-		//x value
-		20,
-		//y value
-		18,
-		//alignment - left or right for vertical arrows, above or below for horizontal arrows
-		'below',
-		//annotation text
-		config.essential.CI_legend_interval_text,
-		//wrap width
-		150,
-		//text adjust y
-		15,
-		//Text vertical align: top, middle or bottom (default is middle)
-		'left'
+	addElbowArrow(
+			ciSvg,                // svgName
+			25,                   // startX
+			25,                   // startY
+			68,                   // endX
+			37,                    // endY
+			"vertical-first",     // bendDirection
+			"start",                // arrowAnchor
+			config.essential.CI_legend_interval_text, // thisText
+			150,                  // wrapWidth
+			25,                   // textAdjustY
+			"top",               // wrapVerticalAlign
+			"#414042",            // arrowColour
+			"end"              // textAlignment
 	)
 
 	addDirectionArrow(

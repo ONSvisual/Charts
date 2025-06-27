@@ -295,7 +295,7 @@ h5#source {
   stroke-dasharray: 4 4;
 }
 
-.direction-arrow {
+.direction-arrow, .elbow-arrow {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
