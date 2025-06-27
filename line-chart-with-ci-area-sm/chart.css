@@ -51,6 +51,15 @@
   forced-color-adjust: none;
 }
 
+.legend--icon--circle {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  align-self: flex-start;
+  flex-shrink: 0;
+  vertical-align: top !important;
+}
+
 .legend--itemCI {
   display: flex;
   padding-right: 40px;
