@@ -33,7 +33,8 @@ config = {
 		"dateFormat": "%Y",
 		"yAxisLabel": "Pay Gap",
 		"CI_legend": true,
-		"CI_legend_text": "95% confidence interval",
+		"CI_legend_interval_text": "Likely range (95% confidence interval)",
+		"CI_legend_text": "Estimated value",
 		"zeroLine": "0"
 	},
 	"optional": {

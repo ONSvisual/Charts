@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel, addDirectionArrow, addElbowArrow } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -245,23 +245,68 @@ function drawGraphic() {
 
 	if (config.essential.CI_legend) {
 
-		// add confidence interval into legend as seperate div 
-		var legenditemCI = d3.select('#legend')
-			.selectAll('div.legend--item2')
-			.data(d3.zip(0)) // creating a filler for the div to read in. 0 is meaningless
-			.enter()
-			.append('div')
-			.attr('class', 'legend--itemCI')
+		const ciSvg = d3.select('#legend')
+		.append('div')
+		.attr('class', 'legend--item')
+		.append('svg')
+		.attr('width', 205)
+		.attr('height', 70);
 
-		legenditemCI.append('div')
-			.attr('class', 'legend--icon--rect')
-			.style('background-color', '#C6C6C6');
+	ciSvg.append('rect')
+		.attr('x', 0)
+		.attr('y', 0)
+		.attr('width', 50)
+		.attr('height', 25)
+		.attr('fill', "#959495")
+		.attr('fill-opacity', 0.3);
 
+	ciSvg.append('line')
+		.attr('x1', 0)
+		.attr('y1', 12.5)
+		.attr('x2', 50)
+		.attr('y2', 12.5)
+		.attr('stroke', "#666666")
+		.attr('stroke-width', 2);
 
-		legenditemCI.append('div')
-			.append('p')
-			.attr('class', 'legend--text')
-			.html(config.essential.CI_legend_text);
+	addElbowArrow(
+			ciSvg,                // svgName
+			25,                   // startX
+			25,                   // startY
+			68,                   // endX
+			37,                    // endY
+			"vertical-first",     // bendDirection
+			"start",                // arrowAnchor
+			config.essential.CI_legend_interval_text, // thisText
+			150,                  // wrapWidth
+			25,                   // textAdjustY
+			"top",               // wrapVerticalAlign
+			"#414042",            // arrowColour
+			"end"              // textAlignment
+	)
+
+	addDirectionArrow(
+		//name of your svg, normally just SVG
+		ciSvg,
+		//direction of arrow: left, right, up or down
+		'left',
+		//anchor end or start (end points the arrow towards your x value, start points away)
+		'end',
+		//x value
+		50,
+		//y value
+		7,
+		//alignment - left or right for vertical arrows, above or below for horizontal arrows
+		'right',
+		//annotation text
+		config.essential.CI_legend_text,
+		//wrap width
+		1500,
+		//text adjust y
+		0,
+		//Text vertical align: top, middle or bottom (default is middle)
+		'bottom'
+	)
+
 
 	}
 
