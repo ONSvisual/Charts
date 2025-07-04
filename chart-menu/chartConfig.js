@@ -164,8 +164,8 @@ const chartConfig = [
       ]
     },
     {
-      name: "A line chart with area shaded",
-      url: "https://onsvisual.github.io/Charts/line-chart-with-area/",
+      name: "Line chart with area shaded",
+      url: "https://onsvisual.github.io/Charts/line-chart-with-ci-area/",
       tags: {
         "change-over-time": true,
         "part-to-whole": true
@@ -240,6 +240,27 @@ const chartConfig = [
         tags: {
           comparison: true,
           distribution: true
+        },
+        dataFiles: [
+          { name: "data.csv", path: "data.csv" }
+        ]
+      },
+      {
+        name: "Scatter plot",
+        url: "https://onsvisual.github.io/Charts/scatter-plot/",
+        tags: {
+          correlation: true
+        },
+        dataFiles: [
+          { name: "data.csv", path: "data.csv" }
+        ]
+      },
+      {
+        name: "Scatter plot small multiple",
+        url: "https://onsvisual.github.io/Charts/scatter-plot-sm/",
+        tags: {
+          correlation: true,
+          comparison: true
         },
         dataFiles: [
           { name: "data.csv", path: "data.csv" }
