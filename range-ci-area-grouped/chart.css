@@ -1,0 +1,27 @@
+line.between{
+  stroke:#c6c6c6;
+  stroke-width:3px;
+}
+
+.dataLabels{
+  font-weight: 600;
+  font-size: 14px;
+}
+
+div.legend--icon--diamond{
+  height: 12px;
+  width: 12px;
+  align-self: center;
+  flex-shrink: 0;
+  forced-color-adjust: none;
+  transform: rotate(45deg);
+}
+
+.legend--icon--circle {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  align-self: flex-start;
+  flex-shrink: 0;
+  vertical-align: top !important;
+}
