@@ -98,7 +98,7 @@ function drawGraphic() {
 			});
 	});
 
-	const rectHeight = 15
+	const rectHeight = 16
 
 	charts
 		.selectAll("rect")
@@ -109,17 +109,20 @@ function drawGraphic() {
 		.attr("width", d => Math.abs(x(Number(d.max)) - x(Number(d.min))))
 		.attr("height", rectHeight)
 		.attr("fill", d => colour(d.series))
-		.attr("opacity", 0.8);
+		.attr("opacity", 0.65);
 
 	charts
-		.selectAll("path.diamond")
+		.selectAll('rect.value')
 		.data((d) => d[1])
-		.join("path")
-		.attr("class", "diamond")
-		.attr("d", d3.symbol().type(d3.symbolDiamond).size(45))
-		.attr("transform", d => `translate(${x(d.value)} ${groups.filter((f) => f[0] == d.group)[0][3](d.name) - 0}) scale(1.5, 1)`)
+		.join('rect')
+		.attr('x', (d) => x(d.value) - 5)
+		.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name) - 5)
+		.attr('width', 10)
+		.attr('height', 10)
+		.attr('transform', (d) => `rotate(45 ${x(d.value) + 0} ${groups.filter((f) => f[0] == d.group)[0][3](d.name) - 0})`)
 		.attr("fill", "white")
-		.attr("stroke", "black");
+		.attr("stroke-width", "2px")
+		.attr('stroke', d => colour(d.series));
 
 	// This does the x-axis label
 	charts.each(function (d, i) {
@@ -137,7 +140,7 @@ function drawGraphic() {
 
 	// Set up the legend
 	let legend = d3
-			.select('#legend')
+		.select('#legend')
 
 	let legenditem = legend
 		.selectAll('div.legend--item')
@@ -167,7 +170,7 @@ function drawGraphic() {
 		});
 
 	if (config.essential.CI_legend) {
-		
+
 
 		const ciSvg = legend
 			.append('div')
@@ -178,18 +181,22 @@ function drawGraphic() {
 
 		ciSvg.append('rect')
 			.attr('x', 0)
-			.attr('y', 0)
+			.attr('y', 1)
 			.attr('width', 50)
-			.attr('height', 15)
+			.attr('height', 16)
 			.attr('fill', "#959495")
-			.attr('fill-opacity', 0.3);
+			.attr('fill-opacity', 0.65);
 
-
-		ciSvg.append("path")
-			.attr("d", d3.symbol().type(d3.symbolDiamond).size(45))
-			.attr("transform", "translate(25, 7.5) scale(1.5, 1)")
+		ciSvg
+			.append("rect")
+			.attr('x', 25)
+			.attr('y', 2)
+			.attr('width', 10)
+			.attr('height', 10)
+			.attr('transform', `rotate(45 ${25} ${2})`)
 			.attr("fill", "white")
-			.attr("stroke", "#959495");
+			.attr("stroke-width", "2px")
+			.attr('stroke', "#959495");
 
 
 		addElbowArrow(

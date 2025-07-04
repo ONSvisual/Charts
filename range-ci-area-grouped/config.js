@@ -3,8 +3,8 @@ config = {
 		"graphic_data_url": "data.csv",
 		"colour_palette": [
 			"#206095",
-			"#27A0CC",
 			"#871A5B",
+			"#27A0CC",
 			"#A8BD3A",
 			"#F66068",
 			"#118C7B"
