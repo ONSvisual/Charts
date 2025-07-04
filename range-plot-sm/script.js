@@ -1,9 +1,9 @@
-import { initialise, addSvg, wrap, addChartTitleLabel, addAxisLabel} from "../lib/helpers.js";
+import { initialise, addSvg, wrap, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
-let graphic_data, size, groups, categories, xDomain, svg, charts ;
+let graphic_data, size, groups, categories, xDomain, svg, charts;
 
 
 function drawGraphic() {
@@ -73,7 +73,7 @@ function drawGraphic() {
 		.attr('class', 'groupLabels')
 		.html((d) => d[0]);
 
-	function drawChart(container, seriesName, data, chartIndex){
+	function drawChart(container, seriesName, data, chartIndex) {
 		for (let i = 0; i < categories.length; i++) {
 			let chartPosition = i % config.optional.chart_every[size]
 
@@ -98,11 +98,11 @@ function drawGraphic() {
 				.tickFormat(d => d3.format(config.essential.xAxisTickFormat)(d));
 
 			svg = addSvg({
-				  svgParent: container,
-				  chart_width: chart_width,
-				  height: (d) => d[2] + margin.top + margin.bottom,
-				  margin: margin
-			})	
+				svgParent: container,
+				chart_width: chart_width,
+				height: (d) => d[2] + margin.top + margin.bottom,
+				margin: margin
+			})
 
 			svg.each(function (d) {
 				if (chartPosition == 0 || !config.optional.dropYAxis) {
@@ -130,12 +130,24 @@ function drawGraphic() {
 					});
 
 				addChartTitleLabel({
-					  svgContainer: d3.select(this),
-					  yPosition: -5,
-					  text: chartPosition == 0 ? "Graduates" : "L3 to L5 non-graduates",
-					  wrapWidth: chart_width
-					})
+					svgContainer: d3.select(this),
+					yPosition: -5,
+					text: chartPosition == 0 ? "Graduates" : "L3 to L5 non-graduates",
+					wrapWidth: chart_width
+				})
 			})
+
+			svg
+				.selectAll('line.between')
+				.data((d) => d[1].filter(e => e.category == categories[i][0]))
+				.join('line')
+				.attr('class', 'between')
+				.attr('x1', (d) => x(d.min))
+				.attr('x2', (d) => x(d.max))
+				.attr('y1', (d, i) => groups.filter((e) => e[0] == d.group)[0][3](d.name))
+				.attr('y2', (d, i) => groups.filter((e) => e[0] == d.group)[0][3](d.name))
+				.attr('stroke', '#c6c6c6')
+				.attr('stroke-width', '3px');
 
 			svg
 				.selectAll('rect.min1')
@@ -194,15 +206,15 @@ function drawGraphic() {
 						svgContainer: d3.select(this),
 						xPosition: chart_width,
 						yPosition: (d) => d[2] + 35,
-						text: chartPosition === categories.length-1 ?
-						  config.essential.xAxisLabel : "",
+						text: chartPosition === categories.length - 1 ?
+							config.essential.xAxisLabel : "",
 						textAnchor: "end",
 						wrapWidth: chart_width
-				  });
+					});
 				}
 			});
 
-			
+
 		}
 	}
 
@@ -210,7 +222,7 @@ function drawGraphic() {
 		drawChart(d3.select(this), key, value, i);
 	});
 
-	
+
 
 	// let svgs = [];
 
@@ -370,7 +382,7 @@ function drawGraphic() {
 
 	legenditem
 		.append('div')
-		.attr('class', (d,i)=>i==1 ? 'legend--icon--circle' : 'legend--icon--diamond')
+		.attr('class', (d, i) => i == 1 ? 'legend--icon--circle' : 'legend--icon--diamond')
 		.style('background-color', function (d) {
 			return d[1];
 		});
