@@ -122,7 +122,10 @@ function drawGraphic() {
 		.attr('transform', (d) => `rotate(45 ${x(d.value) + 0} ${groups.filter((f) => f[0] == d.group)[0][3](d.name) - 0})`)
 		.attr("fill", "white")
 		.attr("stroke-width", "2px")
-		.attr('stroke', d => colour(d.series));
+		.attr('stroke', d => colour(d.series))
+		.attr('rx',1)
+		.attr('ry',1);
+
 
 	// This does the x-axis label
 	charts.each(function (d, i) {
@@ -196,7 +199,9 @@ function drawGraphic() {
 			.attr('transform', `rotate(45 ${25} ${2})`)
 			.attr("fill", "white")
 			.attr("stroke-width", "2px")
-			.attr('stroke', "#959495");
+			.attr('stroke', "#959495")
+			.attr('rx',1)
+			.attr('ry',1);
 
 
 		addElbowArrow(
