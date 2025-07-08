@@ -3,7 +3,7 @@ config = {
 		"graphic_data_url": "data.csv",
 		"legendLabels": { "min": "Moved travel to work area (TTWA)", "max": "Moved region" },
 		//the keys match the column names
-		"colour_palette": ["#118C7B", "#206095"],
+		"colour_palette": ["#8D8C8E", "#206095"],
 		"sourceText": "Office for National Statistics (ONS) analysis using Longitudinal Education Outcomes (LEO) from the Department for Education (DfE)",
 		"accessibleSummary":
 			"Here is the screenreader text describing the chart.",
