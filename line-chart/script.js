@@ -7,6 +7,118 @@ let graphic_data, size;
 
 let pymChild = null;
 
+function getXAxisTicks({
+    data,
+    xDataType,
+    size,
+    config
+}) {
+    let ticks = [];
+    const method = config.optional.xAxisTickMethod || "interval";
+    if (xDataType === 'date') {
+        const start = data[0].date;
+        const end = data[data.length - 1].date;
+        if (method === "total") {
+            const count = config.optional.xAxisTickCount ? config.optional.xAxisTickCount[size] : 5;
+            ticks = d3.scaleTime().domain([start, end]).ticks(count);
+        } else if (method === "interval") {
+            const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+            let d3Interval;
+            switch (interval.unit) {
+                case "year":
+                    d3Interval = d3.timeYear.every(step);
+                    break;
+                case "month":
+                    d3Interval = d3.timeMonth.every(step);
+                    break;
+                case "quarter":
+                    d3Interval = d3.timeMonth.every(step * 3);
+                    break;
+                case "day":
+                    d3Interval = d3.timeDay.every(step);
+                    break;
+                default:
+                    d3Interval = d3.timeYear.every(1);
+            }
+	            ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
+        }
+        if (!Array.isArray(ticks)) ticks = [];
+        if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
+            ticks.unshift(start);
+        }
+        if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
+            ticks.push(end);
+        }
+    } else {
+        // Numeric axis
+        if (method === "total") {
+            const count = config.optional.xAxisTickCount[size] || 5;
+            const extent = d3.extent(data, d => d.date);
+            ticks = d3.ticks(extent[0], extent[1], count);
+        } else if (method === "interval") {
+            const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+            const extent = d3.extent(data, d => d.date);
+            let current = extent[0];
+            while (current <= extent[1]) {
+                ticks.push(current);
+                current += step;
+            }
+        }
+        if (!Array.isArray(ticks)) ticks = [];
+        if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
+            ticks.unshift(data[0].date);
+        }
+        if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+            ticks.push(data[data.length - 1].date);
+        }
+    }
+    // Remove duplicates and sort
+    ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
+    return ticks;
+}
+
+function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
+    let labelData = [];
+    const lastDatum = graphic_data[graphic_data.length - 1];
+    categories.forEach(function (category, index) {
+        if (lastDatum[category] === null) return;
+        const label = svg.append('text')
+            .attr('class', 'directLineLabel')
+            .attr('x', x(lastDatum.date) + 10)
+            .attr('y', y(lastDatum[category]))
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'start')
+            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+            .text(category)
+            .call(wrap, margin.right - 10);
+        const bbox = label.node().getBBox();
+        labelData.push({
+            node: label,
+            x: x(lastDatum.date) + 10,
+            y: y(lastDatum[category]),
+            originalY: y(lastDatum[category]),
+            height: bbox.height,
+            category: category
+        });
+    });
+    if (labelData.length > 1) {
+        labelData.sort((a, b) => a.y - b.y);
+        const minSpacing = 12;
+        for (let i = 1; i < labelData.length; i++) {
+            const current = labelData[i];
+            const previous = labelData[i - 1];
+            if (current.y - previous.y < minSpacing) {
+                current.y = previous.y + minSpacing;
+            }
+        }
+        labelData.forEach(label => {
+            label.node.attr('y', label.y);
+        });
+    }
+}
+
 function drawGraphic() {
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
@@ -56,24 +168,10 @@ function drawGraphic() {
 		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
 		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
 		y.domain([minY, maxY])
-		console.log(minY, maxY)
+		// console.log(minY, maxY)
 	} else {
 		y.domain(config.essential.yDomain)
 	}
-
-	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
-	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
-
-	if (config.optional.addFirstDate == true) {
-		tickValues.push(graphic_data[0].date)
-		console.log("First date added")
-	}
-
-	if (config.optional.addFinalDate == true) {
-		tickValues.push(graphic_data[graphic_data.length - 1].date)
-		console.log("Last date added")
-	}
-console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 12))
 
 	// Create an SVG element
 	const svg = addSvg({
@@ -85,7 +183,7 @@ console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length
 	//console.log(`SVG element created`);
 
 	// create lines and circles for each category
-	categories.forEach(function (category) {
+	categories.forEach(function (category, index) {
 		const lineGenerator = d3
 			.line()
 			.x((d) => x(d.date))
@@ -146,43 +244,9 @@ console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length
 
 		} else {
 
-			// Add text labels to the right of the circles
-			svg
-				.append('text')
-				.attr(
-					'transform',
-					`translate(${x(lastDatum.date)}, ${y(lastDatum[category])})`
-				)
-				.attr('x', 10)
-				.attr('dy', '.35em')
-				.attr('text-anchor', 'start')
-				.attr(
-					'fill',
-					config.essential.text_colour_palette[
-					categories.indexOf(category) % config.essential.text_colour_palette.length
-					]
-				)
-				.text(category)
-				.attr("class", "directLineLabel")
-				.call(wrap, margin.right - 10); //wrap function for the direct labelling.
+		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
 
-		};
-
-
-		svg
-			.append('circle')
-			.attr('cx', x(lastDatum.date))
-			.attr('cy', y(lastDatum[category]))
-			.attr('r', 4)
-			.attr(
-				'fill',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
-				]
-			);
-		// console.log(`Circle appended for category: ${category}`);
-
-
+		}
 
 	});
 
@@ -214,13 +278,16 @@ console.log(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length
 		.call(
 			d3
 				.axisBottom(x)
-				.tickValues(d3.timeMonths(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, (130/config.optional.xAxisTicks[size])))
-				// .ticks(d3.timeYear.every(2))
-				// .ticks(d3.timeMonth.every(12))
+				.tickValues(getXAxisTicks({
+					data: graphic_data,
+					xDataType,
+					size,
+					config
+				}))
 				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
 					: d3.format(config.essential.xAxisNumberFormat)(d))
 		);
-console.log(Math.floor(30/config.optional.xAxisTicks[size]))
+
 	// Add the y-axis
 	svg
 		.append('g')
@@ -258,9 +325,8 @@ console.log(Math.floor(30/config.optional.xAxisTicks[size]))
 	if (pymChild) {
 		pymChild.sendHeight();
 	}
-	// console.log(`PymChild height sent`);
-}
 
+}
 
 // Load the data
 d3.csv(config.essential.graphic_data_url).then((rawData) => {
@@ -284,16 +350,9 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 		}
 	});
 
-	console.log(graphic_data);
-
-	// console.log(`Data from CSV processed`);
-
-	// console.log('Final data structure:');
-	// console.log(graphic_data);
-
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({
 		renderCallback: drawGraphic
 	});
-	// console.log(`PymChild created with renderCallback to drawGraphic`);
+
 });
