@@ -31,12 +31,12 @@ config = {
 		// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
 		// "lineCurveType": "curveMonotoneX" // Monotone spline curve
 
-		"yDomain": [-10000,30000],
+		"yDomain": "auto",
 		// either "auto" or an array for the x domain e.g. [0,2000]
 		"xAxisTickFormat": {
-			"sm": "%b %y",
-			"md": "%b %y",
-			"lg": "%B %Y"
+			"sm": "%Y",
+			"md": "%Y",
+			"lg": "%Y"
 		},
 		"xAxisNumberFormat": ".0f",
 		"yAxisNumberFormat": ".0f",
@@ -71,18 +71,28 @@ config = {
 				"left": 60
 			}
 		},
-		"xAxisTicks": { // this is the number of ticks on the x axis - add the first and last date with the options below
+		// New tick config
+		"xAxisTickMethod": "total", // "interval" or "total"
+		"xAxisTickCount": { // for "total" method
 			"sm": 2,
 			"md": 2,
-			"lg": 5
+			"lg": 6
+		},
+		"xAxisTickInterval": { // for "intersval" method
+			"unit": "year", // "year", "month", "quarter", "day"
+			"step":  { // every x "units"
+				"sm": 2,
+				"md": 2, 
+				"lg": 2
+			}
 		},
 		"yAxisTicks": {
 			"sm": 7,
 			"md": 5,
 			"lg":8
 		},
-		"addFirstDate": true,
-		"addFinalDate": false,
+		"addFirstDate": false,
+		"addFinalDate": true,
 		"mobileBreakpoint": 510,
 		"mediumBreakpoint": 600
 	},
