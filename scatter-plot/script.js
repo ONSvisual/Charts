@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addAxisLabel, diamondShape } from "../lib/helpers.js";
+import { initialise, wrap2, addSvg, addAxisLabel, diamondShape } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -131,6 +131,19 @@ function drawGraphic() {
     .attr('stroke-linejoin', 'round')
     .attr('stroke-opacity', config.essential.strokeOpacity);
 
+    svg.selectAll('text.label')
+    .data(graphic_data.filter(d => d.highlight === 'y'))
+    .join('text')
+    .attr('class', 'dataLabels')
+    .attr('x', d => x(d.xvalue))
+    .attr('y', d => y(d.yvalue))
+    .attr('dy', '-1em')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', '14px')
+    .attr('fill', '#404142')
+    .text(d => d.name)
+    .style('font-weight', '600')
+    .call(wrap2, 100, 1.5, 1, 1.05, 1, true, 'middle');
 
   // This does the x-axis label
   addAxisLabel({
