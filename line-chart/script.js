@@ -293,7 +293,8 @@ function drawGraphic() {
 		.append('g')
 		.attr('class', 'y axis numeric')
 		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-			.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+			.tickFormat(d3.format(config.essential.yAxisNumberFormat))
+			.tickSize(0));
 
 
 
