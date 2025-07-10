@@ -8,6 +8,26 @@ let graphic_data, size;
 
 let pymChild = null;
 
+// Set y domain for new config structure (min/max can be "auto", "autoAll", or a value)
+function getYDomainMinMax({ minType, maxType, allData, filteredData, categories }) {
+    let min, max;
+    if (minType === "autoAll") {
+        min = d3.min(allData, (d) => Math.min(...categories.map((c) => d[c])));
+    } else if (minType === "auto") {
+        min = d3.min(filteredData, (d) => Math.min(...categories.map((c) => d[c])));
+    } else {
+        min = +minType;
+    }
+    if (maxType === "autoAll") {
+        max = d3.max(allData, (d) => Math.max(...categories.map((c) => d[c])));
+    } else if (maxType === "auto") {
+        max = d3.max(filteredData, (d) => Math.max(...categories.map((c) => d[c])));
+    } else {
+        max = +maxType;
+    }
+    return [min, max];
+}
+
 function drawGraphic() {
 	select.selectAll('*').remove(); // Remove the select element if it exists
 
@@ -120,12 +140,19 @@ function changeData(selectedOption) {
 	// Get categories (series) for this option
 	const categories = Object.keys(filteredData[0]).filter((k) => k !== 'date' && k !== 'option');
 
-	// Set y domain for "auto" (per selected option)
-	if (config.essential.yDomain === "auto") {
-		let minY = d3.min(filteredData, (d) => Math.min(...categories.map((c) => d[c])));
-		let maxY = d3.max(filteredData, (d) => Math.max(...categories.map((c) => d[c])));
+	// Set y domain for "auto" min/max using filtered data
+	let yDomainMin = config.essential.yDomainMin;
+	let yDomainMax = config.essential.yDomainMax;
+	if (yDomainMin === "auto" || yDomainMax === "auto") {
+		const [minY, maxY] = getYDomainMinMax({
+			minType: yDomainMin,
+			maxType: yDomainMax,
+			allData: graphic_data,
+			filteredData: filteredData,
+			categories
+		});
 		y.domain([minY, maxY]);
-		console.log("auto y domain:", minY, maxY);
+		// console.log("y domain (changeData):", minY, maxY);
 		// Update y axis
 		svg.select('.y.axis.numeric')
 			.transition()
@@ -366,9 +393,7 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	// console.log(xDataType)
 
 	// Define the x and y scales
-
 	let x;
-
 	if (xDataType == 'date') {
 		x = d3.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
@@ -384,15 +409,22 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		.scaleLinear()
 		.range([height, 0]);
 
-	// Set y domain for "autoAll" or array, but not for "auto"
-	if (config.essential.yDomain === "autoAll") {
-		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])));
-		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])));
+	// Set y domain for "autoAll" or manual values, but not for "auto"
+	let yDomainMin = config.essential.yDomainMin;
+	let yDomainMax = config.essential.yDomainMax;
+	if (yDomainMin === "auto" || yDomainMax === "auto") {
+		// Will be set in changeData for filtered data
+	} else {
+		// Use all data for "autoAll" or manual values
+		const [minY, maxY] = getYDomainMinMax({
+			minType: yDomainMin,
+			maxType: yDomainMax,
+			allData: graphic_data,
+			filteredData: graphic_data,
+			categories: categories
+		});
 		y.domain([minY, maxY]);
-		console.log("autoAll y domain:", minY, maxY);
-	} else if (Array.isArray(config.essential.yDomain)) {
-		y.domain(config.essential.yDomain);
-	} // else "auto" will be handled in changeData
+	}
 
 	// Helper to generate x-axis ticks based on config
 	function getXAxisTicks({
@@ -530,6 +562,18 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		d3.selectAll('.y.axis .tick').attr('opacity', 0); // Hide y-axis ticks
 	}
 
+	// Add grid lines to y axis (like line-chart template)
+	svg
+		.append('g')
+		.attr('class', 'grid')
+		.call(
+			d3.axisLeft(y)
+				.ticks(config.optional.yAxisTicks[size])
+				.tickSize(-chart_width)
+				.tickFormat('')
+		)
+		.lower();
+
 	//use pym to calculate chart dimensions
 	if (pymChild) {
 		pymChild.sendHeight();
@@ -561,8 +605,6 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 			}
 		}
 	});
-
-	console.log(graphic_data);
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({

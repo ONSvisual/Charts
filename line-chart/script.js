@@ -164,14 +164,28 @@ function drawGraphic() {
 		.scaleLinear()
 		.range([height, 0]);
 
-	if (config.essential.yDomain == "auto") {
-		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
-		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
-		y.domain([minY, maxY])
-		// console.log(minY, maxY)
+	let maxY, minY;
+
+	if (config.essential.yDomainMax === "auto") {
+		maxY = d3.max(graphic_data, d => d3.max(categories, c => d[c]));
 	} else {
-		y.domain(config.essential.yDomain)
+		maxY = config.essential.yDomainMax;
 	}
+
+	if (config.essential.yDomainMin === "auto") {
+		minY = d3.min(graphic_data, d => d3.min(categories, c => d[c]));
+	} else {
+		minY = config.essential.yDomainMin;
+	}
+
+	// Ensure maxY is not less than minY
+	if (maxY < minY) {
+		const temp = maxY;
+		maxY = minY;
+		minY = temp;
+	}
+
+	y.domain([minY, maxY]);
 
 	// Create an SVG element
 	const svg = addSvg({
