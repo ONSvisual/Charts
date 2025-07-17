@@ -80,7 +80,6 @@ function getXAxisTicks({
 }
 
 function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
-    console.log(`Creating direct labels for categories: ${categories}`);
 	// Remove any existing direct labels before adding new ones
     svg.selectAll('text.directLineLabel').remove();
     let labelData = [];
