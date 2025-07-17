@@ -175,6 +175,7 @@ function drawGraphic() {
         addChartTitleLabel({
             svgContainer: svg,
             yPosition: -15,
+            xPosition: - margin.left +5,
             text: d => d[0],
             wrapWidth: chart_width
         })
