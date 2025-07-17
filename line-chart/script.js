@@ -80,6 +80,9 @@ function getXAxisTicks({
 }
 
 function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
+    console.log(`Creating direct labels for categories: ${categories}`);
+	// Remove any existing direct labels before adding new ones
+    svg.selectAll('text.directLineLabel').remove();
     let labelData = [];
     const lastDatum = graphic_data[graphic_data.length - 1];
     categories.forEach(function (category, index) {
@@ -242,13 +245,13 @@ function drawGraphic() {
 					return d[0];
 				});
 
-		} else {
-
-		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
-
 		}
-
 	});
+
+	// Only call createDirectLabels once, after all lines are drawn and only if not using legend
+	if (!(config.essential.drawLegend || size === 'sm')) {
+		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
+	}
 
 	// add grid lines to y axis
 	svg
