@@ -31,8 +31,8 @@ config = {
 		// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
 		// "lineCurveType": "curveMonotoneX" // Monotone spline curve
 
-		"yDomain": "auto",
-		// either "auto" or an array for the x domain e.g. [0,2000]
+		"yDomainMax": "auto",  //"auto" for automatic y-axis max, or a number for fixed max
+		"yDomainMin": 0,
 		"xAxisTickFormat": {
 			"sm": "%Y",
 			"md": "%Y",
@@ -78,7 +78,7 @@ config = {
 			"md": 2,
 			"lg": 6
 		},
-		"xAxisTickInterval": { // for "intersval" method
+		"xAxisTickInterval": { // for "interval" method
 			"unit": "year", // "year", "month", "quarter", "day"
 			"step":  { // every x "units"
 				"sm": 2,

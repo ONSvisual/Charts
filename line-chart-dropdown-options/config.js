@@ -31,9 +31,9 @@ config = {
 		// "lineCurveType": "curveCatmullRom" // Catmull-Rom spline curve
 		// "lineCurveType": "curveMonotoneX" // Monotone spline curve
 
-		"yDomain": "auto",
-		// "yDomain": [-10000,30000],
-		// either "auto", "autoAll" or an array for the x domain e.g. [0,2000]
+		"yDomainMax": "auto", // either "auto", "autoAll" or a value
+		"yDomainMin": 0, // either "auto", "autoAll" or a value
+
 		"xAxisTickFormat": {
 			"sm": "%y",
 			"md": "%y",
