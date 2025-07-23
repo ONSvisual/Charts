@@ -13,7 +13,8 @@ config={
     "xAxisLabel":"Change since last month",
     "yAxisLabel":"Difference from trend",
     "xAxisFormat":".0%",
-    "yAxisFormat":".0%"
+    "yAxisFormat":".0%",
+    "groupLabel":'Group'
   },
   "optional": {
     "aspectRatio": {
