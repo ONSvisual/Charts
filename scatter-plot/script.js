@@ -1,4 +1,4 @@
-import { initialise, wrap2, addSvg, addAxisLabel, diamondShape, createDelaunayOverlay, createAdvancedDelaunayOverlay } from "../lib/helpers.js";
+import { initialise, wrap2, addSvg, addAxisLabel, diamondShape, createDelaunayOverlay } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -39,7 +39,7 @@ function drawGraphic() {
     margin: margin
   });
 
-  let groups = [...new Set(graphic_data.map(item => item.group))];
+  let groups = [...new Set(graphic_data.map(item => item.group))].sort();
 
   let shape = d3.scaleOrdinal()
     .domain(groups)
@@ -103,7 +103,7 @@ function drawGraphic() {
         d3.select(this).attr('class', 'zero-line');
       }
     });
-  ;
+  
 
   svg
     .append('g')
@@ -121,7 +121,7 @@ function drawGraphic() {
       }
     });
 
-  svg.selectAll('path')
+  svg.append('g').selectAll('path')
     .data(graphic_data)
     .join('path')
     .attr('d', d => {
