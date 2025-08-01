@@ -131,12 +131,6 @@ svg.chart:focus{
   box-shadow: 0 0 0 3px #fbc900;
 }
 
-
-/* required */
-  {
-  width: 100%;
-}
-
 /* axis tick labels */
 svg.chart g.axis text
 
