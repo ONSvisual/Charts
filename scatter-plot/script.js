@@ -1,4 +1,6 @@
 import { initialise, wrap2, addSvg, addAxisLabel, diamondShape, createDelaunayOverlay } from "../lib/helpers.js";
+import { EnhancedSelect } from "../lib/enhancedSelect.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -75,6 +77,32 @@ function drawGraphic() {
     .style('margin-left', '5px')
     .text(d => d);
 
+  // set up dropdown
+  const dropdownData = graphic_data.map((point, index) => ({
+    id: index,
+    label: point.name || `Point ${index + 1}`,
+    group: point.group
+  }));
+
+  const select = new EnhancedSelect({
+    containerId: 'select',
+    options: dropdownData,
+    label: 'Choose a point',
+    mode: 'default',
+    idKey: 'id',
+    labelKey: 'label',
+    groupKey:'group',
+    onChange: (selectedValue) => {
+      if (selectedValue) {
+        overlayCleanup.highlightPoint(selectedValue.id);
+      } else {
+        overlayCleanup.clearHighlight();
+      }
+    }
+  });
+
+
+
   if (config.essential.xDomain == "auto") {
     x.domain([d3.min(graphic_data, d => d.xvalue), d3.max(graphic_data, d => d.xvalue)]);
   } else {
@@ -103,7 +131,7 @@ function drawGraphic() {
         d3.select(this).attr('class', 'zero-line');
       }
     });
-  
+
 
   svg
     .append('g')
@@ -164,8 +192,8 @@ function drawGraphic() {
       xLabel: config.essential.xAxisLabel || 'X Value',
       yLabel: config.essential.yAxisLabel || 'Y Value',
       groupLabel: config.essential.groupLabel || 'Group',
-      width:"250px",
-      offset:{x:3,y:3}
+      width: "250px",
+      offset: { x: 3, y: 3 }
     },
     margin: margin
   });

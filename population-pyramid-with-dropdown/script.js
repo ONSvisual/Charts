@@ -1,5 +1,5 @@
 import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
-import { EnhancedSelect } from "./js/enhancedSelect.js";
+import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
