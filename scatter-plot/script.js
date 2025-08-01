@@ -164,10 +164,10 @@ function drawGraphic() {
       xLabel: config.essential.xAxisLabel || 'X Value',
       yLabel: config.essential.yAxisLabel || 'Y Value',
       groupLabel: config.essential.groupLabel || 'Group',
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      textColor: '#222222',
-      offset: { x: 65, y: -15 }
-    }
+      width:"250px",
+      offset:{x:3,y:3}
+    },
+    margin: margin
   });
 
   svg.selectAll('text.label')
