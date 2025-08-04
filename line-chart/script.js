@@ -3,7 +3,6 @@ import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let graphic_data, size;
-//console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
 
@@ -129,11 +128,9 @@ function drawGraphic() {
 	let margin = config.optional.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
-	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
-	// console.log(`Categories retrieved: ${categories}`);
 
 	let xDataType;
 
@@ -142,8 +139,6 @@ function drawGraphic() {
 	} else {
 		xDataType = 'numeric';
 	}
-
-	// console.log(xDataType)
 
 	// Define the x and y scales
 
@@ -158,7 +153,6 @@ function drawGraphic() {
 			.domain(d3.extent(graphic_data, (d) => +d.date))
 			.range([0, chart_width]);
 	}
-	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
@@ -194,7 +188,6 @@ function drawGraphic() {
 		height: height + margin.top + margin.bottom,
 		margin: margin
 	})
-	//console.log(`SVG element created`);
 
 	// create lines and circles for each category
 	categories.forEach(function (category, index) {
@@ -205,7 +198,6 @@ function drawGraphic() {
 			.defined(d => d[category] !== null) // Only plot lines where we have values
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
-		// console.log(`Line generator created for category: ${category}`);
 
 		svg
 			.append('path')
@@ -221,12 +213,9 @@ function drawGraphic() {
 			.attr('d', lineGenerator)
 			.style('stroke-linejoin', 'round')
 			.style('stroke-linecap', 'round');
-		//console.log(`Path appended for category: ${category}`);
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
 
-
-		// console.log(`drawLegend: ${size}`);
 		// size === 'sm'
 
 		if (config.essential.drawLegend || size === 'sm') {
@@ -283,7 +272,6 @@ function drawGraphic() {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
-		// console.log(x.ticks(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 5))
 	// Add the x-axis
 	svg
 		.append('g')
@@ -334,7 +322,6 @@ function drawGraphic() {
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
-	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
