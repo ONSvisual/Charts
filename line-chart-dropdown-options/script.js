@@ -48,12 +48,6 @@ function drawGraphic() {
 
 	let uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
 
-	console.log(graphic_data);
-
-	console.log(uniqueOptions);
-
-	console.log(`dropdownData contains: ${JSON.stringify(uniqueOptions)}`);
-
 	const optns = select
 		.append('div')
 		.attr('id', 'sel')
@@ -88,7 +82,6 @@ function drawGraphic() {
 
 	$('#optionsSelect').chosen().change(function () {
 		const selectedOption = $(this).val();
-		console.log(`Selected option: ${selectedOption}`);
 
 		if (selectedOption) {
 			changeData(selectedOption);
@@ -152,7 +145,7 @@ function changeData(selectedOption) {
 			categories
 		});
 		y.domain([minY, maxY]);
-		// console.log("y domain (changeData):", minY, maxY);
+		
 		// Update y axis
 		svg.select('.y.axis.numeric')
 			.transition()
@@ -380,7 +373,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== 'option');
-	// console.log(`Categories retrieved: ${categories}`);
 
 	let xDataType;
 
@@ -389,8 +381,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	} else {
 		xDataType = 'numeric';
 	}
-
-	// console.log(xDataType)
 
 	// Define the x and y scales
 	let x;
@@ -403,7 +393,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 			.domain(d3.extent(graphic_data, (d) => +d.date))
 			.range([0, chart_width]);
 	}
-	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
@@ -549,7 +538,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
-	// console.log(`Link to source created`);
 
 	//if there is a default option, set it
 	if (config.essential.defaultOption) {
@@ -578,7 +566,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	if (pymChild) {
 		pymChild.sendHeight();
 	}
-	// console.log(`PymChild height sent`);
 }
 
 
