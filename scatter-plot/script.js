@@ -88,6 +88,7 @@ function drawGraphic() {
     containerId: 'select',
     options: dropdownData,
     label: 'Choose a point',
+    placeholder:"Select a data point",
     mode: 'default',
     idKey: 'id',
     labelKey: 'label',
