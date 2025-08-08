@@ -1,0 +1,37 @@
+.dataLabels{
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.chart-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.chart-container:last-child {
+  margin-right: 0;
+}
+
+.legend--icon--rect {
+  height: 14px;
+  width: 14px;
+  align-self: center;
+  flex-shrink: 0;
+  forced-color-adjust: none;
+  opacity: 0.65
+}
+
+.legend--itemCI {
+  display: flex;
+  padding-right: 40px;
+  padding-bottom: 12px;
+}
+
+.legend--icon--estline {
+  height: 3px;
+  width: 14px;
+  align-self: center;
+  flex-shrink: 0;
+  forced-color-adjust: none;
+}
+
