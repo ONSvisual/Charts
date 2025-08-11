@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical, addAnnotationText } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical, addAnnotationText } from "https://cdn.ons.gov.uk/assets/data-vis-charts/v1/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
