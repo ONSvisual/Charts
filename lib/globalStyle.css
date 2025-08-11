@@ -108,24 +108,24 @@ body
   padding-bottom: 10px;
 }
 
-text {
+text
+
+/* required */
+  {
   font-family: 'Open Sans', sans-serif;
   font-feature-settings: "salt" 1;
   font-weight: 400;
   forced-color-adjust: auto;
 }
 
-/* chart */
-svg.chart {
-  border: 2px solid transparent; /* Use transparent border in default state */
-  background-position: initial; /* Or whatever default you want */
-  box-shadow: none; /* No box-shadow in default state */
+svg.chart:focus{
+  box-shadow: 0 0 0 2px #222, 0 0 0 5px #fbc900;
 }
 
-svg.chart:focus{
-  border: 2px solid #222;
-  background-position: 12px 10px;
-  box-shadow: 0 0 0 3px #fbc900;
+
+/* required */
+  {
+  width: 100%;
 }
 
 /* axis tick labels */
