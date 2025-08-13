@@ -7,116 +7,78 @@ let graphic_data, size;
 let pymChild = null;
 
 function getXAxisTicks({
-    data,
-    xDataType,
-    size,
-    config
+	data,
+	xDataType,
+	size,
+	config
 }) {
-    let ticks = [];
-    const method = config.optional.xAxisTickMethod || "interval";
-    if (xDataType === 'date') {
-        const start = data[0].date;
-        const end = data[data.length - 1].date;
-        if (method === "total") {
-            const count = config.optional.xAxisTickCount ? config.optional.xAxisTickCount[size] : 5;
-            ticks = d3.scaleTime().domain([start, end]).ticks(count);
-        } else if (method === "interval") {
-            const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
-            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
-            let d3Interval;
-            switch (interval.unit) {
-                case "year":
-                    d3Interval = d3.timeYear.every(step);
-                    break;
-                case "month":
-                    d3Interval = d3.timeMonth.every(step);
-                    break;
-                case "quarter":
-                    d3Interval = d3.timeMonth.every(step * 3);
-                    break;
-                case "day":
-                    d3Interval = d3.timeDay.every(step);
-                    break;
-                default:
-                    d3Interval = d3.timeYear.every(1);
-            }
-	            ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
-        }
-        if (!Array.isArray(ticks)) ticks = [];
-        if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
-            ticks.unshift(start);
-        }
-        if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
-            ticks.push(end);
-        }
-    } else {
-        // Numeric axis
-        if (method === "total") {
-            const count = config.optional.xAxisTickCount[size] || 5;
-            const extent = d3.extent(data, d => d.date);
-            ticks = d3.ticks(extent[0], extent[1], count);
-        } else if (method === "interval") {
-            const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
-            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
-            const extent = d3.extent(data, d => d.date);
-            let current = extent[0];
-            while (current <= extent[1]) {
-                ticks.push(current);
-                current += step;
-            }
-        }
-        if (!Array.isArray(ticks)) ticks = [];
-        if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
-            ticks.unshift(data[0].date);
-        }
-        if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
-            ticks.push(data[data.length - 1].date);
-        }
-    }
-    // Remove duplicates and sort
-    ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
-    return ticks;
+	let ticks = [];
+	const method = config.optional.xAxisTickMethod || "interval";
+	if (xDataType === 'date') {
+		const start = data[0].date;
+		const end = data[data.length - 1].date;
+		if (method === "total") {
+			const count = config.optional.xAxisTickCount ? config.optional.xAxisTickCount[size] : 5;
+			ticks = d3.scaleTime().domain([start, end]).ticks(count);
+		} else if (method === "interval") {
+			const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+			const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+			let d3Interval;
+			switch (interval.unit) {
+				case "year":
+					d3Interval = d3.timeYear.every(step);
+					break;
+				case "month":
+					d3Interval = d3.timeMonth.every(step);
+					break;
+				case "quarter":
+					d3Interval = d3.timeMonth.every(step * 3);
+					break;
+				case "day":
+					d3Interval = d3.timeDay.every(step);
+					break;
+				default:
+					d3Interval = d3.timeYear.every(1);
+			}
+			ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
+		}
+		if (!Array.isArray(ticks)) ticks = [];
+		if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
+			ticks.unshift(start);
+		}
+		if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
+			ticks.push(end);
+		}
+	} else {
+		// Numeric axis
+		if (method === "total") {
+			const count = config.optional.xAxisTickCount[size] || 5;
+			const extent = d3.extent(data, d => d.date);
+			ticks = d3.ticks(extent[0], extent[1], count);
+		} else if (method === "interval") {
+			const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+			const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+			const extent = d3.extent(data, d => d.date);
+			let current = extent[0];
+			while (current <= extent[1]) {
+				ticks.push(current);
+				current += step;
+			}
+		}
+		if (!Array.isArray(ticks)) ticks = [];
+		if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
+			ticks.unshift(data[0].date);
+		}
+		if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+			ticks.push(data[data.length - 1].date);
+		}
+	}
+	// Remove duplicates and sort
+	ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
+	return ticks;
 }
 
-function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
-    let labelData = [];
-    const lastDatum = graphic_data[graphic_data.length - 1];
-    categories.forEach(function (category, index) {
-        if (lastDatum[category] === null) return;
-        const label = svg.append('text')
-            .attr('class', 'directLineLabel')
-            .attr('x', x(lastDatum.date) + 10)
-            .attr('y', y(lastDatum[category]))
-            .attr('dy', '.35em')
-            .attr('text-anchor', 'start')
-            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
-            .text(category)
-            .call(wrap, margin.right - 10);
-        const bbox = label.node().getBBox();
-        labelData.push({
-            node: label,
-            x: x(lastDatum.date) + 10,
-            y: y(lastDatum[category]),
-            originalY: y(lastDatum[category]),
-            height: bbox.height,
-            category: category
-        });
-    });
-    if (labelData.length > 1) {
-        labelData.sort((a, b) => a.y - b.y);
-        const minSpacing = 12;
-        for (let i = 1; i < labelData.length; i++) {
-            const current = labelData[i];
-            const previous = labelData[i - 1];
-            if (current.y - previous.y < minSpacing) {
-                current.y = previous.y + minSpacing;
-            }
-        }
-        labelData.forEach(label => {
-            label.node.attr('y', label.y);
-        });
-    }
-}
+
 
 function drawGraphic() {
 
@@ -189,6 +151,8 @@ function drawGraphic() {
 		margin: margin
 	})
 
+	let labelData = [];
+
 	// create lines and circles for each category
 	categories.forEach(function (category, index) {
 		const lineGenerator = d3
@@ -215,12 +179,30 @@ function drawGraphic() {
 			.style('stroke-linecap', 'round');
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
+		if (lastDatum[category] === null || (config.essential.drawLegend || size === 'sm')) return;
+		const label = svg.append('text')
+			.attr('class', 'directLineLabel')
+			.attr('x', x(lastDatum.date) + 10)
+			.attr('y', y(lastDatum[category]))
+			.attr('dy', '.35em')
+			.attr('text-anchor', 'start')
+			.attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+			.text(category)
+			.call(wrap, margin.right - 10);
+		const bbox = label.node().getBBox();
+		labelData.push({
+			node: label,
+			x: x(lastDatum.date) + 10,
+			y: y(lastDatum[category]),
+			originalY: y(lastDatum[category]),
+			height: bbox.height,
+			category: category
+		});
+	});
+
 
 		// size === 'sm'
-
 		if (config.essential.drawLegend || size === 'sm') {
-
-
 			// Set up the legend
 			let legenditem = d3
 				.select('#legend')
@@ -244,14 +226,10 @@ function drawGraphic() {
 				.html(function (d) {
 					return d[0];
 				});
-
 		} else {
-
 		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
-
 		}
-
-	});
+	
 
 	// add grid lines to y axis
 	svg
@@ -272,6 +250,7 @@ function drawGraphic() {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
+
 	// Add the x-axis
 	svg
 		.append('g')
@@ -358,3 +337,46 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	});
 
 });
+
+function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
+
+	// Remove any existing direct labels before adding new ones
+    svg.selectAll('text.directLineLabel').remove();
+    let labelData = [];
+    const lastDatum = graphic_data[graphic_data.length - 1];
+    categories.forEach(function (category, index) {
+        if (lastDatum[category] === null) return;
+        const label = svg.append('text')
+            .attr('class', 'directLineLabel')
+            .attr('x', x(lastDatum.date) + 10)
+            .attr('y', y(lastDatum[category]))
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'start')
+            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+            .text(category)
+            .call(wrap, margin.right - 10);
+        const bbox = label.node().getBBox();
+        labelData.push({
+            node: label,
+            x: x(lastDatum.date) + 10,
+            y: y(lastDatum[category]),
+            originalY: y(lastDatum[category]),
+            height: bbox.height,
+            category: category
+        });
+    });
+    if (labelData.length > 1) {
+        labelData.sort((a, b) => a.y - b.y);
+        const minSpacing = 12;
+        for (let i = 1; i < labelData.length; i++) {
+            const current = labelData[i];
+            const previous = labelData[i - 1];
+            if (current.y - previous.y < minSpacing) {
+                current.y = previous.y + minSpacing;
+            }
+        }
+        labelData.forEach(label => {
+            label.node.attr('y', label.y);
+        });
+    }
+}
