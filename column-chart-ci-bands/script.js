@@ -41,8 +41,6 @@ function drawGraphic() {
         xDataType = 'categorical';
     }
 
-    console.log(xDataType)
-
     // If xvalue is categorical, show all values, else use the config number of ticks
     let tickValues
 
