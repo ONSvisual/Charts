@@ -3,121 +3,82 @@ import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let graphic_data, size;
-//console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
 
 function getXAxisTicks({
-    data,
-    xDataType,
-    size,
-    config
+	data,
+	xDataType,
+	size,
+	config
 }) {
-    let ticks = [];
-    const method = config.optional.xAxisTickMethod || "interval";
-    if (xDataType === 'date') {
-        const start = data[0].date;
-        const end = data[data.length - 1].date;
-        if (method === "total") {
-            const count = config.optional.xAxisTickCount ? config.optional.xAxisTickCount[size] : 5;
-            ticks = d3.scaleTime().domain([start, end]).ticks(count);
-        } else if (method === "interval") {
-            const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
-            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
-            let d3Interval;
-            switch (interval.unit) {
-                case "year":
-                    d3Interval = d3.timeYear.every(step);
-                    break;
-                case "month":
-                    d3Interval = d3.timeMonth.every(step);
-                    break;
-                case "quarter":
-                    d3Interval = d3.timeMonth.every(step * 3);
-                    break;
-                case "day":
-                    d3Interval = d3.timeDay.every(step);
-                    break;
-                default:
-                    d3Interval = d3.timeYear.every(1);
-            }
-	            ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
-        }
-        if (!Array.isArray(ticks)) ticks = [];
-        if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
-            ticks.unshift(start);
-        }
-        if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
-            ticks.push(end);
-        }
-    } else {
-        // Numeric axis
-        if (method === "total") {
-            const count = config.optional.xAxisTickCount[size] || 5;
-            const extent = d3.extent(data, d => d.date);
-            ticks = d3.ticks(extent[0], extent[1], count);
-        } else if (method === "interval") {
-            const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
-            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
-            const extent = d3.extent(data, d => d.date);
-            let current = extent[0];
-            while (current <= extent[1]) {
-                ticks.push(current);
-                current += step;
-            }
-        }
-        if (!Array.isArray(ticks)) ticks = [];
-        if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
-            ticks.unshift(data[0].date);
-        }
-        if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
-            ticks.push(data[data.length - 1].date);
-        }
-    }
-    // Remove duplicates and sort
-    ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
-    return ticks;
+	let ticks = [];
+	const method = config.optional.xAxisTickMethod || "interval";
+	if (xDataType === 'date') {
+		const start = data[0].date;
+		const end = data[data.length - 1].date;
+		if (method === "total") {
+			const count = config.optional.xAxisTickCount ? config.optional.xAxisTickCount[size] : 5;
+			ticks = d3.scaleTime().domain([start, end]).ticks(count);
+		} else if (method === "interval") {
+			const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+			const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+			let d3Interval;
+			switch (interval.unit) {
+				case "year":
+					d3Interval = d3.timeYear.every(step);
+					break;
+				case "month":
+					d3Interval = d3.timeMonth.every(step);
+					break;
+				case "quarter":
+					d3Interval = d3.timeMonth.every(step * 3);
+					break;
+				case "day":
+					d3Interval = d3.timeDay.every(step);
+					break;
+				default:
+					d3Interval = d3.timeYear.every(1);
+			}
+			ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
+		}
+		if (!Array.isArray(ticks)) ticks = [];
+		if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
+			ticks.unshift(start);
+		}
+		if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
+			ticks.push(end);
+		}
+	} else {
+		// Numeric axis
+		if (method === "total") {
+			const count = config.optional.xAxisTickCount[size] || 5;
+			const extent = d3.extent(data, d => d.date);
+			ticks = d3.ticks(extent[0], extent[1], count);
+		} else if (method === "interval") {
+			const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+			const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+			const extent = d3.extent(data, d => d.date);
+			let current = extent[0];
+			while (current <= extent[1]) {
+				ticks.push(current);
+				current += step;
+			}
+		}
+		if (!Array.isArray(ticks)) ticks = [];
+		if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
+			ticks.unshift(data[0].date);
+		}
+		if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+			ticks.push(data[data.length - 1].date);
+		}
+	}
+	// Remove duplicates and sort
+	ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
+	return ticks;
 }
 
-function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
-    let labelData = [];
-    const lastDatum = graphic_data[graphic_data.length - 1];
-    categories.forEach(function (category, index) {
-        if (lastDatum[category] === null) return;
-        const label = svg.append('text')
-            .attr('class', 'directLineLabel')
-            .attr('x', x(lastDatum.date) + 10)
-            .attr('y', y(lastDatum[category]))
-            .attr('dy', '.35em')
-            .attr('text-anchor', 'start')
-            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
-            .text(category)
-            .call(wrap, margin.right - 10);
-        const bbox = label.node().getBBox();
-        labelData.push({
-            node: label,
-            x: x(lastDatum.date) + 10,
-            y: y(lastDatum[category]),
-            originalY: y(lastDatum[category]),
-            height: bbox.height,
-            category: category
-        });
-    });
-    if (labelData.length > 1) {
-        labelData.sort((a, b) => a.y - b.y);
-        const minSpacing = 12;
-        for (let i = 1; i < labelData.length; i++) {
-            const current = labelData[i];
-            const previous = labelData[i - 1];
-            if (current.y - previous.y < minSpacing) {
-                current.y = previous.y + minSpacing;
-            }
-        }
-        labelData.forEach(label => {
-            label.node.attr('y', label.y);
-        });
-    }
-}
+
 
 function drawGraphic() {
 
@@ -129,11 +90,9 @@ function drawGraphic() {
 	let margin = config.optional.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
-	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
-	// console.log(`Categories retrieved: ${categories}`);
 
 	let xDataType;
 
@@ -142,8 +101,6 @@ function drawGraphic() {
 	} else {
 		xDataType = 'numeric';
 	}
-
-	// console.log(xDataType)
 
 	// Define the x and y scales
 
@@ -158,20 +115,33 @@ function drawGraphic() {
 			.domain(d3.extent(graphic_data, (d) => +d.date))
 			.range([0, chart_width]);
 	}
-	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
 		.range([height, 0]);
 
-	if (config.essential.yDomain == "auto") {
-		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
-		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
-		y.domain([minY, maxY])
-		// console.log(minY, maxY)
+	let maxY, minY;
+
+	if (config.essential.yDomainMax === "auto") {
+		maxY = d3.max(graphic_data, d => d3.max(categories, c => d[c]));
 	} else {
-		y.domain(config.essential.yDomain)
+		maxY = config.essential.yDomainMax;
 	}
+
+	if (config.essential.yDomainMin === "auto") {
+		minY = d3.min(graphic_data, d => d3.min(categories, c => d[c]));
+	} else {
+		minY = config.essential.yDomainMin;
+	}
+
+	// Ensure maxY is not less than minY
+	if (maxY < minY) {
+		const temp = maxY;
+		maxY = minY;
+		minY = temp;
+	}
+
+	y.domain([minY, maxY]);
 
 	// Create an SVG element
 	const svg = addSvg({
@@ -180,7 +150,8 @@ function drawGraphic() {
 		height: height + margin.top + margin.bottom,
 		margin: margin
 	})
-	//console.log(`SVG element created`);
+
+	let labelData = [];
 
 	// create lines and circles for each category
 	categories.forEach(function (category, index) {
@@ -191,7 +162,6 @@ function drawGraphic() {
 			.defined(d => d[category] !== null) // Only plot lines where we have values
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
-		// console.log(`Line generator created for category: ${category}`);
 
 		svg
 			.append('path')
@@ -207,17 +177,32 @@ function drawGraphic() {
 			.attr('d', lineGenerator)
 			.style('stroke-linejoin', 'round')
 			.style('stroke-linecap', 'round');
-		//console.log(`Path appended for category: ${category}`);
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
+		if (lastDatum[category] === null || (config.essential.drawLegend || size === 'sm')) return;
+		const label = svg.append('text')
+			.attr('class', 'directLineLabel')
+			.attr('x', x(lastDatum.date) + 10)
+			.attr('y', y(lastDatum[category]))
+			.attr('dy', '.35em')
+			.attr('text-anchor', 'start')
+			.attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+			.text(category)
+			.call(wrap, margin.right - 10);
+		const bbox = label.node().getBBox();
+		labelData.push({
+			node: label,
+			x: x(lastDatum.date) + 10,
+			y: y(lastDatum[category]),
+			originalY: y(lastDatum[category]),
+			height: bbox.height,
+			category: category
+		});
+	});
 
 
-		// console.log(`drawLegend: ${size}`);
 		// size === 'sm'
-
 		if (config.essential.drawLegend || size === 'sm') {
-
-
 			// Set up the legend
 			let legenditem = d3
 				.select('#legend')
@@ -241,14 +226,10 @@ function drawGraphic() {
 				.html(function (d) {
 					return d[0];
 				});
-
 		} else {
-
 		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
-
 		}
-
-	});
+	
 
 	// add grid lines to y axis
 	svg
@@ -269,7 +250,7 @@ function drawGraphic() {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
-		// console.log(x.ticks(graphic_data[0].date, graphic_data[graphic_data.length - 1].date, 5))
+
 	// Add the x-axis
 	svg
 		.append('g')
@@ -320,7 +301,6 @@ function drawGraphic() {
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
-	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -357,3 +337,46 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	});
 
 });
+
+function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
+
+	// Remove any existing direct labels before adding new ones
+    svg.selectAll('text.directLineLabel').remove();
+    let labelData = [];
+    const lastDatum = graphic_data[graphic_data.length - 1];
+    categories.forEach(function (category, index) {
+        if (lastDatum[category] === null) return;
+        const label = svg.append('text')
+            .attr('class', 'directLineLabel')
+            .attr('x', x(lastDatum.date) + 10)
+            .attr('y', y(lastDatum[category]))
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'start')
+            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+            .text(category)
+            .call(wrap, margin.right - 10);
+        const bbox = label.node().getBBox();
+        labelData.push({
+            node: label,
+            x: x(lastDatum.date) + 10,
+            y: y(lastDatum[category]),
+            originalY: y(lastDatum[category]),
+            height: bbox.height,
+            category: category
+        });
+    });
+    if (labelData.length > 1) {
+        labelData.sort((a, b) => a.y - b.y);
+        const minSpacing = 12;
+        for (let i = 1; i < labelData.length; i++) {
+            const current = labelData[i];
+            const previous = labelData[i - 1];
+            if (current.y - previous.y < minSpacing) {
+                current.y = previous.y + minSpacing;
+            }
+        }
+        labelData.forEach(label => {
+            label.node.attr('y', label.y);
+        });
+    }
+}
