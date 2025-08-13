@@ -1,4 +1,4 @@
-import { initialise, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, addSvg, addAxisLabel, createDelaunayOverlay } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -16,27 +16,27 @@ function drawGraphic() {
 
   // Set up the legend
   const legenditem = d3
-  .select('#legend')
-  .selectAll('div.legend--item')
-  .data([["Country average",config.essential.averages.colour]])
-  .enter()
-  .append('div')
-  .attr('class', 'legend--item');
+    .select('#legend')
+    .selectAll('div.legend--item')
+    .data([["Country average", config.essential.averages.colour]])
+    .enter()
+    .append('div')
+    .attr('class', 'legend--item');
 
   legenditem
-  .append('div')
-  .attr('class', 'legend--icon--refline')
-  .style('background-color', function (d) {
-    return d[1];
-  });
+    .append('div')
+    .attr('class', 'legend--icon--refline')
+    .style('background-color', function (d) {
+      return d[1];
+    });
 
   legenditem
-  .append('div')
-  .append('p')
-  .attr('class', 'legend--text')
-  .html(function (d) {
-    return d[0];
-  });
+    .append('div')
+    .append('p')
+    .attr('class', 'legend--text')
+    .html(function (d) {
+      return d[0];
+    });
 
 
   const min = d3.min(graphic_data, (d) => +d["value"])
@@ -64,15 +64,15 @@ function drawGraphic() {
     .ticks(config.optional.xAxisTicks[size])
     .tickFormat(d3.format(config.essential.xAxisFormat));
 
-  if(config.essential.radius=="auto"){
+  if (config.essential.radius == "auto") {
     radius = (x(x.domain()[1]) - x(x.domain()[0])) / (config.essential.numBands * 1.1);
   } else {
     radius = config.essential.radius
-  } 
-  
+  }
+
 
   if (config.essential.circleDist == "auto") {
-    circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data,d=>d.y) ;
+    circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data, d => d.y);
   } else {
     circleDist = config.essential.circleDist * radius
   }
@@ -124,13 +124,38 @@ function drawGraphic() {
     .selectAll("circle")
     .data([...graphic_data].reverse())
     .join("circle")
-    .attr("cx", d => x(d.valueRound ))
-    .attr("cy", d => y(d.group) + y.bandwidth() - radius/2 - circleDist * d.y)
+    .attr("cx", d => x(d.valueRound))
+    .attr("cy", d => y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y)
     .attr("r", radius / 2)
     .append("title")
     .text(d => d.areanm + ' ' + d.value);
 
-    // Add average lines if they're defined in config
+  // Add Delaunay overlay
+  const overlay = createDelaunayOverlay({
+    svgContainer: chart,
+    data: graphic_data.map(d => ({
+      xvalue: d.valueRound,
+      yvalue: y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y,
+      name: d.areanm,
+      group: d.group,
+      value: d.value
+    })),
+    chart_width: chart_width,
+    height: height - margin.top - margin.bottom,
+    xScale: x,
+    yScale: d3.scaleLinear().domain([0, height - margin.top - margin.bottom]).range([0, height - margin.top - margin.bottom]),
+    tooltipConfig: {
+      xLabel: config.essential.xAxisLabel || 'Value',
+      xValueFormat: d3.format(config.essential.xAxisFormat),
+      showYValue: false,
+    },
+    shape: () => 'circle',
+    circleSize: Math.PI * (radius / 2) * (radius / 2),
+    radius: 25,
+    margin: margin
+  });
+
+  // Add average lines if they're defined in config
   if (config.essential.averages && config.essential.averages.show) {
     // Create average lines
     chart.append("g")
@@ -201,10 +226,10 @@ d3.csv(config.essential.graphic_data_url)
     data.forEach(d => {
       const binNumber = Math.floor((d.value - minValue) / binSize);
       d.valueRound = minValue + (binNumber * binSize)// + (binSize / 2);
-      
+
       // Create unique key for this group and bin combination
       const binKey = d.group + '_' + d.valueRound;
-      
+
       // Assign vertical position
       if (binKey in bins) {
         d.y = bins[binKey]++;
