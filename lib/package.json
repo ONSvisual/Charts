@@ -1,0 +1,35 @@
+{
+  "name": "@onsvisual/charts-lib",
+  "version": "0.0.2",
+  "description": "A library of D3.js chart helpers and global styles for ONS visualisations.",
+  "keywords": [
+    "charts",
+    "data",
+    "data",
+    "visualisation"
+  ],
+  "type": "module",
+  "homepage": "https://github.com/ONSvisual/charts-lib#readme",
+  "bugs": {
+    "url": "https://github.com/ONSvisual/charts-lib/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ONSvisual/charts-lib.git"
+  },
+  "license": "MIT",
+  "author": "ONS Data visualisation team",
+  "main": "helpers.js",
+  "exports": {       
+    ".": "./helpers.js",
+    "./global.css": "./global.css", 
+    "./helpers": "./helpers.js" 
+  },
+  "files": [
+    "global.css",
+    "helpers.js"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

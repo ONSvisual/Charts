@@ -8,6 +8,26 @@ let graphic_data, size;
 
 let pymChild = null;
 
+// Set y domain for new config structure (min/max can be "auto", "autoAll", or a value)
+function getYDomainMinMax({ minType, maxType, allData, filteredData, categories }) {
+    let min, max;
+    if (minType === "autoAll") {
+        min = d3.min(allData, (d) => Math.min(...categories.map((c) => d[c])));
+    } else if (minType === "auto") {
+        min = d3.min(filteredData, (d) => Math.min(...categories.map((c) => d[c])));
+    } else {
+        min = +minType;
+    }
+    if (maxType === "autoAll") {
+        max = d3.max(allData, (d) => Math.max(...categories.map((c) => d[c])));
+    } else if (maxType === "auto") {
+        max = d3.max(filteredData, (d) => Math.max(...categories.map((c) => d[c])));
+    } else {
+        max = +maxType;
+    }
+    return [min, max];
+}
+
 function drawGraphic() {
 	select.selectAll('*').remove(); // Remove the select element if it exists
 
@@ -27,12 +47,6 @@ function drawGraphic() {
 	});
 
 	let uniqueOptions = [...new Set(graphic_data.map((d) => d.option))];
-
-	console.log(graphic_data);
-
-	console.log(uniqueOptions);
-
-	console.log(`dropdownData contains: ${JSON.stringify(uniqueOptions)}`);
 
 	const optns = select
 		.append('div')
@@ -68,7 +82,6 @@ function drawGraphic() {
 
 	$('#optionsSelect').chosen().change(function () {
 		const selectedOption = $(this).val();
-		console.log(`Selected option: ${selectedOption}`);
 
 		if (selectedOption) {
 			changeData(selectedOption);
@@ -103,10 +116,10 @@ function drawGraphic() {
 // Function to change the data based on the selected option
 function changeData(selectedOption) {
 	// Remove all existing lines and circles
-	svg.selectAll('path.line').remove();
-	svg.selectAll('circle.line-end').remove();
-	svg.selectAll('text.directLineLabel').remove();
-	svg.selectAll('line.label-leader-line').remove();
+	// svg.selectAll('path.line').remove();
+	// svg.selectAll('circle.line-end').remove();
+	// svg.selectAll('text.directLineLabel').remove();
+	// svg.selectAll('line.label-leader-line').remove();
 
 	d3.selectAll('.y.axis .tick').attr('opacity', 1); // Reveal y-axis ticks
 
@@ -120,12 +133,19 @@ function changeData(selectedOption) {
 	// Get categories (series) for this option
 	const categories = Object.keys(filteredData[0]).filter((k) => k !== 'date' && k !== 'option');
 
-	// Set y domain for "auto" (per selected option)
-	if (config.essential.yDomain === "auto") {
-		let minY = d3.min(filteredData, (d) => Math.min(...categories.map((c) => d[c])));
-		let maxY = d3.max(filteredData, (d) => Math.max(...categories.map((c) => d[c])));
+	// Set y domain for "auto" min/max using filtered data
+	let yDomainMin = config.essential.yDomainMin;
+	let yDomainMax = config.essential.yDomainMax;
+	if (yDomainMin === "auto" || yDomainMax === "auto") {
+		const [minY, maxY] = getYDomainMinMax({
+			minType: yDomainMin,
+			maxType: yDomainMax,
+			allData: graphic_data,
+			filteredData: filteredData,
+			categories
+		});
 		y.domain([minY, maxY]);
-		console.log("auto y domain:", minY, maxY);
+		
 		// Update y axis
 		svg.select('.y.axis.numeric')
 			.transition()
@@ -144,33 +164,116 @@ function changeData(selectedOption) {
 			);
 	}
 
-	// Draw all lines and circles first
-	categories.forEach(function (category, index) {
-		const lineGenerator = d3.line()
-			.x((d) => x(d.date))
-			.y((d) => y(d[category]))
-			.defined(d => d[category] !== null)
-			.curve(d3[config.essential.lineCurveType]);
-
-		svg.append('path')
-			.datum(filteredData)
-			.attr('class', 'line')
-			.attr('fill', 'none')
-			.attr('stroke', config.essential.colour_palette[index % config.essential.colour_palette.length])
-			.attr('stroke-width', 3)
-			.attr('d', lineGenerator)
-			.style('stroke-linejoin', 'round')
-			.style('stroke-linecap', 'round');
-
-		// Add circle at the end of the line
-		const lastDatum = filteredData[filteredData.length - 1];
-		svg.append('circle')
-			.attr('class', 'line-end')
-			.attr('cx', x(lastDatum.date))
-			.attr('cy', y(lastDatum[category]))
-			.attr('r', 4)
-			.attr('fill', config.essential.colour_palette[index % config.essential.colour_palette.length]);
-	});
+	// Prepare data for binding - create array of objects with category info
+    const lineData = categories.map((category, index) => ({
+        category: category,
+        index: index,
+        data: filteredData,
+        color: config.essential.colour_palette[index % config.essential.colour_palette.length]
+    }));
+    
+    // Create line generator
+    const lineGenerator = d3.line()
+        .x((d) => x(d.date))
+        .y((d) => y(d[lineData.category])) // This will be set per line
+        .defined(d => d[lineData.category] !== null)
+        .curve(d3[config.essential.lineCurveType]);
+    
+    // LINES: Bind data and handle enter/update/exit
+    const lines = svg.selectAll('path.line')
+        .data(lineData, d => d.category); // Use category as key for object constancy
+    
+    // EXIT: Remove old lines
+    lines.exit()
+        .transition()
+        .duration(300)
+        .style('opacity', 0)
+        .remove();
+    
+    // ENTER: Add new lines
+    const linesEnter = lines.enter()
+        .append('path')
+        .attr('class', 'line')
+        .attr('fill', 'none')
+        .attr('stroke-width', 3)
+        .style('stroke-linejoin', 'round')
+        .style('stroke-linecap', 'round')
+        .style('opacity', 0);
+    
+    // UPDATE + ENTER: Update all lines (both new and existing)
+    const linesUpdate = linesEnter.merge(lines);
+    
+    linesUpdate
+        .transition()
+        .duration(500)
+        .style('opacity', 1)
+        .attr('stroke', d => d.color)
+        .attr('d', d => {
+            // Set the y accessor for this specific line
+            const customLineGenerator = d3.line()
+                .x((datum) => x(datum.date))
+                .y((datum) => y(datum[d.category]))
+                .defined(datum => datum[d.category] !== null)
+                .curve(d3[config.essential.lineCurveType]);
+            return customLineGenerator(d.data);
+        });
+    
+    // CIRCLES: Handle end-of-line circles
+    const circleData = categories.map((category, index) => {
+        const lastDatum = filteredData[filteredData.length - 1];
+        return {
+            category: category,
+            index: index,
+            x: x(lastDatum.date),
+            y: y(lastDatum[category]),
+            color: config.essential.colour_palette[index % config.essential.colour_palette.length]
+        };
+    });
+    
+    const circles = svg.selectAll('circle.line-end')
+        .data(circleData, d => d.category); // Use category as key
+    
+    // EXIT: Remove old circles
+    circles.exit()
+        .transition()
+        .duration(300)
+        .attr('r', 0)
+        .style('opacity', 0)
+        .remove();
+    
+    // ENTER: Add new circles
+    const circlesEnter = circles.enter()
+        .append('circle')
+        .attr('class', 'line-end')
+        .attr('r', 0)
+        .style('opacity', 0);
+    
+    // UPDATE + ENTER: Update all circles
+    const circlesUpdate = circlesEnter.merge(circles);
+    
+    circlesUpdate
+        .transition()
+        .duration(500)
+        // .delay(250) // Slight delay so circles animate after lines
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', 4)
+        .attr('fill', d => d.color)
+        .style('opacity', 1);
+    
+    // LABELS AND LEADER LINES: Handle similarly if needed
+    // Remove existing labels and leader lines with transition
+    svg.selectAll('text.directLineLabel')
+        .transition()
+        .duration(300)
+        .style('opacity', 0)
+        .remove();
+    
+    svg.selectAll('line.label-leader-line')
+        .transition()
+        .duration(300)
+        .style('opacity', 0)
+        .remove();
 
 	// Handle legend vs direct labels
 	if (config.essential.drawLegend || size === 'sm') {
@@ -353,7 +456,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== 'option');
-	// console.log(`Categories retrieved: ${categories}`);
 
 	let xDataType;
 
@@ -363,12 +465,8 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		xDataType = 'numeric';
 	}
 
-	// console.log(xDataType)
-
 	// Define the x and y scales
-
 	let x;
-
 	if (xDataType == 'date') {
 		x = d3.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
@@ -378,21 +476,27 @@ function createDirectLabelsWithForce(categories, filteredData) {
 			.domain(d3.extent(graphic_data, (d) => +d.date))
 			.range([0, chart_width]);
 	}
-	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
 		.range([height, 0]);
 
-	// Set y domain for "autoAll" or array, but not for "auto"
-	if (config.essential.yDomain === "autoAll") {
-		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])));
-		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])));
+	// Set y domain for "autoAll" or manual values, but not for "auto"
+	let yDomainMin = config.essential.yDomainMin;
+	let yDomainMax = config.essential.yDomainMax;
+	if (yDomainMin === "auto" || yDomainMax === "auto") {
+		// Will be set in changeData for filtered data
+	} else {
+		// Use all data for "autoAll" or manual values
+		const [minY, maxY] = getYDomainMinMax({
+			minType: yDomainMin,
+			maxType: yDomainMax,
+			allData: graphic_data,
+			filteredData: graphic_data,
+			categories: categories
+		});
 		y.domain([minY, maxY]);
-		console.log("autoAll y domain:", minY, maxY);
-	} else if (Array.isArray(config.essential.yDomain)) {
-		y.domain(config.essential.yDomain);
-	} // else "auto" will be handled in changeData
+	}
 
 	// Helper to generate x-axis ticks based on config
 	function getXAxisTicks({
@@ -517,7 +621,6 @@ function createDirectLabelsWithForce(categories, filteredData) {
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
-	// console.log(`Link to source created`);
 
 	//if there is a default option, set it
 	if (config.essential.defaultOption) {
@@ -530,11 +633,22 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		d3.selectAll('.y.axis .tick').attr('opacity', 0); // Hide y-axis ticks
 	}
 
+	// Add grid lines to y axis (like line-chart template)
+	svg
+		.append('g')
+		.attr('class', 'grid')
+		.call(
+			d3.axisLeft(y)
+				.ticks(config.optional.yAxisTicks[size])
+				.tickSize(-chart_width)
+				.tickFormat('')
+		)
+		.lower();
+
 	//use pym to calculate chart dimensions
 	if (pymChild) {
 		pymChild.sendHeight();
 	}
-	// console.log(`PymChild height sent`);
 }
 
 
@@ -561,8 +675,6 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 			}
 		}
 	});
-
-	console.log(graphic_data);
 
 	// Use pym to create an iframed chart dependent on specified variables
 	pymChild = new pym.Child({

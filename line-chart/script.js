@@ -3,7 +3,6 @@ import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let graphic_data, size;
-//console.log(`Graphic selected: ${graphic}`);
 
 let pymChild = null;
 
@@ -91,11 +90,9 @@ function drawGraphic() {
 	let margin = config.optional.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
-	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
-	// console.log(`Categories retrieved: ${categories}`);
 
 	let xDataType;
 
@@ -104,8 +101,6 @@ function drawGraphic() {
 	} else {
 		xDataType = 'numeric';
 	}
-
-	// console.log(xDataType)
 
 	// Define the x and y scales
 
@@ -120,20 +115,33 @@ function drawGraphic() {
 			.domain(d3.extent(graphic_data, (d) => +d.date))
 			.range([0, chart_width]);
 	}
-	//console.log(`x defined`);
 
 	const y = d3
 		.scaleLinear()
 		.range([height, 0]);
 
-	if (config.essential.yDomain == "auto") {
-		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
-		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
-		y.domain([minY, maxY])
-		// console.log(minY, maxY)
+	let maxY, minY;
+
+	if (config.essential.yDomainMax === "auto") {
+		maxY = d3.max(graphic_data, d => d3.max(categories, c => d[c]));
 	} else {
-		y.domain(config.essential.yDomain)
+		maxY = config.essential.yDomainMax;
 	}
+
+	if (config.essential.yDomainMin === "auto") {
+		minY = d3.min(graphic_data, d => d3.min(categories, c => d[c]));
+	} else {
+		minY = config.essential.yDomainMin;
+	}
+
+	// Ensure maxY is not less than minY
+	if (maxY < minY) {
+		const temp = maxY;
+		maxY = minY;
+		minY = temp;
+	}
+
+	y.domain([minY, maxY]);
 
 	// Create an SVG element
 	const svg = addSvg({
@@ -142,7 +150,6 @@ function drawGraphic() {
 		height: height + margin.top + margin.bottom,
 		margin: margin
 	})
-	//console.log(`SVG element created`);
 
 	let labelData = [];
 
@@ -155,7 +162,6 @@ function drawGraphic() {
 			.defined(d => d[category] !== null) // Only plot lines where we have values
 			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
-		// console.log(`Line generator created for category: ${category}`);
 
 		svg
 			.append('path')
@@ -171,7 +177,6 @@ function drawGraphic() {
 			.attr('d', lineGenerator)
 			.style('stroke-linejoin', 'round')
 			.style('stroke-linecap', 'round');
-		//console.log(`Path appended for category: ${category}`);
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
 		if (lastDatum[category] === null || (config.essential.drawLegend || size === 'sm')) return;
@@ -195,46 +200,34 @@ function drawGraphic() {
 		});
 	});
 
-	if (config.essential.drawLegend || size === 'sm') {
-		// Set up the legend
-		let legenditem = d3
-			.select('#legend')
-			.selectAll('div.legend--item')
-			.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-			.enter()
-			.append('div')
-			.attr('class', 'legend--item');
 
-		legenditem
-			.append('div')
-			.attr('class', 'legend--icon--circle')
-			.style('background-color', function (d) {
-				return d[1];
-			});
+		// size === 'sm'
+		if (config.essential.drawLegend || size === 'sm') {
+			// Set up the legend
+			let legenditem = d3
+				.select('#legend')
+				.selectAll('div.legend--item')
+				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+				.enter()
+				.append('div')
+				.attr('class', 'legend--item');
 
-		legenditem
-			.append('div')
-			.append('p')
-			.attr('class', 'legend--text')
-			.html(function (d) {
-				return d[0];
-			});
+			legenditem
+				.append('div')
+				.attr('class', 'legend--icon--circle')
+				.style('background-color', function (d) {
+					return d[1];
+				});
 
-	} else {
-		// if not using legend add the labels
-		if (labelData.length > 1) {
-			labelData.sort((a, b) => a.y - b.y);
-			const minSpacing = 12;
-			for (let i = 1; i < labelData.length; i++) {
-				const current = labelData[i];
-				const previous = labelData[i - 1];
-				if (current.y - previous.y < minSpacing) {
-					current.y = previous.y + minSpacing;
-				}
-			}
-			labelData.forEach(label => {
-				label.node.attr('y', label.y);
-			});
+			legenditem
+				.append('div')
+				.append('p')
+				.attr('class', 'legend--text')
+				.html(function (d) {
+					return d[0];
+				});
+		} else {
+		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
 		}
 	}
 
@@ -308,7 +301,6 @@ function drawGraphic() {
 
 	//create link to source
 	d3.select('#source').text('Source: ' + config.essential.sourceText);
-	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
