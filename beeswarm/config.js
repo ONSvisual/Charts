@@ -24,18 +24,9 @@ config = {
         y: 0
       },
       "values": [  // Array of average values for each group
-        { group: "North East", value: 14.0 },
-        { group: "North West", value: 13.8 },
         { group: "Wales", value: 14.3 },
         { group: "Scotland", value: 14.7 },
         { group: "Northern Ireland", value: 14.3 },
-        { group: "South East", value: 11.8 },
-        { group: "South West", value: 12.6 },
-        { group: "Yorkshire and The Humber", value: 14.3 },
-        { group: "East Midlands", value: 13.7 },
-        { group: "East of England", value: 13.1 },
-        { group: "West Midlands", value: 13.6 },
-        { group: "London", value: 12.1 },
         { group: "England", value: 13.0}
         // ... add more groups as needed
       ]
