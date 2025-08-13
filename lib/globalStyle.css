@@ -118,17 +118,8 @@ text
   forced-color-adjust: auto;
 }
 
-/* chart */
-svg.chart {
-  border: 2px solid transparent; /* Use transparent border in default state */
-  background-position: initial; /* Or whatever default you want */
-  box-shadow: none; /* No box-shadow in default state */
-}
-
 svg.chart:focus{
-  border: 2px solid #222;
-  background-position: 12px 10px;
-  box-shadow: 0 0 0 3px #fbc900;
+  box-shadow: 0 0 0 2px #222, 0 0 0 5px #fbc900;
 }
 
 /* axis tick labels */
