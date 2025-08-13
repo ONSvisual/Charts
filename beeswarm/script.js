@@ -4,6 +4,98 @@ let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, xDomain, circleDist, radius;
 
+function positionCircles(data, x, y, radius, layoutMethod = "binned") {
+  if (layoutMethod === "force") {
+    return positionCirclesWithForce(data, x, y, radius);
+  } else {
+    return positionCirclesWithBinning(data, x, y, radius);
+  }
+}
+
+function positionCirclesWithBinning(data, x, y, radius) {
+  // Calculate the binned values
+  const minValue = d3.min(data, d => d.value);
+  const maxValue = d3.max(data, d => d.value);
+  const binSize = (maxValue - minValue) / config.essential.numBands;
+
+  // Create bins and assign vertical positions
+  const bins = {};
+  data.forEach(d => {
+    const binNumber = Math.floor((d.value - minValue) / binSize);
+    d.valueRound = minValue + (binNumber * binSize)// + (binSize / 2);
+
+    // Create unique key for this group and bin combination
+    const binKey = d.group + '_' + d.valueRound;
+
+    // Assign vertical position
+    if (binKey in bins) {
+      d.y = bins[binKey]++;
+    } else {
+      d.y = 0;
+      bins[binKey] = 1;
+    }
+    console.log(y(d.group),d.y, circleDist,y.bandwidth(), radius)
+    // Calculate final position
+    d.cx = x(d.valueRound);
+    d.cy = y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y;
+  });
+  console.log(data,'data')
+  return data;
+}
+
+function positionCirclesWithForce(data, x, y, radius) {
+  const forceConfig = config.essential.forceOptions;
+
+  // Initialize positions
+  data.forEach(d => {
+    d.cx = x(d.value);
+    d.cy = y(d.group) + y.bandwidth() / 2;
+    d.targetX = x(d.value); // Store target x position
+    d.targetY = y(d.group) + y.bandwidth() / 2; // Store target y position
+  });
+
+  // Group data by group for separate simulations
+  const groupedData = d3.groups(data, d => d.group);
+
+  groupedData.forEach(([groupName, groupData]) => {
+    const groupY = y(groupName);
+    const groupHeight = y.bandwidth();
+
+    // Create force simulation for this group
+    const simulation = d3.forceSimulation(groupData)
+      .alphaMin(forceConfig.alphaMin || 0.001)
+      .velocityDecay(forceConfig.velocityDecay || 0.2)
+      .force("x", d3.forceX(d => d.targetX).strength(forceConfig.centerStrength || 0.1))
+      .force("y", d3.forceY(d => d.targetY).strength(forceConfig.centerStrength || 0.1))
+      .force("collide", d3.forceCollide()
+        .radius(radius * 0.6) // Slightly smaller than visual radius for tighter packing
+        .strength(forceConfig.strength || 0.5)
+      )
+      .force("boundary", boundaryForce(groupY, groupY + groupHeight));
+
+    // Run simulation for specified iterations
+    for (let i = 0; i < (forceConfig.iterations || 120); ++i) {
+      simulation.tick();
+    }
+
+    simulation.stop();
+  });
+
+  return data;
+}
+
+// Custom force to keep circles within group boundaries
+function boundaryForce(minY, maxY) {
+  function force() {
+    for (let i = 0, n = this.length; i < n; ++i) {
+      const node = this[i];
+      if (node.y < minY + radius / 2) node.y = minY + radius / 2;
+      if (node.y > maxY - radius / 2) node.y = maxY - radius / 2;
+    }
+  }
+  return force;
+}
+
 function drawGraphic() {
 
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
@@ -39,6 +131,7 @@ function drawGraphic() {
     });
 
 
+
   const min = d3.min(graphic_data, (d) => +d["value"])
   const max = d3.max(graphic_data, (d) => +d["value"])
 
@@ -69,7 +162,6 @@ function drawGraphic() {
   } else {
     radius = config.essential.radius
   }
-
 
   if (config.essential.circleDist == "auto") {
     circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data, d => d.y);
@@ -108,24 +200,33 @@ function drawGraphic() {
       .text(d => d);
   }
 
-
   // x axis
   chart.append("g")
     .attr('transform', (d) => 'translate(0,' + (height - margin.top - margin.bottom) + ')')
     .attr('class', 'x axis')
     .call(xAxis);
 
+  // Position circles based on selected method
+  const positionedData = positionCircles(
+    [...graphic_data],
+    x,
+    y,
+    radius,
+    config.essential.layoutMethod || "binned"
+  );
 
+  console.log(positionedData)
 
+  // Draw circles with positioned data
   chart.append("g")
     .attr("fill", config.essential.colour_palette)
     .attr("stroke", "white")
     .attr("stroke-width", 0.6)
     .selectAll("circle")
-    .data([...graphic_data].reverse())
+    .data(positionedData.reverse())
     .join("circle")
-    .attr("cx", d => x(d.valueRound))
-    .attr("cy", d => y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y)
+    .attr("cx", d => d.cx)
+    .attr("cy", d => d.cy)
     .attr("r", radius / 2)
     .append("title")
     .text(d => d.areanm + ' ' + d.value);
@@ -209,6 +310,8 @@ function drawGraphic() {
   }
 }
 
+
+
 d3.csv(config.essential.graphic_data_url)
   .then(data => {
     // First convert string values to numbers if needed
@@ -216,28 +319,7 @@ d3.csv(config.essential.graphic_data_url)
       d.value = +d.value;  // Convert to number if it's a string
     });
 
-    // Calculate the binned values
-    const minValue = d3.min(data, d => d.value);
-    const maxValue = d3.max(data, d => d.value);
-    const binSize = (maxValue - minValue) / config.essential.numBands;
 
-    // Create bins and assign vertical positions
-    const bins = {};
-    data.forEach(d => {
-      const binNumber = Math.floor((d.value - minValue) / binSize);
-      d.valueRound = minValue + (binNumber * binSize)// + (binSize / 2);
-
-      // Create unique key for this group and bin combination
-      const binKey = d.group + '_' + d.valueRound;
-
-      // Assign vertical position
-      if (binKey in bins) {
-        d.y = bins[binKey]++;
-      } else {
-        d.y = 0;
-        bins[binKey] = 1;
-      }
-    });
 
     graphic_data = data;
 

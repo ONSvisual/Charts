@@ -5,6 +5,14 @@ config = {
     "sourceText": "Office for National Statistics",
     "accessibleSummary": "This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
     "xAxisFormat": ".0f",
+    "layoutMethod":'binned',
+    "forceOptions": {
+      "strength": 0.5,        // Collision force strength (0-1)
+      "iterations": 120,      // Number of simulation iterations
+      "velocityDecay": 0.2,   // How quickly nodes slow down (0-1)
+      "alphaMin": 0.001,      // When to stop the simulation
+      "centerStrength": 0.1   // Strength of centering force (0-1)
+    },
     "xAxisLabel": "Percentage",
     "radius": 'auto',//either auto which is x-range / number of bins
     "xDomain": [5,22.5],// either auto or a custom domain as an array e.g [0,100]
