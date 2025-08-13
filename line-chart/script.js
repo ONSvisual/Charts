@@ -229,7 +229,7 @@ function drawGraphic() {
 		} else {
 		createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width);
 		}
-	}
+	
 
 	// add grid lines to y axis
 	svg
@@ -337,3 +337,46 @@ d3.csv(config.essential.graphic_data_url).then((rawData) => {
 	});
 
 });
+
+function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, config, chart_width) {
+
+	// Remove any existing direct labels before adding new ones
+    svg.selectAll('text.directLineLabel').remove();
+    let labelData = [];
+    const lastDatum = graphic_data[graphic_data.length - 1];
+    categories.forEach(function (category, index) {
+        if (lastDatum[category] === null) return;
+        const label = svg.append('text')
+            .attr('class', 'directLineLabel')
+            .attr('x', x(lastDatum.date) + 10)
+            .attr('y', y(lastDatum[category]))
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'start')
+            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+            .text(category)
+            .call(wrap, margin.right - 10);
+        const bbox = label.node().getBBox();
+        labelData.push({
+            node: label,
+            x: x(lastDatum.date) + 10,
+            y: y(lastDatum[category]),
+            originalY: y(lastDatum[category]),
+            height: bbox.height,
+            category: category
+        });
+    });
+    if (labelData.length > 1) {
+        labelData.sort((a, b) => a.y - b.y);
+        const minSpacing = 12;
+        for (let i = 1; i < labelData.length; i++) {
+            const current = labelData[i];
+            const previous = labelData[i - 1];
+            if (current.y - previous.y < minSpacing) {
+                current.y = previous.y + minSpacing;
+            }
+        }
+        labelData.forEach(label => {
+            label.node.attr('y', label.y);
+        });
+    }
+}
