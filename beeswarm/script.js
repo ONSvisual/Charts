@@ -1,18 +1,20 @@
 import { initialise, addSvg, addAxisLabel, createDelaunayOverlay } from "../lib/helpers.js";
+import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
 let graphic_data, size, xDomain, circleDist, radius;
 
-function positionCircles(data, x, y, radius, layoutMethod = "binned") {
+function positionCircles(data, x, y, radius, layoutMethod = "binned", circleDist) {
   if (layoutMethod === "force") {
     return positionCirclesWithForce(data, x, y, radius);
+    
   } else {
-    return positionCirclesWithBinning(data, x, y, radius);
+    return positionCirclesWithBinning(data, x, y, radius, circleDist);
   }
 }
 
-function positionCirclesWithBinning(data, x, y, radius) {
+function positionCirclesWithBinning(data, x, y, radius, circleDist) {
   // Calculate the binned values
   const minValue = d3.min(data, d => d.value);
   const maxValue = d3.max(data, d => d.value);
@@ -34,12 +36,10 @@ function positionCirclesWithBinning(data, x, y, radius) {
       d.y = 0;
       bins[binKey] = 1;
     }
-    console.log(y(d.group),d.y, circleDist,y.bandwidth(), radius)
     // Calculate final position
-    d.cx = x(d.valueRound);
-    d.cy = y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y;
+    d.x = x(d.valueRound);
+    d.y = y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y * 2; // I don't know why it's x2 but it is
   });
-  console.log(data,'data')
   return data;
 }
 
@@ -48,11 +48,12 @@ function positionCirclesWithForce(data, x, y, radius) {
 
   // Initialize positions
   data.forEach(d => {
-    d.cx = x(d.value);
-    d.cy = y(d.group) + y.bandwidth() / 2;
+    d.x = x(d.value);
+    d.y = y(d.group) + y.bandwidth() / 2;
     d.targetX = x(d.value); // Store target x position
     d.targetY = y(d.group) + y.bandwidth() / 2; // Store target y position
   });
+
 
   // Group data by group for separate simulations
   const groupedData = d3.groups(data, d => d.group);
@@ -68,10 +69,11 @@ function positionCirclesWithForce(data, x, y, radius) {
       .force("x", d3.forceX(d => d.targetX).strength(forceConfig.centerStrength || 0.1))
       .force("y", d3.forceY(d => d.targetY).strength(forceConfig.centerStrength || 0.1))
       .force("collide", d3.forceCollide()
-        .radius(radius * 0.6) // Slightly smaller than visual radius for tighter packing
+        .radius(radius*0.6) // Slightly smaller than visual radius for tighter packing
         .strength(forceConfig.strength || 0.5)
       )
-      .force("boundary", boundaryForce(groupY, groupY + groupHeight));
+      // .force('manybody',d3.forceManyBody().strength(-50))
+      .force("boundary", boundaryForce(groupY, groupY + groupHeight,radius));
 
     // Run simulation for specified iterations
     for (let i = 0; i < (forceConfig.iterations || 120); ++i) {
@@ -85,14 +87,28 @@ function positionCirclesWithForce(data, x, y, radius) {
 }
 
 // Custom force to keep circles within group boundaries
-function boundaryForce(minY, maxY) {
+function boundaryForce(minY, maxY, radius) {
+  let nodes;
+
   function force() {
-    for (let i = 0, n = this.length; i < n; ++i) {
-      const node = this[i];
-      if (node.y < minY + radius / 2) node.y = minY + radius / 2;
-      if (node.y > maxY - radius / 2) node.y = maxY - radius / 2;
+    for (let i = 0, n = nodes.length; i < n; ++i) {
+      const node = nodes[i];
+      const radiusOffset = radius;
+      
+      // Gradually nudge the node back into the boundary
+      if (node.y < minY + radiusOffset) {
+        node.vy += (minY + radiusOffset - node.y) * 0.1;
+      }
+      if (node.y > maxY - radiusOffset) {
+        node.vy += (maxY - radiusOffset - node.y) * 0.1;
+      }
     }
   }
+
+  force.initialize = function(_) {
+    nodes = _;
+  };
+
   return force;
 }
 
@@ -130,7 +146,30 @@ function drawGraphic() {
       return d[0];
     });
 
+    // set up dropdown
+  const dropdownData = graphic_data.sort((a,b)=>a.areanm.localeCompare(b.areanm)).map((point, index) => ({
+    id: index,
+    label: point.areanm || `Point ${index + 1}`,
+    group: point.group
+  }));
 
+  const select = new EnhancedSelect({
+    containerId: 'select',
+    options: dropdownData,
+    label: 'Choose a point',
+    placeholder:"Select a data point",
+    mode: 'default',
+    idKey: 'id',
+    labelKey: 'label',
+    groupKey:'group',
+    onChange: (selectedValue) => {
+      if (selectedValue) {
+        overlay.highlightPoint(selectedValue.id);
+      } else {
+        overlay.clearHighlight();
+      }
+    }
+  });
 
   const min = d3.min(graphic_data, (d) => +d["value"])
   const max = d3.max(graphic_data, (d) => +d["value"])
@@ -164,10 +203,11 @@ function drawGraphic() {
   }
 
   if (config.essential.circleDist == "auto") {
-    circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data, d => d.y);
+    circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data, d => d.value);
   } else {
     circleDist = config.essential.circleDist * radius
   }
+
 
   let chart = addSvg({
     svgParent: graphic,
@@ -206,16 +246,15 @@ function drawGraphic() {
     .attr('class', 'x axis')
     .call(xAxis);
 
-  // Position circles based on selected method
+    // Position circles based on selected method
   const positionedData = positionCircles(
     [...graphic_data],
     x,
     y,
     radius,
-    config.essential.layoutMethod || "binned"
+    config.essential.layoutMethod || "binned",
+    circleDist
   );
-
-  console.log(positionedData)
 
   // Draw circles with positioned data
   chart.append("g")
@@ -225,8 +264,8 @@ function drawGraphic() {
     .selectAll("circle")
     .data(positionedData.reverse())
     .join("circle")
-    .attr("cx", d => d.cx)
-    .attr("cy", d => d.cy)
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
     .attr("r", radius / 2)
     .append("title")
     .text(d => d.areanm + ' ' + d.value);
@@ -234,21 +273,23 @@ function drawGraphic() {
   // Add Delaunay overlay
   const overlay = createDelaunayOverlay({
     svgContainer: chart,
-    data: graphic_data.map(d => ({
-      xvalue: d.valueRound,
-      yvalue: y(d.group) + y.bandwidth() - radius / 2 - circleDist * d.y,
+    data: positionedData.map(d => ({
+      xvalue: d.x,
+      yvalue: d.y,
       name: d.areanm,
       group: d.group,
-      value: d.value
-    })),
+      value: d.value,
+      formattedValue: d3.format(".1f")(d.value)
+    })).sort((a,b)=>a.name.localeCompare(b.name)),
     chart_width: chart_width,
     height: height - margin.top - margin.bottom,
-    xScale: x,
+    xScale: (d)=>d,
     yScale: d3.scaleLinear().domain([0, height - margin.top - margin.bottom]).range([0, height - margin.top - margin.bottom]),
     tooltipConfig: {
       xLabel: config.essential.xAxisLabel || 'Value',
-      xValueFormat: d3.format(config.essential.xAxisFormat),
+      xValueFormat: d3.format(".1f"),
       showYValue: false,
+      backgroundColor:"#fff"
     },
     shape: () => 'circle',
     circleSize: Math.PI * (radius / 2) * (radius / 2),

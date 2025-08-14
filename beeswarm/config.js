@@ -5,7 +5,7 @@ config = {
     "sourceText": "Office for National Statistics",
     "accessibleSummary": "This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
     "xAxisFormat": ".0f",
-    "layoutMethod":'binned',
+    "layoutMethod":"force",// 'binned' or 'force'
     "forceOptions": {
       "strength": 0.5,        // Collision force strength (0-1)
       "iterations": 120,      // Number of simulation iterations
@@ -44,15 +44,15 @@ config = {
     "margin": {
       "sm": {
         "top": 5,
-        "right": 20,
+        "right": 0,
         "bottom": 20,
-        "left": 120
+        "left": 0
       },
       "md": {
         "top": 5,
-        "right": 20,
+        "right": 0,
         "bottom": 20,
-        "left": 120
+        "left": 0
       },
       "lg": {
         "top": 0,
