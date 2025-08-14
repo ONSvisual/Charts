@@ -1,4 +1,4 @@
-import { initialise, wrap } from "../lib/helpers.js";
+import { initialise, wrap } from "https://cdn.ons.gov.uk/assets/data-vis-charts/v1/helpers.js";
 
 var graphic = d3.select('#graphic');
 var legend = d3.select('#legend');

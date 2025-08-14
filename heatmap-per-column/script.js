@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg } from "https://cdn.ons.gov.uk/assets/data-vis-charts/v1/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;

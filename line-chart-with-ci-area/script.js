@@ -1,6 +1,6 @@
 //Note: see data.csv for the required data format - the template is quite paticular on the columns ending with _lowerCI and _upperCI
 
-import { initialise, wrap, addSvg, addAxisLabel, addDirectionArrow, addElbowArrow } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addDirectionArrow, addElbowArrow } from "https://cdn.ons.gov.uk/assets/data-vis-charts/v1/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
