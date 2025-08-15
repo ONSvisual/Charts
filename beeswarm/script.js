@@ -194,6 +194,7 @@ function drawGraphic() {
   //set up xAxis generator
   let xAxis = d3.axisBottom(x)
     .ticks(config.optional.xAxisTicks[size])
+    .tickSize(-height+margin.top)
     .tickFormat(d3.format(config.essential.xAxisFormat));
 
   if (config.essential.radius == "auto") {
@@ -216,9 +217,16 @@ function drawGraphic() {
     margin: margin
   })
 
+    // x axis
+  chart.append("g")
+    .attr('transform', (d) => 'translate(0,' + (height - margin.top - margin.bottom) + ')')
+    .attr('class', 'x axis')
+    .call(xAxis);
+
   chart
     .append("g")
-    .attr("fill", "#f5f5f5")
+    .attr("fill", "#d7d7d7")
+    .attr("opacity",0.25)
     .selectAll("rect")
     .data(y.domain())
     .join("rect")
