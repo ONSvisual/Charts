@@ -5,6 +5,14 @@ config = {
     "sourceText": "Office for National Statistics",
     "accessibleSummary": "This chart has been hidden from screen readers. The main message of the chart is summarised in the chart title.",
     "xAxisFormat": ".0f",
+    "layoutMethod":"force",// 'binned' or 'force'
+    "forceOptions": {
+      "strength": 0.5,        // Collision force strength (0-1)
+      "iterations": 120,      // Number of simulation iterations
+      "velocityDecay": 0.2,   // How quickly nodes slow down (0-1)
+      "alphaMin": 0.001,      // When to stop the simulation
+      "centerStrength": 0.1   // Strength of centering force (0-1)
+    },
     "xAxisLabel": "Percentage",
     "radius": 'auto',//either auto which is x-range / number of bins
     "xDomain": [5,22.5],// either auto or a custom domain as an array e.g [0,100]
@@ -24,18 +32,9 @@ config = {
         y: 0
       },
       "values": [  // Array of average values for each group
-        { group: "North East", value: 14.0 },
-        { group: "North West", value: 13.8 },
         { group: "Wales", value: 14.3 },
         { group: "Scotland", value: 14.7 },
         { group: "Northern Ireland", value: 14.3 },
-        { group: "South East", value: 11.8 },
-        { group: "South West", value: 12.6 },
-        { group: "Yorkshire and The Humber", value: 14.3 },
-        { group: "East Midlands", value: 13.7 },
-        { group: "East of England", value: 13.1 },
-        { group: "West Midlands", value: 13.6 },
-        { group: "London", value: 12.1 },
         { group: "England", value: 13.0}
         // ... add more groups as needed
       ]
@@ -45,15 +44,15 @@ config = {
     "margin": {
       "sm": {
         "top": 5,
-        "right": 20,
+        "right": 0,
         "bottom": 20,
-        "left": 120
+        "left": 0
       },
       "md": {
         "top": 5,
-        "right": 20,
+        "right": 0,
         "bottom": 20,
-        "left": 120
+        "left": 0
       },
       "lg": {
         "top": 0,

@@ -7,13 +7,14 @@ config={
         "radius": "4",
     "sourceText": "Office for National Statistics",
     "accessibleSummary":"Here is the screenreader text describing the chart.",
-    "xDomain":[0,0.85],
-    "yDomain":[-0.14,0.85],
+    "xDomain":[0,1.05],
+    "yDomain":[-0.14,0.95],
     // either "auto" or an array for the x/y domain e.g. [0,100]
     "xAxisLabel":"Change since last month",
     "yAxisLabel":"Difference from trend",
     "xAxisFormat":".0%",
-    "yAxisFormat":".0%"
+    "yAxisFormat":".0%",
+    "groupLabel":'Group'
   },
   "optional": {
     "aspectRatio": {

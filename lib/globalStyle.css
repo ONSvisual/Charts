@@ -223,6 +223,7 @@ text {
   forced-color-adjust: auto;
 }
 
+
 svg.chart:focus {
   box-shadow: 0 0 0 2px var(--ons-color-black),
     0 0 0 5px var(--ons-color-sun-yellow);
