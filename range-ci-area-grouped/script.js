@@ -46,7 +46,7 @@ function drawGraphic() {
 	// create the y scale in groups
 	groups.map(function (d) {
 		//height
-		d[2] = config.optional.seriesHeight[size] * d[1].length;
+		d[2] = (config.optional.seriesHeight[size] + (config.essential.clustered === true ? 10 : 0)) * d[1].length;
 
 		// y scale
 		d[3] = d3
@@ -82,6 +82,27 @@ function drawGraphic() {
 			.selectAll('text')
 			.call(wrap, margin.left - 10);
 
+		// Draw tick lines across the chart body only if clustered is true
+		if (config.essential.clustered === true) {
+			d3.select(this)
+				.selectAll('.tick')
+				.each(function () {
+					const tick = d3.select(this);
+					// Get the y of the ticks
+					const y = +tick.attr('transform').match(/translate\(0,([^)]+)\)/)[1];
+					d3.select(this.parentNode)
+						.append('line')
+						.attr('class', 'y-tick-line')
+						.attr('x1', 0)
+						.attr('x2', chart_width)
+						.attr('y1', y)
+						.attr('y2', y)
+						.attr('stroke', '#ccc')
+						.attr('stroke-width', 1)
+						.attr("stroke-dasharray", "2,2");
+				});
+		}
+
 		d3.select(this)
 			.append('g')
 			.attr('transform', (d) => 'translate(0,' + d[2] + ')')
@@ -105,21 +126,48 @@ function drawGraphic() {
 		.data((d) => d[1])
 		.join("rect")
 		.attr("x", d => x(Number(d.min)))
-		.attr("y", (d, i) => groups.filter((e) => e[0] == d.group)[0][3](d.name) - rectHeight / 2)
+		.attr("y", (d, i) => {
+			const baseY = groups.filter((e) => e[0] == d.group)[0][3](d.name) - rectHeight / 2;
+			// if clustered is true, move series 0 up 10, series 1 down 10 only 
+			if (config.essential.clustered === true) {
+				if (d.series === series[0]) return baseY - 10;
+				if (d.series === series[1]) return baseY + 10;
+			}
+			return baseY;
+		})
 		.attr("width", d => Math.abs(x(Number(d.max)) - x(Number(d.min))))
 		.attr("height", rectHeight)
 		.attr("fill", d => colour(d.series))
-		.attr("opacity", 0.65);
+		.attr("opacity", 0.65)
+
 
 	charts
 		.selectAll('rect.value')
 		.data((d) => d[1])
 		.join('rect')
 		.attr('x', (d) => x(d.value) - 5)
-		.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name) - 5)
+		.attr('y', (d) => {
+			const baseY = groups.filter((f) => f[0] == d.group)[0][3](d.name) - 5;
+			// if clustered is true, move series 0 up 10, series 1 down 10 only 
+			if (config.essential.clustered === true) {
+				const series = [...new Set(graphic_data.map(d => d.series))];
+				if (d.series === series[0]) return baseY - 10;
+				if (d.series === series[1]) return baseY + 10;
+			}
+			return baseY;
+		})
 		.attr('width', 10)
 		.attr('height', 10)
-		.attr('transform', (d) => `rotate(45 ${x(d.value) + 0} ${groups.filter((f) => f[0] == d.group)[0][3](d.name) - 0})`)
+		.attr('transform', (d) => {
+			const baseY = groups.filter((f) => f[0] == d.group)[0][3](d.name);
+			let y = baseY;
+			if (config.essential.clustered === true) {
+				const series = [...new Set(graphic_data.map(d => d.series))];
+				if (d.series === series[0]) y = baseY - 10;
+				if (d.series === series[1]) y = baseY + 10;
+			}
+			return `rotate(45 ${x(d.value)} ${y})`;
+		})
 		.attr("fill", "white")
 		.attr("stroke-width", "2px")
 		.attr('stroke', d => colour(d.series))
