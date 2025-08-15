@@ -1,3 +1,114 @@
+:root {
+  --ons-color-black: #222;
+  --ons-color-grey-100: #414042;
+  --ons-color-grey-75: #707071;
+  --ons-color-grey-40: #b3b3b3;
+  --ons-color-grey-35: #bcbcbd;
+  --ons-color-grey-25: #d5d5d6;
+  --ons-color-grey-20: #d9d9d9;
+  --ons-color-grey-15: #e2e2e3;
+  --ons-color-grey-10: #efeff0;
+  --ons-color-grey-5: #f5f5f6;
+  --ons-color-white: #fff;
+  --ons-color-night-blue: #003c57;
+  --ons-color-spring-green: #a8bd3a;
+  --ons-color-ocean-blue: #206095;
+  --ons-color-sky-blue: #27a0cc;
+  --ons-color-aqua-teal: #00a3a6;
+  --ons-color-navy-blue: #194766;
+  --ons-color-pale-blue: #e7eff4;
+  --ons-color-soft-blue-grey: #dee7ee;
+  --ons-color-light-blue-grey: #e9eff4;
+  --ons-color-leaf-green: #0f8243;
+  --ons-color-ruby-red: #d0021b;
+  --ons-color-jaffa-orange: #fa6401;
+  --ons-color-sun-yellow: #fbc900;
+  --ons-color-neon-yellow: #f0f762;
+  --ons-color-light-orange: #e8bb9b;
+  --ons-color-ocean-blue-tint: #e9eff4;
+  --ons-color-ocean-blue-vibrant: #1f8fd8;
+  --ons-color-spring-green-tint: #c3c5b8;
+  --ons-color-leaf-green-tint: #e7f3ec;
+  --ons-color-leaf-green-vibrant: #10ca64;
+  --ons-color-leaf-green-dark-10: #073d20;
+  --ons-color-leaf-green-dark-5: #0c6b37;
+  --ons-color-ruby-red-tint: #fae6e8;
+  --ons-color-ruby-red-vibrant: #fd112d;
+  --ons-color-jaffa-orange-tint: #fff0e6;
+  --ons-color-jaffa-orange-vibrant: #ff7b24;
+  --ons-color-sun-yellow-dark: #e2b500;
+  --ons-color-navy-blue-light: #153b55;
+  --ons-color-branded: var(--ons-color-ocean-blue);
+  --ons-color-branded-text: var(--ons-color-ocean-blue);
+  --ons-color-branded-tint: var(--ons-color-ocean-blue-tint);
+  --ons-color-branded-secondary: var(--ons-color-night-blue);
+  --ons-color-branded-tertiary: var(--ons-color-aqua-teal);
+  --ons-color-branded-supporting: var(--ons-color-spring-green);
+  --ons-color-branded-supporting-tint: var(--ons-color-branded-supporting);
+  --ons-color-header: var(--ons-color-branded);
+  --ons-color-header-neutral: var(--ons-color-grey-75);
+  --ons-color-header-masthead: var(--ons-color-white);
+  --ons-color-header-masthead-internal: var(--ons-color-branded-secondary);
+  --ons-color-header-masthead-neutral: var(--ons-color-black);
+  --ons-color-header-title: var(--ons-color-text);
+  --ons-color-header-navigation-links: var(--ons-color-text);
+  --ons-color-service-links: var(--ons-color-white);
+  --ons-color-cta-bg: var(--ons-color-branded-tint);
+  --ons-color-banner-bg: var(--ons-color-grey-5);
+  --ons-color-banner-bg-dark: var(--ons-color-grey-15);
+  --ons-color-page-light: var(--ons-color-white);
+  --ons-color-banner-browser-bg: var(--ons-color-black);
+  --ons-color-hero-bg: var(--ons-color-branded-tint);
+  --ons-color-hero-bg-dark: var(--ons-color-branded);
+  --ons-color-text: var(--ons-color-black);
+  --ons-color-text-light: var(--ons-color-grey-75);
+  --ons-color-text-inverse: var(--ons-color-white);
+  --ons-color-text-banner: var(--ons-color-black);
+  --ons-color-text-link: var(--ons-color-ocean-blue);
+  --ons-color-text-link-hover: var(--ons-color-night-blue);
+  --ons-color-text-link-active: var(--ons-color-night-blue);
+  --ons-color-text-link-focus: var(--ons-color-black);
+  --ons-color-text-inverse-link: var(--ons-color-white);
+  --ons-color-text-inverse-link-hover: var(--ons-color-grey-5);
+  --ons-color-text-banner-link: var(--ons-color-grey-100);
+  --ons-color-text-banner-link-hover: var(--ons-color-black);
+  --ons-color-text-metadata: var(--ons-color-black);
+  --ons-color-focus: var(--ons-color-sun-yellow);
+  --ons-color-focus-dark: var(--ons-color-sun-yellow-dark);
+  --ons-color-highlight: var(--ons-color-neon-yellow);
+  --ons-color-borders: var(--ons-color-grey-75);
+  --ons-color-borders-indent: var(--ons-color-grey-35);
+  --ons-color-borders-light: var(--ons-color-grey-35);
+  --ons-color-borders-document-image: var(--ons-color-grey-15);
+  --ons-color-borders-document-image-focus: var(--ons-color-black);
+  --ons-color-placeholder: var(--ons-color-grey-75);
+  --ons-color-button: var(--ons-color-leaf-green);
+  --ons-color-button-secondary: var(--ons-color-grey-15);
+  --ons-color-button-shadow: var(--ons-color-leaf-green-dark-10);
+  --ons-color-button-hover: var(--ons-color-leaf-green-dark-5);
+  --ons-color-button-secondary-shadow: var(--ons-color-grey-75);
+  --ons-color-button-secondary-hover: var(--ons-color-grey-25);
+  --ons-color-input-border: var(--ons-color-black);
+  --ons-color-input-bg: var(--ons-color-white);
+  --ons-color-info: var(--ons-color-ocean-blue);
+  --ons-color-info-tint: var(--ons-color-ocean-blue-tint);
+  --ons-color-info-vibrant: var(--ons-color-ocean-blue-vibrant);
+  --ons-color-success: var(--ons-color-leaf-green);
+  --ons-color-success-tint: var(--ons-color-leaf-green-tint);
+  --ons-color-success-vibrant: var(--ons-color-leaf-green-vibrant);
+  --ons-color-errors: var(--ons-color-ruby-red);
+  --ons-color-errors-tint: var(--ons-color-ruby-red-tint);
+  --ons-color-errors-vibrant: var(--ons-color-ruby-red-vibrant);
+  --ons-color-pending: var(--ons-color-jaffa-orange);
+  --ons-color-pending-tint: var(--ons-color-jaffa-orange-tint);
+  --ons-color-pending-vibrant: var(--ons-color-jaffa-orange-vibrant);
+  --ons-color-dead: var(--ons-color-grey-75);
+  --ons-color-instruction: var(--ons-color-jaffa-orange);
+  --ons-color-instruction-tint: var(--ons-color-jaffa-orange-tint);
+  --ons-color-text-disabled: var(--ons-color-grey-35);
+  --ons-color-border-disabled: var(--ons-color-grey-35);
+}
+
 html,
 body,
 div,
@@ -96,11 +207,8 @@ html {
   /* prevent font scaling in landscape */
 }
 
-body
-
-/* required */
-  {
-  font-family: 'Open Sans', sans-serif;
+body {
+  font-family: "Open Sans", sans-serif;
   font-feature-settings: "salt" 1;
   font-weight: 400;
   max-width: 700px;
@@ -108,81 +216,63 @@ body
   padding-bottom: 10px;
 }
 
-text
-
-/* required */
-  {
-  font-family: 'Open Sans', sans-serif;
+text {
+  font-family: "Open Sans", sans-serif;
   font-feature-settings: "salt" 1;
   font-weight: 400;
   forced-color-adjust: auto;
 }
 
-svg.chart:focus{
-  box-shadow: 0 0 0 2px #222, 0 0 0 5px #fbc900;
-}
-
-
-/* required */
-  {
-  width: 100%;
+svg.chart:focus {
+  box-shadow: 0 0 0 2px var(--ons-color-black),
+    0 0 0 5px var(--ons-color-sun-yellow);
 }
 
 /* axis tick labels */
 svg.chart g.axis text
 
-/* sets all tick text as grey 100 */
-  {
+/* sets all tick text as grey 100 */ {
   font-size: 14px;
-  fill: #414042;
+  fill: var(--ons-color-grey-100);
 }
 
 /* overwrites x-axis as grey 75 */
 svg.chart g.x.axis text {
-  fill: #707071;
+  fill: var(--ons-color-grey-75);
 }
 
 /* if axis has class numeric, make it grey75 */
 svg.chart g.axis.numeric text {
-  fill: #707071;
+  fill: var(--ons-color-grey-75);
 }
 
 /* if axis has class categorical, make it grey100 */
 svg.chart g.axis.categorical text {
-  fill: #414042;
+  fill: var(--ons-color-grey-100);
 }
-
-
 
 /* this sets the labels for the axis */
 .axis--label {
   font-size: 14px;
-  fill: #707071;
+  fill: var(--ons-color-grey-75);
 }
 
-
 /* do not show the line that runs the domain of the axis */
-svg.chart g.axis path.domain
-
-/* required */
-  {
+svg.chart g.axis path.domain {
   display: none;
 }
 
 /* this sets the ticks */
 svg.chart .axis line {
-  stroke: #d9d9d9;
+  stroke: var(--ons-color-grey-20);
 }
 
 /* this sets zero line */
 
 g.tick line.zero-line {
-  stroke: #a0a0a0;
+  stroke: var(--ons-color-grey-40);
   stroke-width: 2px;
 }
-
-
-
 
 /* this sets the style for lines charts */
 path.line {
@@ -196,13 +286,12 @@ path.line {
 
 /*this sets the style for */
 
-
 /* source */
 h5#source {
   font-size: 16px;
   margin: 16px 0 8px 0;
   font-weight: 400;
-  color: #707071;
+  color: var(--ons-color-grey-75);
 }
 
 /* legend div */
@@ -227,8 +316,6 @@ h5#source {
   forced-color-adjust: none;
 }
 
-
-
 /* a legend circle with a border for scatterplots */
 
 .legend--icon--circle2 {
@@ -250,13 +337,12 @@ h5#source {
 }
 
 .legend--text {
-  color: #707070;
+  color: var(--ons-color-grey-75);
   line-height: 14px;
   font-size: 14px;
   padding-left: 6px;
   margin: 0;
 }
-
 
 @media (max-width: 400px) {
   #legend {
@@ -271,7 +357,7 @@ h5#source {
 /*styles for annotation added with the annotation.js script*/
 .annotation_arrow {
   fill: none;
-  stroke: #414042;
+  stroke: var(--ons-color-grey-100);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1px;
@@ -279,65 +365,62 @@ h5#source {
 }
 
 .annotation-text {
-  fill: #414042;
-  color: #414042;
+  fill: var(--ons-color-grey-100);
+  color: var(--ons-color-grey-100);
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
 }
 
 .annotation-line {
-  stroke: #b3b3b3;
   stroke-width: 2px;
   stroke-dasharray: 4 4;
 }
 
 .annotation-range {
-  fill: #ececec;
   stroke-width: 2px;
   stroke-dasharray: 4 4;
 }
 
-.direction-arrow, .elbow-arrow {
+.direction-arrow,
+.elbow-arrow {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2px;
 }
 
-.mobile-annotation-circle{
-  stroke: #414042;
-  stroke-width:1px ;
-  fill:white;
+.mobile-annotation-circle {
+  stroke: var(--ons-color-grey-100);
+  stroke-width: 1px;
+  fill: var(--ons-color-white);
 }
 
-.mobile-annotation-circle-text{
-  fill: #414042 ;
-  font-weight:400;
-  font-size:14px;
-  
+.mobile-annotation-circle-text {
+  fill: var(--ons-color-grey-100);
+  font-weight: 400;
+  font-size: 14px;
 }
 
-
-.mobile-annotation-footnote-row{
-  padding-bottom:3px;
+.mobile-annotation-footnote-row {
+  padding-bottom: 3px;
 }
 
 /* Adjusted colours for high-contrast mode */
 @media (forced-colors: active) {
   .annotation_arrow {
-    stroke: #D9D9D9;
+    stroke: var(--ons-color-grey-20);
   }
 
   .annotation-line {
-    stroke: #D9D9D9;
+    stroke: var(--ons-color-grey-20);
   }
 
   .annotation-range {
-    fill: #757575;
+    fill: var(--ons-color-grey-75);
   }
 
   .direction-arrow {
-    stroke: #D9D9D9
+    stroke: var(--ons-color-grey-20);
   }
 }
 
