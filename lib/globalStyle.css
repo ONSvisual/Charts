@@ -377,6 +377,7 @@ h5#source {
 }
 
 .annotation-range {
+  fill:var(--ons-color-grey-10);
   stroke-width: 2px;
   stroke-dasharray: 4 4;
 }
