@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addSource } from "../lib/helpers.js";
 import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 const graphic = d3.select('#graphic');
@@ -343,7 +343,7 @@ function drawGraphic() {
 		);
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

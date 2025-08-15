@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addSource } from "../lib/helpers.js";
 
 const graphic = d3.select('#graphic');
 const legend = d3.select('#legend');
@@ -243,7 +243,7 @@ function drawGraphic() {
 		.attr('pointer-events', 'none');
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

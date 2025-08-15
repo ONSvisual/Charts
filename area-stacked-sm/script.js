@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel, addSource } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select('#graphic');
@@ -217,7 +217,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	// Send the height to the parent frame
 	if (pymChild) {

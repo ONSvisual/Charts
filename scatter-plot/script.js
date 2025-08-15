@@ -1,4 +1,4 @@
-import { initialise, wrap2, addSvg, addAxisLabel, diamondShape, createDelaunayOverlay } from "../lib/helpers.js";
+import { initialise, wrap2, addSvg, addAxisLabel, diamondShape, createDelaunayOverlay, addSource } from "../lib/helpers.js";
 import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 let graphic = d3.select('#graphic');
@@ -235,8 +235,7 @@ function drawGraphic() {
 
 
   //create link to source
-  d3.select("#source")
-    .text("Source: " + config.essential.sourceText)
+    addSource('source', config.essential.sourceText)
 
 
 

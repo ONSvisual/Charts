@@ -1,4 +1,4 @@
-import { initialise, calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel, wrap } from "../lib/helpers.js";
+import { initialise, calculateChartWidth, addDataLabels, addChartTitleLabel, addAxisLabel, wrap, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -232,7 +232,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -893,7 +893,7 @@ function drawGraphic() {
 } //end drawGraphic
 
 //create link to source
-d3.select('#source').text('Source: ' + config.essential.sourceText);
+addSource('source', config.essential.sourceText);
 
 d3.csv(config.essential.graphic_data_url).then((data) => {
 	//load chart data
