@@ -121,6 +121,18 @@ const chartConfig = [
       ]
     },
     {
+      name: "Column chart with confidence bands",
+      url: "https://onsvisual.github.io/Charts/column-chart-ci-bands/",
+      tags: {
+        comparison: true,
+        uncertainty: true,
+        "change-over-time": true
+      },
+      dataFiles: [
+        { name: "data.csv", path: "data.csv" }
+      ]
+    },
+    {
       name: "Dotplot",
       url: "https://onsvisual.github.io/Charts/dot-plot/",
       tags: {
@@ -168,7 +180,7 @@ const chartConfig = [
       url: "https://onsvisual.github.io/Charts/line-chart-with-ci-area/",
       tags: {
         "change-over-time": true,
-        "part-to-whole": true
+        uncertainty: true
       },
       dataFiles: [
         { name: "data.csv", path: "data.csv" }
@@ -229,6 +241,17 @@ const chartConfig = [
       tags: {
         comparison: true,
         distribution: true
+      },
+      dataFiles: [
+        { name: "data.csv", path: "data.csv" }
+      ]
+    },
+    {
+      name: "Confidence interval range plot",
+      url: "https://onsvisual.github.io/Charts/range-ci-area-grouped/",
+      tags: {
+        comparison: true,
+        uncertainty: true
       },
       dataFiles: [
         { name: "data.csv", path: "data.csv" }
