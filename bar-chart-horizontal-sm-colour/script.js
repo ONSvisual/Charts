@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, calculateChartWidth, addAxisLabel } from "https://cdn.ons.gov.uk/assets/data-vis-charts/v1/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addAxisLabel } from "../lib/helpers.js";
 
 let pymChild = null;
 let graphic = d3.select("#graphic");

@@ -1,4 +1,4 @@
-import { initialise, wrap2, addSvg, addAxisLabel, diamondShape } from "https://cdn.ons.gov.uk/assets/data-vis-charts/v1/helpers.js";
+import { initialise, wrap2, addSvg, addAxisLabel, diamondShape } from "../lib/helpers.js";
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
