@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -237,7 +237,7 @@ function drawGraphic() {
 	// 	.attr('transform', "translate(" + margin.left + ", 0)");
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions

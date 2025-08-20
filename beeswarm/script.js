@@ -1,4 +1,4 @@
-import { initialise, addSvg, addAxisLabel, createDelaunayOverlay } from "../lib/helpers.js";
+import { initialise, addSvg, addAxisLabel, createDelaunayOverlay, addSource } from "../lib/helpers.js";
 import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 let graphic = d3.select('#graphic');
@@ -222,6 +222,12 @@ function drawGraphic() {
     .attr('class', 'x axis')
     .call(xAxis);
 
+    // x axis
+  chart.append("g")
+    .attr('transform', (d) => 'translate(0,' + (height - margin.top - margin.bottom) + ')')
+    .attr('class', 'x axis')
+    .call(xAxis);
+
   chart
     .append("g")
     .attr("fill", "#d7d7d7")
@@ -343,8 +349,7 @@ function drawGraphic() {
   });
 
   //create link to source
-  d3.select("#source")
-    .text("Source: " + config.essential.sourceText)
+  addSource('source', config.essential.sourceText)
 
   //use pym to calculate chart dimensions
   if (pymChild) {
