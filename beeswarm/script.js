@@ -194,7 +194,7 @@ function drawGraphic() {
   //set up xAxis generator
   let xAxis = d3.axisBottom(x)
     .ticks(config.optional.xAxisTicks[size])
-    .tickSize(-height+margin.top)
+    .tickSize(-height+margin.bottom+y(y.domain()[0]))
     .tickFormat(d3.format(config.essential.xAxisFormat));
 
   if (config.essential.radius == "auto") {
@@ -216,6 +216,11 @@ function drawGraphic() {
     height: height + margin.top + margin.bottom,
     margin: margin
   })
+    // x axis
+  chart.append("g")
+    .attr('transform', (d) => 'translate(0,' + (height - margin.top - margin.bottom) + ')')
+    .attr('class', 'x axis')
+    .call(xAxis);
 
     // x axis
   chart.append("g")
@@ -247,8 +252,6 @@ function drawGraphic() {
       .attr("y", d => y(d) + 17)
       .text(d => d);
   }
-
-
 
     // Position circles based on selected method
   const positionedData = positionCircles(
