@@ -165,27 +165,29 @@ function processSimpleData() {
             timeComparisonPopTotal = d3.sum(time_comparison_data, d => d.maleBar + d.femaleBar);
         }
 
-        // Transform to tidy data with percentages
+        // Transform to tidy data - use raw numbers or percentages based on displayType
+        const usePercentages = config.essential.displayType !== 'numbers';
+        
         graphic_data_new = graphic_data
             .map(d => [
-                { age: d.age, sex: 'female', value: d.femaleBar / popTotal },
-                { age: d.age, sex: 'male', value: d.maleBar / popTotal }
+                { age: d.age, sex: 'female', value: usePercentages ? d.femaleBar / popTotal : d.femaleBar },
+                { age: d.age, sex: 'male', value: usePercentages ? d.maleBar / popTotal : d.maleBar }
             ])
             .flatMap(d => d);
 
         if (comparison_data) {
             comparison_data_new = comparison_data.map(d => ({
                 age: d.age,
-                malePercent: d.maleBar / comparisonPopTotal,
-                femalePercent: d.femaleBar / comparisonPopTotal
+                malePercent: usePercentages ? d.maleBar / comparisonPopTotal : d.maleBar,
+                femalePercent: usePercentages ? d.femaleBar / comparisonPopTotal : d.femaleBar
             }));
         }
 
         if (time_comparison_data) {
             time_comparison_data_new = time_comparison_data.map(d => ({
                 age: d.age,
-                malePercent: d.maleBar / timeComparisonPopTotal,
-                femalePercent: d.femaleBar / timeComparisonPopTotal
+                malePercent: usePercentages ? d.maleBar / timeComparisonPopTotal : d.maleBar,
+                femalePercent: usePercentages ? d.femaleBar / timeComparisonPopTotal : d.femaleBar
             }));
         }
     } else {
@@ -239,10 +241,12 @@ function processComplexData() {
             d => d.AREACD
         );
 
-        // Calculate percentages
+        // Calculate percentages or use raw numbers based on displayType
+        const usePercentages = config.essential.displayType !== 'numbers';
+        
         tidydataPercentage = tidydata.map(d => ({
             ...d,
-            percentage: d.value / rolledUp.get(d.AREACD)
+            percentage: usePercentages ? d.value / rolledUp.get(d.AREACD) : d.value
         }));
 
         // Process comparison data if it exists
@@ -255,15 +259,15 @@ function processComplexData() {
             );
             tidydataComparisonPercentage = tidydatacomparison.map(d => ({
                 ...d,
-                percentage: d.value / rolledUpComparison.get(d.AREACD)
+                percentage: usePercentages ? d.value / rolledUpComparison.get(d.AREACD) : d.value
             }));
         } else if (comparison_data) {
             // Simple comparison data structure
-            comparisonPopTotal = d3.sum(comparison_data, d => d.maleBar + d.femaleBar);
+            const comparisonTotal = d3.sum(comparison_data, d => d.maleBar + d.femaleBar);
             comparison_data_new = comparison_data.map(d => ({
                 age: d.age,
-                male: d.maleBar / comparisonPopTotal,
-                female: d.femaleBar / comparisonPopTotal
+                male: usePercentages ? d.maleBar / comparisonTotal : d.maleBar,
+                female: usePercentages ? d.femaleBar / comparisonTotal : d.femaleBar
             }));
         }
     } else {

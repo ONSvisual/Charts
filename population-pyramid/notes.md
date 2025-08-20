@@ -54,6 +54,7 @@ config = {
 
 | Property | Type | Description |
 |----------|------|-------------|
+| `displayType` | string | `"percentages"`, `"numbers"` | Whether to display data as percentages or raw numbers (only applies when `dataType: "numbers"`) |
 | `xAxisLabel` | string | Label for x-axis (percentage axis) |
 | `yAxisLabel` | string | Label for y-axis (age axis) |
 | `xAxisNumberFormat` | string | D3 number format string for x-axis ticks (e.g., `".1%"`, `".0%"`) |
@@ -291,6 +292,37 @@ const config = {
         
         legend: ["Population by age and sex"],
         sourceText: "Census 2021"
+    },
+    // ... optional settings
+};
+```
+
+### 6. Display Raw Numbers Instead of Percentages
+
+**Use Case:** Show actual population counts rather than percentages when working with raw number data.
+
+```javascript
+const config = {
+    essential: {
+        graphic_data_url: "data/population-counts.csv",
+        comparison_data: "data/comparison-counts.csv",
+        dataType: "numbers",
+        displayType: "numbers",  // New option to display raw numbers
+        dataStructure: "simple",
+        interactionType: "static",
+        hasComparison: true,
+        hasInteractiveComparison: false,
+        
+        xAxisLabel: "Population count",  // Update label for numbers
+        yAxisLabel: "Age",
+        xAxisNumberFormat: ",.0f",  // Format for whole numbers with commas
+        yAxisTicksEvery: 2,
+        
+        colour_palette: ["#d53e4f", "#3288bd"],
+        comparison_colour_palette: ["#f46d43", "#74add1"],
+        
+        legend: ["Current population", "Historical population"],
+        sourceText: "Census data 2021"
     },
     // ... optional settings
 };
