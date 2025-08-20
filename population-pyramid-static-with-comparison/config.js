@@ -38,7 +38,7 @@ config = {
 			},
 			"centre": 60
 		},
-		"seriesHeight": {
+		"seriesHeight": {//only use integers
 			"sm": 6,
 			"md": 6,
 			"lg": 6
