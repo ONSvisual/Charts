@@ -262,6 +262,7 @@ function drawGraphic() {
 			chartHeight: height,
 			config: config,
 			options: {
+				labelStrategy: 'lastValid',
 				minSpacing: 12,
 				useLeaderLines: true,
 				leaderLineStyle: 'dashed'
