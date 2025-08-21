@@ -200,50 +200,75 @@ function drawGraphic() {
 		});
 	});
 
+	if (config.essential.addEndMarkers) {
+		const circleData = categories.map((category, index) => {
+			// Find last valid datum for this category
+			const lastDatum = [...graphic_data].reverse().find(d => d[category] != null && d[category] !== "");
+			return lastDatum ? {
+				category: category,
+				index: index,
+				x: x(lastDatum.date),
+				y: y(lastDatum[category]),
+				color: config.essential.colour_palette[index % config.essential.colour_palette.length]
+			} : null;
+		}).filter(d => d); // Remove null entries
 
-		// size === 'sm'
-		if (config.essential.drawLegend || size === 'sm') {
-			// Set up the legend
-			let legenditem = d3
-				.select('#legend')
-				.selectAll('div.legend--item')
-				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-				.enter()
-				.append('div')
-				.attr('class', 'legend--item');
+		const circles = svg.selectAll('circle.line-end')
+			.data(circleData, d => d.category)
+			.enter()
+			.append('circle')
+			.attr('cx', d => d.x)
+			.attr('cy', d => d.y)
+			.style('fill', d => d.color)
+			.attr('r', 4)
+			.attr('class', 'line-end');
+	}
 
-			legenditem
-				.append('div')
-				.attr('class', 'legend--icon--circle')
-				.style('background-color', function (d) {
-					return d[1];
-				});
 
-			legenditem
-				.append('div')
-				.append('p')
-				.attr('class', 'legend--text')
-				.html(function (d) {
-					return d[0];
-				});
-		} else {
-			createDirectLabels({
-				categories: categories,
-				data: graphic_data,
-				svg: svg,
-				xScale: x,
-				yScale: y,
-				margin: margin,
-				chartHeight: height,
-				config: config,
-				options: {
-					minSpacing: 12,
-					useLeaderLines: true,
-					leaderLineStyle: 'dashed'
-				}
+	// size === 'sm'
+	if (config.essential.drawLegend || size === 'sm') {
+		legend.selectAll("*").remove()
+
+		// Set up the legend
+		let legenditem = legend
+			.selectAll('div.legend--item')
+			.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+			.enter()
+			.append('div')
+			.attr('class', 'legend--item');
+
+		legenditem
+			.append('div')
+			.attr('class', 'legend--icon--circle')
+			.style('background-color', function (d) {
+				return d[1];
 			});
-		}
-	
+
+		legenditem
+			.append('div')
+			.append('p')
+			.attr('class', 'legend--text')
+			.html(function (d) {
+				return d[0];
+			});
+	} else {
+		createDirectLabels({
+			categories: categories,
+			data: graphic_data,
+			svg: svg,
+			xScale: x,
+			yScale: y,
+			margin: margin,
+			chartHeight: height,
+			config: config,
+			options: {
+				minSpacing: 12,
+				useLeaderLines: true,
+				leaderLineStyle: 'dashed'
+			}
+		});
+	}
+
 
 	// add grid lines to y axis
 	svg
