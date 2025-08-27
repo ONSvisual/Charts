@@ -223,6 +223,11 @@ text {
   forced-color-adjust: auto;
 }
 
+/* title for small multiples */
+text.title{
+  font-weight: 600;
+  fill: var(--ons-color-grey-100);
+}
 
 svg.chart:focus {
   box-shadow: 0 0 0 2px var(--ons-color-black),
