@@ -1,7 +1,12 @@
+
+
+
 :root {
   --ons-color-black: #222;
   --ons-color-grey-100: #414042;
   --ons-color-grey-75: #707071;
+  --ons-color-grey-60: #8D8C8E;
+  --ons-color-grey-50: #A09FA0;
   --ons-color-grey-40: #b3b3b3;
   --ons-color-grey-35: #bcbcbd;
   --ons-color-grey-25: #d5d5d6;
@@ -223,9 +228,19 @@ text {
   forced-color-adjust: auto;
 }
 
-/* title for small multiples */
+/* title for small multiple panels */
 text.title{
   font-weight: 600;
+  font-size: 14px;
+  fill: var(--ons-color-grey-100);
+}
+
+/* title for sub-groups in charts with groups */
+.groupLabels{
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 0px;
+  margin-bottom: 5px;
   fill: var(--ons-color-grey-100);
 }
 
