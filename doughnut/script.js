@@ -1,4 +1,4 @@
-import { initialise, wrap } from "../lib/helpers.js";
+import { initialise, wrap, addSource } from "../lib/helpers.js";
 
 var graphic = d3.select('#graphic');
 var legend = d3.select('#legend');
@@ -14,7 +14,7 @@ function drawGraphic() {
     var chart_width =
         parseInt(graphic.style('width')) - margin.left - margin.right;
     //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-    var height = 400 - margin.top - margin.bottom;
+    var height = config.optional.chartHeight[size];
 
     const radius = Math.min(chart_width, height) / 2
     const outerRadius = radius * 1.1
@@ -194,7 +194,7 @@ function drawGraphic() {
 
 
     //create link to source
-    d3.select('#source').text('Source: ' + config.essential.sourceText);
+    addSource('source', config.essential.sourceText);
 
     //use pym to calculate chart dimensions
     if (pymChild) {

@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, calculateChartWidth, addChartTitleLabel, addAxisLabel, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -79,8 +79,8 @@ function drawGraphic() {
         margin.left = chartGap;
       }
     }
-
-    let height = 400 - margin.top - margin.bottom;
+    let aspectRatio = config.optional.aspectRatio[size];
+    let height = (aspectRatio[0]*chart_width/aspectRatio[1] )- margin.top - margin.bottom;
 
     const x = d3
       .scaleBand()
@@ -253,8 +253,7 @@ function drawGraphic() {
 
 
   //create link to source
-  d3.select("#source")
-    .text("Source: " + config.essential.sourceText)
+  addSource('source', config.essential.sourceText);
 
 
   //use pym to calculate chart dimensions

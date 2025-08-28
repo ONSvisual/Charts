@@ -1,96 +1,138 @@
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap2, addSvg, addAxisLabel, diamondShape, createDelaunayOverlay, addSource } from "../lib/helpers.js";
+import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
 let graphic_data, size, svg;
 
-function drawGraphic() {
+const circleSize = 105; // Define size for circles in pixels
+const squareSize = 90; // Define size for squares in pixels
+const triangleSize = 75; // Define size for triangles in pixels
+const diamondSize = 95; // Define size for diamonds in pixels
 
+// Add this variable to store the overlay cleanup function
+let overlayCleanup = null;
+
+function drawGraphic() {
+  // add cleanup when the chart is destroyed/redrawn
+  function cleanupPreviousChart() {
+    if (overlayCleanup) {
+      overlayCleanup();
+      overlayCleanup = null;
+    }
+  }
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
-  let colour = d3.scaleOrdinal(config.essential.colour_palette); //
+  let colour = d3.scaleOrdinal(config.essential.colour_palette);
 
-  let margin = config.optional.margin[size]
+  let margin = config.optional.margin[size];
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-  let height = 400 - margin.top - margin.bottom;
+  let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width;
 
-  //set up scales
-  const x = d3.scaleLinear()
-    .range([0, chart_width]);
+  const x = d3.scaleLinear().range([0, chart_width]);
+  const y = d3.scaleLinear().range([height, 0]);
 
-  const y = d3.scaleLinear()
-    .range([height, 0])
-
-
-  //create svg for chart
   svg = addSvg({
     svgParent: graphic,
     chart_width: chart_width,
     height: height + margin.top + margin.bottom,
     margin: margin
-  })
+  });
 
+  let groups = [...new Set(graphic_data.map(item => item.group))].sort();
 
-  // lets move on to setting up the legend for this chart. 
-  let groups = [...new Set(graphic_data.map(item => item.group))]; // this will extract the unique groups from the data.csv
+  let shape = d3.scaleOrdinal()
+    .domain(groups)
+    .range(['circle', 'square', 'triangle', 'diamond']);
 
-
-  // This code is meant to create a legend in the style of the scatterplot circle.
-
-  let legenditem = d3
-    .select('#legend')
-    .selectAll('div.legend-item')
+  let legenditem = legend.selectAll('div.legend-item')
     .data(groups)
     .enter()
     .append('div')
-    .attr('class', 'legend--item');
+    .attr('class', 'legend--item')
+    .style('display', 'flex')
+    .style('align-items', 'center');
 
-  legenditem
-    .append('div')
-    .attr('class', 'legend--icon--circle2')
-    .style('background-color', (d) => {
-      let color = d3.color(colour(d));
-      color.opacity = 0.5;
-      return color;
+  legenditem.append('svg')
+    .attr('width', 20)
+    .attr('height', 20)
+    .append('path')
+    .attr('stroke-width', '1px')
+    .attr('d', d => {
+      switch (shape(d)) {
+        case 'circle': return d3.symbol().type(d3.symbolCircle).size(circleSize)();
+        case 'square': return d3.symbol().type(d3.symbolSquare).size(squareSize)();
+        case 'triangle': return d3.symbol().type(d3.symbolTriangle).size(triangleSize)();
+        case 'diamond': return diamondShape(diamondSize / 10); // Use the custom diamond shape
+      }
     })
-    .style('border-color', (d) => colour(d));
+    .attr('transform', 'translate(10,10)')
+    .attr('fill', d => colour(d))
+    .attr('stroke', '#fff');
 
-  legenditem
-    .append('div')
-    .append('p')
+  legenditem.append('p')
     .attr('class', 'legend--text')
-    .html((d) => d);
+    .style('margin-left', '5px')
+    .text(d => d);
+
+  // set up dropdown
+  const dropdownData = graphic_data.map((point, index) => ({
+    id: index,
+    label: point.name || `Point ${index + 1}`,
+    group: point.group
+  }));
+
+  const select = new EnhancedSelect({
+    containerId: 'select',
+    options: dropdownData,
+    label: 'Choose a point',
+    placeholder:"Select a data point",
+    mode: 'default',
+    idKey: 'id',
+    labelKey: 'label',
+    groupKey:'group',
+    onChange: (selectedValue) => {
+      if (selectedValue) {
+        overlayCleanup.highlightPoint(selectedValue.id);
+      } else {
+        overlayCleanup.clearHighlight();
+      }
+    }
+  });
 
 
-
-  // both of these are need to be looked at.
 
   if (config.essential.xDomain == "auto") {
-    x.domain([0, d3.max(graphic_data, function (d) { return d.xvalue })]);
+    x.domain([d3.min(graphic_data, d => d.xvalue), d3.max(graphic_data, d => d.xvalue)]);
   } else {
-    x.domain(config.essential.xDomain)
+    x.domain(config.essential.xDomain);
   }
 
 
   if (config.essential.yDomain == "auto") {
-    y.domain([0, d3.max(graphic_data, function (d) { return d.yvalue })]);
+    y.domain([d3.min(graphic_data, d => d.yvalue), d3.max(graphic_data, d => d.yvalue)]);
   } else {
-    y.domain(config.essential.yDomain)
+    y.domain(config.essential.yDomain);
   }
 
-  svg
-    .append('g')
+  svg.append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0,${height})`)
-    .call(
-      d3.axisBottom(x)
-        .ticks(config.optional.xAxisTicks[size])
-        .tickSize(-height)
-        .tickPadding(10)
-        .tickFormat(d3.format(config.essential.xAxisFormat))
+    .call(d3.axisBottom(x)
+      .ticks(config.optional.xAxisTicks[size])
+      .tickSize(-height)
+      .tickPadding(10)
+      .tickFormat(d3.format(config.essential.xAxisFormat))
     )
+    .selectAll('line')
+    .each(function (d) {
+      if (d === 0) {
+        d3.select(this).attr('class', 'zero-line');
+      }
+    });
+
 
   svg
     .append('g')
@@ -101,21 +143,75 @@ function drawGraphic() {
         .tickSize(-chart_width)
         .tickPadding(10)
         .tickFormat(d3.format(config.essential.yAxisFormat))
-    );
+    ).selectAll('line')
+    .each(function (d) {
+      if (d === 0) {
+        d3.select(this).attr('class', 'zero-line');
+      }
+    });
 
-
-
-  svg.selectAll('circle')
+  svg.append('g').selectAll('path')
     .data(graphic_data)
-    .join('circle')
-    .attr('cx', (d) => x(d.xvalue))
-    .attr('cy', (d) => y(d.yvalue))
-    .attr('r', config.essential.radius)
-    .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
+    .join('path')
+    .attr('d', d => {
+      switch (shape(d.group)) {
+        case 'circle': return d3.symbol().type(d3.symbolCircle).size(circleSize)();
+        case 'square': return d3.symbol().type(d3.symbolSquare).size(squareSize)();
+        case 'triangle': return d3.symbol().type(d3.symbolTriangle).size(triangleSize)();
+        case 'diamond': return diamondShape(diamondSize / 10); // Use the custom diamond shape
+      }
+    })
+    .attr('transform', d => `translate(${x(d.xvalue)},${y(d.yvalue)})`)
+    .attr('fill', d => colour(d.group))
     .attr('fill-opacity', config.essential.fillOpacity)
-    .attr('stroke', (d) => colour(d.group))
+    .attr('stroke', d => d.highlight === 'y' ? '#222' : "#fff")
+    .attr('stroke-width', d => d.highlight === 'y' ? '1.5px' : '1px')
+    .attr('stroke-linejoin', 'round')
     .attr('stroke-opacity', config.essential.strokeOpacity);
 
+  // Clean up previous overlay if it exists
+  if (overlayCleanup) {
+    overlayCleanup();
+  }
+
+  // Create Delaunay overlay for tooltips (Basic version)
+  overlayCleanup = createDelaunayOverlay({
+    svgContainer: svg,
+    data: graphic_data,
+    chart_width: chart_width,
+    height: height,
+    xScale: x,
+    yScale: y,
+    shape: shape,
+    circleSize: circleSize,
+    squareSize: squareSize,
+    triangleSize: triangleSize,
+    diamondSize: diamondSize,
+    tooltipConfig: {
+      xValueFormat: d3.format(config.essential.xAxisFormat),
+      yValueFormat: d3.format(config.essential.yAxisFormat),
+      xLabel: config.essential.xAxisLabel || 'X Value',
+      yLabel: config.essential.yAxisLabel || 'Y Value',
+      groupLabel: config.essential.groupLabel || 'Group',
+      width: "250px",
+      offset: { x: 3, y: 3 }
+    },
+    margin: margin
+  });
+
+  svg.selectAll('text.label')
+    .data(graphic_data.filter(d => d.highlight === 'y'))
+    .join('text')
+    .attr('class', 'dataLabels')
+    .attr('x', d => x(d.xvalue))
+    .attr('y', d => y(d.yvalue))
+    .attr('dy', '-1em')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', '14px')
+    .attr('fill', '#404142')
+    .text(d => d.name)
+    .style('font-weight', '600')
+    .call(wrap2, 100, 1.5, 1, 1.05, 1, true, 'middle');
 
   // This does the x-axis label
   addAxisLabel({
@@ -139,8 +235,7 @@ function drawGraphic() {
 
 
   //create link to source
-  d3.select("#source")
-    .text("Source: " + config.essential.sourceText)
+    addSource('source', config.essential.sourceText)
 
 
 

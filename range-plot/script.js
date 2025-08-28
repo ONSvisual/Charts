@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -109,15 +109,31 @@ function drawGraphic() {
 		.attr('stroke', '#c6c6c6')
 		.attr('stroke-width', '3px');
 
-	charts
-		.selectAll('circle.min')
-		.data((d) => d[1])
-		.join('circle')
-		.attr('class', 'min')
-		.attr('cx', (d) => x(d.min))
-		.attr('cy', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-		.attr('r', 6)
-		.attr('fill', colour('min'));
+	if(config.essential.useDiamonds){
+		charts
+			.selectAll('rect.min')
+			.data((d) => d[1])
+			.join('rect')
+			.attr('class', 'min')
+			.attr('x', (d) => x(d.min)-5)
+			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name)-5)
+			.attr('width', 10)
+			.attr('height', 10)
+			.attr('transform', (d) => `rotate(45 ${x(d.min) +0} ${groups.filter((f) => f[0] == d.group)[0][3](d.name)-0})`)
+			.attr('fill', colour('min'));
+	}else{
+		charts
+			.selectAll('circle.min')
+			.data((d) => d[1])
+			.join('circle')
+			.attr('class', 'min')
+			.attr('cx', (d) => x(d.min))
+			.attr('cy', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) - 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.attr('r', 6)
+			.attr('fill', colour('min'));
+	}
+
+	
 
 	charts
 		.selectAll('circle.max')
@@ -125,7 +141,7 @@ function drawGraphic() {
 		.join('circle')
 		.attr('class', 'max')
 		.attr('cx', (d) => x(d.max))
-		.attr('cy', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+		.attr('cy', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) + 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 		.attr('r', 6)
 		.attr('fill', colour('max'));
 
@@ -136,7 +152,7 @@ function drawGraphic() {
 			.join('text')
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.min))
-			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.attr('y', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) - 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 			.text((d) => d3.format(config.essential.numberFormat)(d.min))
 			.attr('fill', colour('min'))
 			.attr('dy', 6)
@@ -149,7 +165,7 @@ function drawGraphic() {
 			.join('text')
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.max))
-			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
+			.attr('y', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) + 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
 			.text((d) => d3.format(config.essential.numberFormat)(d.max))
 			.attr('fill', colour('max'))
 			.attr('dy', 6)
@@ -189,7 +205,7 @@ function drawGraphic() {
 
 	legenditem
 		.append('div')
-		.attr('class', 'legend--icon--circle')
+		.attr('class', (d,i)=>config.essential.useDiamonds && i==0 ? 'legend--icon--diamond' : 'legend--icon--circle')
 		.style('background-color', function (d) {
 			return d[1];
 		});
@@ -203,7 +219,7 @@ function drawGraphic() {
 		});
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

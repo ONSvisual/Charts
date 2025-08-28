@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addSource } from "../lib/helpers.js";
 
 const graphic = d3.select('#graphic');
 const legend = d3.select('#legend');
@@ -48,7 +48,7 @@ function drawGraphic() {
 			}
 		});
 	} else if (config.essential.breaks == 'equal') {
-		breaks = ss.equalIntervalBreaks(numbers, dvc.numberBreaks);
+		breaks = ss.equalIntervalBreaks(numbers, config.essential.numberOfBreaks);
 	} else {
 		breaks = config.essential.breaks;
 	}
@@ -76,9 +76,11 @@ function drawGraphic() {
 		.scaleThreshold()
 		.domain(breaks.slice(1, 6))
 		.range(
-			chroma
-				.scale(chroma.brewer[config.essential.colour_palette])
-				.colors(config.essential.numberOfBreaks)
+			Array.isArray(config.essential.colour_palette)
+				? config.essential.colour_palette
+				: chroma
+					.scale(chroma.brewer[config.essential.colour_palette])
+					.colors(config.essential.numberOfBreaks)
 		);
 
 	// draw a legend, stealing code from simple maps template
@@ -226,7 +228,12 @@ function drawGraphic() {
 		.data(dataPivoted)
 		.join('text')
 		.attr('class', 'dataLabels')
-		.attr('fill', (d) => (d.value >= breaks[2] ? '#ffffff' : '#414042'))
+		.attr('fill', (d) => {
+			// Calculate contrast ratio and decide text color
+			const rectColor = colour(+d.value);
+			const contrast = chroma.contrast(rectColor, '#ffffff');
+			return contrast >= 4.5 ? '#ffffff' : '#414042'; // Use white if contrast is sufficient, otherwise dark gray
+		})
 		.attr('x', (d) => x(d.region))
 		.attr('dx', x.bandwidth() / 2)
 		.attr('y', (d) => y(d.name))
@@ -236,7 +243,7 @@ function drawGraphic() {
 		.attr('pointer-events', 'none');
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

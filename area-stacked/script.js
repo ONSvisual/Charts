@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
@@ -12,8 +12,9 @@ function drawGraphic() {
 
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
+	let aspectRatio = config.optional.aspectRatio[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = 400 - margin.top - margin.bottom;
+	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date');
@@ -154,7 +155,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

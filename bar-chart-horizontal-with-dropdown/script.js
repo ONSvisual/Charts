@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addDataLabels, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let select = d3.select('#select');
@@ -7,6 +7,9 @@ let x, y, graphic_data, size, svg;
 
 
 function drawGraphic() {
+
+	select.selectAll('*').remove(); // Remove the select element if it exists
+
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
@@ -21,10 +24,8 @@ function drawGraphic() {
 		.append('select')
 		.attr('id', 'optionsSelect')
 		.attr('style', 'width:calc(100% - 6px)')
-		.attr('class', 'chosen-select');
-
-	// Add the placeholder option
-	optns.append('option').attr('value', '').text('Select an option'); // Placeholder text
+		.attr('class', 'chosen-select')
+		.attr('data-placeholder', 'Select an option');
 
 	optns
 		.selectAll('option.option')
@@ -260,7 +261,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	$('#optionsSelect').val(config.essential.defaultOption).trigger('chosen:updated');
 	changeData(config.essential.defaultOption)

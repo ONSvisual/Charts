@@ -1,21 +1,27 @@
 config={
   "essential": {
     "graphic_data_url": "data.csv",
-    "colour_palette": ["#206095","#3fb0b3"],
-    "fillOpacity":0.5,
+    "colour_palette": ["#206095","#A8BD3A","#F66068","#27A0CC"],
+    "fillOpacity":1,
     "strokeOpacity":1,
         "radius": "4",
     "sourceText": "Office for National Statistics",
     "accessibleSummary":"Here is the screenreader text describing the chart.",
-    "xDomain":"auto",
-    "yDomain":"auto",
+    "xDomain":[0,1.05],
+    "yDomain":[-0.14,0.95],
     // either "auto" or an array for the x/y domain e.g. [0,100]
-    "xAxisLabel":"Really long x axis label that is so long that is needs wrapping on mobile because it is so so so so so so so long",
-    "yAxisLabel":"y axis label",
+    "xAxisLabel":"Change since last month",
+    "yAxisLabel":"Difference from trend",
     "xAxisFormat":".0%",
-    "yAxisFormat":".0%"
+    "yAxisFormat":".0%",
+    "groupLabel":'Group'
   },
   "optional": {
+    "aspectRatio": {
+			"sm": [1, 1],
+			"md": [1, 1],
+			"lg": [1, 1]
+		},
     "margin": {
       "sm": {
         "top": 30,
@@ -39,7 +45,7 @@ config={
     "xAxisTicks":{
       "sm":4,
       "md":8,
-      "lg":10
+      "lg":8
     },
     "yAxisTicks":{
       "sm":4,

@@ -1,0 +1,374 @@
+group,areacd,areanm,value
+England,E06000001,Hartlepool,16.4
+England,E06000002,Middlesbrough,17.2
+England,E06000003,Redcar and Cleveland,14.5
+England,E06000004,Stockton-on-Tees,11.8
+England,E06000005,Darlington,11.5
+England,E06000047,County Durham,15.3
+England,E06000057,Northumberland,11.2
+England,E08000021,Newcastle upon Tyne,13.4
+England,E08000022,North Tyneside,13.3
+England,E08000023,South Tyneside,15.7
+England,E08000024,Sunderland,15
+England,E08000037,Gateshead,13.3
+England,E06000006,Halton,13.8
+England,E06000007,Warrington,10
+England,E06000008,Blackburn with Darwen,16.8
+England,E06000009,Blackpool,21.3
+England,E06000049,Cheshire East,10.8
+England,E06000050,Cheshire West and Chester,10.6
+England,E07000026,Allerdale,14
+England,E07000027,Barrow-in-Furness,17.1
+England,E07000028,Carlisle,14.7
+England,E07000029,Copeland,14.4
+England,E07000030,Eden,7.5
+England,E07000031,South Lakeland,10
+England,E07000117,Burnley,19.9
+England,E07000118,Chorley,16.1
+England,E07000119,Fylde,7.3
+England,E07000120,Hyndburn,12.1
+England,E07000121,Lancaster,14.2
+England,E07000122,Pendle,13.7
+England,E07000123,Preston,15.5
+England,E07000124,Ribble Valley,7.3
+England,E07000125,Rossendale,18.4
+England,E07000126,South Ribble,12.8
+England,E07000127,West Lancashire,14.8
+England,E07000128,Wyre,10.7
+England,E08000001,Bolton,16.1
+England,E08000002,Bury,11.6
+England,E08000003,Manchester,17
+England,E08000004,Oldham,14.9
+England,E08000005,Rochdale,15.4
+England,E08000006,Salford,15.6
+England,E08000007,Stockport,12.6
+England,E08000008,Tameside,18.4
+England,E08000009,Trafford,9.5
+England,E08000010,Wigan,14.8
+England,E08000011,Knowsley,13.9
+England,E08000012,Liverpool,16
+England,E08000013,St. Helens,12.1
+England,E08000014,Sefton,9
+England,E08000015,Wirral,11.4
+England,E06000010,"Kingston upon Hull, City of",20.3
+England,E06000011,East Riding of Yorkshire,11.1
+England,E06000012,North East Lincolnshire,19
+England,E06000013,North Lincolnshire,15.3
+England,E06000014,York,9.9
+England,E07000163,Craven,8.5
+England,E07000164,Hambleton,10.1
+England,E07000165,Harrogate,10.1
+England,E07000166,Richmondshire,9.8
+England,E07000167,Ryedale,11.7
+England,E07000168,Scarborough,13.5
+England,E07000169,Selby,9.8
+England,E08000016,Barnsley,16.4
+England,E08000017,Doncaster,17.7
+England,E08000018,Rotherham,15.7
+England,E08000019,Sheffield,12.2
+England,E08000032,Bradford,15.6
+England,E08000033,Calderdale,13.2
+England,E08000034,Kirklees,13.6
+England,E08000035,Leeds,13
+England,E08000036,Wakefield,15.5
+England,E06000015,Derby,14.8
+England,E06000016,Leicester,14.2
+England,E06000017,Rutland,9.5
+England,E06000018,Nottingham,18.6
+England,E07000032,Amber Valley,14.3
+England,E07000033,Bolsover,15.5
+England,E07000034,Chesterfield,14.1
+England,E07000035,Derbyshire Dales,8.8
+England,E07000036,Erewash,14.9
+England,E07000037,High Peak,15.5
+England,E07000038,North East Derbyshire,9
+England,E07000039,South Derbyshire,13.5
+England,E07000129,Blaby,10.9
+England,E07000130,Charnwood,11.7
+England,E07000131,Harborough,8.4
+England,E07000132,Hinckley and Bosworth,9
+England,E07000133,Melton,12.5
+England,E07000134,North West Leicestershire,11.3
+England,E07000135,Oadby and Wigston,10.1
+England,E07000136,Boston,17
+England,E07000137,East Lindsey,15
+England,E07000138,Lincoln,17.1
+England,E07000139,North Kesteven,10.3
+England,E07000140,South Holland,20.3
+England,E07000141,South Kesteven,9.8
+England,E07000142,West Lindsey,16.3
+England,E06000061,North Northamptonshire,14.7
+England,E06000062,West Northamptonshire,12.9
+England,E07000170,Ashfield,12.3
+England,E07000171,Bassetlaw,11.5
+England,E07000172,Broxtowe,14
+England,E07000173,Gedling,12.8
+England,E07000174,Mansfield,19.9
+England,E07000175,Newark and Sherwood,12.8
+England,E07000176,Rushcliffe,6.4
+England,E06000019,"Herefordshire, County of",11.9
+England,E06000020,Telford and Wrekin,15.2
+England,E06000021,Stoke-on-Trent,16.2
+England,E06000051,Shropshire,11.8
+England,E07000192,Cannock Chase,14.6
+England,E07000193,East Staffordshire,13.8
+England,E07000194,Lichfield,6.7
+England,E07000195,Newcastle-under-Lyme,11.8
+England,E07000196,South Staffordshire,9
+England,E07000197,Stafford,10.1
+England,E07000198,Staffordshire Moorlands,9.2
+England,E07000199,Tamworth,12.9
+England,E07000218,North Warwickshire,16.5
+England,E07000219,Nuneaton and Bedworth,15.7
+England,E07000220,Rugby,14.2
+England,E07000221,Stratford-on-Avon,9.9
+England,E07000222,Warwick,11.5
+England,E07000234,Bromsgrove,10.6
+England,E07000235,Malvern Hills,12
+England,E07000236,Redditch,13.6
+England,E07000237,Worcester,13.2
+England,E07000238,Wychavon,11.2
+England,E07000239,Wyre Forest,11.7
+England,E08000025,Birmingham,15.7
+England,E08000026,Coventry,15
+England,E08000027,Dudley,12.7
+England,E08000028,Sandwell,17.4
+England,E08000029,Solihull,10.8
+England,E08000030,Walsall,14.5
+England,E08000031,Wolverhampton,14
+England,E06000031,Peterborough,14.7
+England,E06000032,Luton,16.8
+England,E06000033,Southend-on-Sea,12.8
+England,E06000034,Thurrock,15
+England,E06000055,Bedford,12.5
+England,E06000056,Central Bedfordshire,13.1
+England,E07000008,Cambridge,13.5
+England,E07000009,East Cambridgeshire,10.5
+England,E07000010,Fenland,22.1
+England,E07000011,Huntingdonshire,12.3
+England,E07000012,South Cambridgeshire,8.4
+England,E07000066,Basildon,15.5
+England,E07000067,Braintree,14.5
+England,E07000068,Brentwood,10.5
+England,E07000069,Castle Point,10.7
+England,E07000070,Chelmsford,12.1
+England,E07000071,Colchester,12.2
+England,E07000072,Epping Forest,12.1
+England,E07000073,Harlow,16.4
+England,E07000074,Maldon,10.3
+England,E07000075,Rochford,7
+England,E07000076,Tendring,15.6
+England,E07000077,Uttlesford,14.3
+England,E07000095,Broxbourne,14.8
+England,E07000096,Dacorum,12.1
+England,E07000098,Hertsmere,11.1
+England,E07000099,North Hertfordshire,10.8
+England,E07000102,Three Rivers,9
+England,E07000103,Watford,13
+England,E07000143,Breckland,12.9
+England,E07000144,Broadland,11.4
+England,E07000145,Great Yarmouth,17
+England,E07000146,King's Lynn and West Norfolk,16.6
+England,E07000147,North Norfolk,12.5
+England,E07000148,Norwich,15.8
+England,E07000149,South Norfolk,12.1
+England,E07000200,Babergh,12.6
+England,E07000202,Ipswich,16.9
+England,E07000203,Mid Suffolk,10.3
+England,E07000240,St Albans,5.7
+England,E07000241,Welwyn Hatfield,14.5
+England,E07000242,East Hertfordshire,10.1
+England,E07000243,Stevenage,11.3
+England,E07000244,East Suffolk,12.4
+England,E07000245,West Suffolk,13.1
+England,E09000001,City of London,9.5
+England,E09000002,Barking and Dagenham,15.2
+England,E09000003,Barnet,9.6
+England,E09000004,Bexley,12.3
+England,E09000005,Brent,10.4
+England,E09000006,Bromley,10
+England,E09000007,Camden,10.4
+England,E09000008,Croydon,13.2
+England,E09000009,Ealing,14.2
+England,E09000010,Enfield,15
+England,E09000011,Greenwich,12.4
+England,E09000012,Hackney,12.4
+England,E09000013,Hammersmith and Fulham,10.8
+England,E09000014,Haringey,13.8
+England,E09000015,Harrow,10.1
+England,E09000016,Havering,12.4
+England,E09000017,Hillingdon,10.7
+England,E09000018,Hounslow,13.7
+England,E09000019,Islington,12.4
+England,E09000020,Kensington and Chelsea,12.6
+England,E09000021,Kingston upon Thames,8.5
+England,E09000022,Lambeth,12.6
+England,E09000023,Lewisham,12.8
+England,E09000024,Merton,13.7
+England,E09000025,Newham,13.5
+England,E09000026,Redbridge,11.3
+England,E09000027,Richmond upon Thames,6.8
+England,E09000028,Southwark,13.8
+England,E09000029,Sutton,10.6
+England,E09000030,Tower Hamlets,13.1
+England,E09000031,Waltham Forest,11.4
+England,E09000032,Wandsworth,10.6
+England,E09000033,Westminster,13
+England,E06000035,Medway,13
+England,E06000036,Bracknell Forest,12.5
+England,E06000037,West Berkshire,11.2
+England,E06000038,Reading,14
+England,E06000039,Slough,14.1
+England,E06000040,Windsor and Maidenhead,10.2
+England,E06000041,Wokingham,6.7
+England,E06000042,Milton Keynes,13.2
+England,E06000043,Brighton and Hove,15.4
+England,E06000044,Portsmouth,14.3
+England,E06000045,Southampton,14.2
+England,E06000046,Isle of Wight,12.2
+England,E06000060,Buckinghamshire unitary authority,10.7
+England,E07000061,Eastbourne,11.8
+England,E07000062,Hastings,18.7
+England,E07000063,Lewes,11.1
+England,E07000064,Rother,15.2
+England,E07000065,Wealden,9.3
+England,E07000084,Basingstoke and Deane,9.5
+England,E07000085,East Hampshire,8.1
+England,E07000086,Eastleigh,9.4
+England,E07000087,Fareham,10.2
+England,E07000088,Gosport,14.3
+England,E07000089,Hart,7.4
+England,E07000090,Havant,14.7
+England,E07000091,New Forest,8.8
+England,E07000092,Rushmoor,13.6
+England,E07000093,Test Valley,8.8
+England,E07000094,Winchester,7
+England,E07000105,Ashford,13.6
+England,E07000106,Canterbury,11.5
+England,E07000107,Dartford,13.2
+England,E07000108,Dover,15.3
+England,E07000109,Gravesham,13.5
+England,E07000110,Maidstone,12.7
+England,E07000111,Sevenoaks,10.1
+England,E07000112,Folkestone and Hythe,12.5
+England,E07000113,Swale,14.1
+England,E07000114,Thanet,16.8
+England,E07000115,Tonbridge and Malling,7.9
+England,E07000116,Tunbridge Wells,13.4
+England,E07000177,Cherwell,13.6
+England,E07000178,Oxford,10.6
+England,E07000179,South Oxfordshire,11.8
+England,E07000180,Vale of White Horse,8.8
+England,E07000181,West Oxfordshire,11.7
+England,E07000207,Elmbridge,7.7
+England,E07000208,Epsom and Ewell,7.3
+England,E07000209,Guildford,11.2
+England,E07000210,Mole Valley,11.2
+England,E07000211,Reigate and Banstead,10.5
+England,E07000212,Runnymede,12.5
+England,E07000213,Spelthorne,10.1
+England,E07000214,Surrey Heath,7.9
+England,E07000215,Tandridge,10.6
+England,E07000216,Waverley,9
+England,E07000217,Woking,5.3
+England,E07000223,Adur,8.1
+England,E07000224,Arun,12.7
+England,E07000225,Chichester,11.4
+England,E07000226,Crawley,19.1
+England,E07000227,Horsham,9.7
+England,E07000228,Mid Sussex,10.3
+England,E07000229,Worthing,15.2
+England,E06000022,Bath and North East Somerset,11.3
+England,E06000023,"Bristol, City of",16
+England,E06000024,North Somerset,11.1
+England,E06000025,South Gloucestershire,10.9
+England,E06000026,Plymouth,16.8
+England,E06000027,Torbay,15.6
+England,E06000030,Swindon,11.6
+England,E06000052,Cornwall,12.5
+England,E06000054,Wiltshire,12.2
+England,E06000058,"Bournemouth, Christchurch and Poole",10.7
+England,E06000059,Dorset,10.2
+England,E07000040,East Devon,9.7
+England,E07000041,Exeter,10.8
+England,E07000042,Mid Devon,13.4
+England,E07000043,North Devon,12.7
+England,E07000044,South Hams,10.6
+England,E07000045,Teignbridge,15.7
+England,E07000046,Torridge,9.5
+England,E07000047,West Devon,14.4
+England,E07000078,Cheltenham,11.5
+England,E07000079,Cotswold,8.8
+England,E07000080,Forest of Dean,13.4
+England,E07000081,Gloucester,16.7
+England,E07000082,Stroud,10.5
+England,E07000083,Tewkesbury,11.7
+England,E07000187,Mendip,10.6
+England,E07000188,Sedgemoor,17.9
+England,E07000189,South Somerset,11.1
+England,E07000246,Somerset West and Taunton,13.2
+Scotland,S12000005,Clackmannanshire,17.3
+Scotland,S12000006,Dumfries and Galloway,14.9
+Scotland,S12000008,East Ayrshire,15.7
+Scotland,S12000010,East Lothian,12
+Scotland,S12000011,East Renfrewshire,9.3
+Scotland,S12000013,Na h-Eileanan Siar,12.3
+Scotland,S12000014,Falkirk,15.8
+Scotland,S12000017,Highland,11
+Scotland,S12000018,Inverclyde,15.4
+Scotland,S12000019,Midlothian,12.4
+Scotland,S12000020,Moray,13.2
+Scotland,S12000021,North Ayrshire,14.7
+Scotland,S12000023,Orkney Islands,13.8
+Scotland,S12000026,Scottish Borders,12.4
+Scotland,S12000027,Shetland Islands,12.1
+Scotland,S12000028,South Ayrshire,14.1
+Scotland,S12000029,South Lanarkshire,14.8
+Scotland,S12000030,Stirling,10.1
+Scotland,S12000033,Aberdeen City,13.8
+Scotland,S12000034,Aberdeenshire,12.3
+Scotland,S12000035,Argyll and Bute,12
+Scotland,S12000036,City of Edinburgh,10.8
+Scotland,S12000038,Renfrewshire,16.1
+Scotland,S12000039,West Dunbartonshire,17.5
+Scotland,S12000040,West Lothian,19.5
+Scotland,S12000041,Angus,15
+Scotland,S12000042,Dundee City,17.2
+Scotland,S12000045,East Dunbartonshire,6.6
+Scotland,S12000047,Fife,15.7
+Scotland,S12000048,Perth and Kinross,12.3
+Scotland,S12000049,Glasgow City,19.1
+Scotland,S12000050,North Lanarkshire,20.8
+Wales,W06000001,Isle of Anglesey,14
+Wales,W06000002,Gwynedd,15.5
+Wales,W06000003,Conwy,13.9
+Wales,W06000004,Denbighshire,16.2
+Wales,W06000005,Flintshire,13.7
+Wales,W06000006,Wrexham,15.4
+Wales,W06000008,Ceredigion,13.4
+Wales,W06000009,Pembrokeshire,15
+Wales,W06000010,Carmarthenshire,13.4
+Wales,W06000011,Swansea,13.9
+Wales,W06000012,Neath Port Talbot,16.1
+Wales,W06000013,Bridgend,14.1
+Wales,W06000014,Vale of Glamorgan,9.7
+Wales,W06000015,Cardiff,13.4
+Wales,W06000016,Rhondda Cynon Taf,15.6
+Wales,W06000018,Caerphilly,15.5
+Wales,W06000019,Blaenau Gwent,17.9
+Wales,W06000020,Torfaen,17.2
+Wales,W06000021,Monmouthshire,8.7
+Wales,W06000022,Newport,15.9
+Wales,W06000023,Powys,11.7
+Wales,W06000024,Merthyr Tydfil,17.6
+Northern Ireland,N09000001,Antrim and Newtownabbey,10.1
+Northern Ireland,N09000002,"Armagh City, Banbridge and Craigavon",14.6
+Northern Ireland,N09000003,Belfast,18.4
+Northern Ireland,N09000004,Causeway Coast and Glens,16.5
+Northern Ireland,N09000005,Derry City and Strabane,14.9
+Northern Ireland,N09000006,Fermanagh and Omagh,14.4
+Northern Ireland,N09000007,Lisburn and Castlereagh,10.1
+Northern Ireland,N09000008,Mid and East Antrim,14.2
+Northern Ireland,N09000009,Mid Ulster,12.3
+Northern Ireland,N09000010,"Newry, Mourne and Down",12.9
+Northern Ireland,N09000011,Ards and North Down,13.5

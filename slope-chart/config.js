@@ -35,7 +35,12 @@ config = {
 	},
 	"optional": {
 		// default is 75
-		 "chartwidth": {
+		"chartHeight": {
+			"sm": 350,
+			"md": 350,
+			"lg": 350
+		},
+		 "chartWidth": {
 			"sm": 75,
 			"md": 75,
 			"lg": 75

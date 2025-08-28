@@ -31,6 +31,7 @@ div.rowLabel span{
     display:block;
     padding-right:10px;
     height:30px;
+    line-height: 1;
 }
 
 div.column span{

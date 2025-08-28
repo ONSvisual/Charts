@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addSource } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 //console.log(`Graphic selected: ${graphic}`);
@@ -14,8 +14,8 @@ function drawGraphic() {
 	// Define the dimensions and margin, width and height of the chart.
 	let margin = config.optional.margin[size];
 	// let width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = 400 - margin.top - margin.bottom;
-	let width = config.optional.chartwidth[size];
+	let height = config.optional.chartHeight[size];
+	let width = config.optional.chartWidth[size];
 	// console.log(parseInt(graphic.style('width')) - width - margin.left - 75)
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
 
@@ -237,7 +237,7 @@ function drawGraphic() {
 	// 	.attr('transform', "translate(" + margin.left + ", 0)");
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions

@@ -1,4 +1,5 @@
-import { initialise, wrap, addSvg, addAxisLabel } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addSource } from "../lib/helpers.js";
+import { EnhancedSelect } from "../lib/enhancedSelect.js";
 
 const graphic = d3.select('#graphic');
 const titles = d3.select('#titles');
@@ -17,91 +18,51 @@ function drawGraphic() {
 	// https://stackoverflow.com/questions/38613654/javascript-find-unique-objects-in-array-based-on-multiple-properties
 	dropdownData = graphic_data
 		.map(function (d) {
-			return { nm: d.AREANM, cd: d.AREACD };
+			return { label: d.AREANM, id: d.AREACD };
 		})
 		.filter(function (a) {
-			let key = a.nm + '|' + a.cd;
+			let key = a.label + '|' + a.id;
 			if (!this[key]) {
 				this[key] = true;
 				return true;
 			}
 		}, Object.create(null))
-		.sort((a, b) => d3.ascending(a.nm, b.nm)); //sorted alphabetically
+		.sort((a, b) => d3.ascending(a.label, b.label)); //sorted alphabetically
 
-	// // Build option menu
-	const optns = d3
-		.select('#select')
-		.append('div')
-		.attr('id', 'sel')
-		.append('select')
-		.attr('id', 'areaselect')
-		.attr('style', 'width:calc(100% - 6px)')
-		.attr('class', 'chosen-select');
-
-	optns.append('option');
-
-	//join unique names and codes to build select
-	optns
-		.selectAll('p')
-		.data(dropdownData)
-		.join('option')
-		.attr('value', function (d) {
-			return d.cd;
-		})
-		.text(function (d) {
-			return d.nm;
-		});
-
-	// start the chosen dropdown
-	$('#areaselect').chosen({
-		placeholder_text_single: 'Select an area',
-		allow_single_deselect: true
-	});
-
-	//add some more accessibility stuff
-	d3.select('input.chosen-search-input').attr('id', 'chosensearchinput');
-	d3.select('div.chosen-search')
-		.insert('label', 'input.chosen-search-input')
-		.attr('class', 'visuallyhidden')
-		.attr('for', 'chosensearchinput')
-		.html('Type to select an area');
-
-	// draw the bars on change
-	$('#areaselect').on('change', function () {
-		if ($('#areaselect').val() != '') {
-			d3.select('#bars')
-				.selectAll('rect')
-				.data(
-					tidydataPercentage.filter((d) => d.AREACD == $('#areaselect').val())
-				)
-				.join('rect')
-				.attr('fill', (d) =>
-					d.sex === 'female'
-						? config.essential.colour_palette[0]
-						: config.essential.colour_palette[1]
-				)
-				.attr('y', (d) => y(d.age))
-				.attr('height', y.bandwidth())
-				.transition()
-				.attr('x', (d) =>
-					d.sex === 'female' ? xLeft(d.percentage) : xRight(0)
-				)
-				.attr('width', (d) =>
-					d.sex === 'female'
-						? xLeft(0) - xLeft(d.percentage)
-						: xRight(d.percentage) - xRight(0)
-				);
-
-			// clear the chart via keyboard
-			d3.select('button.abbr').on('keypress', function (evt) {
-				if (evt.keyCode == 13 || evt.keyCode == 32) {
-					evt.preventDefault();
-					clear();
-				}
-			});
-		} else {
-			//on clear
-			clear();
+	const select = new EnhancedSelect({
+		containerId: 'select',
+		options: dropdownData,
+		label: 'Choose an area',
+		mode: 'default', // or 'search'
+		idKey: 'id',
+		labelKey: 'label',
+		onChange: (selectedValue) => {
+			if (selectedValue !== null) {
+				d3.select('#bars')
+					.selectAll('rect')
+					.data(
+						tidydataPercentage.filter((d) => d.AREACD == selectedValue.id)
+					)
+					.join('rect')
+					.attr('fill', (d) =>
+						d.sex === 'female'
+							? config.essential.colour_palette[0]
+							: config.essential.colour_palette[1]
+					)
+					.attr('y', (d) => y(d.age))
+					.attr('height', y.bandwidth())
+					.transition()
+					.attr('x', (d) =>
+						d.sex === 'female' ? xLeft(d.percentage) : xRight(0)
+					)
+					.attr('width', (d) =>
+						d.sex === 'female'
+							? xLeft(0) - xLeft(d.percentage)
+							: xRight(d.percentage) - xRight(0)
+					);
+			} else {
+				d3.select('#bars').selectAll('rect').transition().attr('height', 0);
+			}
 		}
 	});
 
@@ -282,7 +243,7 @@ function drawGraphic() {
 			d3
 				.axisRight(y)
 				.tickSize(0)
-				.tickValues(y.domain().filter((d, i) => !(i % 10)))
+				.tickValues(y.domain().filter((d, i) => !(i % config.essential.yAxisTicksEvery)))
 		)
 		.selectAll('text')
 		.each(function () {
@@ -382,7 +343,7 @@ function drawGraphic() {
 		);
 
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

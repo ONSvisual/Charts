@@ -27,11 +27,11 @@ config = {
       md: 2,
       lg: 2, // This indicates you want 2 charts side by side
     },
-    aspectRatio: {
-      sm: [3, 4],
-      md: [3, 4],
-      lg: [3, 4], //lg: [1.4, 2], can be used to make a 2x wide grid
-    },
+    // aspectRatio: {
+    //   sm: [3, 4],
+    //   md: [3, 4],
+    //   lg: [3, 4], //lg: [1.4, 2], can be used to make a 2x wide grid
+    // },
     margin: {
       sm: {
         top: 60,

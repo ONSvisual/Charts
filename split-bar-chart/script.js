@@ -1,3 +1,5 @@
+import { initialise, addSource} from "../lib/helpers.js";
+
 let graphic = d3.select('#graphic');
 let legend = d3.select('#legend');
 let pymChild = null;
@@ -8,11 +10,7 @@ function drawGraphic() {
 	graphic.selectAll('*').remove();
 	legend.selectAll('*').remove();
 
-	if (parseInt(graphic.style('width')) < config.essential.threshold_sm) {
-		size = 'sm';
-	} else {
-		size = 'not sm';
-	}
+	size = initialise(size);
 
 	//population accessible summmary
 	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
@@ -217,8 +215,20 @@ function drawGraphic() {
 		.style('left', 'calc(' + x(0) + '%' + ' - 5px)')
 		.html(0);
 
+	// x-axis label
+	finalrow
+		.append('div')
+		.attr('class', 'axis--label') 
+		.style('width', '100%')
+		.style('text-align', 'right') 
+		.style('margin-top', '10px') 
+		.style('padding-right', '10px') 
+		.append('span')
+		.style('white-space', 'nowrap') 
+		.text(config.essential.xAxisLabel);
+
 	//create link to source
-	d3.select('#source').text('Source: ' + config.essential.sourceText);
+	addSource('source', config.essential.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {

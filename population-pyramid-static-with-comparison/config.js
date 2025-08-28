@@ -12,6 +12,7 @@ config = {
 		"comparison_colour_palette": ["#5c5185", "#306970"],
 		"legend": ["Area name", "England and Wales"],
 		"xAxisNumberFormat": ".1%",
+		"yAxisTicksEvery": 10,
 		"xAxisLabel": "Percentage",
 		"yAxisLabel": "Age"
 	},
@@ -37,7 +38,7 @@ config = {
 			},
 			"centre": 60
 		},
-		"seriesHeight": {
+		"seriesHeight": {//only use integers
 			"sm": 6,
 			"md": 6,
 			"lg": 6
