@@ -43,7 +43,8 @@ config = {
 		"dateFormat": "%d/%m/%Y",
 		"yAxisLabel": "y axis label",
 		"xAxisLabel": "",
-		"zeroLine": "0"
+		"zeroLine": "0",
+		"addEndMarkers":true
 	},
 	"optional": {
 		"aspectRatio": {
