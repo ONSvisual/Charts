@@ -32,11 +32,11 @@ function drawGraphic() {
 
 	function drawChart(container, seriesName, data, chartIndex) {
 
-		const chartEvery = config.optional.chart_every[size];
-		const chartsPerRow = config.optional.chart_every[size];
+		const chartEvery = config.chart_every[size];
+		const chartsPerRow = config.chart_every[size];
 		let chartPosition = chartIndex % chartsPerRow;
 
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 		let chartGap = config.optional?.chartGap || 10;
 
 		let chart_width = calculateChartWidth({
@@ -47,13 +47,13 @@ function drawGraphic() {
 		})
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			if (chartPosition !== 0) {
 				margin.left = chartGap;
 			}
 		}
 
-		const aspectRatio = config.optional.aspectRatio[size];
+		const aspectRatio = config.aspectRatio[size];
 		// let chart_width = calculateChartWidth(size)
 
 		//height is set by the aspect ratio
@@ -77,11 +77,11 @@ function drawGraphic() {
 		let yAxis = d3.axisLeft(y)
 			.tickSize(-chart_width)
 			.tickPadding(10)
-			.ticks(config.optional.yAxisTicks[size])
-			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisTickFormat)(d) :
-				chartPosition == 0 ? d3.format(config.essential.yAxisTickFormat)(d) : "");
+			.ticks(config.yAxisTicks[size])
+			.tickFormat((d) => config.dropYAxis !== true ? d3.format(config.yAxisTickFormat)(d) :
+				chartPosition == 0 ? d3.format(config.yAxisTickFormat)(d) : "");
 
-		let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
+		let xTime = d3.timeFormat(config.xAxisTickFormat[size])
 
 		//set up xAxis generator
 		let xAxis = d3
@@ -102,11 +102,11 @@ function drawGraphic() {
 					return a - b
 				})
 				.filter(function (d, i) {
-					return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
-				}) : x.domain().filter((d, i) => { return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 })
+					return i % config.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
+				}) : x.domain().filter((d, i) => { return i % config.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.xAxisTicksEvery[size] || i == data.length - 1 })
 			)
 			.tickFormat((d) => xDataType == 'date' ? xTime(d)
-				: d3.format(config.essential.xAxisNumberFormat)(d));
+				: d3.format(config.xAxisNumberFormat)(d));
 
 		//create svg for chart
 		svg = addSvg({
@@ -116,7 +116,7 @@ function drawGraphic() {
 			margin: margin
 		})
 
-		if (config.essential.yDomain == 'auto') {
+		if (config.yDomain == 'auto') {
 			if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
 				y.domain([
 					0,
@@ -125,7 +125,7 @@ function drawGraphic() {
 				y.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
 			}
 		} else {
-			y.domain(config.essential.yDomain);
+			y.domain(config.yDomain);
 		}
 
 		svg
@@ -155,7 +155,7 @@ function drawGraphic() {
 			.attr('x', (d) => x(d.date))
 			.attr('height', (d) => Math.abs(y(d.value) - y(0)))
 			.attr('width', x.bandwidth())
-			.attr('fill', config.essential.colour_palette);
+			.attr('fill', config.colour_palette);
 
 		// This does the chart title label
 		addChartTitleLabel({
@@ -170,7 +170,7 @@ function drawGraphic() {
 			svgContainer: svg,
 			xPosition: 5 - margin.left,
 			yPosition: -10,
-			text: chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "",
+			text: chartIndex % chartEvery == 0 ? config.yAxisLabel : "",
 			textAnchor: "start",
 			wrapWidth: chart_width
 		});
@@ -182,7 +182,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -190,11 +190,11 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
-	let parseTime = d3.timeParse(config.essential.dateFormat);
+	let parseTime = d3.timeParse(config.dateFormat);
 
 	data.forEach((d, i) => {
 

@@ -9,12 +9,12 @@ function drawGraphic() {
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
-  let margin = config.optional.margin[size]
+  let margin = config.margin[size]
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
 
   let groups = d3.groups(graphic_data, (d) => d.group)
 
-  if (config.essential.xDomain == "auto") {
+  if (config.xDomain == "auto") {
     let min = 0
     let max = 0
     for (let i = 2; i < graphic_data.columns.length; i++) {
@@ -23,7 +23,7 @@ function drawGraphic() {
     }
     xDomain = [min, max]
   } else {
-    xDomain = config.essential.xDomain
+    xDomain = config.xDomain
   }
 
   //set up scales
@@ -32,13 +32,13 @@ function drawGraphic() {
     .domain(xDomain);
 
   const colour = d3.scaleOrdinal()
-    .range(config.essential.colour_palette)
-    .domain(Object.keys(config.essential.legendLabels))
+    .range(config.colour_palette)
+    .domain(Object.keys(config.legendLabels))
 
   // create the y scale in groups
   groups.map(function (d) {
     //height
-    d[2] = config.optional.seriesHeight[size] * d[1].length
+    d[2] = config.seriesHeight[size] * d[1].length
 
     // y scale
     d[3] = d3.scaleBand()
@@ -54,8 +54,8 @@ function drawGraphic() {
 
   //set up xAxis generator
   let xAxis = d3.axisBottom(x)
-    .ticks(config.optional.xAxisTicks[size])
-    .tickFormat(d3.format(config.essential.xAxisFormat));
+    .ticks(config.xAxisTicks[size])
+    .tickFormat(d3.format(config.xAxisFormat));
 
   let divs = graphic.selectAll('div.categoryLabels')
     .data(groups)
@@ -107,11 +107,11 @@ function drawGraphic() {
     .attr('y', d => groups.filter(f => f[0] == d.group)[0][3](d.name))
     .attr('width', (d) => Math.abs(x(d.value) - x(0)))
     .attr('height', (d) => groups.filter(f => f[0] == d.group)[0][3].bandwidth())
-    .attr('fill', config.essential.colour_palette);
+    .attr('fill', config.colour_palette);
 
   let labelPositionFactor = 7;
 
-  if (config.essential.dataLabels.show == true) {
+  if (config.dataLabels.show == true) {
     charts.selectAll('text.value')
       .data((d) => d[1])
       .join('text')
@@ -130,7 +130,7 @@ function drawGraphic() {
       .attr('fill', (d) =>
         (Math.abs(x(d.value) - x(0)) < chart_width / labelPositionFactor ? '#414042' : '#ffffff')
       )
-      .text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
+      .text((d) => d3.format(config.dataLabels.numberFormat)(d.value))
   }//end if for datalabels
 
 
@@ -143,7 +143,7 @@ function drawGraphic() {
         svgContainer: d3.select(this),
         xPosition: chart_width,
         yPosition: d[2] + 35,
-        text: config.essential.xAxisLabel,
+        text: config.xAxisLabel,
         textAnchor: "end",
         wrapWidth: chart_width
       });
@@ -154,7 +154,7 @@ function drawGraphic() {
 
 
   //create link to source
-    addSource('source', config.essential.sourceText)
+    addSource('source', config.sourceText)
 
   //use pym to calculate chart dimensions
   if (pymChild) {
@@ -162,7 +162,7 @@ function drawGraphic() {
   }
 }
 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
   .then(data => {
     //load chart data
     graphic_data = data

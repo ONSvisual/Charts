@@ -10,8 +10,8 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	const aspectRatio = config.optional.aspectRatio[size];
-	let margin = config.optional.margin[size];
+	const aspectRatio = config.aspectRatio[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by the aspect ratio
@@ -32,22 +32,22 @@ function drawGraphic() {
 	const colour = d3
 		.scaleOrdinal()
 		.domain(graphic_data.columns.slice(1))
-		.range(config.essential.colour_palette);
+		.range(config.colour_palette);
 
 	//use the data to find unique entries in the date column
 	x.domain([...new Set(graphic_data.map((d) => d.date))]);
 
 	let tickValues = x.domain().filter(function (d, i) {
-		return !(i % config.optional.xAxisTicksEvery[size])
+		return !(i % config.xAxisTicksEvery[size])
 	});
 
 	//Labelling the first and/or last bar if needed
-	if (config.optional.addFirstDate == true) {
+	if (config.addFirstDate == true) {
 		tickValues.push(graphic_data[0].date)
 		console.log("First date added")
 	}
 
-	if (config.optional.addFinalDate == true) {
+	if (config.addFinalDate == true) {
 		tickValues.push(graphic_data[graphic_data.length - 1].date)
 		console.log("Last date added")
 	}
@@ -56,14 +56,14 @@ function drawGraphic() {
 	let yAxis = d3.axisLeft(y)
 		.tickSize(-chart_width)
 		.tickPadding(10)
-		.ticks(config.optional.yAxisTicks[size])
-		.tickFormat(d3.format(config.essential.yAxisTickFormat));
+		.ticks(config.yAxisTicks[size])
+		.tickFormat(d3.format(config.yAxisTickFormat));
 
 	const stack = d3
 		.stack()
 		.keys(graphic_data.columns.slice(1))
-		.offset(d3[config.essential.stackOffset])
-		.order(d3[config.essential.stackOrder]);
+		.offset(d3[config.stackOffset])
+		.order(d3[config.stackOrder]);
 
 	const series = stack(graphic_data);
 
@@ -77,7 +77,7 @@ function drawGraphic() {
 
 	// console.log(xDataType)
 
-	let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
+	let xTime = d3.timeFormat(config.xAxisTickFormat[size])
 
 	//set up xAxis generator
 	let xAxis = d3
@@ -86,7 +86,7 @@ function drawGraphic() {
 		.tickPadding(10)
 		.tickValues(tickValues) //Labelling the first and/or last bar if needed
 		.tickFormat((d) => xDataType == 'date' ? xTime(d)
-			: d3.format(config.essential.xAxisNumberFormat)(d));
+			: d3.format(config.xAxisNumberFormat)(d));
 
 	//create svg for chart
 	svg = addSvg({
@@ -96,14 +96,14 @@ function drawGraphic() {
 		margin: margin
 	})
 
-	if (config.essential.yDomain == 'auto') {
+	if (config.yDomain == 'auto') {
 		y.domain(d3.extent(series.flat(2))); //flatten the arrays and then get the extent
 	} else {
-		y.domain(config.essential.yDomain);
+		y.domain(config.yDomain);
 	}
 
 	//Getting the list of colours used in this visualisation
-	let colours = [...config.essential.colour_palette].slice(0, graphic_data.columns.slice(1).length)
+	let colours = [...config.colour_palette].slice(0, graphic_data.columns.slice(1).length)
 
 	// Set up the legend
 	let legenditem = d3
@@ -133,7 +133,7 @@ function drawGraphic() {
 
 	if (size !== 'sm') {
 		d3.select('#legend')
-			.style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`)
+			.style('grid-template-columns', `repeat(${config.legendColumns}, 1fr)`)
 	}
 
 	svg
@@ -160,7 +160,7 @@ function drawGraphic() {
 		.selectAll('g')
 		.data(series)
 		.join('g')
-		.attr('fill', (d, i) => config.essential.colour_palette[i])
+		.attr('fill', (d, i) => config.colour_palette[i])
 		.selectAll('rect')
 		.data((d) => d)
 		.join('rect')
@@ -175,13 +175,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: 5 - margin.left,
 		yPosition: -10,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -189,11 +189,11 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
-	let parseTime = d3.timeParse(config.essential.dateFormat);
+	let parseTime = d3.timeParse(config.dateFormat);
 
 	data.forEach((d, i) => {
 

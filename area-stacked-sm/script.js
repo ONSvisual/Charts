@@ -21,11 +21,11 @@ function drawGraphic() {
 		.attr('class', 'chart-container');
 
 	function drawChart(container, seriesName, data, chartIndex) {
-		const chartsPerRow = config.optional.chart_every[size];
+		const chartsPerRow = config.chart_every[size];
 		const chartPosition = chartIndex % chartsPerRow;
 
 		// Set dimensions
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 		let chartGap = config.optional?.chartGap || 10;
 
 		// Calculate chart width here
@@ -37,7 +37,7 @@ function drawGraphic() {
 		});
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			if (chartPosition !== 0) {
 				margin.left = chartGap;
 			}
@@ -49,10 +49,10 @@ function drawGraphic() {
 		const colorScale = d3
 			.scaleOrdinal()
 			.domain(categories)
-			.range(config.essential.colour_palette);
+			.range(config.colour_palette);
 
 		//Getting the list of colours used in this visualisation
-		let colours = [...config.essential.colour_palette].slice(0, categories.length)
+		let colours = [...config.colour_palette].slice(0, categories.length)
 
 		// Set up the legend
 		const legenditem = legend
@@ -81,13 +81,13 @@ function drawGraphic() {
 
 		if (size !== 'sm') {
 			d3.select('#legend')
-				.style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`)
+				.style('grid-template-columns', `repeat(${config.legendColumns}, 1fr)`)
 		}
 		//End of legend code
 
 
 		let height =
-			chart_width * (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) - margin.top - margin.bottom;
+			chart_width * (config.aspectRatio[size][1] / config.aspectRatio[size][0]) - margin.top - margin.bottom;
 
 		// Define the x and y scales
 		const x = d3
@@ -103,8 +103,8 @@ function drawGraphic() {
 		// Define the stack generator
 		const stack = d3.stack()
 			.keys(categories)
-			.order(d3[config.essential.stackOrder]) // Use the stack order defined in the config
-			.offset(d3[config.essential.stackOffset]); // Convert to percentage values
+			.order(d3[config.stackOrder]) // Use the stack order defined in the config
+			.offset(d3[config.stackOffset]); // Convert to percentage values
 
 		// Create an SVG for this chart
 		const svg = addSvg({
@@ -153,10 +153,10 @@ function drawGraphic() {
 							return a - b
 						})
 						.filter(function (d, i) {
-							return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == graphic_data.length - 1 //Rob's fussy comment about labelling the last date
+							return i % config.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.xAxisTicksEvery[size] || i == graphic_data.length - 1 //Rob's fussy comment about labelling the last date
 						})
 					)
-					.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
+					.tickFormat(d3.timeFormat(config.xAxisTickFormat[size]))
 			);
 
 
@@ -166,11 +166,11 @@ function drawGraphic() {
 			.attr('class', 'y axis numeric')
 			.call(d3.axisLeft(y)
 				.tickSize(calculateTickSize())
-				.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisFormat)(d) :
-					chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : ""));
+				.tickFormat((d) => config.dropYAxis !== true ? d3.format(config.yAxisFormat)(d) :
+					chartPosition == 0 ? d3.format(config.yAxisFormat)(d) : ""));
 
 		function calculateTickSize() {
-			if (config.optional.dropYAxis) {
+			if (config.dropYAxis) {
 				if (chartPosition == 0) {
 					return 5
 				} else {
@@ -195,7 +195,7 @@ function drawGraphic() {
 				svgContainer: svg,
 				xPosition: chart_width,
 				yPosition: height + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
 			});
@@ -206,7 +206,7 @@ function drawGraphic() {
 			svgContainer: svg,
 			xPosition: -(margin.left - 5),
 			yPosition: -10,
-			text: chartPosition == 0 ? config.essential.yAxisLabel : "",
+			text: chartPosition == 0 ? config.yAxisLabel : "",
 			textAnchor: "start",
 			wrapWidth: chart_width
 		});
@@ -217,7 +217,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	// Send the height to the parent frame
 	if (pymChild) {
@@ -226,7 +226,7 @@ function drawGraphic() {
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
 	.then((data) => {
 		// console.log("Original data:", data);
 
@@ -235,7 +235,7 @@ d3.csv(config.essential.graphic_data_url)
 
 		// 	);
 		graphic_data.forEach((d) => {
-			d.date = d3.timeParse(config.essential.dateFormat)(d.date);
+			d.date = d3.timeParse(config.dateFormat)(d.date);
 		});
 
 		//use pym to create iframed chart dependent on specified variables

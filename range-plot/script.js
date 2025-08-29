@@ -10,13 +10,13 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	groups = d3.groups(graphic_data, (d) => d.group);
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		let min = 1000000;
 		let max = 0;
 		for (i = 2; i < graphic_data.columns.length; i++) {
@@ -31,7 +31,7 @@ function drawGraphic() {
 		}
 		xDomain = [min, max];
 	} else {
-		xDomain = config.essential.xDomain;
+		xDomain = config.xDomain;
 	}
 
 	//set up scales
@@ -39,13 +39,13 @@ function drawGraphic() {
 
 	const colour = d3
 		.scaleOrdinal()
-		.range(config.essential.colour_palette)
-		.domain(Object.keys(config.essential.legendLabels));
+		.range(config.colour_palette)
+		.domain(Object.keys(config.legendLabels));
 
 	// create the y scale in groups
 	groups.map(function (d) {
 		//height
-		d[2] = config.optional.seriesHeight[size] * d[1].length;
+		d[2] = config.seriesHeight[size] * d[1].length;
 
 		// y scale
 		d[3] = d3
@@ -59,8 +59,8 @@ function drawGraphic() {
 
 	//set up xAxis generator
 	let xAxis = d3.axisBottom(x)
-		.ticks(config.optional.xAxisTicks[size])
-		.tickFormat(d3.format(config.essential.xAxisTickFormat));
+		.ticks(config.xAxisTicks[size])
+		.tickFormat(d3.format(config.xAxisTickFormat));
 
 	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
@@ -109,7 +109,7 @@ function drawGraphic() {
 		.attr('stroke', '#c6c6c6')
 		.attr('stroke-width', '3px');
 
-	if(config.essential.useDiamonds){
+	if(config.useDiamonds){
 		charts
 			.selectAll('rect.min')
 			.data((d) => d[1])
@@ -145,7 +145,7 @@ function drawGraphic() {
 		.attr('r', 6)
 		.attr('fill', colour('max'));
 
-	if (config.essential.showDataLabels) {
+	if (config.showDataLabels) {
 		charts
 			.selectAll('text.min')
 			.data((d) => d[1])
@@ -153,7 +153,7 @@ function drawGraphic() {
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.min))
 			.attr('y', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) - 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
-			.text((d) => d3.format(config.essential.numberFormat)(d.min))
+			.text((d) => d3.format(config.numberFormat)(d.min))
 			.attr('fill', colour('min'))
 			.attr('dy', 6)
 			.attr('dx', (d) => (+d.min < +d.max ? -8 : 8))
@@ -166,7 +166,7 @@ function drawGraphic() {
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.max))
 			.attr('y', (d) => Math.abs(x(d.max) - x(d.min)) < 3 ? groups.filter((f) => f[0] == d.group)[0][3](d.name) + 3 : groups.filter((f) => f[0] == d.group)[0][3](d.name))
-			.text((d) => d3.format(config.essential.numberFormat)(d.max))
+			.text((d) => d3.format(config.numberFormat)(d.max))
 			.attr('fill', colour('max'))
 			.attr('dy', 6)
 			.attr('dx', (d) => (+d.min > +d.max ? -8 : 8))
@@ -182,7 +182,7 @@ function drawGraphic() {
 				svgContainer: d3.select(this),
 				xPosition: chart_width,
 				yPosition: d[2] + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
 			});
@@ -195,8 +195,8 @@ function drawGraphic() {
 		.selectAll('div.legend--item')
 		.data(
 			d3.zip(
-				Object.values(config.essential.legendLabels),
-				config.essential.colour_palette
+				Object.values(config.legendLabels),
+				config.colour_palette
 			)
 		)
 		.enter()
@@ -205,7 +205,7 @@ function drawGraphic() {
 
 	legenditem
 		.append('div')
-		.attr('class', (d,i)=>config.essential.useDiamonds && i==0 ? 'legend--icon--diamond' : 'legend--icon--circle')
+		.attr('class', (d,i)=>config.useDiamonds && i==0 ? 'legend--icon--diamond' : 'legend--icon--circle')
 		.style('background-color', function (d) {
 			return d[1];
 		});
@@ -219,7 +219,7 @@ function drawGraphic() {
 		});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -227,7 +227,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

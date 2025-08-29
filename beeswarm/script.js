@@ -18,7 +18,7 @@ function positionCirclesWithBinning(data, x, y, radius, circleDist) {
   // Calculate the binned values
   const minValue = d3.min(data, d => d.value);
   const maxValue = d3.max(data, d => d.value);
-  const binSize = (maxValue - minValue) / config.essential.numBands;
+  const binSize = (maxValue - minValue) / config.numBands;
 
   // Create bins and assign vertical positions
   const bins = {};
@@ -44,7 +44,7 @@ function positionCirclesWithBinning(data, x, y, radius, circleDist) {
 }
 
 function positionCirclesWithForce(data, x, y, radius) {
-  const forceConfig = config.essential.forceOptions;
+  const forceConfig = config.forceOptions;
 
   // Initialize positions
   data.forEach(d => {
@@ -117,16 +117,16 @@ function drawGraphic() {
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
-  let margin = config.optional.margin[size]
+  let margin = config.margin[size]
   let groups = d3.groups(graphic_data, (d) => d.group)
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-  let height = config.optional.seriesHeight[size] * groups.length
+  let height = config.seriesHeight[size] * groups.length
 
   // Set up the legend
   const legenditem = d3
     .select('#legend')
     .selectAll('div.legend--item')
-    .data([["Country average", config.essential.averages.colour]])
+    .data([["Country average", config.averages.colour]])
     .enter()
     .append('div')
     .attr('class', 'legend--item');
@@ -174,10 +174,10 @@ function drawGraphic() {
   const min = d3.min(graphic_data, (d) => +d["value"])
   const max = d3.max(graphic_data, (d) => +d["value"])
 
-  if (config.essential.xDomain == "auto") {
+  if (config.xDomain == "auto") {
     xDomain = [min, max]
   } else {
-    xDomain = config.essential.xDomain
+    xDomain = config.xDomain
   }
 
 
@@ -193,20 +193,20 @@ function drawGraphic() {
 
   //set up xAxis generator
   let xAxis = d3.axisBottom(x)
-    .ticks(config.optional.xAxisTicks[size])
+    .ticks(config.xAxisTicks[size])
     .tickSize(-height+margin.bottom+y(y.domain()[0]))
-    .tickFormat(d3.format(config.essential.xAxisFormat));
+    .tickFormat(d3.format(config.xAxisFormat));
 
-  if (config.essential.radius == "auto") {
-    radius = (x(x.domain()[1]) - x(x.domain()[0])) / (config.essential.numBands * 1.1);
+  if (config.radius == "auto") {
+    radius = (x(x.domain()[1]) - x(x.domain()[0])) / (config.numBands * 1.1);
   } else {
-    radius = config.essential.radius
+    radius = config.radius
   }
 
-  if (config.essential.circleDist == "auto") {
+  if (config.circleDist == "auto") {
     circleDist = (y.bandwidth() * 0.95 - radius) / d3.max(graphic_data, d => d.value);
   } else {
-    circleDist = config.essential.circleDist * radius
+    circleDist = config.circleDist * radius
   }
 
 
@@ -259,13 +259,13 @@ function drawGraphic() {
     x,
     y,
     radius,
-    config.essential.layoutMethod || "binned",
+    config.layoutMethod || "binned",
     circleDist
   );
 
   // Draw circles with positioned data
   chart.append("g")
-    .attr("fill", config.essential.colour_palette)
+    .attr("fill", config.colour_palette)
     .attr("stroke", "white")
     .attr("stroke-width", 0.6)
     .selectAll("circle")
@@ -293,7 +293,7 @@ function drawGraphic() {
     xScale: (d)=>d,
     yScale: d3.scaleLinear().domain([0, height - margin.top - margin.bottom]).range([0, height - margin.top - margin.bottom]),
     tooltipConfig: {
-      xLabel: config.essential.xAxisLabel || 'Value',
+      xLabel: config.xAxisLabel || 'Value',
       xValueFormat: d3.format(".1f"),
       showYValue: false,
       backgroundColor:"#fff"
@@ -305,35 +305,35 @@ function drawGraphic() {
   });
 
   // Add average lines if they're defined in config
-  if (config.essential.averages && config.essential.averages.show) {
+  if (config.averages && config.averages.show) {
     // Create average lines
     chart.append("g")
       .attr("class", "average-lines")
       .selectAll("line")
-      .data(config.essential.averages.values)
+      .data(config.averages.values)
       .join("line")
       .attr("x1", d => x(d.value))
       .attr("x2", d => x(d.value))
       .attr("y1", d => y(d.group))
       .attr("y2", d => y(d.group) + y.bandwidth())
-      .attr("stroke", config.essential.averages.colour || "#444")
-      .attr("stroke-width", config.essential.averages.strokeWidth || 2)
-      .attr("stroke-dasharray", config.essential.averages.strokeDash || "");
+      .attr("stroke", config.averages.colour || "#444")
+      .attr("stroke-width", config.averages.strokeWidth || 2)
+      .attr("stroke-dasharray", config.averages.strokeDash || "");
 
     // Add average labels if enabled
-    if (config.essential.averages.showLabels) {
+    if (config.averages.showLabels) {
       chart.append("g")
         .attr("class", "average-labels")
         .selectAll("text")
-        .data(config.essential.averages.values)
+        .data(config.averages.values)
         .join("text")
-        .attr("x", d => x(d.value) + (config.essential.averages.labelOffset?.x || 5))
-        .attr("y", d => y(d.group) + y.bandwidth() / 2 + (config.essential.averages.labelOffset?.y || 0))
+        .attr("x", d => x(d.value) + (config.averages.labelOffset?.x || 5))
+        .attr("y", d => y(d.group) + y.bandwidth() / 2 + (config.averages.labelOffset?.y || 0))
         .attr("dy", "0.35em")
-        .attr("fill", config.essential.averages.labelColour || "#444")
+        .attr("fill", config.averages.labelColour || "#444")
         .text(d => {
-          const format = d3.format(config.essential.averages.labelFormat || config.essential.xAxisFormat);
-          const prefix = config.essential.averages.labelPrefix || "Mean: ";
+          const format = d3.format(config.averages.labelFormat || config.xAxisFormat);
+          const prefix = config.averages.labelPrefix || "Mean: ";
           return `${prefix}${format(d.value)}`;
         });
     }
@@ -343,13 +343,13 @@ function drawGraphic() {
     svgContainer: chart,
     xPosition: chart_width,
     yPosition: height - margin.top - margin.bottom + 40,
-    text: config.essential.xAxisLabel,
+    text: config.xAxisLabel,
     textAnchor: "end",
     wrapWidth: chart_width
   });
 
   //create link to source
-  addSource('source', config.essential.sourceText)
+  addSource('source', config.sourceText)
 
   //use pym to calculate chart dimensions
   if (pymChild) {
@@ -359,7 +359,7 @@ function drawGraphic() {
 
 
 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
   .then(data => {
     // First convert string values to numbers if needed
     data.forEach(d => {

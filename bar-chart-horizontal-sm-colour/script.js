@@ -9,15 +9,15 @@ let graphic_data, size, svg;
 
 function drawGraphic(seriesName, graphic_data, chartIndex) {
 
-  const chartsPerRow = config.optional.chart_every[size];
+  const chartsPerRow = config.chart_every[size];
   const chartPosition = chartIndex % chartsPerRow;
   const colorsArray = ["#206095", "#27A0CC", "#871A5B", "#746CB1", "#A8BD3A"];
 
   // Set dimensions
-  let margin = { ...config.optional.margin[size] };
+  let margin = { ...config.margin[size] };
 
   let height =
-    config.optional.seriesHeight[size] * graphic_data.length +
+    config.seriesHeight[size] * graphic_data.length +
     10 * (graphic_data.length - 1) +
     12;
 
@@ -31,7 +31,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   })
 
   // If the chart is not in the first position in the row, reduce the left margin
-  if (config.optional.dropYAxis) {
+  if (config.dropYAxis) {
     if (chartPosition !== 0) {
       margin.left = chartGap;
     }
@@ -71,25 +71,25 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
   let xAxis = d3
     .axisBottom(x)
     .tickSize(-height)
-    .tickFormat(d3.format(config.essential.xAxisTickFormat))
-    .ticks(config.optional.xAxisTicks[size]);
+    .tickFormat(d3.format(config.xAxisTickFormat))
+    .ticks(config.xAxisTicks[size]);
 
   let yAxis = d3.axisLeft(y).tickSize(0).tickPadding(10);
 
   // Define stack layout
   let stack = d3
     .stack()
-    .offset(d3[config.essential.stackOffset])
-    .order(d3[config.essential.stackOrder])
+    .offset(d3[config.stackOffset])
+    .order(d3[config.stackOrder])
     .keys(graphic_data.columns.slice(1, -1));
 
   const series = stack(graphic_data);
 
   // trying a different version because d3.nice() is causing issues.
-  if (config.essential.xDomain === "auto") {
+  if (config.xDomain === "auto") {
     x.domain([0, d3.max(series, (d) => d3.max(d, (d) => d[1]))]);
   } else {
-    x.domain([0, config.essential.xDomain[1]]);
+    x.domain([0, config.xDomain[1]]);
   }
 
   y.domain(graphic_data.map((d) => d.name));
@@ -169,14 +169,14 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
       svgContainer: svg,
       xPosition: chart_width,
       yPosition: height + 35,
-      text: config.essential.xAxisLabel,
+      text: config.xAxisLabel,
       textAnchor: "end",
       wrapWidth: chart_width
     });
   }
 
   //create link to source
-    addSource('source', config.essential.sourceText);
+    addSource('source', config.sourceText);
 
   //use pym to calculate chart dimensions
   if (pymChild) {
@@ -186,7 +186,7 @@ function drawGraphic(seriesName, graphic_data, chartIndex) {
 
 function renderCallback() {
   // Load the data
-  d3.csv(config.essential.graphic_data_url)
+  d3.csv(config.graphic_data_url)
     .then((data) => {
       // console.log("Original data:", data);
 

@@ -12,20 +12,20 @@ function drawGraphic() {
 
 	//set margin
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 
 	//chart width calculated - allows small multiple chart widths to be calculated for the 'bar' chart type but defaults to 1 for the rest
 	let chart_width = calculateChartWidth({
 		screenWidth: parseInt(graphic.style('width')),
-		chartEvery: (config.essential.chartType === "bar"? config.optional.chart_every[size] : 1),
-		chartMargin: config.optional.margin[size]
+		chartEvery: (config.chartType === "bar"? config.chart_every[size] : 1),
+		chartMargin: config.margin[size]
 	})
 				
 	//set up linear x scales for all chart types
 	const x = d3.scaleLinear().range([0, chart_width]);
 
 	//if the config is set to auto, it will take the min and max values from the ref and value columns
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 				x.domain([
 					Math.min(0, d3.min(graphic_data.map(({ value }) => Number(value))),
 						d3.min(graphic_data.map(({ ref }) => Number(ref)))),
@@ -34,7 +34,7 @@ function drawGraphic() {
 						d3.max(graphic_data.map(({ ref }) => Number(ref))))
 				])
 			} else {
-				x.domain(config.essential.xDomain);
+				x.domain(config.xDomain);
 			}
 
 	//create the data groups for comet and range charts
@@ -50,12 +50,12 @@ function drawGraphic() {
 		.append('div')
 		.attr('class', 'legend--item--here')
 		.append('div').attr('class', 'legend--icon--circle')
-		.style('background-color', config.essential.colour_palette[0])
+		.style('background-color', config.colour_palette[0])
 
 	d3.select(".legend--item--here")
 		.append('div')
 		.append('p').attr('class', 'legend--text')
-		.html(config.essential.legendLabels[0])
+		.html(config.legendLabels[0])
 
 	legend
 		.append('div')
@@ -68,7 +68,7 @@ function drawGraphic() {
 	d3.select(".legend--item--here.refline")
 		.append('div')
 		.append('p').attr('class', 'legend--text')
-		.html(config.essential.legendLabels[1])
+		.html(config.legendLabels[1])
 
 	// Nest the graphic_data by the 'series' column
 	let nested_data = d3.group(graphic_data, (d) => d.series);
@@ -93,18 +93,18 @@ function drawGraphic() {
 
 	
 		// Calculate the height based on the data
-		let height = config.optional.seriesHeight[size] * data.length +
+		let height = config.seriesHeight[size] * data.length +
 			10 * (data.length - 1) +
 			12;
 
 
-		let chartsPerRow = config.optional.chart_every[size];
+		let chartsPerRow = config.chart_every[size];
 		let chartPosition = chartIndex % chartsPerRow;
 
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			if (chartPosition !== 0) {
 				margin.left = 10;
 			}
@@ -127,15 +127,15 @@ function drawGraphic() {
 		let yAxis = d3.axisLeft(y)
 			.tickSize(0)
 			.tickPadding(10)
-			.tickFormat((d) => config.optional.dropYAxis !== true ? (d) :
+			.tickFormat((d) => config.dropYAxis !== true ? (d) :
 				chartPosition == 0 ? (d) : "");
 
 		//set up xAxis generator
 		let xAxis = d3
 			.axisBottom(x)
 			.tickSize(-height)
-			.tickFormat(d3.format(config.essential.dataLabels.numberFormat))
-			.ticks(config.optional.xAxisTicks[size]);
+			.tickFormat(d3.format(config.dataLabels.numberFormat))
+			.ticks(config.xAxisTicks[size]);
 
 		//create svg for chart
 		svg = container
@@ -178,7 +178,7 @@ function drawGraphic() {
 			.attr('y', (d) => y(d.name))
 			.attr('width', (d) => Math.abs(x(d.value) - x(0)))
 			.attr('height', y.bandwidth())
-			.attr('fill', config.essential.colour_palette[0]);
+			.attr('fill', config.colour_palette[0]);
 
 
 		svg
@@ -192,7 +192,7 @@ function drawGraphic() {
 			.attr('y2', (d) => y(d.name) + y.bandwidth())
 
 
-		if (config.essential.dataLabels.show == true) {
+		if (config.dataLabels.show == true) {
 			addDataLabels({
 				svgContainer: svg,
 				data: data,
@@ -219,7 +219,7 @@ function drawGraphic() {
 				svgContainer: svg,
 				xPosition: chart_width,
 				yPosition: height + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				wrapWidth: chart_width
 			});
 			
@@ -232,7 +232,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -249,17 +249,17 @@ function drawGraphic() {
 			parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	
-		let cometLegendLabels = { "min": config.essential.legendLabels[0], "max": config.essential.legendLabels[1] }
+		let cometLegendLabels = { "min": config.legendLabels[0], "max": config.legendLabels[1] }
 
 		const colour = d3
 			.scaleOrdinal()
-			.range(config.essential.colour_palette)
+			.range(config.colour_palette)
 			.domain(Object.keys(cometLegendLabels));
 	
 		// create the y scale in groups
 		groups.map(function (d) {
 			//height
-			d[2] = config.optional.seriesHeight[size] * d[1].length;
+			d[2] = config.seriesHeight[size] * d[1].length;
 	
 			// y scale
 			d[3] = d3
@@ -272,7 +272,7 @@ function drawGraphic() {
 		});
 	
 		//set up xAxis generator
-		let xAxis = d3.axisBottom(x).ticks(config.optional.xAxisTicks[size]).tickFormat(d => d3.format(config.essential.dataLabels.numberFormat)(d));
+		let xAxis = d3.axisBottom(x).ticks(config.xAxisTicks[size]).tickFormat(d => d3.format(config.dataLabels.numberFormat)(d));
 	
 		divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 	
@@ -326,10 +326,10 @@ function drawGraphic() {
 			.attr('y2', (d, i) => groups.filter((e) => e[0] == d.series)[0][3](d.name))
 			.attr('stroke', (d) =>
 				+d.value > +d.ref
-					? config.essential.colour_palette[1]//increase
+					? config.colour_palette[1]//increase
 					: +d.value < +d.ref
-					? config.essential.colour_palette[0]//decrease
-					: config.essential.colour_palette[2]//same
+					? config.colour_palette[0]//decrease
+					: config.colour_palette[2]//same
 			)
 			.attr('stroke-width', '3px');
 	
@@ -341,17 +341,17 @@ function drawGraphic() {
 			.attr('class', 'max')
 			.attr('cx', (d) => x(d.ref))
 			.attr('cy', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
-			.attr('r', config.essential.dotsize)
+			.attr('r', config.dotsize)
 			.attr('fill', (d) =>
 				+d.value > +d.ref
-					? config.essential.colour_palette[1]//increase
+					? config.colour_palette[1]//increase
 					: +d.value < +d.ref
-					? config.essential.colour_palette[0]//decrease
-					: config.essential.colour_palette[2]//same
+					? config.colour_palette[0]//decrease
+					: config.colour_palette[2]//same
 			);
 
 	
-		if (config.essential.dataLabels.show == true) {
+		if (config.dataLabels.show == true) {
 			charts
 				.selectAll('text.min')
 				.data((d) => d[1])
@@ -359,12 +359,12 @@ function drawGraphic() {
 				.attr('class', 'dataLabels')
 				.attr('x', (d) => x(d.value))
 				.attr('y', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
-				.text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
+				.text((d) => d3.format(config.dataLabels.numberFormat)(d.value))
 				.attr('fill', (d) =>
 					+d.value > +d.ref
-						? config.essential.colour_palette[1]//increase
+						? config.colour_palette[1]//increase
 						: +d.value < +d.ref
-						? config.essential.colour_palette[0]//decrease
+						? config.colour_palette[0]//decrease
 						: 'none'
 				)
 				.attr('dy', 6)
@@ -378,19 +378,19 @@ function drawGraphic() {
 				.attr('class', 'dataLabels')
 				.attr('x', (d) => x(d.ref))
 				.attr('y', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
-				.text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.ref))
+				.text((d) => d3.format(config.dataLabels.numberFormat)(d.ref))
 				.attr('fill', (d) =>
 					+d.value > +d.ref
-						? config.essential.colour_palette[1]//increase
+						? config.colour_palette[1]//increase
 						: +d.value < +d.ref
-						? config.essential.colour_palette[0]//decrease
-						: config.essential.colour_palette[2]//same
+						? config.colour_palette[0]//decrease
+						: config.colour_palette[2]//same
 				)
 				.attr('dy', 6)
 				.attr('dx', (d) =>
 					+d.value > +d.ref
-						? -(config.essential.dotsize + 5)
-						: config.essential.dotsize + 5
+						? -(config.dotsize + 5)
+						: config.dotsize + 5
 				)
 				.attr('text-anchor', (d) => (+d.value > +d.ref ? 'end' : 'start'));
 		}//ends function to draw datalabels
@@ -403,7 +403,7 @@ function drawGraphic() {
 					.attr('x', chart_width)
 					.attr('y', (d) => d[2] + 35)
 					.attr('class', 'axis--label')
-					.text(config.essential.xAxisLabel)
+					.text(config.xAxisLabel)
 					.attr('text-anchor', 'end');
 			}
 		});
@@ -425,20 +425,20 @@ function drawGraphic() {
 				.select('#legend')
 				.selectAll('div.legend--item.Inc')
 				.append('svg')
-				.attr('height', config.optional.legendHeight[size])
-				.attr('width', config.essential.legendItemWidth);
+				.attr('height', config.legendHeight[size])
+				.attr('width', config.legendItemWidth);
 			let var_group2 = d3
 				.select('#legend')
 				.selectAll('div.legend--item.Dec')
 				.append('svg')
-				.attr('height', config.optional.legendHeight[size])
-				.attr('width', config.essential.legendItemWidth);
+				.attr('height', config.legendHeight[size])
+				.attr('width', config.legendItemWidth);
 			let var_group3 = d3
 				.select('#legend')
 				.selectAll('div.legend--item.No')
 				.append('svg')
-				.attr('height', config.optional.legendHeight[size])
-				.attr('width', config.essential.legendItemWidth);
+				.attr('height', config.legendHeight[size])
+				.attr('width', config.legendItemWidth);
 	
 			//Increase legend item
 			var_group
@@ -447,26 +447,26 @@ function drawGraphic() {
 				.attr('x', 0)
 				.attr('text-anchor', 'start')
 				.attr('class', 'mintext legendLabel')
-				.attr('fill', config.essential.colour_palette[0])
-				.text(config.essential.legendLabels[0]);
+				.attr('fill', config.colour_palette[0])
+				.text(config.legendLabels[0]);
 	
 			//this measures how wide the "min" value is so that we can place the legend items responsively
 			let minTextWidth = d3.select('text.mintext').node().getBBox().width + 5;
 	
 			var_group
 				.append('line')
-				.attr('stroke', config.essential.colour_palette[0])
+				.attr('stroke', config.colour_palette[0])
 				.attr('stroke-width', '3px')
 				.attr('y1', 26)
 				.attr('y2', 26)
 				.attr('x1', minTextWidth)
-				.attr('x2', minTextWidth + config.essential.legendLineLength);
+				.attr('x2', minTextWidth + config.legendLineLength);
 	
 			var_group
 				.append('circle')
-				.attr('r', config.essential.dotsize)
-				.attr('fill', config.essential.colour_palette[0])
-				.attr('cx', minTextWidth + config.essential.legendLineLength)
+				.attr('r', config.dotsize)
+				.attr('fill', config.colour_palette[0])
+				.attr('cx', minTextWidth + config.legendLineLength)
 				.attr('cy', 26);
 	
 			var_group
@@ -475,13 +475,13 @@ function drawGraphic() {
 				.attr(
 					'x',
 					minTextWidth +
-						config.essential.legendLineLength +
-						config.essential.dotsize +
+						config.legendLineLength +
+						config.dotsize +
 						5
 				)
 				.attr('text-anchor', 'start')
 				.attr('class', 'maxtext legendLabel')
-				.attr('fill', config.essential.colour_palette[0])
+				.attr('fill', config.colour_palette[0])
 				.text(cometLegendLabels.max);
 	
 			//this measures how wide the "max" value is so that we can place the legend items responsively
@@ -494,36 +494,36 @@ function drawGraphic() {
 				.attr(
 					'x',
 					(minTextWidth +
-						config.essential.legendLineLength +
-						config.essential.dotsize +
+						config.legendLineLength +
+						config.dotsize +
 						maxTextWidth) /
 						2
 				)
 				.attr('text-anchor', 'middle')
 				.attr('class', 'legendLabel')
-				.attr('fill', config.essential.colour_palette[0])
+				.attr('fill', config.colour_palette[0])
 				.text('Increase');
 	
 			//Decrease legend item
 			var_group2
 				.append('line')
-				.attr('stroke', config.essential.colour_palette[1])
+				.attr('stroke', config.colour_palette[1])
 				.attr('stroke-width', '3px')
 				.attr('y1', 26)
 				.attr('y2', 26)
-				.attr('x1', maxTextWidth + config.essential.dotsize)
+				.attr('x1', maxTextWidth + config.dotsize)
 				.attr(
 					'x2',
 					maxTextWidth +
-						config.essential.dotsize +
-						config.essential.legendLineLength
+						config.dotsize +
+						config.legendLineLength
 				);
 	
 			var_group2
 				.append('circle')
-				.attr('r', config.essential.dotsize)
-				.attr('fill', config.essential.colour_palette[1])
-				.attr('cx', maxTextWidth + config.essential.dotsize)
+				.attr('r', config.dotsize)
+				.attr('fill', config.colour_palette[1])
+				.attr('cx', maxTextWidth + config.dotsize)
 				.attr('cy', 26);
 	
 			var_group2
@@ -532,7 +532,7 @@ function drawGraphic() {
 				.attr('x', 0)
 				.attr('text-anchor', 'start')
 				.attr('class', 'legendLabel')
-				.attr('fill', config.essential.colour_palette[1])
+				.attr('fill', config.colour_palette[1])
 				.text(cometLegendLabels.max);
 	
 			var_group2
@@ -541,13 +541,13 @@ function drawGraphic() {
 				.attr(
 					'x',
 					maxTextWidth +
-						config.essential.legendLineLength +
-						config.essential.dotsize +
+						config.legendLineLength +
+						config.dotsize +
 						5
 				)
 				.attr('text-anchor', 'start')
 				.attr('class', 'legendLabel')
-				.attr('fill', config.essential.colour_palette[1])
+				.attr('fill', config.colour_palette[1])
 				.text(cometLegendLabels.min);
 	
 			var_group2
@@ -556,31 +556,31 @@ function drawGraphic() {
 				.attr(
 					'x',
 					(maxTextWidth +
-						config.essential.legendLineLength +
-						config.essential.dotsize +
+						config.legendLineLength +
+						config.dotsize +
 						minTextWidth) /
 						2
 				)
 				.attr('text-anchor', 'middle')
 				.attr('class', 'legendLabel')
-				.attr('fill', config.essential.colour_palette[1])
+				.attr('fill', config.colour_palette[1])
 				.text('Decrease');
 	
 			//No change legend item
 			var_group3
 				.append('circle')
-				.attr('r', config.essential.dotsize)
-				.attr('fill', config.essential.colour_palette[2])
+				.attr('r', config.dotsize)
+				.attr('fill', config.colour_palette[2])
 				.attr('cx', 10)
 				.attr('cy', 26);
 	
 			var_group3
 				.append('text')
 				.attr('y', 30)
-				.attr('x', config.essential.dotsize + 15)
+				.attr('x', config.dotsize + 15)
 				.attr('text-anchor', 'start')
 				.attr('class', 'legendLabel')
-				.attr('fill', config.essential.colour_palette[2])
+				.attr('fill', config.colour_palette[2])
 				.text('No change');
 		} //End drawLegend
 	
@@ -594,7 +594,7 @@ function drawGraphic() {
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height
-	let height = config.optional.seriesHeight[size] * graphic_data.length;
+	let height = config.seriesHeight[size] * graphic_data.length;
 
 	
 	let y = d3.scalePoint().padding(0.5).range([0, height]);
@@ -609,15 +609,15 @@ function drawGraphic() {
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.ticks(config.optional.xAxisTicks[size])
-		.tickFormat(d => d3.format(config.essential.dataLabels.numberFormat)(d));
+		.ticks(config.xAxisTicks[size])
+		.tickFormat(d => d3.format(config.dataLabels.numberFormat)(d));
 
 	// Set up the legend
 	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-			d3.zip(config.essential.legendLabels, config.essential.colour_palette)
+			d3.zip(config.legendLabels, config.colour_palette)
 		)
 		.enter()
 		.append('div')
@@ -677,7 +677,7 @@ function drawGraphic() {
 		.append('circle')
 		.attr('class', 'min')
 		.attr('r', 6)
-		.attr('fill', config.essential.colour_palette[0])
+		.attr('fill', config.colour_palette[0])
 		.attr('cx', function (d) {
 			return x(d.value);
 		})
@@ -692,7 +692,7 @@ function drawGraphic() {
 		.append('circle')
 		.attr('class', 'max')
 		.attr('r', 6)
-		.attr('fill', config.essential.colour_palette[1])
+		.attr('fill', config.colour_palette[1])
 		.attr('cx', function (d) {
 			return x(d.ref);
 		})
@@ -711,8 +711,8 @@ function drawGraphic() {
 			.selectAll('div.legend--item')
 			.data(
 				d3.zip(
-					Object.values(config.essential.legendLabels),
-					config.essential.colour_palette
+					Object.values(config.legendLabels),
+					config.colour_palette
 				)
 			)
 			.enter()
@@ -736,13 +736,13 @@ function drawGraphic() {
 		
 		const colour = d3
 			.scaleOrdinal()
-			.range(config.essential.colour_palette)
-			.domain(Object.keys(config.essential.legendLabels));
+			.range(config.colour_palette)
+			.domain(Object.keys(config.legendLabels));
 	
 		// create the y scale in groups
 		groups.map(function (d) {
 			//height
-			d[2] = config.optional.seriesHeight[size] * d[1].length;
+			d[2] = config.seriesHeight[size] * d[1].length;
 	
 			// y scale
 			d[3] = d3
@@ -756,8 +756,8 @@ function drawGraphic() {
 	
 		//set up xAxis generator
 		let xAxis = d3.axisBottom(x)
-			.ticks(config.optional.xAxisTicks[size])
-			.tickFormat(d => d3.format(config.essential.dataLabels.numberFormat)(d));
+			.ticks(config.xAxisTicks[size])
+			.tickFormat(d => d3.format(config.dataLabels.numberFormat)(d));
 	
 		divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 	
@@ -822,7 +822,7 @@ function drawGraphic() {
 			.attr('cx', (d) => x(d.value))
 			.attr('cy', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
 			.attr('r', 6)
-			.attr('fill', config.essential.colour_palette[0]);
+			.attr('fill', config.colour_palette[0]);
 	
 		charts
 			.selectAll('circle.max')
@@ -832,9 +832,9 @@ function drawGraphic() {
 			.attr('cx', (d) => x(d.ref))
 			.attr('cy', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
 			.attr('r', 6)
-			.attr('fill', config.essential.colour_palette[1]);
+			.attr('fill', config.colour_palette[1]);
 	
-		if (config.essential.dataLabels.show) {
+		if (config.dataLabels.show) {
 			charts
 				.selectAll('text.min')
 				.data((d) => d[1])
@@ -842,8 +842,8 @@ function drawGraphic() {
 				.attr('class', 'dataLabels')
 				.attr('x', (d) => x(d.value))
 				.attr('y', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
-				.text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.value))
-				.attr('fill', config.essential.colour_palette[0])
+				.text((d) => d3.format(config.dataLabels.numberFormat)(d.value))
+				.attr('fill', config.colour_palette[0])
 				.attr('dy', 6)
 				.attr('dx', (d) => (+d.value < +d.ref ? -8 : 8))
 				.attr('text-anchor', (d) => (+d.value < +d.ref ? 'end' : 'start'));
@@ -855,8 +855,8 @@ function drawGraphic() {
 				.attr('class', 'dataLabels')
 				.attr('x', (d) => x(d.ref))
 				.attr('y', (d) => groups.filter((f) => f[0] == d.series)[0][3](d.name))
-				.text((d) => d3.format(config.essential.dataLabels.numberFormat)(d.ref))
-				.attr('fill', config.essential.colour_palette[1])
+				.text((d) => d3.format(config.dataLabels.numberFormat)(d.ref))
+				.attr('fill', config.colour_palette[1])
 				.attr('dy', 6)
 				.attr('dx', (d) => (+d.value > +d.ref ? -8 : 8))
 				.attr('text-anchor', (d) => (+d.value > +d.ref ? 'end' : 'start'));
@@ -871,7 +871,7 @@ function drawGraphic() {
 					.attr('x', chart_width)
 					.attr('y', (d) => d[2] + 35)
 					.attr('class', 'axis--label')
-					.text(config.essential.xAxisLabel)
+					.text(config.xAxisLabel)
 					.attr('text-anchor', 'end');
 			}
 		});
@@ -881,21 +881,21 @@ function drawGraphic() {
 	
 	//now draw the charts according to chart type from config.essential (bar, comet, dot or range)
 
-	if (config.essential.chartType == "bar") {drawBars()}
+	if (config.chartType == "bar") {drawBars()}
 	
-	if (config.essential.chartType == "range") {drawRange()}
+	if (config.chartType == "range") {drawRange()}
 
-	if (config.essential.chartType == "dot") {drawDot()}
+	if (config.chartType == "dot") {drawDot()}
 	
-	if (config.essential.chartType == "comet") {drawComet()}
+	if (config.chartType == "comet") {drawComet()}
 
 	
 } //end drawGraphic
 
 //create link to source
-addSource('source', config.essential.sourceText);
+addSource('source', config.sourceText);
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 	//use pym to create iframed chart dependent on specified variables

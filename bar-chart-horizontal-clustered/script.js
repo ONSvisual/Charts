@@ -13,14 +13,14 @@ function drawGraphic() {
 	let namesUnique = [...new Set(graphic_data.map((d) => d.name))];
 	let categoriesUnique = [...new Set(graphic_data.map((d) => d.category))];
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
-		config.optional.seriesHeight[size] * graphic_data.length +
+		config.seriesHeight[size] * graphic_data.length +
 		14 * (namesUnique.length - 1) +
-		(config.optional.seriesHeight[size] * categoriesUnique.length + 14) * 0.2;
+		(config.seriesHeight[size] * categoriesUnique.length + 14) * 0.2;
 
 
 	//set up scales
@@ -44,7 +44,7 @@ function drawGraphic() {
 
 	const colour = d3
 		.scaleOrdinal()
-		.range(config.essential.colour_palette)
+		.range(config.colour_palette)
 		.domain(categoriesUnique);
 
 	//set up yAxis generator
@@ -54,15 +54,15 @@ function drawGraphic() {
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.tickFormat(d3.format(config.essential.dataLabels.numberFormat))
-		.ticks(config.optional.xAxisTicks[size]);
+		.tickFormat(d3.format(config.dataLabels.numberFormat))
+		.ticks(config.xAxisTicks[size]);
 
 	// Set up the legend
 	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-			d3.zip(config.essential.legendLabels, config.essential.colour_palette)
+			d3.zip(config.legendLabels, config.colour_palette)
 		)
 		.enter()
 		.append('div')
@@ -91,7 +91,7 @@ function drawGraphic() {
 		margin: margin
 	})
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
 			x.domain([
 				0,
@@ -100,7 +100,7 @@ function drawGraphic() {
 			x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
 		}
 	} else {
-		x.domain(config.essential.xDomain);
+		x.domain(config.xDomain);
 	}
 
 	svg
@@ -134,7 +134,7 @@ function drawGraphic() {
 
 	let labelPositionFactor = 7;
 
-	if (config.essential.dataLabels.show == true) {
+	if (config.dataLabels.show == true) {
 
 		addDataLabels({
 			svgContainer: svg,
@@ -152,13 +152,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 35,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -166,7 +166,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

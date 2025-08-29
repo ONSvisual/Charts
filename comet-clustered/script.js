@@ -16,13 +16,13 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	let groups = d3.groups(graphic_data, (d) => d.group);
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		let min = 1000000;
 		let max = 0;
 		for (i = 2; i < graphic_data.columns.length; i++) {
@@ -37,7 +37,7 @@ function drawGraphic() {
 		}
 		xDomain = [min, max];
 	} else {
-		xDomain = config.essential.xDomain;
+		xDomain = config.xDomain;
 	}
 
 	//set up scales
@@ -45,14 +45,14 @@ function drawGraphic() {
 
 	const colour = d3
 		.scaleOrdinal()
-		.range(config.essential.colour_palette)
-		.domain(Object.keys(config.essential.legendLabels));
+		.range(config.colour_palette)
+		.domain(Object.keys(config.legendLabels));
 
 
 	// create the y scale in groups
 	groups.map(function (d) {
 		//height
-		d[2] = config.optional.seriesHeight[size] * d[1].length;
+		d[2] = config.seriesHeight[size] * d[1].length;
 
 		// y scale
 		d[3] = d3
@@ -69,8 +69,8 @@ function drawGraphic() {
 
 	//set up xAxis generator
 	let xAxis = d3.axisBottom(x)
-		.ticks(config.optional.xAxisTicks[size])
-		.tickFormat(d3.format(config.essential.xAxisNumberFormat));
+		.ticks(config.xAxisTicks[size])
+		.tickFormat(d3.format(config.xAxisNumberFormat));
 
 	let divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
@@ -139,10 +139,10 @@ function drawGraphic() {
 		.attr('y2', (d, i) => groups.filter((e) => e[0] == d.group)[0][3](d.name) + groups.filter(e => e[0] == d.group)[0][5](d.series))
 		// .attr('stroke', (d) =>
 		// 	+d.min > +d.max
-		// 		? config.essential.colour_palette[1]
+		// 		? config.colour_palette[1]
 		// 		: +d.min < +d.max
-		// 		? config.essential.colour_palette[0]
-		// 		: config.essential.colour_palette[2]
+		// 		? config.colour_palette[0]
+		// 		: config.colour_palette[2]
 		// ) //old way of colouring by increase/decrease
 		.attr('stroke', (d) => colour(d.series))
 		.attr('stroke-width', '2px');
@@ -153,7 +153,7 @@ function drawGraphic() {
 	//     .attr('class', 'min')
 	//     .attr('cx', d => x(d.min))
 	// 	.attr('cy', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name) + groups.filter(e => e[0] == d.group)[0][5](d.series))
-	// 	.attr('r', config.essential.dotsize - 2.5)
+	// 	.attr('r', config.dotsize - 2.5)
 	//     .attr('fill', (d) => colour(d.series))
 
 	// charts
@@ -184,17 +184,17 @@ function drawGraphic() {
 		.attr('class', 'max')
 		.attr('cx', (d) => x(d.max))
 		.attr('cy', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name) + groups.filter(e => e[0] == d.group)[0][5](d.series))
-		.attr('r', config.essential.dotsize)
+		.attr('r', config.dotsize)
 		// .attr('fill', (d) =>
 		// 	+d.min > +d.max
-		// 		? config.essential.colour_palette[1]
+		// 		? config.colour_palette[1]
 		// 		: +d.min < +d.max
-		// 		? config.essential.colour_palette[0]
-		// 		: config.essential.colour_palette[2]
+		// 		? config.colour_palette[0]
+		// 		: config.colour_palette[2]
 		// )
 		.attr('fill', (d) => colour(d.series));
 
-	if (config.essential.showDataLabels == true) {
+	if (config.showDataLabels == true) {
 		charts
 			.selectAll('text.min')
 			.data((d) => d[1])
@@ -202,16 +202,16 @@ function drawGraphic() {
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.min) - 2)
 			.attr('y', (d) => (groups.filter((f) => f[0] == d.group)[0][3](d.name) + groups.filter(e => e[0] == d.group)[0][5](d.series)) - 1)
-			.text((d) => config.essential.numberSuffix + d3.format(config.essential.numberFormat)(d.min))
+			.text((d) => config.numberSuffix + d3.format(config.numberFormat)(d.min))
 			// .attr('fill', (d) =>
 			// 	+d.min > +d.max
-			// 		? config.essential.colour_palette[1]
+			// 		? config.colour_palette[1]
 			// 		: +d.min < +d.max
-			// 		? config.essential.colour_palette[0]
+			// 		? config.colour_palette[0]
 			// 		: 'none'
 			// )
 			// .attr('fill', (d) => colour(d.series))
-			.attr("fill", config.essential.colour_min_text)
+			.attr("fill", config.colour_min_text)
 			.attr('dy', 6)
 			.attr('dx', (d) => (+d.min < +d.max ? -5 : 5))
 			.attr('text-anchor', (d) => (+d.min < +d.max ? 'end' : 'start'))
@@ -224,20 +224,20 @@ function drawGraphic() {
 			.attr('class', 'dataLabels')
 			.attr('x', (d) => x(d.max))
 			.attr('y', (d) => (groups.filter((f) => f[0] == d.group)[0][3](d.name) + groups.filter(e => e[0] == d.group)[0][5](d.series)) - 1)
-			.text((d) => config.essential.numberSuffix + d3.format(config.essential.numberFormat)(d.max))
+			.text((d) => config.numberSuffix + d3.format(config.numberFormat)(d.max))
 			// .attr('fill', (d) =>
 			// 	+d.min > +d.max
-			// 		? config.essential.colour_palette[1]
+			// 		? config.colour_palette[1]
 			// 		: +d.min < +d.max
-			// 		? config.essential.colour_palette[0]
-			// 		: config.essential.colour_palette[2]
+			// 		? config.colour_palette[0]
+			// 		: config.colour_palette[2]
 			// )
 			.attr('fill', (d) => colour(d.series))
 			.attr('dy', 6)
 			.attr('dx', (d) =>
 				+d.min > +d.max
-					? -(config.essential.dotsize + 5)
-					: config.essential.dotsize + 5
+					? -(config.dotsize + 5)
+					: config.dotsize + 5
 			)
 			.attr('text-anchor', (d) => (+d.min > +d.max ? 'end' : 'start'))
 			.style("font-weight", 700);
@@ -250,7 +250,7 @@ function drawGraphic() {
 				svgContainer: d3.select(this),
 				xPosition: chart_width,
 				yPosition: d[2] + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
 			});
@@ -260,7 +260,7 @@ function drawGraphic() {
 	// Set up the legend
 	var legenditemTop = d3.select('#legendTop')
 		.selectAll('div.legend--item')
-		.data(d3.zip(Object.values(config.essential.seriesLabels), config.essential.colour_palette))
+		.data(d3.zip(Object.values(config.seriesLabels), config.colour_palette))
 		.enter()
 		.append('div')
 		.attr('class', 'legend--item')
@@ -279,7 +279,7 @@ function drawGraphic() {
 	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
-		.data(config.essential.legendItems)
+		.data(config.legendItems)
 		.enter()
 		.append('div')
 		.attr('class', (d) => 'legend--item ' + [d]);
@@ -291,20 +291,20 @@ function drawGraphic() {
 			.select('#legend')
 			.selectAll('div.legend--item.Inc')
 			.append('svg')
-			.attr('height', config.optional.legendHeight[size])
-			.attr('width', config.essential.legendItemWidth);
+			.attr('height', config.legendHeight[size])
+			.attr('width', config.legendItemWidth);
 		let var_group2 = d3
 			.select('#legend')
 			.selectAll('div.legend--item.Dec')
 			.append('svg')
-			.attr('height', config.optional.legendHeight[size])
-			.attr('width', config.essential.legendItemWidth);
+			.attr('height', config.legendHeight[size])
+			.attr('width', config.legendItemWidth);
 		// var_group3 = d3
 		// 	.select('#legend')
 		// 	.selectAll('div.legend--item.No')
 		// 	.append('svg')
-		// 	.attr('height', config.optional.legendHeight[size])
-		// 	.attr('width', config.essential.legendItemWidth);
+		// 	.attr('height', config.legendHeight[size])
+		// 	.attr('width', config.legendItemWidth);
 
 		//Increase legend item
 		var_group
@@ -314,39 +314,39 @@ function drawGraphic() {
 			.attr('x', 0)
 			.attr('text-anchor', 'start')
 			.attr('class', 'mintext legendLabel')
-			.attr('fill', config.essential.legend_colour)
-			.text(config.essential.legendLabels.min);
+			.attr('fill', config.legend_colour)
+			.text(config.legendLabels.min);
 
 		//this measures how wide the "min" value is so that we can place the legend items responsively
 		let minTextWidth = d3.select('text.mintext').node().getBBox().width + 5;
 
 		var_group
 			.append('line')
-			.attr('stroke', config.essential.legend_colour)
+			.attr('stroke', config.legend_colour)
 			.attr('stroke-width', '3px')
 			.attr('y1', 26)
 			.attr('y2', 26)
 			.attr('x1', minTextWidth)
-			.attr('x2', minTextWidth + config.essential.legendLineLength);
+			.attr('x2', minTextWidth + config.legendLineLength);
 
 		var_group
 			.append('circle')
-			.attr('r', config.essential.dotsize)
-			.attr('fill', config.essential.legend_colour)
-			.attr('cx', minTextWidth + config.essential.legendLineLength)
+			.attr('r', config.dotsize)
+			.attr('fill', config.legend_colour)
+			.attr('cx', minTextWidth + config.legendLineLength)
 			.attr('cy', 26);
 
 		// var_group
 		// 	.append('circle')
-		// 	.attr('r', config.essential.dotsize - 2.5)
-		// 	.attr('fill', config.essential.legend_colour)
+		// 	.attr('r', config.dotsize - 2.5)
+		// 	.attr('fill', config.legend_colour)
 		// 	.attr('cx', minTextWidth + 1.25)
 		// 	.attr('cy', 26);
 
 		// var_group
 		// .append("path")
 		// .attr("d", minSym) 
-		// .attr("fill", config.essential.legend_colour) 
+		// .attr("fill", config.legend_colour) 
 		// .attr("transform", "translate(" + (minTextWidth) + "," + 26 + ") rotate(45)");
 
 		var_group
@@ -355,7 +355,7 @@ function drawGraphic() {
 			.attr("x2", minTextWidth)
 			.attr("y1", 26 + 7)
 			.attr("y2", 26 - 7)
-			.attr('stroke', config.essential.legend_colour)
+			.attr('stroke', config.legend_colour)
 			.attr('stroke-width', '2.5px');
 
 		var_group
@@ -364,14 +364,14 @@ function drawGraphic() {
 			.attr(
 				'x',
 				minTextWidth +
-				config.essential.legendLineLength +
-				config.essential.dotsize +
+				config.legendLineLength +
+				config.dotsize +
 				5
 			)
 			.attr('text-anchor', 'start')
 			.attr('class', 'maxtext legendLabel')
-			.attr('fill', config.essential.legend_colour)
-			.text(config.essential.legendLabels.max)
+			.attr('fill', config.legend_colour)
+			.text(config.legendLabels.max)
 			.style("font-weight", 700);
 
 		//this measures how wide the "max" value is so that we can place the legend items responsively
@@ -383,8 +383,8 @@ function drawGraphic() {
 			.attr(
 				'x',
 				(minTextWidth +
-					config.essential.legendLineLength +
-					config.essential.dotsize +
+					config.legendLineLength +
+					config.dotsize +
 					maxTextWidth) /
 				2
 			)
@@ -396,16 +396,16 @@ function drawGraphic() {
 		//Decrease legend item
 		var_group2
 			.append('line')
-			.attr('stroke', config.essential.legend_colour)
+			.attr('stroke', config.legend_colour)
 			.attr('stroke-width', '3px')
 			.attr('y1', 26)
 			.attr('y2', 26)
-			.attr('x1', maxTextWidth + config.essential.dotsize)
+			.attr('x1', maxTextWidth + config.dotsize)
 			.attr(
 				'x2',
 				maxTextWidth +
-				config.essential.dotsize +
-				config.essential.legendLineLength
+				config.dotsize +
+				config.legendLineLength
 			);
 
 
@@ -414,31 +414,31 @@ function drawGraphic() {
 
 		var_group2
 			.append('circle')
-			.attr('r', config.essential.dotsize)
-			.attr('fill', config.essential.legend_colour)
-			.attr('cx', maxTextWidth + config.essential.dotsize)
+			.attr('r', config.dotsize)
+			.attr('fill', config.legend_colour)
+			.attr('cx', maxTextWidth + config.dotsize)
 			.attr('cy', 26);
 
 		// var_group2
 		// 	.append('circle')
-		// 	.attr('r', config.essential.dotsize - 2.5)
-		// 	.attr('fill', config.essential.legend_colour)
-		// 	.attr('cx', maxTextWidth + config.essential.legendLineLength + 2.5)
+		// 	.attr('r', config.dotsize - 2.5)
+		// 	.attr('fill', config.legend_colour)
+		// 	.attr('cx', maxTextWidth + config.legendLineLength + 2.5)
 		// 	.attr('cy', 26);
 
 		// var_group2
 		// 	.append("path")
 		// 	.attr("d", minSym) 
-		//     .attr("fill", config.essential.legend_colour) 
-		//     .attr("transform", "translate(" + (maxTextWidth + config.essential.legendLineLength + 2.5) + "," + 26 + ") rotate(45)"); 
+		//     .attr("fill", config.legend_colour) 
+		//     .attr("transform", "translate(" + (maxTextWidth + config.legendLineLength + 2.5) + "," + 26 + ") rotate(45)"); 
 
 		var_group2
 			.append("line")
-			.attr("x1", maxTextWidth + config.essential.legendLineLength + config.essential.dotsize)
-			.attr("x2", maxTextWidth + config.essential.legendLineLength + config.essential.dotsize)
+			.attr("x1", maxTextWidth + config.legendLineLength + config.dotsize)
+			.attr("x2", maxTextWidth + config.legendLineLength + config.dotsize)
 			.attr("y1", 26 + 7)
 			.attr("y2", 26 - 7)
-			.attr('stroke', config.essential.legend_colour)
+			.attr('stroke', config.legend_colour)
 			.attr('stroke-width', '2.5px');
 
 		var_group2
@@ -447,8 +447,8 @@ function drawGraphic() {
 			.attr('x', 0)
 			.attr('text-anchor', 'start')
 			.attr('class', 'legendLabel')
-			.attr('fill', config.essential.legend_colour)
-			.text(config.essential.legendLabels.max)
+			.attr('fill', config.legend_colour)
+			.text(config.legendLabels.max)
 			.style("font-weight", 700);
 
 		var_group2
@@ -457,14 +457,14 @@ function drawGraphic() {
 			.attr(
 				'x',
 				maxTextWidth +
-				config.essential.legendLineLength +
-				config.essential.dotsize +
+				config.legendLineLength +
+				config.dotsize +
 				5
 			)
 			.attr('text-anchor', 'start')
 			.attr('class', 'legendLabel')
-			.attr('fill', config.essential.legend_colour)
-			.text(config.essential.legendLabels.min)
+			.attr('fill', config.legend_colour)
+			.text(config.legendLabels.min)
 		// .style("font-size", "12.5px");
 
 		var_group2
@@ -473,37 +473,37 @@ function drawGraphic() {
 			.attr(
 				'x',
 				(maxTextWidth +
-					config.essential.legendLineLength +
-					config.essential.dotsize +
+					config.legendLineLength +
+					config.dotsize +
 					minTextWidth) /
 				2
 			)
 			.attr('text-anchor', 'middle')
 			.attr('class', 'legendLabel')
-			// .attr('fill', config.essential.colour_palette[1])
+			// .attr('fill', config.colour_palette[1])
 			.text('Decrease')
 			.attr('fill', "#707070");
 
 		// 	//No change legend item
 		// 	var_group3
 		// 		.append('circle')
-		// 		.attr('r', config.essential.dotsize)
-		// 		.attr('fill', config.essential.colour_palette[2])
+		// 		.attr('r', config.dotsize)
+		// 		.attr('fill', config.colour_palette[2])
 		// 		.attr('cx', 10)
 		// 		.attr('cy', 26);
 
 		// 	var_group3
 		// 		.append('text')
 		// 		.attr('y', 30)
-		// 		.attr('x', config.essential.dotsize + 15)
+		// 		.attr('x', config.dotsize + 15)
 		// 		.attr('text-anchor', 'start')
 		// 		.attr('class', 'legendLabel')
-		// 		.attr('fill', config.essential.colour_palette[2])
+		// 		.attr('fill', config.colour_palette[2])
 		// 		.text('No change');
 	} //End drawLegend
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -511,7 +511,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

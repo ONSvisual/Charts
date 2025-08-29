@@ -22,7 +22,7 @@ function drawGraphic() {
     legendItem
         .append('div')
         .attr('class', 'legend--icon--circle')
-        .style('background-color', (d, i) => config.essential.colour_palette[i])
+        .style('background-color', (d, i) => config.colour_palette[i])
 
     legendItem
         .append('div')
@@ -61,12 +61,12 @@ function drawGraphic() {
         ];
 
         // Calculate the height based on the y-axis domain
-        let height = config.essential.chartHeight[size] - config.optional.margin[size].top - config.optional.margin[size].bottom;
+        let height = config.chartHeight[size] - config.margin[size].top - config.margin[size].bottom;
 
-        let chartsPerRow = config.optional.chart_every[size];
+        let chartsPerRow = config.chart_every[size];
         let chartPosition = chartIndex % chartsPerRow;
 
-        let margin = { ...config.optional.margin[size] };
+        let margin = { ...config.margin[size] };
         let chartGap = config.optional?.chartGap || 10;
 
         let chart_width = calculateChartWidth({
@@ -77,7 +77,7 @@ function drawGraphic() {
         })
 
         // If the chart is not in the first position in the row, reduce the left margin
-        if (config.optional.dropYAxis) {
+        if (config.dropYAxis) {
             if (chartPosition !== 0) {
                 margin.left = chartGap;
             }
@@ -110,15 +110,15 @@ function drawGraphic() {
         let xAxis = d3.axisBottom(x)
             .tickSize(0)
             .tickPadding(10)
-            .tickFormat((d) => config.optional.dropYAxis !== true ? (d) :
+            .tickFormat((d) => config.dropYAxis !== true ? (d) :
                 chartPosition == 0 ? (d) : "");
 
         // Set up yAxis generator
         let yAxis = d3
             .axisLeft(y)
             .tickSize(-chart_width)
-            .tickFormat(d3.format(config.essential.dataLabels.numberFormat))
-            .ticks(config.optional.xAxisTicks[size]);
+            .tickFormat(d3.format(config.dataLabels.numberFormat))
+            .ticks(config.xAxisTicks[size]);
 
         // Create svg for chart
         svg = addSvg({
@@ -159,9 +159,9 @@ function drawGraphic() {
             .attr('y', d => y(Math.max(0, d.value)))
             .attr('width', x2.bandwidth())
             .attr('height', (d) => Math.abs(y(d.value) - y(0)))
-            .attr('fill', (d) => config.essential.colour_palette[legendCategories.indexOf(d.category)]);
+            .attr('fill', (d) => config.colour_palette[legendCategories.indexOf(d.category)]);
 
-        if (config.essential.dataLabels.show == true && legendCategories.length <= 2) {
+        if (config.dataLabels.show == true && legendCategories.length <= 2) {
 			addDataLabelsVertical({
 				svgContainer: svg,
 				data: data,
@@ -186,7 +186,7 @@ function drawGraphic() {
                 svgContainer: svg,
                 xPosition: chart_width,
                 yPosition: height + 35,
-                text: config.essential.xAxisLabel,
+                text: config.xAxisLabel,
                 textAnchor: "end",
                 wrapWidth: chart_width
             });
@@ -199,7 +199,7 @@ function drawGraphic() {
     });
 
     //create link to source
-    addSource('source', config.essential.sourceText);
+    addSource('source', config.sourceText);
 
     //use pym to calculate chart dimensions
     if (pymChild) {
@@ -207,7 +207,7 @@ function drawGraphic() {
     }
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
     //load chart data
     graphic_data = data;
 

@@ -12,14 +12,14 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height = Math.ceil(
-		(chart_width * config.optional.aspectRatio[size][1]) /
-		config.optional.aspectRatio[size][0]
+		(chart_width * config.aspectRatio[size][1]) /
+		config.aspectRatio[size][0]
 	);
 
 	//Set the timepoints from the data for the slider labels and sort from oldest to newest
@@ -27,7 +27,7 @@ function drawGraphic() {
 
 	//Takes the last data point from the date series
 
-	let timeLoad = config.essential.timeLoad;
+	let timeLoad = config.timeLoad;
 
 	//set up scales
 	const x = d3.scaleLinear().range([0, chart_width]);
@@ -39,12 +39,12 @@ function drawGraphic() {
 	function drawSliderButtons() {
 		//Set the initial timepoint for the data load at from the config
 
-		let a = config.essential.timeLoad;
+		let a = config.timeLoad;
 
 		//Set the date format for the slider label
 
-		let dateformat = d3.timeFormat(config.essential.dateFormat);
-		let dateparse = d3.timeParse(config.essential.dateParse);
+		let dateformat = d3.timeFormat(config.dateFormat);
+		let dateparse = d3.timeParse(config.dateParse);
 
 		//Make the slider
 
@@ -187,7 +187,7 @@ function drawGraphic() {
 
 	//if config drawSliderButtons is set to true, draw the buttons etc
 
-	if (config.essential.drawSliderButtons === true) {
+	if (config.drawSliderButtons === true) {
 		drawSliderButtons();
 	} else {
 		d3.selectAll('.flex-container').remove();
@@ -197,14 +197,14 @@ function drawGraphic() {
 	let yAxis = d3
 		.axisLeft(y)
 		.tickSize(-chart_width - 10)
-		.tickFormat(d3.format(config.essential.yDisplayFormat));
+		.tickFormat(d3.format(config.yDisplayFormat));
 
 	//set up xAxis generator
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height - 10)
-		.tickFormat(d3.format(config.essential.xDisplayFormat))
-		.ticks(config.optional.xAxisTicks[size]);
+		.tickFormat(d3.format(config.xDisplayFormat))
+		.ticks(config.xAxisTicks[size]);
 
 	//create svg for chart
 	svg = addSvg({
@@ -216,34 +216,34 @@ function drawGraphic() {
 
 	// Set the scales for the chart - auto calculates the scale from the data or you can select your own in the config
 	//X scale
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		x.domain([
 			d3.min(graphic_data, (d) => d.x),
 			d3.max(graphic_data, (d) => d.x)
 		]);
 	} else {
-		x.domain(config.essential.xDomain);
+		x.domain(config.xDomain);
 	}
 
 	//Y Scale
-	if (config.essential.yDomain == 'auto') {
+	if (config.yDomain == 'auto') {
 		y.domain([
 			d3.min(graphic_data, (d) => d.y),
 			d3.max(graphic_data, (d) => d.y)
 		]);
 	} else {
-		y.domain(config.essential.yDomain);
+		y.domain(config.yDomain);
 	}
 
 	//R scale for the size of the circle
-	if (config.essential.rDomain == 'auto') {
+	if (config.rDomain == 'auto') {
 		r.domain([
 			d3.min(graphic_data, (d) => d.size),
 			d3.max(graphic_data, (d) => d.size)
 		]);
 		r.range([0, 20]);
 	} else {
-		r.domain(config.essential.rDomain);
+		r.domain(config.rDomain);
 		r.range([0, 20]);
 	}
 
@@ -276,7 +276,7 @@ function drawGraphic() {
 
 	//remove the highlight stroke on mobile
 	if (size == 'sm') {
-		d3.selectAll('.dots').attr('stroke', config.essential.colour_palette);
+		d3.selectAll('.dots').attr('stroke', config.colour_palette);
 	}
 
 	// This does the y-axis label
@@ -284,7 +284,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: -margin.left + 2,
 		yPosition: -20,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 		});
@@ -294,7 +294,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 35,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 		});
@@ -389,13 +389,13 @@ function drawGraphic() {
 				d3.select(this)
 					.style('opacity', 0.75)
 					.style('stroke', (d) =>
-						d.highlight == 0 ? config.essential.colour_palette : '#222222'
+						d.highlight == 0 ? config.colour_palette : '#222222'
 					);
 			} else {
 				tooltip.style('opacity', 0);
 				d3.select(this)
 					.style('opacity', 0.75)
-					.style('stroke', config.essential.colour_palette);
+					.style('stroke', config.colour_palette);
 			}
 		};
 
@@ -413,11 +413,11 @@ function drawGraphic() {
 			.attr('cx', (d) => x(d.x))
 			.attr('cy', (d) => y(d.y))
 			.attr('r', (d) => r(d.size))
-			.attr('fill', config.essential.colour_palette)
+			.attr('fill', config.colour_palette)
 			.attr('opacity', 0.75)
 			.attr('stroke-width', (d) => (d.highlight == 0 ? '1px' : '1.5px'))
 			.attr('stroke', (d) =>
-				d.highlight == 0 ? config.essential.colour_palette : '#222222'
+				d.highlight == 0 ? config.colour_palette : '#222222'
 			);
 
 		d3.selectAll('.dots')
@@ -436,9 +436,9 @@ function drawGraphic() {
 			//pull in the legend data from the config
 
 			let legendData = d3.zip(
-				config.essential.legendLabels,
-				config.essential.legendRadius,
-				config.essential.legendCX
+				config.legendLabels,
+				config.legendRadius,
+				config.legendCX
 			);
 
 			//draw legend for medium and large screens
@@ -454,10 +454,10 @@ function drawGraphic() {
 					.attr('cx', (d, i) => legendData[i][2])
 					.attr('cy', -(margin.top * 0.66))
 					.attr('r', (d, i) => r(legendData[i][1]))
-					.attr('fill', config.essential.colour_palette)
+					.attr('fill', config.colour_palette)
 					.attr('opacity', 0.75)
 					.attr('stroke-width', '1px')
-					.attr('stroke', config.essential.colour_palette);
+					.attr('stroke', config.colour_palette);
 
 				//append text
 
@@ -484,10 +484,10 @@ function drawGraphic() {
 					.attr('cx', -10)
 					.attr('cy', (d, i) => -margin.top + 20 + r(legendData[i][1] * 5)) //may need to tweak these values to get the legend to sit correctly
 					.attr('r', (d, i) => r(legendData[i][1]))
-					.attr('fill', config.essential.colour_palette)
+					.attr('fill', config.colour_palette)
 					.attr('opacity', 0.75)
 					.attr('stroke-width', '1px')
-					.attr('stroke', config.essential.colour_palette);
+					.attr('stroke', config.colour_palette);
 
 				//append text
 
@@ -510,7 +510,7 @@ function drawGraphic() {
 
 		if (
 			(size !== 'sm' &&
-				config.essential.highlight === true) === true
+				config.highlight === true) === true
 		) {
 			drawHighlight();
 		} //end if for datalabels
@@ -571,7 +571,7 @@ function drawGraphic() {
 	} //end updateVisuals function
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -579,7 +579,7 @@ function drawGraphic() {
 	}
 } ///END DRAW GRAPHIC
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	data.forEach(function (d) {
 		d.x = +d.x;
