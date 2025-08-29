@@ -188,51 +188,18 @@ const chartConfig = [
     },
     {
       name: "Population pyramid",
-      url: "https://onsvisual.github.io/Charts/population-pyramid-static/",
-      tags: {
-        comparison: true,
-        distribution: true
-      },
-      dataFiles: [
-        { name: "data.csv", path: "data.csv" }
-      ]
-    },
-    {
-      name: "Population pyramid with toggle",
-      url: "https://onsvisual.github.io/Charts/population-pyramid-with-comparison-toggle/",
+      url: "https://onsvisual.github.io/Charts/population-pyramid/",
       tags: {
         comparison: true,
         distribution: true,
         "change-over-time": true
       },
       dataFiles: [
-        { name: "Main data", path: "data.csv" },
-        { name: "Comparison data", path: "comparison.csv" },
-        { name: "Comparison time data", path: "comparison-time.csv" }
-      ]
-    },
-    {
-      name: "Population pyramid with a static comparison",
-      url: "https://onsvisual.github.io/Charts/population-pyramid-static-with-comparison/",
-      tags: {
-        comparison: true,
-        distribution: true
-      },
-      dataFiles: [
-        { name: "Main data", path: "data.csv" },
-        { name: "Comparison data", path: "comparison.csv" }
-      ]
-    },
-    {
-      name: "Population pyramid with dropdown and interactive comparison",
-      url: "https://onsvisual.github.io/Charts/population-pyramid-with-dropdown-and-interactive-comparison/",
-      tags: {
-        comparison: true,
-        distribution: true
-      },
-      dataFiles: [
-        { name: "Main data", path: "data.csv" },
-        { name: "Comparison data", path: "comparison.csv" }
+        { name: "Population simple data", path: "population-simple.csv" },
+        { name: "Population complex data", path: "population-complex.csv" },
+        { name: "Population comparison data", path: "population-comparison.csv" },
+        { name: "Population comparison complex data", path: "population-comparison-complex.csv" },
+        { name: "Population comparison time data", path: "population-comparison-time.csv" }
       ]
     },
     {
