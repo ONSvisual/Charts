@@ -6,7 +6,10 @@ The official repository for all publication ready ONS charts. See our
 [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and
 [service manual](https://service-manual.ons.gov.uk/data-visualisation)
 for more guidance on the use of these charts, and of charts more
-generally.
+generally. This repo uses
+[charts-lib](https://github.com/ONSvisual/charts-lib/) to maintain the
+central lib files. If you want to change `helpers.js` or
+`globalStyle.css` or other central file, do it there.
 
 We currently maintain a separate [map templates
 repository](https://github.com/ONSvisual/maptemplates).
@@ -98,7 +101,6 @@ the team will have a look.
 | Range CI area grouped                                       | [View](https://onsvisual.github.io/Charts/range-ci-area-grouped/)                                       | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-ci-area-grouped/)                                       |
 | Range plot                                                  | [View](https://onsvisual.github.io/Charts/range-plot/)                                                  | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-plot/)                                                  |
 | Range plot sm                                               | [View](https://onsvisual.github.io/Charts/range-plot-sm/)                                               | [`</>`](https://github.com/ONSvisual/Charts/tree/main/range-plot-sm/)                                               |
-| Ridgeline plot                                              | [View](https://onsvisual.github.io/Charts/ridgeline-plot/)                                              | [`</>`](https://github.com/ONSvisual/Charts/tree/main/ridgeline-plot/)                                              |
 | Scatter plot                                                | [View](https://onsvisual.github.io/Charts/scatter-plot/)                                                | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot/)                                                |
 | Scatter plot animated                                       | [View](https://onsvisual.github.io/Charts/scatter-plot-animated/)                                       | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot-animated/)                                       |
 | Scatter plot sm                                             | [View](https://onsvisual.github.io/Charts/scatter-plot-sm/)                                             | [`</>`](https://github.com/ONSvisual/Charts/tree/main/scatter-plot-sm/)                                             |
