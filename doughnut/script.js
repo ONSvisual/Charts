@@ -10,11 +10,11 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-    var margin = config.optional.margin[size];
+    var margin = config.margin[size];
     var chart_width =
         parseInt(graphic.style('width')) - margin.left - margin.right;
     //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
-    var height = config.optional.chartHeight[size];
+    var height = config.chartHeight[size];
 
     const radius = Math.min(chart_width, height) / 2
     const outerRadius = radius * 1.1
@@ -54,10 +54,10 @@ function drawGraphic() {
         .data(pie(graphic_data))
         .join('path')
         .attr('class', (d, i) => 'path' + i)
-        .attr('fill', (d, i) => config.essential.colour_palette[i])
+        .attr('fill', (d, i) => config.colour_palette[i])
         .attr('d', arc)
 
-    if (config.essential.dataLabels.show && size !== "sm") {
+    if (config.dataLabels.show && size !== "sm") {
 
         //Adding layers for lines and labels
         let labels = svg.append("g")
@@ -92,7 +92,7 @@ function drawGraphic() {
             .attr('x', 0)
             .attr('dy', '1.1em')
             .attr('font-weight', 400)
-            .text(d => d3.format(config.essential.dataLabels.numberFormat)(d.value))
+            .text(d => d3.format(config.dataLabels.numberFormat)(d.value))
 
         //Adding connecting lines
         svg.append("g")
@@ -153,8 +153,8 @@ function drawGraphic() {
         var legenditemPie = d3.select('#legend')
             .selectAll('div.legend--item')
             .data(d3.zip(graphic_data.map(item => (item.category)),
-                graphic_data.map(item => d3.format(config.essential.dataLabels.numberFormat)(item.value)),
-                config.essential.colour_palette))
+                graphic_data.map(item => d3.format(config.dataLabels.numberFormat)(item.value)),
+                config.colour_palette))
             .enter()
             .append('div')
             .attr('class', 'container'); // Add float-right class here
@@ -188,13 +188,13 @@ function drawGraphic() {
         .attr('x', 0)
         .attr('y', 0)
         .style('font-weight', 600)
-        .text(config.essential.centreLabel)
+        .text(config.centreLabel)
         .attr('text-anchor', 'middle')
         .call(wrap, radius / 2);
 
 
     //create link to source
-    addSource('source', config.essential.sourceText);
+    addSource('source', config.sourceText);
 
     //use pym to calculate chart dimensions
     if (pymChild) {
@@ -202,7 +202,7 @@ function drawGraphic() {
     }
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
     //load chart data
     graphic_data = data.sort(function (a, b) {
         return b.value - a.value //  Sorting the categories by value, may prefer to sort alphabetically (a.category - b.category) or not at all

@@ -30,7 +30,7 @@ function drawGraphic() {
 
 	let cell = grid
 		.selectAll('div.grid-cell')
-		.data(config.essential.buttonLabels)
+		.data(config.buttonLabels)
 		.join('div')
 		.attr('class', 'grid-cell');
 
@@ -59,7 +59,7 @@ function drawGraphic() {
 	// set first button to selected
 	d3.select('#button0').property('checked', true);
 	d3.select('#selected').text(
-		config.essential.buttonLabels[
+		config.buttonLabels[
 		document.querySelector('input[name="button"]:checked').value
 		] + ' is selected'
 	);
@@ -68,7 +68,7 @@ function drawGraphic() {
 	d3.selectAll('input[type="radio"]').on('change', function (d) {
 		onchange(document.querySelector('input[name="button"]:checked').value);
 		d3.select('#selected').text(
-			config.essential.buttonLabels[
+			config.buttonLabels[
 			document.querySelector('input[name="button"]:checked').value
 			] + ' is selected'
 		);
@@ -78,12 +78,12 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
-	margin.centre = config.optional.margin.centre;
+	let margin = config.margin[size];
+	margin.centre = config.margin.centre;
 
 	// calculate percentage if we have numbers
 	// percentages are based of total populations as is common practice amongst pop pyramids
-	if (config.essential.dataType == 'numbers') {
+	if (config.dataType == 'numbers') {
 		popTotal = d3.sum(graphic_data, (d) => d.maleBar + d.femaleBar);
 
 		comparisonPopTotal = d3.sum(
@@ -174,7 +174,7 @@ function drawGraphic() {
 	// set up widths
 	width = parseInt(graphic.style('width'));
 	chart_width = (parseInt(graphic.style('width')) - margin.centre - margin.left - margin.right) / 2;
-	height = (graphic_data_new.length / 2) * config.optional.seriesHeight[size];
+	height = (graphic_data_new.length / 2) * config.seriesHeight[size];
 
 	// set up some scales, first the left scale
 	xLeft = d3
@@ -224,8 +224,8 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(xLeft)
-				.tickFormat(d3.format(config.essential.xAxisNumberFormat))
-				.ticks(config.optional.xAxisTicks[size])
+				.tickFormat(d3.format(config.xAxisNumberFormat))
+				.ticks(config.xAxisTicks[size])
 				.tickSize(-height)
 		)
 		.selectAll('line')
@@ -243,8 +243,8 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(xRight)
-				.tickFormat(d3.format(config.essential.xAxisNumberFormat))
-				.ticks(config.optional.xAxisTicks[size])
+				.tickFormat(d3.format(config.xAxisNumberFormat))
+				.ticks(config.xAxisTicks[size])
 				.tickSize(-height)
 		)
 		.selectAll('line')
@@ -262,8 +262,8 @@ function drawGraphic() {
 		.join('rect')
 		.attr('fill', (d) =>
 			d.sex === 'female'
-				? config.essential.colour_palette[0]
-				: config.essential.colour_palette[1]
+				? config.colour_palette[0]
+				: config.colour_palette[1]
 		)
 		.attr('x', (d) => (d.sex === 'female' ? xLeft(d.value) : xRight(0)))
 		.attr('y', (d) => y(d.age))
@@ -286,7 +286,7 @@ function drawGraphic() {
 			d3
 				.axisRight(y)
 				.tickSize(0)
-				.tickValues(y.domain().filter((d, i) => !(i % config.essential.yAxisTicksEvery)))
+				.tickValues(y.domain().filter((d, i) => !(i % config.yAxisTicksEvery)))
 		)
 		.selectAll('text')
 		.each(function () {
@@ -301,7 +301,7 @@ function drawGraphic() {
 		.attr('class', 'line')
 		.attr('id', 'comparisonLineLeft')
 		.attr('d', lineLeft(comparison_data_new) + 'l 0 ' + -y.bandwidth())
-		.attr('stroke', config.essential.comparison_colour_palette[0])
+		.attr('stroke', config.comparison_colour_palette[0])
 		.attr('stroke-width', '2px');
 
 	comparisons
@@ -309,7 +309,7 @@ function drawGraphic() {
 		.attr('class', 'line')
 		.attr('id', 'comparisonLineRight')
 		.attr('d', lineRight(comparison_data_new) + 'l 0 ' + -y.bandwidth())
-		.attr('stroke', config.essential.comparison_colour_palette[1])
+		.attr('stroke', config.comparison_colour_palette[1])
 		.attr('stroke-width', '2px');
 
 	//add x-axis label
@@ -317,7 +317,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: (width - margin.left),
 		yPosition: (height + 30),
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: width
 	});
@@ -327,7 +327,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: (chart_width + margin.centre / 2),
 		yPosition: -15,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "middle",
 		wrapWidth: width
 	});
@@ -370,8 +370,8 @@ function drawGraphic() {
 		.append('div')
 		.style('background-color', (d, i) =>
 			d == 'x'
-				? config.essential.colour_palette[i]
-				: config.essential.comparison_colour_palette[i]
+				? config.colour_palette[i]
+				: config.comparison_colour_palette[i]
 		)
 		.attr('class', (d) =>
 			d == 'x' ? 'legend--icon--circle' : 'legend--icon--refline'
@@ -382,7 +382,7 @@ function drawGraphic() {
 		.append('p')
 		.attr('class', (d) => 'legend--text ' + 'item' + d)
 		.html((d) =>
-			d == 'x' ? config.essential.legend[0] : config.essential.buttonLabels[0]
+			d == 'x' ? config.legend[0] : config.buttonLabels[0]
 		);
 
 	function onchange(value) {
@@ -402,13 +402,13 @@ function drawGraphic() {
 			);
 
 		//Updating the legend based on which button is selected
-		d3.selectAll("p.legend--text.itemy").text(config.essential.buttonLabels[
+		d3.selectAll("p.legend--text.itemy").text(config.buttonLabels[
 			document.querySelector('input[name="button"]:checked').value
 		])
 	}
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -417,9 +417,9 @@ function drawGraphic() {
 } //end draw graphic
 
 Promise.all([
-	d3.csv(config.essential.graphic_data_url, d3.autoType),
-	d3.csv(config.essential.comparison_data, d3.autoType),
-	d3.csv(config.essential.comparison_time_data, d3.autoType)
+	d3.csv(config.graphic_data_url, d3.autoType),
+	d3.csv(config.comparison_data, d3.autoType),
+	d3.csv(config.comparison_time_data, d3.autoType)
 ]).then(([data, datab, datac]) => {
 	//load chart data
 	graphic_data = data;

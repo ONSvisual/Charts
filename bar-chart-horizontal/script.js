@@ -9,12 +9,12 @@ function drawGraphic() {
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
-  let margin = config.optional.margin[size];
+  let margin = config.margin[size];
   let chart_width =
     parseInt(graphic.style("width")) - margin.left - margin.right;
   //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
   let height =
-    config.optional.seriesHeight[size] * graphic_data.length +
+    config.seriesHeight[size] * graphic_data.length +
     10 * (graphic_data.length - 1) +
     12;
 
@@ -38,8 +38,8 @@ function drawGraphic() {
   let xAxis = d3
     .axisBottom(x)
     .tickSize(-height)
-    .tickFormat(d3.format(config.essential.dataLabels.numberFormat))
-    .ticks(config.optional.xAxisTicks[size]);
+    .tickFormat(d3.format(config.dataLabels.numberFormat))
+    .ticks(config.xAxisTicks[size]);
 
   //create svg for chart
   svg = addSvg({
@@ -49,14 +49,14 @@ function drawGraphic() {
     margin: margin
   })
 
-  if (config.essential.xDomain == "auto") {
+  if (config.xDomain == "auto") {
     if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
       x.domain([0, d3.max(graphic_data.map(({ value }) => Number(value)))]); //modified so it converts string to number
     } else {
       x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))));
     }
   } else {
-    x.domain(config.essential.xDomain);
+    x.domain(config.xDomain);
   }
 
   svg
@@ -88,11 +88,11 @@ function drawGraphic() {
     .attr("y", (d) => y(d.name))
     .attr("width", (d) => Math.abs(x(d.value) - x(0)))
     .attr("height", y.bandwidth())
-    .attr("fill", config.essential.colour_palette);
+    .attr("fill", config.colour_palette);
 
   // let labelPositionFactor = 7;
 
-  if (config.essential.dataLabels.show == true) {
+  if (config.dataLabels.show == true) {
     addDataLabels({
       svgContainer: svg,
       data: graphic_data,
@@ -108,14 +108,14 @@ function drawGraphic() {
     svgContainer: svg,
     xPosition: chart_width,
     yPosition: height + 35,
-    text: config.essential.xAxisLabel,
+    text: config.xAxisLabel,
     textAnchor: "end",
     wrapWidth: chart_width
   });
 
 
   //create link to source
-  addSource('source', config.essential.sourceText);
+  addSource('source', config.sourceText);
 
   //use pym to calculate chart dimensions
   if (pymChild) {
@@ -123,7 +123,7 @@ function drawGraphic() {
   }
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
   //load chart data
   graphic_data = data;
 

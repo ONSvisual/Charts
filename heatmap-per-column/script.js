@@ -9,12 +9,12 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
-		config.optional.seriesHeight[size] * graphic_data.length +
+		config.seriesHeight[size] * graphic_data.length +
 		3 * (graphic_data.length - 1);
 
 	columnNames = graphic_data.columns.slice(1);
@@ -34,13 +34,13 @@ function drawGraphic() {
 		pivot(graphic_data, graphic_data.columns.slice(1), 'region', 'value')
 	);
 
-	if (config.essential.breaks == 'jenks') {
+	if (config.breaks == 'jenks') {
 		columnNames.forEach((item) => {
 			let temp = [];
 
-			ss.ckmeans(numbers.get(item), config.essential.numberOfBreaks).map(
+			ss.ckmeans(numbers.get(item), config.numberOfBreaks).map(
 				function (cluster, i) {
-					if (i < config.essential.numberOfBreaks - 1) {
+					if (i < config.numberOfBreaks - 1) {
 						temp.push(cluster[0]);
 					} else {
 						temp.push(cluster[0]);
@@ -51,7 +51,7 @@ function drawGraphic() {
 			);
 			breaks.set(item, temp);
 		});
-	} else if (config.essential.breaks == 'equal') {
+	} else if (config.breaks == 'equal') {
 		columnNames.forEach((item) => {
 			breaks.set(
 				item,
@@ -60,7 +60,7 @@ function drawGraphic() {
 		});
 	} else {
 		columnNames.forEach((item) => {
-			breaks.set(item, config.essential.breaks[item]);
+			breaks.set(item, config.breaks[item]);
 		});
 	}
 
@@ -92,8 +92,8 @@ function drawGraphic() {
 				.domain(breaks.get(item).slice(0, -1))
 				.range(
 					chroma
-						.scale(chroma.brewer[config.essential.colour_palette])
-						.colors(config.essential.numberOfBreaks)
+						.scale(chroma.brewer[config.colour_palette])
+						.colors(config.numberOfBreaks)
 				)
 		);
 	});
@@ -151,10 +151,10 @@ function drawGraphic() {
 		.attr('y', (d) => y(d.name))
 		.attr('dy', y.bandwidth() / 2 + 4)
 		.attr('text-anchor', 'middle')
-		.text((d) => d3.format(config.essential.dataLabelsNumberFormat)(d.value));
+		.text((d) => d3.format(config.dataLabelsNumberFormat)(d.value));
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -182,7 +182,7 @@ function* pivot(data, columns, name, value, opts) {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
