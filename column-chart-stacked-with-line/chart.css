@@ -8,5 +8,10 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
+}
 
+.diamondStyle {
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  fill: white;
 }
