@@ -1,4 +1,4 @@
-.dataLabels{
+.dataLabels {
   font-weight: 600;
   font-size: 14px;
 }
@@ -12,12 +12,10 @@
   margin-right: 0;
 }
 
-
-
-#legend{
-  display: grid;
-  align-items: center;
-  padding-bottom: 20px;
+.diamondStyle {
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  fill: white;
 }
 
 .dataLine {
