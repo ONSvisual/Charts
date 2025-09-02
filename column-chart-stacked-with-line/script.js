@@ -10,8 +10,8 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	const aspectRatio = config.optional.aspectRatio[size];
-	let margin = config.optional.margin[size];
+	const aspectRatio = config.aspectRatio[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by the aspect ratio
@@ -35,8 +35,8 @@ function drawGraphic() {
 	let yAxis = d3.axisLeft(y)
 		.tickSize(-chart_width)
 		.tickPadding(10)
-		.ticks(config.optional.yAxisTicks[size])
-		.tickFormat(d3.format(config.essential.yAxisTickFormat));
+		.ticks(config.yAxisTicks[size])
+		.tickFormat(d3.format(config.yAxisTickFormat));
 
 	let xDataType;
 
@@ -48,19 +48,19 @@ function drawGraphic() {
 
 	// console.log(xDataType)
 
-	let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
+	let xTime = d3.timeFormat(config.xAxisTickFormat[size])
 
 	let tickValues = x.domain().filter(function (d, i) {
-		return !(i % config.optional.xAxisTicksEvery[size])
+		return !(i % config.xAxisTicksEvery[size])
 	});
 
 	//Labelling the first and/or last bar if needed
-	if (config.optional.addFirstDate == true) {
+	if (config.addFirstDate == true) {
 		tickValues.push(graphic_data[0].date)
 		console.log("First date added")
 	}
 
-	if (config.optional.addFinalDate == true) {
+	if (config.addFinalDate == true) {
 		tickValues.push(graphic_data[graphic_data.length - 1].date)
 		console.log("Last date added")
 	}
@@ -72,13 +72,13 @@ function drawGraphic() {
 		.tickPadding(10)
 		.tickValues(tickValues)
 		.tickFormat((d) => xDataType == 'date' ? xTime(d)
-			: d3.format(config.essential.xAxisNumberFormat)(d));
+			: d3.format(config.xAxisNumberFormat)(d));
 
 	const stack = d3
 		.stack()
-		.keys(graphic_data.columns.slice(1).filter(d => (d) !== config.essential.line_series))
-		.offset(d3[config.essential.stackOffset])
-		.order(d3[config.essential.stackOrder]);
+		.keys(graphic_data.columns.slice(1).filter(d => (d) !== config.line_series))
+		.offset(d3[config.stackOffset])
+		.order(d3[config.stackOrder]);
 
 	let series = stack(graphic_data);
 
@@ -121,7 +121,7 @@ function drawGraphic() {
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-			d3.zip(graphic_data.columns.slice(1).filter(d => (d) !== config.essential.line_series), config.essential.colour_palette)
+			d3.zip(graphic_data.columns.slice(1).filter(d => (d) !== config.line_series), config.colour_palette)
 		)
 		.enter()
 		.append('div')
@@ -147,12 +147,12 @@ function drawGraphic() {
 		.attr('class', 'legend--item line')
 		.append('div')
 		.attr('class', 'legend--icon--refline')
-		.style('background-color', config.essential.line_colour);
+		.style('background-color', config.line_colour);
 
 	d3.select('.legend--item.line')
 		.append('div')
 		.attr('class', 'legend--text')
-		.text(config.essential.line_series)
+		.text(config.line_series)
 
 
 	//create svg for chart
@@ -163,13 +163,13 @@ function drawGraphic() {
 		margin: margin
 	})
 
-	if (config.essential.yDomain == 'auto') {
+	if (config.yDomain == 'auto') {
 		// y.domain([
 		// 	0,
 		// 	d3.max(graphic_data, (d) => d3.max(keys, (c) => d[c]))])
 		y.domain(d3.extent(series.flat(2)));
 	} else {
-		y.domain(config.essential.yDomain);
+		y.domain(config.yDomain);
 	}
 
 	svg
@@ -196,7 +196,7 @@ function drawGraphic() {
 		.selectAll('g')
 		.data(series)
 		.join('g')
-		.attr('fill', (d, i) => config.essential.colour_palette[i])
+		.attr('fill', (d, i) => config.colour_palette[i])
 		.selectAll('rect')
 		.data((d) => d)
 		.join('rect')
@@ -204,7 +204,7 @@ function drawGraphic() {
 		.attr('x', (d) => x(d.data.date))
 		.attr('height', (d) => Math.abs(y(d[0]) - y(d[1])))
 		.attr('width', x.bandwidth())
-	// .attr('fill', config.essential.colour_palette[0]);
+	// .attr('fill', config.colour_palette[0]);
 
 
 	let thisCurve = d3.curveLinear
@@ -216,18 +216,18 @@ function drawGraphic() {
 		.y((d) => y(d.amt));
 	// //     //opposite sex
 
-	let line_values = Object.entries(lines).filter(d => d[0] == config.essential.line_series)
+	let line_values = Object.entries(lines).filter(d => d[0] == config.line_series)
 
 	// console.log("lines: ", lines)
 	// console.log("Object.entries(lines)", Object.entries(lines))
-	// console.log("filtered lines: ", Object.entries(lines).filter(d => d[0] == config.essential.line_series))
+	// console.log("filtered lines: ", Object.entries(lines).filter(d => d[0] == config.line_series))
 
 	svg.append('g')
 		.selectAll('path')
 		.data(line_values)
 		.enter()
 		.append('path')
-		.attr("stroke", (d, i) => config.essential.line_colour)
+		.attr("stroke", (d, i) => config.line_colour)
 		.attr("class", "dataLine")
 		.attr('d', (d) =>
 			line(d[1]))
@@ -238,13 +238,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: 5 - margin.left,
 		yPosition: -10,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -252,11 +252,11 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
-	let parseTime = d3.timeParse(config.essential.dateFormat);
+	let parseTime = d3.timeParse(config.dateFormat);
 
 	data.forEach((d, i) => {
 

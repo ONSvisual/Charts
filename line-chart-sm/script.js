@@ -10,10 +10,10 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	const aspectRatio = config.optional.aspectRatio[size];
-	const chartsPerRow = config.optional.chart_every[size];
+	const aspectRatio = config.aspectRatio[size];
+	const chartsPerRow = config.chart_every[size];
 
-	const reference = config.essential.reference_category;
+	const reference = config.reference_category;
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== reference);
@@ -36,7 +36,7 @@ function drawGraphic() {
 		let chartPosition = chartIndex % chartsPerRow;
 
 		// Set dimensions
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 
 		let chartGap = config.optional?.chartGap || 10;
 
@@ -48,7 +48,7 @@ function drawGraphic() {
 		})
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			if (chartPosition !== 0) {
 				margin.left = chartGap;
 			}
@@ -87,13 +87,13 @@ function drawGraphic() {
 			.scaleLinear()
 			.range([height, 0]);
 
-		if (config.essential.yDomain == "auto") {
+		if (config.yDomain == "auto") {
 			let minY = d3.min(graphic_data, (d) => Math.min(...categoriesToPlot.map((c) => d[c])))
 			let maxY = d3.max(graphic_data, (d) => Math.max(...categoriesToPlot.map((c) => d[c])))
 			y.domain([minY, maxY])
 			// console.log(minY, maxY)
 		} else {
-			y.domain(config.essential.yDomain)
+			y.domain(config.yDomain)
 		}
 
 		// Create an SVG element
@@ -113,7 +113,7 @@ function drawGraphic() {
 				.x((d) => x(d.date))
 				.y((d) => y(d.amt))
 				.defined(d => d.amt !== null) // Only plot lines where we have values
-				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
+				.curve(d3[config.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null);
 
 			var lines = {};
@@ -129,7 +129,7 @@ function drawGraphic() {
 
 			//This interpolates points when a cell contains no data (draws a line where there are no data points)
 
-			if (config.essential.interpolateGaps) {
+			if (config.interpolateGaps) {
 
 				keys = Object.keys(lines)
 				for (let i = 0; i < keys.length; i++) {
@@ -150,10 +150,10 @@ function drawGraphic() {
 				.datum(Object.entries(lines))
 				.attr('fill', 'none')
 				.attr(
-					'stroke', () => (categoriesToPlot.indexOf(category) == chartIndex) ? config.essential.colour_palette[0] :
-						category == reference ? config.essential.colour_palette[1] : config.essential.colour_palette[2]
-					// config.essential.colour_palette[
-					// categories.indexOf(category) % config.essential.colour_palette.length
+					'stroke', () => (categoriesToPlot.indexOf(category) == chartIndex) ? config.colour_palette[0] :
+						category == reference ? config.colour_palette[1] : config.colour_palette[2]
+					// config.colour_palette[
+					// categories.indexOf(category) % config.colour_palette.length
 					// ]
 				)
 				.attr('stroke-width', 2)
@@ -169,7 +169,7 @@ function drawGraphic() {
 			const lastDatum = graphic_data[graphic_data.length - 1];
 
 			//Labelling the final data point on each chart if option selected in the config
-			if (config.essential.labelFinalPoint == true) {
+			if (config.labelFinalPoint == true) {
 				// Add text labels to the right of the circles
 				if (categories.indexOf(category) == chartIndex) {
 					svg
@@ -183,9 +183,9 @@ function drawGraphic() {
 						.attr('y', 4)
 						.attr('text-anchor', 'start')
 						.attr(
-							'fill', config.essential.colour_palette[0]
-							// config.essential.colour_palette[
-							// categories.indexOf(category) % config.essential.colour_palette.length
+							'fill', config.colour_palette[0]
+							// config.colour_palette[
+							// categories.indexOf(category) % config.colour_palette.length
 							// ]
 						)
 						.text(d3.format(",.0f")(lastDatum[category]))
@@ -199,9 +199,9 @@ function drawGraphic() {
 						.attr('cy', y(lastDatum[category]))
 						.attr('r', 3)
 						.attr(
-							'fill', config.essential.colour_palette[0]
-							// config.essential.colour_palette[
-							// categories.indexOf(category) % config.essential.colour_palette.length
+							'fill', config.colour_palette[0]
+							// config.colour_palette[
+							// categories.indexOf(category) % config.colour_palette.length
 							// ]
 						);
 
@@ -217,7 +217,7 @@ function drawGraphic() {
 			.call(
 				d3
 					.axisLeft(y)
-					.ticks(config.optional.yAxisTicks[size])
+					.ticks(config.yAxisTicks[size])
 					.tickSize(-chart_width)
 					.tickFormat('')
 			)
@@ -225,7 +225,7 @@ function drawGraphic() {
 
 		d3.selectAll('g.tick line')
 			.each(function (e) {
-				if (e == config.essential.zeroLine) {
+				if (e == config.zeroLine) {
 					d3.select(this).attr('class', 'zero-line');
 				}
 			})
@@ -252,11 +252,11 @@ function drawGraphic() {
 							return a - b
 						})
 						.filter(function (d, i) {
-							return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == graphic_data.length - 1 //Rob's fussy comment about labelling the last date
+							return i % config.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.xAxisTicksEvery[size] || i == graphic_data.length - 1 //Rob's fussy comment about labelling the last date
 						})
 					)
-					.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-						: d3.format(config.essential.xAxisNumberFormat)(d))
+					.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisTickFormat[size])(d)
+						: d3.format(config.xAxisNumberFormat)(d))
 			).each(function(d){
 				d3.select(this).selectAll('.tick text')
 				.attr('text-anchor', function(e,j,arr){
@@ -270,7 +270,7 @@ function drawGraphic() {
 			svg
 				.append('g')
 				.attr('class', 'y axis numeric')
-				.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]))
+				.call(d3.axisLeft(y).ticks(config.yAxisTicks[size]))
 				.selectAll('.tick text')
 				.call(wrap, margin.left - 10);
 		} else {
@@ -293,7 +293,7 @@ function drawGraphic() {
 				svgContainer: svg,
 				xPosition: 5 - margin.left,
 				yPosition: 0,
-				text: config.essential.yAxisLabel,
+				text: config.yAxisLabel,
 				textAnchor: "start",
 				wrapWidth: chart_width
 			});
@@ -305,7 +305,7 @@ function drawGraphic() {
 				svgContainer: svg,
 				xPosition: chart_width,
 				yPosition: height + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
 			});
@@ -321,7 +321,7 @@ function drawGraphic() {
 	// Set up the legend
 	let legenditem = legend
 		.selectAll('div.legend--item')
-		.data([[config.essential.legendLabel, config.essential.colour_palette[0]], [reference, config.essential.colour_palette[1]], [config.essential.allLabel, config.essential.colour_palette[2]]])
+		.data([[config.legendLabel, config.colour_palette[0]], [reference, config.colour_palette[1]], [config.allLabel, config.colour_palette[2]]])
 		.enter()
 		.append('div')
 		.attr('class','legend--item');
@@ -343,7 +343,7 @@ function drawGraphic() {
 
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 
 	//use pym to calculate chart dimensions
@@ -354,11 +354,11 @@ function drawGraphic() {
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+d3.csv(config.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+		if (d3.timeParse(config.dateFormat)(d.date) !== null) {
 			return {
-				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				date: d3.timeParse(config.dateFormat)(d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
 					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes

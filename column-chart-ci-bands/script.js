@@ -9,8 +9,8 @@ function drawGraphic() {
     //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
     size = initialise(size);
 
-    const aspectRatio = config.optional.aspectRatio[size];
-    let margin = config.optional.margin[size];
+    const aspectRatio = config.aspectRatio[size];
+    let margin = config.margin[size];
     let chart_width =
         parseInt(graphic.style('width')) - margin.left - margin.right;
     //height is set by the aspect ratio
@@ -49,17 +49,17 @@ function drawGraphic() {
     }
     else {
         tickValues = x.domain().filter(function (d, i) {
-            return !(i % config.optional.xAxisTicksEvery[size])
+            return !(i % config.xAxisTicksEvery[size])
         })
     }
 
     //Labelling the first and/or last bar if needed
-    if (config.optional.addFirstDate == true) {
+    if (config.addFirstDate == true) {
         tickValues.push(graphic_data[0].xvalue)
         console.log("First date added")
     }
 
-    if (config.optional.addFinalDate == true) {
+    if (config.addFinalDate == true) {
         tickValues.push(graphic_data[graphic_data.length - 1].xvalue)
         console.log("Last date added")
     }
@@ -68,11 +68,11 @@ function drawGraphic() {
     let yAxis = d3.axisLeft(y)
         .tickSize(-chart_width)
         .tickPadding(10)
-        .ticks(config.optional.yAxisTicks[size])
-        .tickFormat(d3.format(config.essential.yAxisTickFormat));
+        .ticks(config.yAxisTicks[size])
+        .tickFormat(d3.format(config.yAxisTickFormat));
 
 
-    let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
+    let xTime = d3.timeFormat(config.xAxisTickFormat[size])
 
     //set up xAxis generator
     let xAxis = d3
@@ -82,7 +82,7 @@ function drawGraphic() {
         .tickValues(tickValues) //Labelling the first and/or last bar if needed
         .tickFormat((d) => {
             if (xDataType == 'date') return xTime(d);
-            if (xDataType == 'numeric') return d3.format(config.essential.xAxisNumberFormat)(d);
+            if (xDataType == 'numeric') return d3.format(config.xAxisNumberFormat)(d);
             return d; // categorical: just show the label
         });
 
@@ -95,7 +95,7 @@ function drawGraphic() {
     })
 
     // set ydomain based on max upperCI and min lowerCI
-    if (config.essential.yDomain == 'auto') {
+    if (config.yDomain == 'auto') {
         if (d3.min(graphic_data.map(({ lowerCI }) => Number(lowerCI))) >= 0) {
             y.domain([
                 0,
@@ -107,7 +107,7 @@ function drawGraphic() {
             ])
         }
     } else {
-        y.domain(config.essential.yDomain);
+        y.domain(config.yDomain);
     }
 
     svg
@@ -137,7 +137,7 @@ function drawGraphic() {
         .attr('x', (d) => x(d.xvalue))
         .attr('height', (d) => Math.abs(y(d.upperCI) - y(d.lowerCI)))
         .attr('width', x.bandwidth())
-        .attr('fill', config.essential.colour_palette)
+        .attr('fill', config.colour_palette)
         .attr("opacity", 0.65);
 
     svg
@@ -151,7 +151,7 @@ function drawGraphic() {
         .attr('y2', (d) => y((d.yvalue)))
         .attr('stroke-width', 3)
         .attr('stroke-linecap', 'butt')
-        .attr('stroke', config.essential.line_colour)
+        .attr('stroke', config.line_colour)
         .attr('fill', 'none');
 
     // This does the x-axis label
@@ -159,7 +159,7 @@ function drawGraphic() {
         svgContainer: svg,
         xPosition: chart_width,
         yPosition: height + 55,
-        text: config.essential.xAxisLabel,
+        text: config.xAxisLabel,
         textAnchor: "end",
         wrapWidth: chart_width
     });
@@ -169,7 +169,7 @@ function drawGraphic() {
         svgContainer: svg,
         xPosition: 5 - margin.left,
         yPosition: -20,
-        text: config.essential.yAxisLabel,
+        text: config.yAxisLabel,
         textAnchor: "start",
         wrapWidth: chart_width
     });
@@ -186,13 +186,13 @@ function drawGraphic() {
 
     legenditemCI.append('div')
         .attr('class', 'legend--icon--rect')
-        .style('background-color', config.essential.colour_palette);
+        .style('background-color', config.colour_palette);
 
 
     legenditemCI.append('div')
         .append('p')
         .attr('class', 'legend--text')
-        .html(config.essential.CI_legend_text);
+        .html(config.CI_legend_text);
 
     var legenditem = d3
         .select('#legend')
@@ -205,17 +205,17 @@ function drawGraphic() {
     legenditem
         .append('div')
         .attr('class', 'legend--icon--estline')
-        .style('background-color', config.essential.line_colour)
+        .style('background-color', config.line_colour)
 
     legenditem
         .append('div')
         .append('p')
         .attr('class', 'legend--text')
-        .html(config.essential.est_text);
+        .html(config.est_text);
 
 
     //create link to source
-    addSource('source', config.essential.sourceText);
+    addSource('source', config.sourceText);
 
     //use pym to calculate chart dimensions
     if (pymChild) {
@@ -223,9 +223,9 @@ function drawGraphic() {
     }
 }
 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
     .then((data) => {
-        let parseTime = d3.timeParse(config.essential.dateFormat);
+        let parseTime = d3.timeParse(config.dateFormat);
         //load chart data
         graphic_data = data;
 

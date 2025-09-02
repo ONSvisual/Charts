@@ -13,13 +13,13 @@ function drawGraphic() {
   //group data on the basis of plot
   nested_data = d3.group(graphic_data, d => d.series)
 
-  let colour = d3.scaleOrdinal(config.essential.colour_palette); //
+  let colour = d3.scaleOrdinal(config.colour_palette); //
 
-  const chartEvery = config.optional.chartEvery[size];
+  const chartEvery = config.chartEvery[size];
 
-  let margin = config.optional.margin[size]
+  let margin = config.margin[size]
   let chart_width = (parseInt(graphic.style("width")) / chartEvery) - margin.left - margin.right;
-	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
+	let height = (config.aspectRatio[size][1] / config.aspectRatio[size][0]) * chart_width
 
 
   //set up scales
@@ -33,17 +33,17 @@ function drawGraphic() {
 
   // both of these are need to be looked at.
 
-  if (config.essential.xDomain == "auto") {
+  if (config.xDomain == "auto") {
     x.domain([0, d3.max(graphic_data, function (d) { return d.xvalue })]);
   } else {
-    x.domain(config.essential.xDomain)
+    x.domain(config.xDomain)
   }
 
 
-  if (config.essential.yDomain == "auto") {
+  if (config.yDomain == "auto") {
     y.domain([0, d3.max(graphic_data, function (d) { return d.yvalue })]);
   } else {
-    y.domain(config.essential.yDomain)
+    y.domain(config.yDomain)
   }
 
   // Create a container div for each small multiple
@@ -68,10 +68,10 @@ function drawGraphic() {
       .attr('transform', `translate(0,${height})`)
       .call(
         d3.axisBottom(x)
-          .ticks(config.optional.xAxisTicks[size])
+          .ticks(config.xAxisTicks[size])
           .tickSize(-height)
           .tickPadding(10)
-          .tickFormat(d3.format(config.essential.xAxisFormat))
+          .tickFormat(d3.format(config.xAxisFormat))
       )
 
     svg
@@ -79,10 +79,10 @@ function drawGraphic() {
       .attr('class', 'axis numeric')
       .call(
         d3.axisLeft(y)
-          .ticks(config.optional.yAxisTicks[size])
+          .ticks(config.yAxisTicks[size])
           .tickSize(-chart_width)
           .tickPadding(10)
-          .tickFormat(d3.format(config.essential.yAxisFormat))
+          .tickFormat(d3.format(config.yAxisFormat))
       );
 
     svg.selectAll('circle')
@@ -91,11 +91,11 @@ function drawGraphic() {
       // .data(d => d[1])
       .attr('cx', (d) => x(d.xvalue))
       .attr('cy', (d) => y(d.yvalue))
-      .attr('r', config.essential.radius)
+      .attr('r', config.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
-      .attr('fill-opacity', config.essential.fillOpacity)
+      .attr('fill-opacity', config.fillOpacity)
       .attr('stroke', (d) => colour(d.group))
-      .attr('stroke-opacity', config.essential.strokeOpacity);
+      .attr('stroke-opacity', config.strokeOpacity);
 
     // This does the chart title label
     addChartTitleLabel({
@@ -111,7 +111,7 @@ function drawGraphic() {
       xPosition: chart_width,
       yPosition: height + 40,
       text: chartIndex % chartEvery == chartEvery - 1 || chartIndex === plots.length - 1 ?
-        config.essential.xAxisLabel : "",
+        config.xAxisLabel : "",
       textAnchor: "end",
       wrapWidth: chart_width
     });
@@ -121,7 +121,7 @@ function drawGraphic() {
       svgContainer: svg,
       xPosition: -(margin.left - 5),
       yPosition: -10,
-      text: (d) => chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "",
+      text: (d) => chartIndex % chartEvery == 0 ? config.yAxisLabel : "",
       textAnchor: "start",
       wrapWidth: chart_width
     });
@@ -161,7 +161,7 @@ function drawGraphic() {
   });
 
   //create link to source
-  addSource('source', config.essential.sourceText)
+  addSource('source', config.sourceText)
 
 
 
@@ -172,7 +172,7 @@ function drawGraphic() {
 }
 
 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
   .then(data => {
     //load chart data
     graphic_data = data

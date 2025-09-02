@@ -27,16 +27,16 @@ function drawGraphic() {
 
 	function drawChart(container, seriesName, data, chartIndex) {
 
-		const chartEvery = config.optional.chart_every[size];
-		const chartsPerRow = config.optional.chart_every[size];
+		const chartEvery = config.chart_every[size];
+		const chartsPerRow = config.chart_every[size];
 		let chartPosition = chartIndex % chartsPerRow;
 
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 
 		let chartGap = config.optional?.chartGap || 10;
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis && !config.optional.freeYAxisScales) {
+		if (config.dropYAxis && !config.freeYAxisScales) {
 
 			chart_width = calculateChartWidth({
 				screenWidth: parseInt(graphic.style('width')),
@@ -52,7 +52,7 @@ function drawGraphic() {
 		}
 		// }
 
-		const aspectRatio = config.optional.aspectRatio[size];
+		const aspectRatio = config.aspectRatio[size];
 
 		//height is set by the aspect ratio
 		var height =
@@ -69,7 +69,7 @@ function drawGraphic() {
 			.scaleLinear()
 			.domain([
 				0, //This should be a calculated rather than 0 to allow for negativ values
-				d3.max(config.optional.freeYAxisScales ? data : graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
+				d3.max(config.freeYAxisScales ? data : graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
 			])
 			.nice()
 			.range([height, 0]);
@@ -91,7 +91,7 @@ function drawGraphic() {
 				.line()
 				.x((d) => x(d.date))
 				.y((d) => y(d[category]))
-				.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
+				.curve(d3[config.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 				.context(null)
 				.defined(d => d[category] !== null) // Only plot lines where we have values
 
@@ -101,8 +101,8 @@ function drawGraphic() {
 				.attr('fill', 'none')
 				.attr(
 					'stroke', /*() => (categories.indexOf(category) == chartIndex) ? "#206095" : "#dadada"*/
-					config.essential.colour_palette[
-					categories.indexOf(category) % config.essential.colour_palette.length
+					config.colour_palette[
+					categories.indexOf(category) % config.colour_palette.length
 					]
 				)
 				.attr('stroke-width', 2.5)
@@ -120,7 +120,7 @@ function drawGraphic() {
 			.call(
 				d3
 					.axisLeft(y)
-					.ticks(config.optional.yAxisTicks[size])
+					.ticks(config.yAxisTicks[size])
 					.tickSize(-chart_width)
 					.tickFormat('')
 			)
@@ -128,7 +128,7 @@ function drawGraphic() {
 
 		d3.selectAll('g.tick line')
 			.each(function (e) {
-				if (e == config.essential.zeroLine) {
+				if (e == config.zeroLine) {
 					d3.select(this).attr('class', 'zero-line');
 				}
 			})
@@ -152,10 +152,10 @@ console.log(data)
 							return a - b
 						})
 						.filter(function (d, i) {
-							return i % config.optional.xAxisTicksEvery[size] === 0 && i <= data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
+							return i % config.xAxisTicksEvery[size] === 0 && i <= data.length - config.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
 						})
 					)
-					.tickFormat(d3.timeFormat(config.essential.xAxisTickFormat[size]))
+					.tickFormat(d3.timeFormat(config.xAxisTickFormat[size]))
 			);
 
 
@@ -164,10 +164,10 @@ console.log(data)
 			.append('g')
 			.attr('class', 'y axis numeric')
 			.call(d3.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
-				.tickFormat((d) => config.optional.freeYAxisScales ? d3.format(config.essential.yAxisFormat)(d) :
-					config.optional.dropYAxis ? (chartPosition == 0 ? d3.format(config.essential.yAxisFormat)(d) : "") :
-						d3.format(config.essential.yAxisFormat)(d)))
+				.ticks(config.yAxisTicks[size])
+				.tickFormat((d) => config.freeYAxisScales ? d3.format(config.yAxisFormat)(d) :
+					config.dropYAxis ? (chartPosition == 0 ? d3.format(config.yAxisFormat)(d) : "") :
+						d3.format(config.yAxisFormat)(d)))
 			.selectAll('.tick text')
 			.call(wrap, margin.left - 10);
 
@@ -187,9 +187,9 @@ console.log(data)
 			svgContainer: svg,
 			xPosition: -margin.left,
 			yPosition: 35 - margin.top,
-			text: config.optional.freeYAxisScales ? config.essential.yAxisLabel :
+			text: config.freeYAxisScales ? config.yAxisLabel :
 				chartIndex % chartEvery == 0 ?
-					config.essential.yAxisLabel : "", //May need to make the y-axis label an array in the config?
+					config.yAxisLabel : "", //May need to make the y-axis label an array in the config?
 			textAnchor: "start",
 			wrapWidth: chart_width
 		});
@@ -207,7 +207,7 @@ console.log(data)
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-			d3.zip(categories, config.essential.colour_palette)
+			d3.zip(categories, config.colour_palette)
 		)
 		.enter()
 		.append('div')
@@ -229,7 +229,7 @@ console.log(data)
 		});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -239,10 +239,10 @@ console.log(data)
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+d3.csv(config.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
 		return {
-			date: d3.timeParse(config.essential.dateFormat)(d.date),
+			date: d3.timeParse(config.dateFormat)(d.date),
 			...Object.entries(d)
 				.filter(([key]) => key !== 'date')
 				.map(([key, value]) => key !== "series" ? [key, value == "" ? null : +value] : [key, value]) // Checking for missing values so that they can be separated from zeroes

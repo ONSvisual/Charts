@@ -10,9 +10,9 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-  let colour = d3.scaleOrdinal(config.essential.colour_palette);
+  let colour = d3.scaleOrdinal(config.colour_palette);
 
-  const chartEvery = config.optional.chartEvery[size];
+  const chartEvery = config.chartEvery[size];
 
 
   // let legenditem = d3
@@ -62,7 +62,7 @@ function drawGraphic() {
     let chartsPerRow = chartEvery;
     let chartPosition = chartIndex % chartsPerRow;
 
-    let margin = { ...config.optional.margin[size] };
+    let margin = { ...config.margin[size] };
 
     let chartGap = config.optional?.chartGap || 10;
 
@@ -74,12 +74,12 @@ function drawGraphic() {
     })
 
     // If the chart is not in the first position in the row, reduce the left margin
-    if (config.optional.dropYAxis) {
+    if (config.dropYAxis) {
       if (chartPosition !== 0) {
         margin.left = chartGap;
       }
     }
-    let aspectRatio = config.optional.aspectRatio[size];
+    let aspectRatio = config.aspectRatio[size];
     let height = (aspectRatio[0]*chart_width/aspectRatio[1] )- margin.top - margin.bottom;
 
     const x = d3
@@ -108,7 +108,7 @@ function drawGraphic() {
     // console.log(grouped_data)
 
     // both of these are need to be looked at.
-    if (config.essential.yDomain == "auto") {
+    if (config.yDomain == "auto") {
       if (d3.min(graphic_data.map(({ lowerCI }) => Number(lowerCI))) >= 0) {
         y.domain([
           0,
@@ -118,7 +118,7 @@ function drawGraphic() {
       }
 
     } else {
-      y.domain(config.essential.yDomain)
+      y.domain(config.yDomain)
     }
 
     svg
@@ -127,11 +127,11 @@ function drawGraphic() {
       .attr('transform', `translate(0,${height})`)
       .call(
         d3.axisBottom(x)
-          .ticks(config.optional.xAxisTicks[size])
+          .ticks(config.xAxisTicks[size])
           .tickSize(-height)
           .tickPadding(10)
-          .tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisFormat)(d)
-            : d3.format(config.essential.xAxisNumberFormat)(d)))
+          .tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisFormat)(d)
+            : d3.format(config.xAxisNumberFormat)(d)))
 
     svg.selectAll('g.x.axis')
       .selectAll('text')
@@ -144,11 +144,11 @@ function drawGraphic() {
       .attr('class', 'axis numeric')
       .call(
         d3.axisLeft(y)
-          .ticks(config.optional.yAxisTicks[size])
+          .ticks(config.yAxisTicks[size])
           .tickSize(-chart_width)
           .tickPadding(10)
-          .tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisTickFormat)(d) :
-            chartPosition == 0 ? d3.format(config.essential.yAxisTickFormat)(d) : "")
+          .tickFormat((d) => config.dropYAxis !== true ? d3.format(config.yAxisTickFormat)(d) :
+            chartPosition == 0 ? d3.format(config.yAxisTickFormat)(d) : "")
       );
 
 
@@ -161,11 +161,11 @@ function drawGraphic() {
       .attr('y', (d) => y(Math.max(d.yvalue, 0)))
       .attr('height', (d) => Math.abs(y(d.yvalue) - y(0)))
       .attr('width', x.bandwidth())
-      // .attr('r', config.essential.radius)
+      // .attr('r', config.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
-      .attr('fill-opacity', config.essential.fillOpacity)
+      .attr('fill-opacity', config.fillOpacity)
       .attr('stroke', (d) => colour(d.group))
-      .attr('stroke-opacity', config.essential.strokeOpacity);
+      .attr('stroke-opacity', config.strokeOpacity);
 
 
     //adding ci's to each of the charts.
@@ -224,7 +224,7 @@ function drawGraphic() {
       xPosition: chart_width,
       yPosition: height + margin.bottom,
       text: chartIndex % chartEvery == chartEvery - 1 ?
-        config.essential.xAxisLabel : "",
+        config.xAxisLabel : "",
       textAnchor: "end",
       wrapWidth: chart_width
     });
@@ -234,7 +234,7 @@ function drawGraphic() {
       svgContainer: svg,
       xPosition: 5 - margin.left,
       yPosition: -10,
-      text: chartPosition == 0 ? config.essential.yAxisLabel : "",
+      text: chartPosition == 0 ? config.yAxisLabel : "",
       textAnchor: "start",
       wrapWidth: chart_width
     });
@@ -253,7 +253,7 @@ function drawGraphic() {
 
 
   //create link to source
-  addSource('source', config.essential.sourceText);
+  addSource('source', config.sourceText);
 
 
   //use pym to calculate chart dimensions
@@ -263,10 +263,10 @@ function drawGraphic() {
 }
 
 //load data 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
   .then((data) => {
 
-    let parseTime = d3.timeParse(config.essential.dateFormat);
+    let parseTime = d3.timeParse(config.dateFormat);
     //load chart data
     graphic_data = data;
 

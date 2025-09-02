@@ -15,9 +15,9 @@ function drawGraphic() {
 	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width
+	let height = (config.aspectRatio[size][1] / config.aspectRatio[size][0]) * chart_width
 	// console.log(`Margin, chart_width, and height set: ${margin}, ${chart_width}, ${height}`);
 
 
@@ -49,13 +49,13 @@ function drawGraphic() {
 		x = d3.scaleTime()
 			.domain(d3.extent(graphic_data, (d) => d.date))
 			.range([0, chart_width]);
-	} else if (config.essential.xDomain == "auto") {
+	} else if (config.xDomain == "auto") {
 		x = d3.scaleLinear()
 			.domain(d3.extent(graphic_data, (d) => +d.date))
 			.range([0, chart_width]);
 	} else {
 		x = d3.scaleLinear()
-			.domain(config.essential.xDomain)
+			.domain(config.xDomain)
 			.range([0, chart_width]);
 	}
 	//console.log(`x defined`);
@@ -64,29 +64,29 @@ function drawGraphic() {
 		.scaleLinear()
 		.range([height, 0]);
 
-	if (config.essential.yDomain == "auto") {
+	if (config.yDomain == "auto") {
 		y.domain(
 			[d3.min(graphic_data, (d) => Math.min(...fulldataKeys.map((c) => d[c]))),
 			d3.max(graphic_data, (d) => Math.max(...fulldataKeys.map((c) => d[c])))]
 		)
 	} else {
-		y.domain(config.essential.yDomain)
+		y.domain(config.yDomain)
 	}
 	//console.log(`yAxis defined`);
 
 
 	// This function generates an array of approximately count + 1 uniformly-spaced, rounded values in the range of the given start and end dates (or numbers).
-	let tickValues = x.ticks(config.optional.xAxisTicks[size]);
+	let tickValues = x.ticks(config.xAxisTicks[size]);
 
 	// Add the first and last dates to the ticks array, and use a Set to remove any duplicates
 	// tickValues = Array.from(new Set([graphic_data[0].date, ...tickValues, graphic_data[graphic_data.length - 1].date]));
 
-	if (config.optional.addFirstDate == true) {
+	if (config.addFirstDate == true) {
 		tickValues.push(graphic_data[0].date)
 		console.log("First date added")
 	}
 
-	if (config.optional.addFinalDate == true) {
+	if (config.addFinalDate == true) {
 		tickValues.push(graphic_data[graphic_data.length - 1].date)
 		console.log("Last date added")
 	}
@@ -111,8 +111,8 @@ function drawGraphic() {
 			d3
 				.axisBottom(x)
 				.tickValues(tickValues)
-				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-					: d3.format(config.essential.xAxisNumberFormat)(d))
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisTickFormat[size])(d)
+					: d3.format(config.xAxisNumberFormat)(d))
 		);
 
 
@@ -120,7 +120,7 @@ function drawGraphic() {
 	svg
 		.append('g')
 		.attr('class', 'y axis numeric')
-		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size]));
+		.call(d3.axisLeft(y).ticks(config.yAxisTicks[size]));
 
 	// add grid lines to y axis
 	svg
@@ -129,14 +129,14 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
+				.ticks(config.yAxisTicks[size])
 				.tickSize(-chart_width)
 				.tickFormat('')
 		);
 
 	d3.selectAll('g.tick line')
 		.each(function (e) {
-			if (e == config.essential.zeroLine) {
+			if (e == config.zeroLine) {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
@@ -148,7 +148,7 @@ function drawGraphic() {
 			.x((d) => x(d.date))
 			.y((d) => y(d[category]))
 			.defined(d => d[category] !== null) // Only plot lines where we have values
-			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
+			.curve(d3[config.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
 		// console.log(`Line generator created for category: ${category}`);
 
@@ -158,8 +158,8 @@ function drawGraphic() {
 			.attr('fill', 'none')
 			.attr(
 				'stroke',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
+				config.colour_palette[
+				categories.indexOf(category) % config.colour_palette.length
 				]
 			)
 			.attr('stroke-width', 3)
@@ -179,22 +179,22 @@ function drawGraphic() {
 		svg.append('path')
 			.attr('class', 'shaded')
 			.attr('d', areaGenerator(graphic_data))
-			.attr('fill', config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
+			.attr('fill', config.colour_palette[
+				categories.indexOf(category) % config.colour_palette.length
 			])
 			.attr('opacity', 0.15)
 
 		// console.log(`drawLegend: ${size}`);
 		// size === 'sm'
 
-		if (config.essential.drawLegend || size === 'sm') {
+		if (config.drawLegend || size === 'sm') {
 
 
 			// Set up the legend
 			let legenditem = d3
 				.select('#legend')
 				.selectAll('div.legend--item')
-				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+				.data(categories.map((c, i) => [c, config.colour_palette[i % config.colour_palette.length]]))
 				.enter()
 				.append('div')
 				.attr('class', 'legend--item');
@@ -228,8 +228,8 @@ function drawGraphic() {
 				.attr('text-anchor', 'start')
 				.attr(
 					'fill', //Colours adjusted for text where needed
-					config.essential.text_colour_palette[
-					categories.indexOf(category) % config.essential.text_colour_palette.length
+					config.text_colour_palette[
+					categories.indexOf(category) % config.text_colour_palette.length
 					]
 				)
 				.text(category)
@@ -243,8 +243,8 @@ function drawGraphic() {
 				.attr('r', 4)
 				.attr(
 					'fill',
-					config.essential.colour_palette[
-					categories.indexOf(category) % config.essential.colour_palette.length
+					config.colour_palette[
+					categories.indexOf(category) % config.colour_palette.length
 					]
 				);
 			// console.log(`Circle appended for category: ${category}`);
@@ -254,7 +254,7 @@ function drawGraphic() {
 
 	});
 
-	if (config.essential.CI_legend) {
+	if (config.CI_legend) {
 	const ciSvg = d3.select('#legend')
 		.append('div')
 		.attr('class', 'legend--item')
@@ -292,7 +292,7 @@ function drawGraphic() {
 	// 	//alignment - left or right for vertical arrows, above or below for horizontal arrows
 	// 	'below',
 	// 	//annotation text
-	// 	config.essential.CI_legend_interval_text,
+	// 	config.CI_legend_interval_text,
 	// 	//wrap width
 	// 	150,
 	// 	//text adjust y
@@ -309,7 +309,7 @@ function drawGraphic() {
 		37,                    // endY
 		"vertical-first",     // bendDirection
 		"start",                // arrowAnchor
-		config.essential.CI_legend_interval_text, // thisText
+		config.CI_legend_interval_text, // thisText
 		150,                  // wrapWidth
 		25,                   // textAdjustY
 		"top",               // wrapVerticalAlign
@@ -331,7 +331,7 @@ function drawGraphic() {
 		//alignment - left or right for vertical arrows, above or below for horizontal arrows
 		'right',
 		//annotation text
-		config.essential.CI_legend_text,
+		config.CI_legend_text,
 		//wrap width
 		1500,
 		//text adjust y
@@ -347,13 +347,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: 10 - margin.left,
 		yPosition: -10,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions
@@ -364,12 +364,12 @@ function drawGraphic() {
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then(data => {
+d3.csv(config.graphic_data_url).then(data => {
 
 	graphic_data = data.map((d) => {
-		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+		if (d3.timeParse(config.dateFormat)(d.date) !== null) {
 			return {
-				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				date: d3.timeParse(config.dateFormat)(d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
 					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes

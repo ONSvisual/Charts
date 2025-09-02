@@ -11,10 +11,10 @@ function drawGraphic() {
 	size = initialise(size);
 
 	function calculateChartWidth(size) {
-		const chartEvery = config.optional.chart_every[size];
-		const chartMargin = config.optional.margin[size];
+		const chartEvery = config.chart_every[size];
+		const chartMargin = config.margin[size];
 
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			// Chart width calculation allowing for 30px left margin between the charts
 			const chartWidth = ((parseInt(graphic.style('width')) - chartMargin.left - ((chartEvery - 1) * 30)) / chartEvery) - chartMargin.right;
 			return chartWidth;
@@ -27,7 +27,7 @@ function drawGraphic() {
 	groups = d3.groups(graphic_data, (d) => d.group);
 	categories = d3.groups(graphic_data, (d) => d.category);
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		let min = 1000000;
 		let max = 0;
 		for (i = 2; i < graphic_data.columns.length; i++) {
@@ -42,18 +42,18 @@ function drawGraphic() {
 		}
 		xDomain = [min, max];
 	} else {
-		xDomain = config.essential.xDomain;
+		xDomain = config.xDomain;
 	}
 
 	const colour = d3
 		.scaleOrdinal()
-		.range(config.essential.colour_palette)
-		.domain(Object.keys(config.essential.legendLabels));
+		.range(config.colour_palette)
+		.domain(Object.keys(config.legendLabels));
 
 	// create the y scale in groups
 	groups.map(function (d) {
 		//height
-		d[2] = config.optional.seriesHeight[size] * d[1].length / categories.length;
+		d[2] = config.seriesHeight[size] * d[1].length / categories.length;
 
 		// y scale
 		d[3] = d3
@@ -75,12 +75,12 @@ function drawGraphic() {
 
 	function drawChart(container, seriesName, data, chartIndex) {
 		for (let i = 0; i < categories.length; i++) {
-			let chartPosition = i % config.optional.chart_every[size]
+			let chartPosition = i % config.chart_every[size]
 
-			let margin = { ...config.optional.margin[size] };
+			let margin = { ...config.margin[size] };
 
 			// If the chart is not in the first position in the row, reduce the left margin
-			if (config.optional.dropYAxis) {
+			if (config.dropYAxis) {
 				if (chartPosition !== 0) {
 					margin.left = 30;
 				}
@@ -94,8 +94,8 @@ function drawGraphic() {
 
 			//set up xAxis generator
 			let xAxis = d3.axisBottom(x)
-				.ticks(config.optional.xAxisTicks[size])
-				.tickFormat(d => d3.format(config.essential.xAxisTickFormat)(d));
+				.ticks(config.xAxisTicks[size])
+				.tickFormat(d => d3.format(config.xAxisTickFormat)(d));
 
 			svg = addSvg({
 				svgParent: container,
@@ -105,7 +105,7 @@ function drawGraphic() {
 			})
 
 			svg.each(function (d) {
-				if (chartPosition == 0 || !config.optional.dropYAxis) {
+				if (chartPosition == 0 || !config.dropYAxis) {
 					d3.select(this)
 						.append('g')
 						.attr('class', 'y axis')
@@ -171,7 +171,7 @@ function drawGraphic() {
 				.attr('r', 6)
 				.attr('fill', colour('max'));
 
-			if (config.essential.showDataLabels) {
+			if (config.showDataLabels) {
 				svg
 					.selectAll('text.min')
 					.data((d) => d[1].filter(e => e.category == categories[i][0]))
@@ -179,7 +179,7 @@ function drawGraphic() {
 					.attr('class', 'dataLabels')
 					.attr('x', (d) => x(d.min))
 					.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-					.text((d) => d3.format(config.essential.numberFormat)(d.min))
+					.text((d) => d3.format(config.numberFormat)(d.min))
 					.attr('fill', colour('min'))
 					.attr('dy', 6)
 					.attr('dx', (d) => (+d.min < +d.max ? -8 : 8))
@@ -192,7 +192,7 @@ function drawGraphic() {
 					.attr('class', 'dataLabels')
 					.attr('x', (d) => x(d.max))
 					.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-					.text((d) => d3.format(config.essential.numberFormat)(d.max))
+					.text((d) => d3.format(config.numberFormat)(d.max))
 					.attr('fill', colour('max'))
 					.attr('dy', 6)
 					.attr('dx', (d) => (+d.min > +d.max ? -8 : 8))
@@ -207,7 +207,7 @@ function drawGraphic() {
 						xPosition: chart_width,
 						yPosition: (d) => d[2] + 35,
 						text: chartPosition === categories.length - 1 ?
-							config.essential.xAxisLabel : "",
+							config.xAxisLabel : "",
 						textAnchor: "end",
 						wrapWidth: chart_width
 					});
@@ -228,14 +228,14 @@ function drawGraphic() {
 
 	// for (let i = 0; i < categories.length; i++) {
 
-	// 	let chartsPerRow = config.optional.chart_every[size];
+	// 	let chartsPerRow = config.chart_every[size];
 	// 	let chartPosition = i % chartsPerRow;
 
 
-	// 	let margin = { ...config.optional.margin[size] };
+	// 	let margin = { ...config.margin[size] };
 
 	// 	// If the chart is not in the first position in the row, reduce the left margin
-	// 	if (config.optional.dropYAxis) {
+	// 	if (config.dropYAxis) {
 	// 		if (chartPosition !== 0) {
 	// 			margin.left = 30;
 	// 		}
@@ -249,8 +249,8 @@ function drawGraphic() {
 
 	// 	//set up xAxis generator
 	// 	let xAxis = d3.axisBottom(x)
-	// 		.ticks(config.optional.xAxisTicks[size])
-	// 		.tickFormat(d => d3.format(config.essential.xAxisTickFormat)(d));
+	// 		.ticks(config.xAxisTicks[size])
+	// 		.tickFormat(d => d3.format(config.xAxisTickFormat)(d));
 
 	// 	svgs[i] = chartContainers
 	// 		.append('svg')
@@ -263,7 +263,7 @@ function drawGraphic() {
 	// 		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 	// 	charts.each(function (d) {
-	// 		if (chartPosition == 0 || !config.optional.dropYAxis) {
+	// 		if (chartPosition == 0 || !config.dropYAxis) {
 	// 			d3.select(this)
 	// 				.append('g')
 	// 				.attr('class', 'y axis')
@@ -321,7 +321,7 @@ function drawGraphic() {
 	// 		.attr('r', 6)
 	// 		.attr('fill', colour('max'));
 
-	// 	if (config.essential.showDataLabels) {
+	// 	if (config.showDataLabels) {
 	// 		charts
 	// 			.selectAll('text.min')
 	// 			.data((d) => d[1].filter(e => e.category == categories[i][0]))
@@ -329,7 +329,7 @@ function drawGraphic() {
 	// 			.attr('class', 'dataLabels')
 	// 			.attr('x', (d) => x(d.min))
 	// 			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-	// 			.text((d) => d3.format(config.essential.numberFormat)(d.min))
+	// 			.text((d) => d3.format(config.numberFormat)(d.min))
 	// 			.attr('fill', colour('min'))
 	// 			.attr('dy', 6)
 	// 			.attr('dx', (d) => (+d.min < +d.max ? -8 : 8))
@@ -342,7 +342,7 @@ function drawGraphic() {
 	// 			.attr('class', 'dataLabels')
 	// 			.attr('x', (d) => x(d.max))
 	// 			.attr('y', (d) => groups.filter((f) => f[0] == d.group)[0][3](d.name))
-	// 			.text((d) => d3.format(config.essential.numberFormat)(d.max))
+	// 			.text((d) => d3.format(config.numberFormat)(d.max))
 	// 			.attr('fill', colour('max'))
 	// 			.attr('dy', 6)
 	// 			.attr('dx', (d) => (+d.min > +d.max ? -8 : 8))
@@ -359,7 +359,7 @@ function drawGraphic() {
 	// 				.attr('x', chart_width)
 	// 				.attr('y', (d) => d[2] + 35)
 	// 				.attr('class', 'axis--label')
-	// 				.text(config.essential.xAxisLabel)
+	// 				.text(config.xAxisLabel)
 	// 				.attr('text-anchor', 'end');
 	// 		}
 	// 	});
@@ -372,8 +372,8 @@ function drawGraphic() {
 		.selectAll('div.legend--item')
 		.data(
 			d3.zip(
-				Object.values(config.essential.legendLabels),
-				config.essential.colour_palette
+				Object.values(config.legendLabels),
+				config.colour_palette
 			)
 		)
 		.enter()
@@ -396,7 +396,7 @@ function drawGraphic() {
 		});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -404,7 +404,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

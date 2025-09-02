@@ -29,11 +29,11 @@ function drawGraphic() {
 		//Sort the data so that the bars in each chart are in the same order
 		data.sort((a, b) => namesArray.indexOf(a.name) - namesArray.indexOf(b.name))
 
-		const chartsPerRow = config.optional.chart_every[size];
+		const chartsPerRow = config.chart_every[size];
 		const chartPosition = chartIndex % chartsPerRow;
 
 		// Set dimensions
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 		let chartGap = config.optional?.chartGap || 10;
 
 		let chart_width = calculateChartWidth({
@@ -44,7 +44,7 @@ function drawGraphic() {
 		})
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			if (chartPosition !== 0) {
 				margin.left = chartGap;
 			}
@@ -56,7 +56,7 @@ function drawGraphic() {
 		//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 
 		let height =
-			config.optional.seriesHeight[size] * data.length +
+			config.seriesHeight[size] * data.length +
 			10 * (data.length - 1) +
 			12;
 
@@ -77,20 +77,20 @@ function drawGraphic() {
 		let xAxis = d3
 			.axisBottom(x)
 			.tickSize(-height)
-			.tickFormat(d3.format(config.essential.xAxisTickFormat))
-			.ticks(config.optional.xAxisTicks[size]);
+			.tickFormat(d3.format(config.xAxisTickFormat))
+			.ticks(config.xAxisTicks[size]);
 
 		let yAxis = d3.axisLeft(y)
 			.tickSize(0)
 			.tickPadding(10)
-			.tickFormat((d) => config.optional.dropYAxis !== true ? (d) :
+			.tickFormat((d) => config.dropYAxis !== true ? (d) :
 				chartPosition == 0 ? (d) : "");
 
 		// Define stack layout
 		let stack = d3
 			.stack()
-			.offset(d3[config.essential.stackOffset])
-			.order(d3[config.essential.stackOrder])
+			.offset(d3[config.stackOffset])
+			.order(d3[config.stackOrder])
 			.keys(graphic_data.columns.slice(1, -1));
 
 		// Process data ! This needs review
@@ -99,10 +99,10 @@ function drawGraphic() {
 
 		// console.table(series);
 
-		if (config.essential.xDomain === 'auto') {
+		if (config.xDomain === 'auto') {
 			x.domain([Math.min(0, d3.min(stack(graphic_data), (d) => d3.min(d, (d) => d[1]))), d3.max(stack(graphic_data), (d) => d3.max(d, (d) => d[1]))]); //removed.nice()
 		} else {
-			x.domain(config.essential.xDomain);
+			x.domain(config.xDomain);
 		}
 
 		y.domain(data.map((d) => d.name));
@@ -111,7 +111,7 @@ function drawGraphic() {
 		let legenditem = legend
 			.selectAll('div.legend--item')
 			.data(
-				d3.zip(graphic_data.columns.slice(1), config.essential.colour_palette)
+				d3.zip(graphic_data.columns.slice(1), config.colour_palette)
 			)
 			.enter()
 			.append('div')
@@ -189,7 +189,7 @@ function drawGraphic() {
 			.data(series)
 			.enter()
 			.append('g')
-			.style('fill', (_, i) => config.essential.colour_palette[i])
+			.style('fill', (_, i) => config.colour_palette[i])
 			.selectAll('rect')
 			.data((d) => d)
 			.join('rect')
@@ -204,7 +204,7 @@ function drawGraphic() {
 				svgContainer: svg,
 				xPosition: chart_width,
 				yPosition: height + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
 			});
@@ -216,7 +216,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -226,7 +226,7 @@ function drawGraphic() {
 
 
 // Load the data
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
 	.then((data) => {
 		// console.log('Original data:', data);
 

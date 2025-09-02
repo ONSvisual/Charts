@@ -15,12 +15,12 @@ function drawGraphic() {
 
   let plots = [...new Set(graphic_data.map(d => d.series))];
 
-  let colour = d3.scaleOrdinal(config.essential.colour_palette);
+  let colour = d3.scaleOrdinal(config.colour_palette);
 
-  const chartEvery = config.optional.chartEvery[size];
+  const chartEvery = config.chartEvery[size];
 
-  let margin = config.optional.margin[size]
-  let aspectRatio = config.optional.aspectRatio[size];
+  let margin = config.margin[size]
+  let aspectRatio = config.aspectRatio[size];
   let chart_width = (parseInt(graphic.style("width")) / chartEvery) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 
@@ -72,10 +72,10 @@ function drawGraphic() {
 
     // both of these are need to be looked at.
 
-    if (config.essential.yDomain == "auto") {
+    if (config.yDomain == "auto") {
       y.domain([0, d3.max(graphic_data, function (d) { return d.upperCI })]);
     } else {
-      y.domain(config.essential.yDomain)
+      y.domain(config.yDomain)
     }
 
     svg
@@ -84,11 +84,11 @@ function drawGraphic() {
       .attr('transform', `translate(0,${height})`)
       .call(
         d3.axisBottom(x)
-          .ticks(config.optional.xAxisTicks[size])
+          .ticks(config.xAxisTicks[size])
           .tickSize(-height)
           .tickPadding(10)
-          .tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisFormat)(d)
-            : d3.format(config.essential.xAxisNumberFormat)(d)));
+          .tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisFormat)(d)
+            : d3.format(config.xAxisNumberFormat)(d)));
 
 
     svg
@@ -96,10 +96,10 @@ function drawGraphic() {
       .attr('class', 'axis numeric')
       .call(
         d3.axisLeft(y)
-          .ticks(config.optional.yAxisTicks[size])
+          .ticks(config.yAxisTicks[size])
           .tickSize(-chart_width)
           .tickPadding(10)
-          .tickFormat(d3.format(config.essential.yAxisFormat))
+          .tickFormat(d3.format(config.yAxisFormat))
       );
 
 
@@ -147,11 +147,11 @@ function drawGraphic() {
       .join('circle')
       .attr('cx', (d) => x(d.date))
       .attr('cy', (d) => y(d.yvalue))
-      .attr('r', config.essential.radius)
+      .attr('r', config.radius)
       .attr("fill", (d) => colour(d.group)) // This adds the colour to the circles based on the group
-      .attr('fill-opacity', config.essential.fillOpacity)
+      .attr('fill-opacity', config.fillOpacity)
       .attr('stroke', (d) => colour(d.group))
-      .attr('stroke-opacity', config.essential.strokeOpacity);
+      .attr('stroke-opacity', config.strokeOpacity);
 
     // This does the chart title label
     addChartTitleLabel({
@@ -167,7 +167,7 @@ function drawGraphic() {
       xPosition: chart_width,
       yPosition: height + 40,
       text: chartIndex % chartEvery == chartEvery - 1 || chartIndex === plots.length - 1 ?
-        config.essential.xAxisLabel : "",
+        config.xAxisLabel : "",
       textAnchor: "end",
       wrapWidth: chart_width
     });
@@ -177,7 +177,7 @@ function drawGraphic() {
       svgContainer: svg,
       xPosition: -(margin.left - 5),
       yPosition: -10,
-      text: (d) => chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "",
+      text: (d) => chartIndex % chartEvery == 0 ? config.yAxisLabel : "",
       textAnchor: "start",
       wrapWidth: chart_width
     });
@@ -215,7 +215,7 @@ function drawGraphic() {
   });
 
   //create link to source
-  addSource('source', config.essential.sourceText)
+  addSource('source', config.sourceText)
 
 
   //use pym to calculate chart dimensions
@@ -225,10 +225,10 @@ function drawGraphic() {
 }
 
 //load data 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
   .then((data) => {
 
-    let parseTime = d3.timeParse(config.essential.dateFormat);
+    let parseTime = d3.timeParse(config.dateFormat);
     //load chart data
     graphic_data = data;
 

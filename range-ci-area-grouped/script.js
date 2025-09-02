@@ -10,13 +10,13 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	groups = d3.groups(graphic_data, (d) => d.group);
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		let min = 1000000;
 		let max = 0;
 		for (i = 2; i < graphic_data.columns.length; i++) {
@@ -31,7 +31,7 @@ function drawGraphic() {
 		}
 		xDomain = [min, max];
 	} else {
-		xDomain = config.essential.xDomain;
+		xDomain = config.xDomain;
 	}
 
 	//set up scales
@@ -40,13 +40,13 @@ function drawGraphic() {
 	const series = [...new Set(graphic_data.map(d => d.series))]
 	const colour = d3
 		.scaleOrdinal()
-		.range(config.essential.colour_palette)
+		.range(config.colour_palette)
 		.domain(series);
 
 	// create the y scale in groups
 	groups.map(function (d) {
 		//height
-		d[2] = (config.optional.seriesHeight[size] + (config.essential.clustered === true ? 10 : 0)) * d[1].length;
+		d[2] = (config.seriesHeight[size] + (config.clustered === true ? 10 : 0)) * d[1].length;
 
 		// y scale
 		d[3] = d3
@@ -60,8 +60,8 @@ function drawGraphic() {
 
 	//set up xAxis generator
 	let xAxis = d3.axisBottom(x)
-		.ticks(config.optional.xAxisTicks[size])
-		.tickFormat(d3.format(config.essential.xAxisTickFormat));
+		.ticks(config.xAxisTicks[size])
+		.tickFormat(d3.format(config.xAxisTickFormat));
 
 	divs = graphic.selectAll('div.categoryLabels').data(groups).join('div');
 
@@ -83,7 +83,7 @@ function drawGraphic() {
 			.call(wrap, margin.left - 10);
 
 		// Draw tick lines across the chart body only if clustered is true
-		if (config.essential.clustered === true) {
+		if (config.clustered === true) {
 			d3.select(this)
 				.selectAll('.tick')
 				.each(function () {
@@ -129,7 +129,7 @@ function drawGraphic() {
 		.attr("y", (d, i) => {
 			const baseY = groups.filter((e) => e[0] == d.group)[0][3](d.name) - rectHeight / 2;
 			// if clustered is true, move series 0 up 10, series 1 down 10 only 
-			if (config.essential.clustered === true) {
+			if (config.clustered === true) {
 				if (d.series === series[0]) return baseY - 10;
 				if (d.series === series[1]) return baseY + 10;
 			}
@@ -149,7 +149,7 @@ function drawGraphic() {
 		.attr('y', (d) => {
 			const baseY = groups.filter((f) => f[0] == d.group)[0][3](d.name) - 5;
 			// if clustered is true, move series 0 up 10, series 1 down 10 only 
-			if (config.essential.clustered === true) {
+			if (config.clustered === true) {
 				const series = [...new Set(graphic_data.map(d => d.series))];
 				if (d.series === series[0]) return baseY - 10;
 				if (d.series === series[1]) return baseY + 10;
@@ -161,7 +161,7 @@ function drawGraphic() {
 		.attr('transform', (d) => {
 			const baseY = groups.filter((f) => f[0] == d.group)[0][3](d.name);
 			let y = baseY;
-			if (config.essential.clustered === true) {
+			if (config.clustered === true) {
 				const series = [...new Set(graphic_data.map(d => d.series))];
 				if (d.series === series[0]) y = baseY - 10;
 				if (d.series === series[1]) y = baseY + 10;
@@ -182,7 +182,7 @@ function drawGraphic() {
 				svgContainer: d3.select(this),
 				xPosition: chart_width,
 				yPosition: d[2] + 35,
-				text: config.essential.xAxisLabel,
+				text: config.xAxisLabel,
 				textAnchor: "end",
 				wrapWidth: chart_width
 			});
@@ -198,7 +198,7 @@ function drawGraphic() {
 		.data(
 			d3.zip(
 				series,
-				config.essential.colour_palette
+				config.colour_palette
 			)
 		)
 		.enter()
@@ -207,7 +207,7 @@ function drawGraphic() {
 
 	legenditem
 		.append('div')
-		.attr('class', (d, i) => config.essential.useDiamonds && i == 0 ? 'legend--icon--diamond' : 'legend--icon--circle')
+		.attr('class', (d, i) => config.useDiamonds && i == 0 ? 'legend--icon--diamond' : 'legend--icon--circle')
 		.style('background-color', function (d) {
 			return d[1];
 		});
@@ -220,7 +220,7 @@ function drawGraphic() {
 			return d[0];
 		});
 
-	if (config.essential.CI_legend) {
+	if (config.CI_legend) {
 
 
 		const ciSvg = legend
@@ -260,7 +260,7 @@ function drawGraphic() {
 			47,                    // endY
 			"vertical-first",     // bendDirection
 			"start",                // arrowAnchor
-			config.essential.CI_legend_text, // thisText
+			config.CI_legend_text, // thisText
 			150,                  // wrapWidth
 			10,                   // textAdjustY
 			"top",               // wrapVerticalAlign
@@ -282,7 +282,7 @@ function drawGraphic() {
 			//alignment - left or right for vertical arrows, above or below for horizontal arrows
 			'right',
 			//annotation text
-			config.essential.CI_legend_interval_text,
+			config.CI_legend_interval_text,
 			//wrap width
 			150,
 			//text adjust y
@@ -294,7 +294,7 @@ function drawGraphic() {
 
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -302,7 +302,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

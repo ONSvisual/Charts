@@ -10,12 +10,12 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
-		config.optional.seriesHeight[size] * graphic_data.length +
+		config.seriesHeight[size] * graphic_data.length +
 		3 * (graphic_data.length - 1);
 
 	columnNames = graphic_data.columns.slice(1);
@@ -32,14 +32,14 @@ function drawGraphic() {
 		pivot(graphic_data, graphic_data.columns.slice(1), 'region', 'value')
 	);
 
-	if (config.essential.breaks == 'jenks') {
+	if (config.breaks == 'jenks') {
 		breaks = [];
 
-		ss.ckmeans(numbers, config.essential.numberOfBreaks).map(function (
+		ss.ckmeans(numbers, config.numberOfBreaks).map(function (
 			cluster,
 			i
 		) {
-			if (i < config.essential.numberOfBreaks - 1) {
+			if (i < config.numberOfBreaks - 1) {
 				breaks.push(cluster[0]);
 			} else {
 				breaks.push(cluster[0]);
@@ -47,10 +47,10 @@ function drawGraphic() {
 				breaks.push(cluster[cluster.length - 1]);
 			}
 		});
-	} else if (config.essential.breaks == 'equal') {
-		breaks = ss.equalIntervalBreaks(numbers, config.essential.numberOfBreaks);
+	} else if (config.breaks == 'equal') {
+		breaks = ss.equalIntervalBreaks(numbers, config.numberOfBreaks);
 	} else {
-		breaks = config.essential.breaks;
+		breaks = config.breaks;
 	}
 
 	//set up scales
@@ -76,11 +76,11 @@ function drawGraphic() {
 		.scaleThreshold()
 		.domain(breaks.slice(1, 6))
 		.range(
-			Array.isArray(config.essential.colour_palette)
-				? config.essential.colour_palette
+			Array.isArray(config.colour_palette)
+				? config.colour_palette
 				: chroma
-					.scale(chroma.brewer[config.essential.colour_palette])
-					.colors(config.essential.numberOfBreaks)
+					.scale(chroma.brewer[config.colour_palette])
+					.colors(config.numberOfBreaks)
 		);
 
 	// draw a legend, stealing code from simple maps template
@@ -96,7 +96,7 @@ function drawGraphic() {
 
 	legendx = d3
 		.scaleLinear()
-		.domain([breaks[0], breaks[config.essential.numberOfBreaks]])
+		.domain([breaks[0], breaks[config.numberOfBreaks]])
 		.range([0, chart_width]);
 
 	key
@@ -126,7 +126,7 @@ function drawGraphic() {
 				.axisBottom(legendx)
 				.tickValues(breaks)
 				.tickSize(15)
-				.tickFormat(d3.format(config.essential.legendFormat))
+				.tickFormat(d3.format(config.legendFormat))
 		);
 
 	key
@@ -164,7 +164,7 @@ function drawGraphic() {
 
 	svg.append('g').attr('class', 'x axis').call(xAxis);
 
-	if (config.essential.cascadeX === true) {
+	if (config.cascadeX === true) {
 		d3.selectAll('g.x.axis text').each(function (d, i) {
 			d3.select(this)
 				.attr('dy', -20 * i)
@@ -204,7 +204,7 @@ function drawGraphic() {
 		.on('mouseover', function (d) {
 			d3.select('#keytext')
 				.text(
-					d3.format(config.essential.dataLabelsNumberFormat)(
+					d3.format(config.dataLabelsNumberFormat)(
 						d3.select(this).data()[0].value
 					)
 				)
@@ -239,11 +239,11 @@ function drawGraphic() {
 		.attr('y', (d) => y(d.name))
 		.attr('dy', y.bandwidth() / 2 + 4)
 		.attr('text-anchor', 'middle')
-		.text((d) => d3.format(config.essential.dataLabelsNumberFormat)(d.value))
+		.text((d) => d3.format(config.dataLabelsNumberFormat)(d.value))
 		.attr('pointer-events', 'none');
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -277,7 +277,7 @@ function* pivot(data, columns, name, value, opts) {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

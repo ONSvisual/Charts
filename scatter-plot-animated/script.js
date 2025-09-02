@@ -13,14 +13,14 @@ function drawGraphic() {
 	size = initialise(size);
 
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height = Math.ceil(
-		(chart_width * config.optional.aspectRatio[size][1]) /
-		config.optional.aspectRatio[size][0]
+		(chart_width * config.aspectRatio[size][1]) /
+		config.aspectRatio[size][0]
 	);
 
 	//Set the timepoints from the data for the slider labels and sort from oldest to newest
@@ -28,7 +28,7 @@ function drawGraphic() {
 
 	//Takes the last data point from the date series
 
-	let timeLoad = config.essential.timeLoad;
+	let timeLoad = config.timeLoad;
 
 	//set up scales
 	const x = d3.scaleLinear().range([0, chart_width]);
@@ -38,12 +38,12 @@ function drawGraphic() {
 	function drawSliderButtons() {
 		//Set the initial timepoint for the data load at from the config
 
-		let a = config.essential.timeLoad;
+		let a = config.timeLoad;
 
 		//Set the date format for the slider label
 
-		let dateformat = d3.timeFormat(config.essential.dateFormat);
-		let dateparse = d3.timeParse(config.essential.dateParse);
+		let dateformat = d3.timeFormat(config.dateFormat);
+		let dateparse = d3.timeParse(config.dateParse);
 
 		//Make the slider
 
@@ -186,7 +186,7 @@ function drawGraphic() {
 
 	//if config drawSliderButtons is set to true, draw the buttons etc
 
-	if (config.essential.drawSliderButtons === true) {
+	if (config.drawSliderButtons === true) {
 		drawSliderButtons();
 	} else {
 		d3.selectAll('.flex-container').remove();
@@ -196,14 +196,14 @@ function drawGraphic() {
 	let yAxis = d3
 		.axisLeft(y)
 		.tickSize(-chart_width - 10)
-		.tickFormat(d3.format(config.essential.yDisplayFormat));
+		.tickFormat(d3.format(config.yDisplayFormat));
 
 	//set up xAxis generator
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height - 10)
-		.tickFormat(d3.format(config.essential.xDisplayFormat))
-		.ticks(config.optional.xAxisTicks[size]);
+		.tickFormat(d3.format(config.xDisplayFormat))
+		.ticks(config.xAxisTicks[size]);
 
 	//create svg for chart
 	svg = addSvg({
@@ -215,23 +215,23 @@ function drawGraphic() {
 
 	// Set the scales for the chart - auto calculates the scale from the data or you can select your own in the config
 	//X scale
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		x.domain([
 			d3.min(graphic_data, (d) => d.x),
 			d3.max(graphic_data, (d) => d.x)
 		]);
 	} else {
-		x.domain(config.essential.xDomain);
+		x.domain(config.xDomain);
 	}
 
 	//Y Scale
-	if (config.essential.yDomain == 'auto') {
+	if (config.yDomain == 'auto') {
 		y.domain([
 			d3.min(graphic_data, (d) => d.y),
 			d3.max(graphic_data, (d) => d.y)
 		]);
 	} else {
-		y.domain(config.essential.yDomain);
+		y.domain(config.yDomain);
 	}
 
 	//Draws the x axis zero line
@@ -263,7 +263,7 @@ function drawGraphic() {
 
 	//remove the highlight stroke on mobile
 	if (size == 'sm') {
-		d3.selectAll('.dots').attr('stroke', config.essential.colour_palette);
+		d3.selectAll('.dots').attr('stroke', config.colour_palette);
 	}
 
 	// // This does the y-axis label
@@ -271,7 +271,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: -(margin.left - 2),
 		yPosition: -20,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
@@ -281,7 +281,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 35,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
@@ -376,13 +376,13 @@ function drawGraphic() {
 				d3.select(this)
 					.style('opacity', 0.75)
 					.style('stroke', (d) =>
-						d.highlight == 0 ? config.essential.colour_palette : '#222222'
+						d.highlight == 0 ? config.colour_palette : '#222222'
 					);
 			} else {
 				tooltip.style('opacity', 0);
 				d3.select(this)
 					.style('opacity', 0.75)
-					.style('stroke', config.essential.colour_palette);
+					.style('stroke', config.colour_palette);
 			}
 		};
 
@@ -399,12 +399,12 @@ function drawGraphic() {
 			.transition(t)
 			.attr('cx', (d) => x(d.x))
 			.attr('cy', (d) => y(d.y))
-			.attr('r', config.essential.size)
-			.attr('fill', config.essential.colour_palette)
+			.attr('r', config.size)
+			.attr('fill', config.colour_palette)
 			.attr('opacity', 0.75)
 			.attr('stroke-width', (d) => (d.highlight == 0 ? '1px' : '1.5px'))
 			.attr('stroke', (d) =>
-				d.highlight == 0 ? config.essential.colour_palette : '#222222'
+				d.highlight == 0 ? config.colour_palette : '#222222'
 			);
 
 		d3.selectAll('.dots')
@@ -421,7 +421,7 @@ function drawGraphic() {
 
 		if (
 			(size == 'lg' &&
-				config.essential.highlight === true) === true
+				config.highlight === true) === true
 		) {
 			drawHighlight();
 		} //end if for datalabels
@@ -445,25 +445,25 @@ function drawGraphic() {
 				.style('font-weight', 500)
 				.attr('x', function (d) {
 					if (d.label_y == 'middle' && d.label_anchor == 'start') {
-						return x(d.x) + config.essential.size + 6;
+						return x(d.x) + config.size + 6;
 					} // shifts to the side of the circle when text anchor is middle
 					else if (d.label_y == 'middle' && d.label_anchor == 'end') {
-						return x(d.x) - config.essential.size - 6;
+						return x(d.x) - config.size - 6;
 					} // shifts to the other side of the circle when text anchor is middle
 					else {
 						return x(d.x);
 					}
 				})
-				// .attr('y',function(d) { return (y(d.y) < (topYTick) ? (y(d.y)+config.essential.size+15) : (y(d.y)-config.essential.size)-2 )})
+				// .attr('y',function(d) { return (y(d.y) < (topYTick) ? (y(d.y)+config.size+15) : (y(d.y)-config.size)-2 )})
 				.attr('y', function (d) {
 					if (d.label_y == 'top') {
-						return y(d.y) - config.essential.size - 6;
+						return y(d.y) - config.size - 6;
 					} else if (d.label_y == 'bottom') {
-						return y(d.y) + config.essential.size + 15;
+						return y(d.y) + config.size + 15;
 					} else if (d.label_y == 'middle') {
 						return y(d.y);
 					} else {
-						return y(d.y) - config.essential.size - 2;
+						return y(d.y) - config.size - 2;
 					}
 				})
 				.style('text-anchor', function (d) {
@@ -482,7 +482,7 @@ function drawGraphic() {
 	} //end updateVisuals function
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -490,7 +490,7 @@ function drawGraphic() {
 	}
 } ///END DRAW GRAPHIC
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	data.forEach(function (d) {
 		d.x = +d.x;

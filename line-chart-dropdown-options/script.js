@@ -33,8 +33,8 @@ function drawGraphic() {
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
-	const aspectRatio = config.optional.aspectRatio[size]
-	let margin = config.optional.margin[size];
+	const aspectRatio = config.aspectRatio[size]
+	let margin = config.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 
@@ -134,8 +134,8 @@ function changeData(selectedOption) {
 	const categories = Object.keys(filteredData[0]).filter((k) => k !== 'date' && k !== 'option');
 
 	// Set y domain for "auto" min/max using filtered data
-	let yDomainMin = config.essential.yDomainMin;
-	let yDomainMax = config.essential.yDomainMax;
+	let yDomainMin = config.yDomainMin;
+	let yDomainMax = config.yDomainMax;
 	if (yDomainMin === "auto" || yDomainMax === "auto") {
 		const [minY, maxY] = getYDomainMinMax({
 			minType: yDomainMin,
@@ -150,15 +150,15 @@ function changeData(selectedOption) {
 		svg.select('.y.axis.numeric')
 			.transition()
 			.duration(500)
-			.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-				.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+			.call(d3.axisLeft(y).ticks(config.yAxisTicks[size])
+				.tickFormat(d3.format(config.yAxisNumberFormat)));
 		// Update grid lines
 		svg.select('.grid')
 			.transition()
 			.duration(500)
 			.call(
 				d3.axisLeft(y)
-					.ticks(config.optional.yAxisTicks[size])
+					.ticks(config.yAxisTicks[size])
 					.tickSize(-chart_width)
 					.tickFormat('')
 			);
@@ -169,7 +169,7 @@ function changeData(selectedOption) {
         category: category,
         index: index,
         data: filteredData,
-        color: config.essential.colour_palette[index % config.essential.colour_palette.length]
+        color: config.colour_palette[index % config.colour_palette.length]
     }));
     
     // Create line generator
@@ -177,7 +177,7 @@ function changeData(selectedOption) {
         .x((d) => x(d.date))
         .y((d) => y(d[lineData.category])) // This will be set per line
         .defined(d => d[lineData.category] !== null)
-        .curve(d3[config.essential.lineCurveType]);
+        .curve(d3[config.lineCurveType]);
     
     // LINES: Bind data and handle enter/update/exit
     const lines = svg.selectAll('path.line')
@@ -214,7 +214,7 @@ function changeData(selectedOption) {
                 .x((datum) => x(datum.date))
                 .y((datum) => y(datum[d.category]))
                 .defined(datum => datum[d.category] !== null)
-                .curve(d3[config.essential.lineCurveType]);
+                .curve(d3[config.lineCurveType]);
             return customLineGenerator(d.data);
         });
     
@@ -226,7 +226,7 @@ function changeData(selectedOption) {
             index: index,
             x: x(lastDatum.date),
             y: y(lastDatum[category]),
-            color: config.essential.colour_palette[index % config.essential.colour_palette.length]
+            color: config.colour_palette[index % config.colour_palette.length]
         };
     });
     
@@ -276,12 +276,12 @@ function changeData(selectedOption) {
         .remove();
 
 	// Handle legend vs direct labels
-	if (config.essential.drawLegend || size === 'sm') {
+	if (config.drawLegend || size === 'sm') {
 		// Create legend (moved outside the loop)
 		let legenditem = d3
 			.select('#legend')
 			.selectAll('div.legend--item')
-			.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+			.data(categories.map((c, i) => [c, config.colour_palette[i % config.colour_palette.length]]))
 			.enter()
 			.append('div')
 			.attr('class', 'legend--item');
@@ -322,7 +322,7 @@ function createDirectLabels(categories, filteredData) {
 			.attr('y', y(lastDatum[category]))
 			.attr('dy', '.35em')
 			.attr('text-anchor', 'start')
-			.attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+			.attr('fill', config.text_colour_palette[index % config.text_colour_palette.length])
 			.text(category)
 			.call(wrap, margin.right - 10);
 
@@ -389,7 +389,7 @@ function createDirectLabels(categories, filteredData) {
 					.attr('y1', label.originalY)
 					.attr('x2', label.x) // start of the label
 					.attr('y2', label.y)
-					.attr('stroke', config.essential.colour_palette[categories.indexOf(label.category) % config.essential.colour_palette.length])
+					.attr('stroke', config.colour_palette[categories.indexOf(label.category) % config.colour_palette.length])
 					.attr('stroke-width', 1)
 					.attr('stroke-dasharray', '2,2'); // optional: dashed line
 			}
@@ -412,7 +412,7 @@ function createDirectLabelsWithForce(categories, filteredData) {
 			.attr('y', y(lastDatum[category]))
 			.attr('dy', '.35em')
 			.attr('text-anchor', 'start')
-			.attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+			.attr('fill', config.text_colour_palette[index % config.text_colour_palette.length])
 			.text(category)
 			.call(wrap, margin.right - 10);
 
@@ -482,8 +482,8 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		.range([height, 0]);
 
 	// Set y domain for "autoAll" or manual values, but not for "auto"
-	let yDomainMin = config.essential.yDomainMin;
-	let yDomainMax = config.essential.yDomainMax;
+	let yDomainMin = config.yDomainMin;
+	let yDomainMax = config.yDomainMax;
 	if (yDomainMin === "auto" || yDomainMax === "auto") {
 		// Will be set in changeData for filtered data
 	} else {
@@ -506,17 +506,17 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	    config
 	}) {
 	    let ticks = [];
-	    const method = config.optional.xAxisTickMethod || "interval";
+	    const method = config.xAxisTickMethod || "interval";
 	    if (xDataType === 'date') {
 	        const start = data[0].date;
 	        const end = data[data.length - 1].date;
 	        if (method === "total") {
 	            // Use d3.ticks for total number of ticks
-	            const count = config.optional.xAxisTickCount[size] || 5;
+	            const count = config.xAxisTickCount[size] || 5;
 	            ticks = d3.scaleTime().domain([start, end]).ticks(count);
 	        } else if (method === "interval") {
 	            // Use d3.time* for interval ticks
-	            const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+	            const interval = config.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
 	            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
 	            let d3Interval;
 	            switch (interval.unit) {
@@ -538,20 +538,20 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	            ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
 	        }
 	        // Only add first/last if not present by value
-	        if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
+	        if (config.addFirstDate && !ticks.some(t => +t === +start)) {
 	            ticks.unshift(start);
 	        }
-	        if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
+	        if (config.addFinalDate && !ticks.some(t => +t === +end)) {
 	            ticks.push(end);
 	        }
 	    } else {
 	        // Numeric axis
 	        if (method === "total") {
-	            const count = config.optional.xAxisTickCount[size] || 5;
+	            const count = config.xAxisTickCount[size] || 5;
 	            const extent = d3.extent(data, d => d.date);
 	            ticks = d3.ticks(extent[0], extent[1], count);
 	        } else if (method === "interval") {
-	            const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+	            const interval = config.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
 	            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
 	            const extent = d3.extent(data, d => d.date);
 	            let current = extent[0];
@@ -560,10 +560,10 @@ function createDirectLabelsWithForce(categories, filteredData) {
 	                current += step;
 	            }
 	        }
-	        if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
+	        if (config.addFirstDate && !ticks.some(t => t === data[0].date)) {
 	            ticks.unshift(data[0].date);
 	        }
-	        if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+	        if (config.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
 	            ticks.push(data[data.length - 1].date);
 	        }
 	    }
@@ -586,16 +586,16 @@ function createDirectLabelsWithForce(categories, filteredData) {
 					size,
 					config
 				}))
-				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-					: d3.format(config.essential.xAxisNumberFormat)(d))
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisTickFormat[size])(d)
+					: d3.format(config.xAxisNumberFormat)(d))
 		);
 
 	// Add the y-axis
 	svg
 		.append('g')
 		.attr('class', 'y axis numeric')
-		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-			.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+		.call(d3.axisLeft(y).ticks(config.yAxisTicks[size])
+			.tickFormat(d3.format(config.yAxisNumberFormat)));
 
 
 
@@ -604,7 +604,7 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		svgContainer: svg,
 		xPosition: 5 - margin.left,
 		yPosition: -15,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
@@ -614,18 +614,18 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + margin.bottom - 25,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//if there is a default option, set it
-	if (config.essential.defaultOption) {
-		$('#optionsSelect').val(config.essential.defaultOption).trigger('chosen:updated');
-		changeData(config.essential.defaultOption);
+	if (config.defaultOption) {
+		$('#optionsSelect').val(config.defaultOption).trigger('chosen:updated');
+		changeData(config.defaultOption);
 	} else {
 		// If no default option, clear the chart
 		clearChart();
@@ -639,7 +639,7 @@ function createDirectLabelsWithForce(categories, filteredData) {
 		.attr('class', 'grid')
 		.call(
 			d3.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
+				.ticks(config.yAxisTicks[size])
 				.tickSize(-chart_width)
 				.tickFormat('')
 		)
@@ -653,11 +653,11 @@ function createDirectLabelsWithForce(categories, filteredData) {
 
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+d3.csv(config.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+		if (d3.timeParse(config.dateFormat)(d.date) !== null) {
 			return {
-				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				date: d3.timeParse(config.dateFormat)(d.date),
 				option: d.option,
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date' && key !== 'option') // Exclude 'date' and 'option' keys from the data
