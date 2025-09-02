@@ -1,5 +1,16 @@
-.dataLabels{
-  font-weight: 600;
-  font-size: 14px;
+.grid line {
+  stroke: var(--ons-color-grey-20);;
 }
 
+.chart-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.chart-container:last-child {
+  margin-right: 0;
+}
+
+.grid path.domain {
+  display: none;
+}
