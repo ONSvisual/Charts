@@ -45,7 +45,7 @@ addSimpleAnnotation(chartSvg, 'arrow', 100, 50, 'Important point');
 - `type`: Annotation type string
 - `x`: X coordinate
 - `y`: Y coordinate  
-- `text`: Annotation text
+- `label`: Annotation text
 - `options`: Optional configuration object (same structure as `addAnnotation`)
 
 ## Configuration Reference
@@ -58,7 +58,7 @@ addSimpleAnnotation(chartSvg, 'arrow', 100, 50, 'Important point');
 | `type` | String | ✓ | Annotation type (see [Annotation Types](#annotation-types)) |
 | `x` | Number | ✓ | Primary X coordinate |
 | `y` | Number | ✓ | Primary Y coordinate |
-| `text` | String | | Annotation text content |
+| `label` | String | | Annotation text content |
 
 ### Position Settings (`position`)
 
