@@ -109,8 +109,9 @@ function drawGraphic() {
     svg: svg,
     type: 'line-vertical',
     x: x(0.2),
-    text: 'A vertical line annotation',
-    line: { height: height }
+    label: 'A vertical line annotation',
+    line: { height: height },
+    editable:true
   })
 
   //setup the arrowhead marker
@@ -121,11 +122,12 @@ function drawGraphic() {
     type:'arrow',
     x:x(0.48),
     y:y("Arts") + y.bandwidth()/2,
-    text:"An arrow annotation, also known as a point annotation",
+    label:"An arrow annotation, also known as a point annotation",
     arrow:{lengthX:50,lengthY:50,offsetX:10,offsetY:10,curve:'left'},
     position:{
       text:'below',
-    }
+    },
+    editable:true
   })
 
   addAnnotation({
@@ -133,37 +135,38 @@ function drawGraphic() {
     type:'text',
     x:x(0.38),
     y:y("A few more")-5,
-    text:"A free text annotation"
+    label:"A free text annotation",
+    editable:true
   })
 
-  addAnnotation({
-    svg:svg,
-    type:'direction-arrow',
-    x:x(1),
-    y:10,
-    text:"A direction arrow, with end anchor",
-    arrow:{direction:'right'},
-    position:{alignment:"right"}
-  })
+  // addAnnotation({
+  //   svg:svg,
+  //   type:'direction-arrow',
+  //   x:x(1),
+  //   y:10,
+  //   label:"A direction arrow, with end anchor",
+  //   arrow:{direction:'right'},
+  //   position:{alignment:"right"}
+  // })
 
-  addAnnotation({
-    svg:svg,
-    type:'direction-arrow',
-    x:x(0.2),
-    y:height-20,
-    text:"A direction anchor",
-    arrow:{direction:'right'},
-    position:{anchor:'start'}
-  })
+  // addAnnotation({
+  //   svg:svg,
+  //   type:'direction-arrow',
+  //   x:x(0.2),
+  //   y:height-20,
+  //   label:"A direction anchor",
+  //   arrow:{direction:'right'},
+  //   position:{anchor:'start'}
+  // })
 
-  addAnnotation({
-    svg:svg,
-    type:'range-vertical',
-    x:x(0.6),
-    y:y('Small bars'),
-    text:"A vertical range annotation",
-    line:{endX:x(1),height:height}
-  })
+  // addAnnotation({
+  //   svg:svg,
+  //   type:'range-vertical',
+  //   x:x(0.6),
+  //   y:y('Small bars'),
+  //   label:"A vertical range annotation",
+  //   line:{endX:x(1),height:height}
+  // })
 
   //create link to source
   addSource('source', config.essential.sourceText)
