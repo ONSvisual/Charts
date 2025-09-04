@@ -152,7 +152,8 @@ function drawGraphic() {
 		x:x(x.domain()[8]),
 		line:{endY:y(1.0), width:chart_width},
 		label:'A horizontal range annotation',
-		text: {wrapWidth:700}
+		text: {wrapWidth:250},
+		editable:true
 	})
 
 	//create link to source

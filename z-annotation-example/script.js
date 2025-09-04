@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical, addAnnotationText, addSource, addSimpleAnnotation, addAnnotation } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addAnnotationArrow, addDirectionArrow, addAnnotationLineVertical, addAnnotationRangeVertical, addAnnotationText, addSource, addAnnotation } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -139,34 +139,37 @@ function drawGraphic() {
     editable:true
   })
 
-  // addAnnotation({
-  //   svg:svg,
-  //   type:'direction-arrow',
-  //   x:x(1),
-  //   y:10,
-  //   label:"A direction arrow, with end anchor",
-  //   arrow:{direction:'right'},
-  //   position:{alignment:"right"}
-  // })
+  addAnnotation({
+    svg:svg,
+    type:'direction-arrow',
+    x:x(1),
+    y:15,
+    label:"A direction arrow, with end anchor",
+    arrow:{direction:'right'},
+    editable:true
+  })
 
-  // addAnnotation({
-  //   svg:svg,
-  //   type:'direction-arrow',
-  //   x:x(0.2),
-  //   y:height-20,
-  //   label:"A direction anchor",
-  //   arrow:{direction:'right'},
-  //   position:{anchor:'start'}
-  // })
+  addAnnotation({
+    svg:svg,
+    type:'direction-arrow',
+    x:x(0.22),
+    y:height-20,
+    label:"A direction arrow, with start anchor",
+    arrow:{direction:'right'},
+    position:{anchor:'start'},
+    editable:true
+  })
 
-  // addAnnotation({
-  //   svg:svg,
-  //   type:'range-vertical',
-  //   x:x(0.6),
-  //   y:y('Small bars'),
-  //   label:"A vertical range annotation",
-  //   line:{endX:x(1),height:height}
-  // })
+  addAnnotation({
+    svg:svg,
+    type:'range-vertical',
+    x:x(0.6),
+    y:y('Small bars'),
+    label:"A vertical range annotation",
+    line:{endX:x(0.9),height:height},
+    position:{text:"left",inside:"inside"},
+    editable:true
+  })
 
   //create link to source
   addSource('source', config.essential.sourceText)
