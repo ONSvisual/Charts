@@ -73,7 +73,7 @@ addAnnotationArrow(
 ```
 
 ## Note on `config` and `d3`:
-Several helper functions (e.g., initialise, addDataLabels) expect a global config object to be available, and many rely on the d3 library. Ensure d3 is installed in your project and passed into your chart files as needed, and that a config object is structured according to your project's needs (e.g., config.essential.accessibleSummary, config.essential.dataLabels.numberFormat).
+Several helper functions (e.g., initialise, addDataLabels) expect a global config object to be available, and many rely on the d3 library. Ensure d3 is installed in your project and passed into your chart files as needed, and that a config object is structured according to your project's needs (e.g., config.accessibleSummary, config.dataLabels.numberFormat).
 
 ## Importing Global CSS
 

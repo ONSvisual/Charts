@@ -13,12 +13,12 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
-	margin.centre = config.optional.margin.centre;
+	let margin = config.margin[size];
+	margin.centre = config.margin.centre;
 
 	// calculate percentage if we have numbers
 	// percentages are based of total populations as is common practice amongst pop pyramids
-	if (config.essential.dataType == 'numbers') {
+	if (config.dataType == 'numbers') {
 		popTotal = d3.sum(graphic_data, (d) => d.maleBar + d.femaleBar);
 
 		// turn into tidy data
@@ -63,7 +63,7 @@ function drawGraphic() {
 	// set up widths
 	width = parseInt(graphic.style('width'));
 	chart_width = (width - margin.centre - margin.left - margin.right) / 2;
-	height = (graphic_data_new.length / 2) * config.optional.seriesHeight[size];
+	height = (graphic_data_new.length / 2) * config.seriesHeight[size];
 
 	// set up some scales, first the left scale
 	xLeft = d3
@@ -100,8 +100,8 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(xLeft)
-				.tickFormat(d3.format(config.essential.xAxisNumberFormat))
-				.ticks(config.optional.xAxisTicks[size])
+				.tickFormat(d3.format(config.xAxisNumberFormat))
+				.ticks(config.xAxisTicks[size])
 				.tickSize(-height)
 		)
 		.selectAll('line')
@@ -119,8 +119,8 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisBottom(xRight)
-				.tickFormat(d3.format(config.essential.xAxisNumberFormat))
-				.ticks(config.optional.xAxisTicks[size])
+				.tickFormat(d3.format(config.xAxisNumberFormat))
+				.ticks(config.xAxisTicks[size])
 				.tickSize(-height)
 		)
 		.selectAll('line')
@@ -138,8 +138,8 @@ function drawGraphic() {
 		.join('rect')
 		.attr('fill', (d) =>
 			d.sex === 'female'
-				? config.essential.colour_palette[0]
-				: config.essential.colour_palette[1]
+				? config.colour_palette[0]
+				: config.colour_palette[1]
 		)
 		.attr('x', (d) => (d.sex === 'female' ? xLeft(d.value) : xRight(0)))
 		.attr('y', (d) => y(d.age))
@@ -162,7 +162,7 @@ function drawGraphic() {
 			d3
 				.axisRight(y)
 				.tickSize(0)
-				.tickValues(y.domain().filter((d, i) => !(i % config.essential.yAxisTicksEvery)))
+				.tickValues(y.domain().filter((d, i) => !(i % config.yAxisTicksEvery)))
 		)
 		.selectAll('text')
 		.each(function () {
@@ -174,7 +174,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: (width - margin.left),
 		yPosition: (height + 30),
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: width
 	});
@@ -184,7 +184,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: (chart_width + margin.centre / 2),
 		yPosition: -15,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "middle",
 		wrapWidth: width
 	});
@@ -221,17 +221,17 @@ function drawGraphic() {
 
 	titleDivs
 		.append('div')
-		.style('background-color', (d, i) => config.essential.colour_palette[i])
+		.style('background-color', (d, i) => config.colour_palette[i])
 		.attr('class', 'legend--icon--circle');
 
 	titleDivs
 		.append('div')
 		.append('p')
 		.attr('class', 'legend--text')
-		.html(config.essential.legend);
+		.html(config.legend);
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -239,7 +239,7 @@ function drawGraphic() {
 	}
 } //end draw graphic
 
-d3.csv(config.essential.graphic_data_url, d3.autoType).then((data) => {
+d3.csv(config.graphic_data_url, d3.autoType).then((data) => {
 	//load chart data
 	graphic_data = data;
 
