@@ -54,7 +54,7 @@ config = {
 
 | Property            | Type   | Description                                                       |
 | ------------------- | ------ | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `displayType`       | string | `"percentages"`, `"counts"`                                       | Whether to display data as percentages or raw numbers (only applies when `dataType: "counts"`) |
+| `displayType`       | string | `"percentages"`, `"counts"`. Whether to display data as percentages or raw numbers (only applies when `dataType: "counts"`) |
 | `xAxisLabel`        | string | Label for x-axis (percentage axis)                                |
 | `yAxisLabel`        | string | Label for y-axis (age axis)                                       |
 | `xAxisNumberFormat` | string | D3 number format string for x-axis ticks (e.g., `".1%"`, `".0%"`) |
