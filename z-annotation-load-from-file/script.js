@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addSource, loadAnnotationsFromJson } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addDataLabels, addAxisLabel, setupArrowhead, addSource, loadAnnotationsFromJson, setupMobileAnnotations } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -13,6 +13,7 @@ function drawGraphic() {
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
   //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
   let height = (config.optional.seriesHeight[size] * graphic_data.length) + (10 * (graphic_data.length - 1)) + 12
+  let isMobile = size == "sm";
 
   //set up scales
   const x = d3.scaleLinear()
@@ -107,8 +108,9 @@ function drawGraphic() {
 
   //setup the arrowhead marker
   setupArrowhead(d3.select("svg"));
+  setupMobileAnnotations();
 
-  loadAnnotationsFromJson("annotations-1757685026793.json",svg)
+  loadAnnotationsFromJson("annotations-1757686345555.json",svg, isMobile)
 
   //create link to source
   addSource('source', config.essential.sourceText)

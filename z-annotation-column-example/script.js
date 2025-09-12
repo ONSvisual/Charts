@@ -1,4 +1,4 @@
-import { initialise, wrap, addSvg, addAxisLabel, addSource, addAnnotation } from "../lib/helpers.js";
+import { initialise, wrap, addSvg, addAxisLabel, addSource, addAnnotation, setupMobileAnnotations } from "../lib/helpers.js";
 
 let graphic = d3.select('#graphic');
 let pymChild = null;
@@ -14,8 +14,9 @@ function drawGraphic() {
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by the aspect ratio
-	let height =
-		aspectRatio[1] / aspectRatio[0] * chart_width;
+	let height = aspectRatio[1] / aspectRatio[0] * chart_width;
+	const isMobile = size == "sm";
+
 
 	//set up scales
 	const y = d3.scaleLinear().range([height, 0]);
@@ -133,27 +134,32 @@ function drawGraphic() {
 		wrapWidth: chart_width
 	});
 
+	setupMobileAnnotations();
+
 	addAnnotation({
-		svg:svg,
-		type:'line-horizontal',
-		y:y(0.50),
-		x:x(x.domain()[7]),
-		position: {text:"above"},
-		text: {wrapWidth:700},
-		label:"A horizontal line annotation",
-		line: {width:chart_width},
-		editable:true
+		svg: svg,
+		type: 'line-horizontal',
+		y: y(0.50),
+		x: x(x.domain()[7]),
+		position: { text: "above" },
+		text: { wrapWidth: 700 },
+		label: "A horizontal line annotation",
+		line: { width: chart_width },
+		editable: true,
+		mobile: { enabled: isMobile, number: 1 }
 	})
 
 	addAnnotation({
-		svg:svg,
-		type:'range-horizontal',
-		y:y(0.80),
-		x:x(x.domain()[8]),
-		line:{endY:y(1.0), width:chart_width},
-		label:'A horizontal range annotation',
-		text: {wrapWidth:250},
-		editable:true
+		svg: svg,
+		type: 'range-horizontal',
+		y: y(0.80),
+		x: x(x.domain()[8]),
+		line: { endY: y(1.0), width: chart_width },
+		label: 'A horizontal range annotation',
+		text: { wrapWidth: 250 },
+		editable: true,
+		mobile: { enabled: isMobile, number: 2 }
+
 	})
 
 	//create link to source

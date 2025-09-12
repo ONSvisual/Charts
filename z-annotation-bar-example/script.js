@@ -13,6 +13,7 @@ function drawGraphic() {
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
   //height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
   let height = (config.optional.seriesHeight[size] * graphic_data.length) + (10 * (graphic_data.length - 1)) + 12
+  const isMobile = size == "sm";
 
   //set up scales
   const x = d3.scaleLinear()
@@ -111,7 +112,8 @@ function drawGraphic() {
     x: x(0.2),
     label: 'A vertical line annotation',
     line: { height: height },
-    editable:true
+    editable:true,
+    mobile:{enabled:isMobile,number:1}
   })
 
   //setup the arrowhead marker
@@ -127,7 +129,9 @@ function drawGraphic() {
     position:{
       text:'below',
     },
-    editable:true
+    editable:true,
+    mobile:{enabled:isMobile,number:2}
+
   })
 
   addAnnotation({
@@ -136,7 +140,9 @@ function drawGraphic() {
     x:x(0.38),
     y:y("A few more")-5,
     label:"A free text annotation",
-    editable:true
+    editable:true,   
+    mobile:{enabled:isMobile,number:3}
+
   })
 
   addAnnotation({
@@ -146,7 +152,7 @@ function drawGraphic() {
     y:15,
     label:"A direction arrow, with end anchor",
     arrow:{direction:'right'},
-    editable:true
+    editable:true,
   })
 
   addAnnotation({
@@ -157,7 +163,7 @@ function drawGraphic() {
     label:"A direction arrow, with start anchor",
     arrow:{direction:'right'},
     position:{anchor:'start'},
-    editable:true
+    editable:true,
   })
 
   addAnnotation({
@@ -167,8 +173,9 @@ function drawGraphic() {
     y:y('Small bars'),
     label:"A vertical range annotation",
     line:{endX:x(0.9),height:height},
-    position:{text:"left",inside:"inside"},
-    editable:true
+    position:{text:"left",enclosure:"inside"},
+    editable:true,
+    mobile:{enabled:isMobile,number:4}
   })
 
   //create link to source
