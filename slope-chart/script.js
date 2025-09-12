@@ -12,10 +12,10 @@ function drawGraphic() {
 	size = initialise(size);
 
 	// Define the dimensions and margin, width and height of the chart.
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	// let width = parseInt(graphic.style('width')) - margin.left - margin.right;
-	let height = config.optional.chartHeight[size];
-	let width = config.optional.chartWidth[size];
+	let height = config.chartHeight[size];
+	let width = config.chartWidth[size];
 	// console.log(parseInt(graphic.style('width')) - width - margin.left - 75)
 	// console.log(`Margin, width, and height set: ${margin}, ${width}, ${height}`);
 
@@ -52,13 +52,13 @@ function drawGraphic() {
 		.scaleLinear()
 		.range([height, 0]);
 
-	if (config.essential.yDomain == "auto") {
+	if (config.yDomain == "auto") {
 		let minY = d3.min(graphic_data, (d) => Math.min(...categories.map((c) => d[c])))
 		let maxY = d3.max(graphic_data, (d) => Math.max(...categories.map((c) => d[c])))
 		y.domain([minY, maxY])
 		console.log(minY, maxY)
 	} else {
-		y.domain(config.essential.yDomain)
+		y.domain(config.yDomain)
 	}
 
 
@@ -83,8 +83,8 @@ function drawGraphic() {
 			d3
 				.axisTop(x)
 				// .tickValues(tickValues)
-				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-					: d3.format(config.essential.xAxisNumberFormat)(d))
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisTickFormat[size])(d)
+					: d3.format(config.xAxisNumberFormat)(d))
 				.tickValues([firstDatum.date, lastDatum.date])
 				.tickSize(height + 10)
 		);
@@ -107,7 +107,7 @@ function drawGraphic() {
 			.line()
 			.x((d) => x(d.date))
 			.y((d) => y(d[category]))
-			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
+			.curve(d3[config.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
 		// console.log(`Line generator created for category: ${category}`);
 
@@ -117,8 +117,8 @@ function drawGraphic() {
 			.attr('fill', 'none')
 			.attr(
 				'stroke',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
+				config.colour_palette[
+				categories.indexOf(category) % config.colour_palette.length
 				]
 			)
 			.attr('stroke-width', 3)
@@ -139,11 +139,11 @@ function drawGraphic() {
 			.attr('text-anchor', 'start')
 			.attr(
 				'fill',
-				config.essential.colour_palette_text[
-				categories.indexOf(category) % config.essential.colour_palette_text.length
+				config.colour_palette_text[
+				categories.indexOf(category) % config.colour_palette_text.length
 				]
 			)
-			.text(d3.format(config.essential.yAxisNumberFormat)((lastDatum[category]))) /* (Math.round((lastDatum[category]) / 100) * 100) */
+			.text(d3.format(config.yAxisNumberFormat)((lastDatum[category]))) /* (Math.round((lastDatum[category]) / 100) * 100) */
 			.attr('id', 'lastDateLabel')
 			.attr("class", "directLineLabelBold")
 			.call(textLength, this) //Work out the width of this bit of text for positioning the next bit
@@ -153,8 +153,8 @@ function drawGraphic() {
 			.attr('text-anchor', 'start')
 			.attr(
 				'fill',
-				config.essential.colour_palette_text[
-				categories.indexOf(category) % config.essential.colour_palette_text.length
+				config.colour_palette_text[
+				categories.indexOf(category) % config.colour_palette_text.length
 				]
 			)
 			.text(category)
@@ -173,11 +173,11 @@ function drawGraphic() {
 			.attr('text-anchor', 'end')
 			.attr(
 				'fill',
-				config.essential.colour_palette_text[
-				categories.indexOf(category) % config.essential.colour_palette_text.length
+				config.colour_palette_text[
+				categories.indexOf(category) % config.colour_palette_text.length
 				]
 			)
-			.text(d3.format(config.essential.yAxisNumberFormat)(firstDatum[category]))
+			.text(d3.format(config.yAxisNumberFormat)(firstDatum[category]))
 			.attr("class", "directLineLabelBold")
 
 		//Add the circles
@@ -188,8 +188,8 @@ function drawGraphic() {
 			.attr('r', 4)
 			.attr(
 				'fill',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
+				config.colour_palette[
+				categories.indexOf(category) % config.colour_palette.length
 				]
 			);
 		svg
@@ -199,8 +199,8 @@ function drawGraphic() {
 			.attr('r', 4)
 			.attr(
 				'fill',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
+				config.colour_palette[
+				categories.indexOf(category) % config.colour_palette.length
 				]
 			);
 		// console.log(`Circle appended for category: ${category}`);
@@ -231,13 +231,13 @@ function drawGraphic() {
 	// svg
 	// 	.append('g')
 	// 	.attr('class', 'y axis')
-	// 	.call(d3.axisRight(y).ticks(config.optional.yAxisTicks[size])
+	// 	.call(d3.axisRight(y).ticks(config.yAxisTicks[size])
 	// 		.tickValues([])
-	// 		.tickFormat(d3.format(config.essential.yAxisNumberFormat)))
+	// 		.tickFormat(d3.format(config.yAxisNumberFormat)))
 	// 	.attr('transform', "translate(" + margin.left + ", 0)");
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 	// console.log(`Link to source created`);
 
 	//use pym to calculate chart dimensions
@@ -249,11 +249,11 @@ function drawGraphic() {
 
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+d3.csv(config.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+		if (d3.timeParse(config.dateFormat)(d.date) !== null) {
 			return {
-				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				date: d3.timeParse(config.dateFormat)(d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
 					.map(([key, value]) => [key, +value])
