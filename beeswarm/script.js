@@ -147,11 +147,14 @@ function drawGraphic() {
     });
 
     // set up dropdown
-  const dropdownData = graphic_data.sort((a,b)=>a.areanm.localeCompare(b.areanm)).map((point, index) => ({
+  const dropdownData = [...graphic_data].sort((a,b)=>a.areanm.localeCompare(b.areanm)).map((point, index) => ({
     id: index,
     label: point.areanm || `Point ${index + 1}`,
     group: point.group
   }));
+
+  //remove and then add dropdown again.
+  d3.select("#select").selectAll("*").remove()
 
   const select = new EnhancedSelect({
     containerId: 'select',
