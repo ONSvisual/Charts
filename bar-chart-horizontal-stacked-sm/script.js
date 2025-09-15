@@ -169,19 +169,19 @@ function drawGraphic() {
         }
 
         // Add annotation range if needed
-        if (chartIndex !== 0) {
-            addAnnotationRangeHorizontal(
-                svg,
-                chart_width,
-                y("two years") + (4 - chartIndex) * y.step(),
-                y("five years") + y.bandwidth(),
-                chartIndex == 1 ? 'N/A' : "",
-                'above',
-                'inside',
-                x(5),
-                50
-            );
-        }
+    //     if (chartIndex !== 0) {
+    //         addAnnotationRangeHorizontal(
+    //             svg,
+    //             chart_width,
+    //             y("two years") + (4 - chartIndex) * y.step(),
+    //             y("five years") + y.bandwidth(),
+    //             chartIndex == 1 ? 'N/A' : "",
+    //             'above',
+    //             'inside',
+    //             x(5),
+    //             50
+    //         );
+    //     }
     }
 
     // Draw the charts for each small multiple
@@ -218,9 +218,7 @@ function drawGraphic() {
               .style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`);
     }
 
-	svg.selectAll('.grid.domain').attr('display', 'none');
-
-    //create link to source
+    //create source text
     addSource('source', config.essential.sourceText);
 
     //use pym to calculate chart dimensions

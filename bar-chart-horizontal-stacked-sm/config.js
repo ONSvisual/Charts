@@ -2,7 +2,7 @@ config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
 		"colour_palette": ["#206095", "#27A0CC", "#871A5B", "#AB5F8C", "#A09FA0"],
-		"sourceText": "Borders and Immigration data from the Home Office",
+		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "The chart canvas is hidden from screen readers. The main message is summarised by the chart title and the data behind the chart is available to download below.",
 		"xAxisTickFormat": {
 			"sm": "%Y",
@@ -13,8 +13,8 @@ config = {
 		//the format your date data has in data.csv
 		"yDomain": [0,100],
 		// either "auto" or an array for the x domain e.g. [0,100]
-		"yAxisLabel": "After",
-		"xAxisLabel": "%",
+		"yAxisLabel": "yAxis Label",
+		"xAxisLabel": "xAxis Label",
 		"stackOffset": "stackOffsetNone",
 		// options include
 		// stackOffsetNone means the baseline is set at zero

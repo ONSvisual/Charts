@@ -1,16 +1,16 @@
-date,series,Remained on student visa,Transitioned to a different visa type,Emigrated,Emigrated in previous years,Not categorised
-one year,Year ending December 2019 arrivals,73,1,26,0,0
-two years,Year ending December 2019 arrivals,48,9,14,26,3
-three years,Year ending December 2019 arrivals,26,18,12,40,3
-four years,Year ending December 2019 arrivals,13,22,10,52,3
-five years,Year ending December 2019 arrivals,5,22,6,62,4
-one year,Year ending December 2020 arrivals,76,11,9,0,4
-two years,Year ending December 2020 arrivals,38,36,13,9,4
-three years,Year ending December 2020 arrivals,20,41,13,22,4
-four years,Year ending December 2020 arrivals,9,41,12,35,4
-one year,Year ending December 2021 arrivals,67,22,10,0,0
-two years,Year ending December 2021 arrivals,30,44,15,10,1
-three years,Year ending December 2021 arrivals,15,46,13,25,1
-one year,Year ending December 2022 arrivals,58,33,9,0,0
-two years,Year ending December 2022 arrivals,20,60,10,9,0
-one year,Year ending December 2023 arrivals,59,32,9,0,0
+date,series,Category 1,Category 2,Category 3,Category 4,Category 5
+one,Chart 1,73,1,26,0,0
+two,Chart 1,48,9,14,26,3
+three,Chart 1,26,18,12,40,3
+four,Chart 1,13,22,10,52,3
+five,Chart 1,5,22,6,62,4
+one,Chart 2,76,11,9,0,4
+two,Chart 2,38,36,13,9,4
+three,Chart 2,20,41,13,22,4
+four,Chart 2,9,41,12,35,4
+one,Chart 3,67,22,10,0,0
+two,Chart 3,30,44,15,10,1
+three,Chart 3,15,46,13,25,1
+one,Chart 4,58,33,9,0,0
+two,Chart 4,20,60,10,9,0
+one,Chart 5,59,32,9,0,0
