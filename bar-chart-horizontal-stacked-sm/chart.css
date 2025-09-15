@@ -1,3 +1,9 @@
+.legend--text {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
 .grid line {
   stroke: var(--ons-color-grey-20);;
 }
