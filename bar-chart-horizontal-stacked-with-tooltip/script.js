@@ -10,12 +10,12 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 	let height =
-		config.optional.seriesHeight[size] * graphic_data.length +
+		config.seriesHeight[size] * graphic_data.length +
 		10 * (graphic_data.length - 1) +
 		12;
 
@@ -32,7 +32,7 @@ function drawGraphic() {
 	const colour = d3
 		.scaleOrdinal()
 		.domain(graphic_data.columns.slice(1))
-		.range(config.essential.colour_palette);
+		.range(config.colour_palette);
 
 	//use the data to find unique entries in the name column
 	y.domain([...new Set(graphic_data.map((d) => d.name))]);
@@ -43,8 +43,8 @@ function drawGraphic() {
 	const stack = d3
 		.stack()
 		.keys(graphic_data.columns.slice(1))
-		.offset(d3[config.essential.stackOffset])
-		.order(d3[config.essential.stackOrder]);
+		.offset(d3[config.stackOffset])
+		.order(d3[config.stackOrder]);
 
 	const series = stack(graphic_data);
 
@@ -52,8 +52,8 @@ function drawGraphic() {
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.tickFormat(d3.format(config.essential.xAxisTickFormat))
-		.ticks(config.optional.xAxisTicks[size]);
+		.tickFormat(d3.format(config.xAxisTickFormat))
+		.ticks(config.xAxisTicks[size]);
 
 	//create svg for chart
 	svg = addSvg({
@@ -63,10 +63,10 @@ function drawGraphic() {
 		margin: margin
 	})
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		x.domain(d3.extent(series.flat(2))); //flatten the arrays and then get the extent
 	} else {
-		x.domain(config.essential.xDomain);
+		x.domain(config.xDomain);
 	}
 
 	// Set up the legend
@@ -74,7 +74,7 @@ function drawGraphic() {
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-			d3.zip(graphic_data.columns.slice(1), config.essential.colour_palette)
+			d3.zip(graphic_data.columns.slice(1), config.colour_palette)
 		)
 		.enter()
 		.append('div')
@@ -119,7 +119,7 @@ function drawGraphic() {
 		.selectAll('g')
 		.data(series)
 		.join('g')
-		.attr('fill', (d, i) => config.essential.colour_palette[i])
+		.attr('fill', (d, i) => config.colour_palette[i])
 		.selectAll('rect')
 		.data((d) => d)
 		.join('rect')
@@ -142,7 +142,7 @@ function drawGraphic() {
 
 			svg.select(".tooltipGroup")
 				.select("text")
-				.text(d3.format(config.essential.tooltipFormat)((i[1] - i[0])))
+				.text(d3.format(config.tooltipFormat)((i[1] - i[0])))
 		})
 		.on("mouseleave", function (d, i) {
 
@@ -186,13 +186,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 35,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 		});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -200,7 +200,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

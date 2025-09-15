@@ -121,7 +121,7 @@ function drawGraphic() {
 			// .attr('width', 0)
 			.attr('width', d => d.value < 0 ? Math.abs(x(d.value) - x(0)) : x(d.value) - x(0))
 			.attr('height', y.bandwidth())
-			.attr('fill', config.essential.colour_palette)
+			.attr('fill', config.colour_palette)
 			.merge(bars)
 			.transition()
 			.duration(1250)
@@ -132,7 +132,7 @@ function drawGraphic() {
 
 
 		// Update the data labels
-		if (config.essential.dataLabels.show === true) {
+		if (config.dataLabels.show === true) {
 			addDataLabels({
 				svgContainer: svg,
 				data: filteredData,
@@ -162,7 +162,7 @@ function drawGraphic() {
 						let interpolatedValue = i(t);
 
 						// Update the label's text
-						this.textContent = d3.format(config.essential.dataLabels.numberFormat)(interpolatedValue);
+						this.textContent = d3.format(config.dataLabels.numberFormat)(interpolatedValue);
 
 						// Update the label's x position
 						d3.select(this).attr('x', xi(t));
@@ -172,14 +172,14 @@ function drawGraphic() {
 
 	}
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height + some magic because scale band is all about proportion
 
 	let uniqueNames = [...new Set(graphic_data.map((d) => d.name))];
 	let height =
-		config.optional.seriesHeight[size] * uniqueNames.length +
+		config.seriesHeight[size] * uniqueNames.length +
 		10 * (uniqueNames.length - 1) +
 		12;
 
@@ -203,8 +203,8 @@ function drawGraphic() {
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.tickFormat(d3.format(config.essential.dataLabels.numberFormat))
-		.ticks(config.optional.xAxisTicks[size]);
+		.tickFormat(d3.format(config.dataLabels.numberFormat))
+		.ticks(config.xAxisTicks[size]);
 
 	//create svg for chart
 	svg = addSvg({
@@ -222,7 +222,7 @@ function drawGraphic() {
 		.selectAll('text')
 		.call(wrap, margin.left - 10);
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		if (d3.min(graphic_data.map(({ value }) => Number(value))) >= 0) {
 			x.domain([
 				0,
@@ -231,7 +231,7 @@ function drawGraphic() {
 			x.domain(d3.extent(graphic_data.map(({ value }) => Number(value))))
 		}
 	} else {
-		x.domain(config.essential.xDomain);
+		x.domain(config.xDomain);
 	}
 
 
@@ -255,16 +255,16 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 35,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
-	$('#optionsSelect').val(config.essential.defaultOption).trigger('chosen:updated');
-	changeData(config.essential.defaultOption)
+	$('#optionsSelect').val(config.defaultOption).trigger('chosen:updated');
+	changeData(config.defaultOption)
 	// updateLegend("Agriculture, forestry and fishing", 0)
 
 	//use pym to calculate chart dimensions
@@ -273,7 +273,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

@@ -9,8 +9,8 @@ function drawGraphic() {
     //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
     size = initialise(size);
 
-    const aspectRatio = config.optional.aspectRatio[size];
-    const chartsPerRow = config.optional.chart_every[size];
+    const aspectRatio = config.aspectRatio[size];
+    const chartsPerRow = config.chart_every[size];
 
     // Get categories from the keys used in the stack generator
     const categories = graphic_data.columns.slice(2);
@@ -27,8 +27,8 @@ function drawGraphic() {
 
     function drawChart(container, data, seriesName, chartIndex) {
         let chartPosition = chartIndex % chartsPerRow;
-        let margin = { ...config.optional.margin[size] };
-        let chartGap = config.optional?.chartGap || 10;
+        let margin = { ...config.margin[size] };
+        let chartGap = config?.chartGap || 10;
         let chart_width = calculateChartWidth({
             screenWidth: parseInt(graphic.style('width')),
             chartEvery: chartsPerRow,
@@ -36,7 +36,7 @@ function drawGraphic() {
             chartGap: chartGap
         });
 
-        if (config.optional.dropYAxis) {
+        if (config.dropYAxis) {
             if (chartPosition !== 0) {
                 margin.left = chartGap;
             }
@@ -52,16 +52,16 @@ function drawGraphic() {
 
         const stack = d3.stack()
             .keys(categories)
-            .offset(d3[config.essential.stackOffset])
-            .order(d3[config.essential.stackOrder]);
+            .offset(d3[config.stackOffset])
+            .order(d3[config.stackOrder]);
 
         const series = stack(data);
         const seriesAll = stack(graphic_data);
 
-        if (config.essential.yDomain == 'auto') {
+        if (config.yDomain == 'auto') {
             x.domain(d3.extent(seriesAll.flat(2)));
         } else {
-            x.domain(config.essential.yDomain);
+            x.domain(config.yDomain);
         }
 
         // Create an SVG element
@@ -77,7 +77,7 @@ function drawGraphic() {
             .selectAll('g')
             .data(series)
             .join('g')
-            .attr('fill', (d, i) => config.essential.colour_palette[i])
+            .attr('fill', (d, i) => config.colour_palette[i])
             .selectAll('rect')
             .data((d) => d)
             .join('rect')
@@ -86,7 +86,7 @@ function drawGraphic() {
             .attr('width', (d) => Math.abs(x(d[1]) - x(d[0])))
             .attr('height', y.bandwidth());
 
-        const xAxisTickFormat = config.essential.xAxisTickFormat[size];
+        const xAxisTickFormat = config.xAxisTickFormat[size];
         const isDateScale = x.tickFormat && typeof x.domain()[0] !== 'number';
 
         // Add grid lines to x axis
@@ -94,7 +94,7 @@ function drawGraphic() {
             .attr('class', 'grid')
             .call(
                 d3.axisBottom(x)
-                .ticks(config.optional.xAxisTicks[size])
+                .ticks(config.xAxisTicks[size])
                 .tickSize(-height)
                 .tickFormat('')
 
@@ -113,7 +113,7 @@ function drawGraphic() {
             .attr('class', 'x axis')
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x)
-                .ticks(config.optional.xAxisTicks[size])
+                .ticks(config.xAxisTicks[size])
                 .tickFormat(isDateScale ? d3.timeFormat(xAxisTickFormat) : d3.format(xAxisTickFormat))
             );
 
@@ -124,7 +124,7 @@ function drawGraphic() {
             });
 
         // Only draw the y axis tick labels on the first chart in each row, or always if chartsPerRow is 1 or dropYAxis is false
-        if (!config.optional.dropYAxis || chartsPerRow === 1 || chartIndex % chartsPerRow === 0) {
+        if (!config.dropYAxis || chartsPerRow === 1 || chartIndex % chartsPerRow === 0) {
             svg.append('g')
                 .attr('class', 'y axis category')
                 .call(d3.axisLeft(y).tickValues(y.domain()))
@@ -154,7 +154,7 @@ function drawGraphic() {
                 svgContainer: svg,
                 xPosition: 5 - margin.left,
                 yPosition: 0,
-                text: config.essential.yAxisLabel,
+                text: config.yAxisLabel,
                 textAnchor: "start",
                 wrapWidth: chart_width
             });
@@ -166,7 +166,7 @@ function drawGraphic() {
                 svgContainer: svg,
                 xPosition: chart_width,
                 yPosition: height + 35,
-                text: config.essential.xAxisLabel,
+                text: config.xAxisLabel,
                 textAnchor: "end",
                 wrapWidth: chart_width
             });
@@ -196,7 +196,7 @@ function drawGraphic() {
     // Set up the legend
     let legenditem = legend
         .selectAll('div.legend--item')
-        .data(categories.map((cat, i) => [cat, config.essential.colour_palette[i]]))
+        .data(categories.map((cat, i) => [cat, config.colour_palette[i]]))
         .enter()
         .append('div')
         .attr('class', 'legend--item');
@@ -216,14 +216,14 @@ function drawGraphic() {
             return d[0];
         });
 
-    // Set legend columns if config.optional.legendColumns is defined
-    if (config.optional.legendColumns) {
+    // Set legend columns if config.legendColumns is defined
+    if (config.legendColumns) {
         legend.style('display', 'grid')
-              .style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`);
+              .style('grid-template-columns', `repeat(${config.legendColumns}, 1fr)`);
     }
 
     //create source text
-    addSource('source', config.essential.sourceText);
+    addSource('source', config.sourceText);
 
     //use pym to calculate chart dimensions
     if (pymChild) {
@@ -233,7 +233,7 @@ function drawGraphic() {
 
 // Load the data
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
     graphic_data = data;
 
     pymChild = new pym.Child({

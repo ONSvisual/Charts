@@ -24,7 +24,7 @@ Replace any code that is covered by a function in helpers.js, e.g.
     .attr('x', chart_width) 
     .attr('y', 35) 
     .attr('class', 'axis--label') 
-    .text(config.essential.xAxisLabel) 
+    .text(config.xAxisLabel) 
     .attr('text-anchor', 'end'); 
 
 Becomes: 
@@ -33,7 +33,7 @@ Becomes:
     svgContainer: svg, 
     xPosition: chart_width, 
     yPosition: height + 35, 
-    text: config.essential.xAxisLabel, 
+    text: config.xAxisLabel, 
     wrapWidth: chart_width 
     }); 
 
