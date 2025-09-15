@@ -91,7 +91,7 @@ function drawGraphic() {
             .attr('class', 'grid')
             .call(
                 d3.axisBottom(x)
-                .ticks(config.optional.yAxisTicks[size])
+                .ticks(config.optional.xAxisTicks[size])
                 .tickSize(-height)
                 .tickFormat('')
             )
@@ -109,7 +109,7 @@ function drawGraphic() {
             .attr('class', 'x axis')
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x)
-                .ticks(config.optional.yAxisTicks[size])
+                .ticks(config.optional.xAxisTicks[size])
                 .tickFormat(d3.format('.0f'))
             );
 

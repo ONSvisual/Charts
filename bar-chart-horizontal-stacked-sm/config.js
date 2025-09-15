@@ -60,12 +60,7 @@ config = {
 			"md": [1, 1],
 			"lg": [4, 3]
 		},
-		"xAxisTicksEvery": { // this is the interval of ticks on the x axis - always including the first and last date
-			"sm": 1,
-			"md": 1,
-			"lg": 1
-		},
-		"yAxisTicks": {
+		"xAxisTicks": {
 			"sm": 5,
 			"md": 5,
 			"lg": 5
