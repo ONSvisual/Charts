@@ -1,7 +1,7 @@
 config = {
 	"essential": {
 		"graphic_data_url": "data.csv",
-		"colour_palette": ["#206095", "#27A0CC", "#871A5B", "#AB5F8C", "#A09FA0"],
+		"colour_palette": [ONScolours.oceanBlue, ONScolours.skyBlue, "#871A5B", "#AB5F8C", ONScolours.grey50],
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "The chart canvas is hidden from screen readers. The main message is summarised by the chart title and the data behind the chart is available to download below.",
 		"xAxisTickFormat": {
