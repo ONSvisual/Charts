@@ -119,8 +119,8 @@ function drawGraphic() {
                 return d === 0 ? 'zero-line' : null;
             });
 
-        // Only draw the y axis tick labels on the first chart in each row
-        if (chartIndex % chartsPerRow === 0) {
+        // Only draw the y axis tick labels on the first chart in each row, or always if chartsPerRow is 1 or dropYAxis is false
+        if (!config.optional.dropYAxis || chartsPerRow === 1 || chartIndex % chartsPerRow === 0) {
             svg.append('g')
                 .attr('class', 'y axis category')
                 .call(d3.axisLeft(y).tickValues(y.domain()))
