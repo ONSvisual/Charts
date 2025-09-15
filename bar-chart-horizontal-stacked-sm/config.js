@@ -5,9 +5,9 @@ config = {
 		"sourceText": "Office for National Statistics",
 		"accessibleSummary": "The chart canvas is hidden from screen readers. The main message is summarised by the chart title and the data behind the chart is available to download below.",
 		"xAxisTickFormat": {
-			"sm": "%Y",
-			"md": "%Y",
-			"lg": "%Y"
+			"sm": ".0f",
+			"md": ".0f",
+			"lg": ".0f"
 		},
 		"dateFormat": "%b-%y",
 		//the format your date data has in data.csv
