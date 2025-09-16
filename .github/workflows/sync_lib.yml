@@ -47,7 +47,7 @@ jobs:
         # rsync -av --exclude='.git' --exclude='.github' source-repo/ charts-lib/
         rsync -av --exclude='.git' --exclude='.github' source-repo/ otherCharts/lib/
     
-    - name: Commit and push changes to charts-lib
+    # - name: Commit and push changes to charts-lib
       # run: |
         # cd charts-lib
         # git config --local user.email "action@github.com"
