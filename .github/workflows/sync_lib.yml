@@ -36,7 +36,7 @@ jobs:
     - name: Clear existing lib folders in target repo
       run: |
         # Clear lib folder
-        find charts-lib -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} *
+        find charts-lib -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 
         rm -rf otherCharts/lib
         mkdir -p otherCharts/lib
