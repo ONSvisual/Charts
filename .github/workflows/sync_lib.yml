@@ -42,7 +42,7 @@ jobs:
         
         # Copy to charts-lib (excluding .git and .github, delete extraneous files)
         echo "=== Running rsync to charts-lib ==="
-        rsync -av --delete --exclude='.git' --exclude='.github' source-repo/ charts-lib/
+        rsync -av --delete-excluded --exclude='.git' --exclude='.github' source-repo/ charts-lib/
         
         # Debug: Check what's in the directory after copying
         echo "=== Debugging charts-lib after copy ==="
