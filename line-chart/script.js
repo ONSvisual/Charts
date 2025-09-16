@@ -13,15 +13,15 @@ function getXAxisTicks({
 	config
 }) {
 	let ticks = [];
-	const method = config.optional.xAxisTickMethod || "interval";
+	const method = config.xAxisTickMethod || "interval";
 	if (xDataType === 'date') {
 		const start = data[0].date;
 		const end = data[data.length - 1].date;
 		if (method === "total") {
-			const count = config.optional.xAxisTickCount ? config.optional.xAxisTickCount[size] : 5;
+			const count = config.xAxisTickCount ? config.xAxisTickCount[size] : 5;
 			ticks = d3.scaleTime().domain([start, end]).ticks(count);
 		} else if (method === "interval") {
-			const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+			const interval = config.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
 			const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
 			let d3Interval;
 			switch (interval.unit) {
@@ -43,20 +43,20 @@ function getXAxisTicks({
 			ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
 		}
 		if (!Array.isArray(ticks)) ticks = [];
-		if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
+		if (config.addFirstDate && !ticks.some(t => +t === +start)) {
 			ticks.unshift(start);
 		}
-		if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
+		if (config.addFinalDate && !ticks.some(t => +t === +end)) {
 			ticks.push(end);
 		}
 	} else {
 		// Numeric axis
 		if (method === "total") {
-			const count = config.optional.xAxisTickCount[size] || 5;
+			const count = config.xAxisTickCount[size] || 5;
 			const extent = d3.extent(data, d => d.date);
 			ticks = d3.ticks(extent[0], extent[1], count);
 		} else if (method === "interval") {
-			const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+			const interval = config.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
 			const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
 			const extent = d3.extent(data, d => d.date);
 			let current = extent[0];
@@ -66,10 +66,10 @@ function getXAxisTicks({
 			}
 		}
 		if (!Array.isArray(ticks)) ticks = [];
-		if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
+		if (config.addFirstDate && !ticks.some(t => t === data[0].date)) {
 			ticks.unshift(data[0].date);
 		}
-		if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+		if (config.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
 			ticks.push(data[data.length - 1].date);
 		}
 	}
@@ -84,10 +84,10 @@ function drawGraphic() {
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
-	const aspectRatio = config.optional.aspectRatio[size]
+	const aspectRatio = config.aspectRatio[size]
 
 	// Define the dimensions and margin, width and height of the chart.
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 
@@ -122,16 +122,16 @@ function drawGraphic() {
 
 	let maxY, minY;
 
-	if (config.essential.yDomainMax === "auto") {
+	if (config.yDomainMax === "auto") {
 		maxY = d3.max(graphic_data, d => d3.max(categories, c => d[c]));
 	} else {
-		maxY = config.essential.yDomainMax;
+		maxY = config.yDomainMax;
 	}
 
-	if (config.essential.yDomainMin === "auto") {
+	if (config.yDomainMin === "auto") {
 		minY = d3.min(graphic_data, d => d3.min(categories, c => d[c]));
 	} else {
-		minY = config.essential.yDomainMin;
+		minY = config.yDomainMin;
 	}
 
 	// Ensure maxY is not less than minY
@@ -160,7 +160,7 @@ function drawGraphic() {
 			.x((d) => x(d.date))
 			.y((d) => y(d[category]))
 			.defined(d => d[category] !== null) // Only plot lines where we have values
-			.curve(d3[config.essential.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
+			.curve(d3[config.lineCurveType]) // I used bracket notation here to access the curve type as it's a string
 			.context(null);
 
 		svg
@@ -169,8 +169,8 @@ function drawGraphic() {
 			.attr('fill', 'none')
 			.attr(
 				'stroke',
-				config.essential.colour_palette[
-				categories.indexOf(category) % config.essential.colour_palette.length
+				config.colour_palette[
+				categories.indexOf(category) % config.colour_palette.length
 				]
 			)
 			.attr('stroke-width', 3)
@@ -179,14 +179,14 @@ function drawGraphic() {
 			.style('stroke-linecap', 'round');
 
 		const lastDatum = graphic_data[graphic_data.length - 1];
-		if (lastDatum[category] === null || (config.essential.drawLegend || size === 'sm')) return;
+		if (lastDatum[category] === null || (config.drawLegend || size === 'sm')) return;
 		const label = svg.append('text')
 			.attr('class', 'directLineLabel')
 			.attr('x', x(lastDatum.date) + 10)
 			.attr('y', y(lastDatum[category]))
 			.attr('dy', '.35em')
 			.attr('text-anchor', 'start')
-			.attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+			.attr('fill', config.text_colour_palette[index % config.text_colour_palette.length])
 			.text(category)
 			.call(wrap, margin.right - 10);
 		const bbox = label.node().getBBox();
@@ -202,12 +202,12 @@ function drawGraphic() {
 
 
 		// size === 'sm'
-		if (config.essential.drawLegend || size === 'sm') {
+		if (config.drawLegend || size === 'sm') {
 			// Set up the legend
 			let legenditem = d3
 				.select('#legend')
 				.selectAll('div.legend--item')
-				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
+				.data(categories.map((c, i) => [c, config.colour_palette[i % config.colour_palette.length]]))
 				.enter()
 				.append('div')
 				.attr('class', 'legend--item');
@@ -238,7 +238,7 @@ function drawGraphic() {
 		.call(
 			d3
 				.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
+				.ticks(config.yAxisTicks[size])
 				.tickSize(-chart_width)
 				.tickFormat('')
 		)
@@ -246,7 +246,7 @@ function drawGraphic() {
 
 	d3.selectAll('g.tick line')
 		.each(function (e) {
-			if (e == config.essential.zeroLine) {
+			if (e == config.zeroLine) {
 				d3.select(this).attr('class', 'zero-line');
 			}
 		})
@@ -265,16 +265,16 @@ function drawGraphic() {
 					size,
 					config
 				}))
-				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-					: d3.format(config.essential.xAxisNumberFormat)(d))
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisTickFormat[size])(d)
+					: d3.format(config.xAxisNumberFormat)(d))
 		);
 
 	// Add the y-axis
 	svg
 		.append('g')
 		.attr('class', 'y axis numeric')
-		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-			.tickFormat(d3.format(config.essential.yAxisNumberFormat))
+		.call(d3.axisLeft(y).ticks(config.yAxisTicks[size])
+			.tickFormat(d3.format(config.yAxisNumberFormat))
 			.tickSize(0));
 
 
@@ -284,7 +284,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: 5 - margin.left,
 		yPosition: -15,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
@@ -294,13 +294,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + margin.bottom - 25,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -310,11 +310,11 @@ function drawGraphic() {
 }
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+d3.csv(config.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+		if (d3.timeParse(config.dateFormat)(d.date) !== null) {
 			return {
-				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				date: d3.timeParse(config.dateFormat)(d.date),
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date')
 					.map(([key, value]) => [key, value == "" ? null : +value]) // Checking for missing values so that they can be separated from zeroes
@@ -352,7 +352,7 @@ function createDirectLabels(categories, graphic_data, svg, x, y, margin, size, c
             .attr('y', y(lastDatum[category]))
             .attr('dy', '.35em')
             .attr('text-anchor', 'start')
-            .attr('fill', config.essential.text_colour_palette[index % config.essential.text_colour_palette.length])
+            .attr('fill', config.text_colour_palette[index % config.text_colour_palette.length])
             .text(category)
             .call(wrap, margin.right - 10);
         const bbox = label.node().getBBox();

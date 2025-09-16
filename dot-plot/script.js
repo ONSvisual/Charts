@@ -10,11 +10,11 @@ function drawGraphic() {
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
 
-	let margin = config.optional.margin[size];
+	let margin = config.margin[size];
 	let chart_width =
 		parseInt(graphic.style('width')) - margin.left - margin.right;
 	//height is set by unique options in column name * a fixed height
-	let height = config.optional.seriesHeight[size] * graphic_data.length;
+	let height = config.seriesHeight[size] * graphic_data.length;
 
 	// Get the column headers with numbers in
 	const keys = Object.keys(graphic_data[0]).slice(1)
@@ -26,20 +26,20 @@ function drawGraphic() {
 
 	const colour = d3.scaleOrdinal()
 		.domain(keys)
-		.range(config.essential.colour_palette);
+		.range(config.colour_palette);
 
-	if (config.essential.xDomain == 'auto') {
+	if (config.xDomain == 'auto') {
 		let max = d3.max(graphic_data, d => d3.max(keys, col => parseFloat(d[col])));
 		let min = d3.min([0,d3.min(graphic_data,d => d3.min(keys, col => parseFloat(d[col])))])
 		x.domain([min, max]);
 	} else {
-		x.domain(config.essential.xDomain);
+		x.domain(config.xDomain);
 	}
 
 	//use the data to find unique entries in the name column
 	y.domain(graphic_data.map((d) => d.name));
 
-	const processedData = handleMetricOverlap(graphic_data, x, y, keys, { specialCategories: config.essential.categoriesToMakeDiamonds });
+	const processedData = handleMetricOverlap(graphic_data, x, y, keys, { specialCategories: config.categoriesToMakeDiamonds });
 
 	//set up yAxis generator
 	let yAxis = d3.axisLeft(y).tickSize(-chart_width).tickPadding(10);
@@ -48,15 +48,15 @@ function drawGraphic() {
 	let xAxis = d3
 		.axisBottom(x)
 		.tickSize(-height)
-		.ticks(config.optional.xAxisTicks[size])
-		.tickFormat(d3.format(config.essential.xAxisNumberFormat));
+		.ticks(config.xAxisTicks[size])
+		.tickFormat(d3.format(config.xAxisNumberFormat));
 
 	// Set up the legend
 	let legenditem = d3
 		.select('#legend')
 		.selectAll('div.legend--item')
 		.data(
-			d3.zip(config.essential.legendLabels, config.essential.colour_palette)
+			d3.zip(config.legendLabels, config.colour_palette)
 		)
 		.enter()
 		.append('div')
@@ -64,7 +64,7 @@ function drawGraphic() {
 
 	legenditem
 		.append('div')
-		.attr('class', (d,i)=>config.essential.categoriesToMakeDiamonds.includes(keys[i]) ? 'legend--icon--diamond' : 'legend--icon--circle')
+		.attr('class', (d,i)=>config.categoriesToMakeDiamonds.includes(keys[i]) ? 'legend--icon--diamond' : 'legend--icon--circle')
 		.style('background-color', function (d) {
 			return d[1];
 		});
@@ -210,13 +210,13 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + 30,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -224,7 +224,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 

@@ -2,6 +2,8 @@
   --ons-color-black: #222;
   --ons-color-grey-100: #414042;
   --ons-color-grey-75: #707071;
+  --ons-color-grey-60: #8d8c8e;
+  --ons-color-grey-50: #a09fa0;
   --ons-color-grey-40: #b3b3b3;
   --ons-color-grey-35: #bcbcbd;
   --ons-color-grey-25: #d5d5d6;
@@ -223,6 +225,21 @@ text {
   forced-color-adjust: auto;
 }
 
+/* title for small multiple panels */
+text.title {
+  font-weight: 600;
+  font-size: 14px;
+  fill: var(--ons-color-grey-100);
+}
+
+/* title for sub-groups in charts with groups */
+.groupLabels {
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  fill: var(--ons-color-grey-100);
+}
 
 svg.chart:focus {
   box-shadow: 0 0 0 2px var(--ons-color-black),
@@ -273,6 +290,13 @@ svg.chart .axis line {
 g.tick line.zero-line {
   stroke: var(--ons-color-grey-40);
   stroke-width: 2px;
+}
+
+/* guidelines for dot plots and similar */
+.guideline {
+  stroke: var(--ons-color-grey-20);
+  stroke-width: 1px;
+  stroke-dasharray: 2 2;
 }
 
 /* this sets the style for lines charts */
@@ -373,13 +397,13 @@ h5#source {
 }
 
 .annotation-line {
-  stroke:var(--ons-color-grey-40);
+  stroke: var(--ons-color-grey-40);
   stroke-width: 2px;
   stroke-dasharray: 4 4;
 }
 
 .annotation-range {
-  fill:var(--ons-color-grey-10);
+  fill: var(--ons-color-grey-10);
   stroke-width: 2px;
   stroke-dasharray: 4 4;
 }
