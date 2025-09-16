@@ -34,13 +34,12 @@ jobs:
     
     - name: Clear existing lib folders in target repo
       run: |
+        # Clear charts-lib content but preserve .git and .github
+        find charts-lib -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.github' -exec rm -rf {} +
+        
         # Clear lib folder
-        rm -rf charts-lib/
-        mkdir -p charts-lib/
-
         rm -rf otherCharts/lib
         mkdir -p otherCharts/lib
-    
     - name: Copy files to target repo (excluding GitHub Actions)
       run: |
         # Copy
