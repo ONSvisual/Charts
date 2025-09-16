@@ -32,8 +32,8 @@ function drawGraphic() {
 
 	//Set up some of the basics and return the size value ('sm', 'md' or 'lg')
 	size = initialise(size);
-	const aspectRatio = config.optional.aspectRatio[size]
-	let margin = config.optional.margin[size];
+	const aspectRatio = config.aspectRatio[size]
+	let margin = config.margin[size];
 	let chart_width = parseInt(graphic.style('width')) - margin.left - margin.right;
 	let height = (aspectRatio[1] / aspectRatio[0]) * chart_width;
 
@@ -132,158 +132,158 @@ function drawGraphic() {
 		// Get categories (series) for this option
 		const categories = Object.keys(filteredData[0]).filter((k) => k !== 'date' && k !== 'option');
 
-		// Set y domain for "auto" min/max using filtered data
-		let yDomainMin = config.essential.yDomainMin;
-		let yDomainMax = config.essential.yDomainMax;
-		if (yDomainMin === "auto" || yDomainMax === "auto") {
-			const [minY, maxY] = getYDomainMinMax({
-				minType: yDomainMin,
-				maxType: yDomainMax,
-				allData: graphic_data,
-				filteredData: filteredData,
-				categories
-			});
-			y.domain([minY, maxY]);
-
-			// Update y axis
-			svg.select('.y.axis.numeric')
-				.transition()
-				.duration(500)
-				.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-					.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
-			// Update grid lines
-			svg.select('.grid')
-				.transition()
-				.duration(500)
-				.call(
-					d3.axisLeft(y)
-						.ticks(config.optional.yAxisTicks[size])
-						.tickSize(-chart_width)
-						.tickFormat('')
-				);
-		}
-
-		// Prepare data for binding - create array of objects with category info
-		const lineData = categories.map((category, index) => ({
-			category: category,
-			index: index,
-			data: filteredData,
-			color: config.essential.colour_palette[index % config.essential.colour_palette.length]
-		}));
-
-		// Create line generator
-		const lineGenerator = d3.line()
-			.x((d) => x(d.date))
-			.y((d) => y(d[lineData.category])) // This will be set per line
-			.defined(d => d[lineData.category] !== null)
-			.curve(d3[config.essential.lineCurveType]);
-
-		// LINES: Bind data and handle enter/update/exit
-		const lines = svg.selectAll('path.line')
-			.data(lineData, d => d.category); // Use category as key for object constancy
-
-		// EXIT: Remove old lines
-		lines.exit()
-			.transition()
-			.duration(300)
-			.style('opacity', 0)
-			.remove();
-
-		// ENTER: Add new lines
-		const linesEnter = lines.enter()
-			.append('path')
-			.attr('class', 'line')
-			.attr('fill', 'none')
-			.attr('stroke-width', 3)
-			.style('stroke-linejoin', 'round')
-			.style('stroke-linecap', 'round')
-			.style('opacity', 0);
-
-		// UPDATE + ENTER: Update all lines (both new and existing)
-		const linesUpdate = linesEnter.merge(lines);
-
-		linesUpdate
-			.transition()
-			.duration(500)
-			.style('opacity', 1)
-			.attr('stroke', d => d.color)
-			.attr('d', d => {
-				// Set the y accessor for this specific line
-				const customLineGenerator = d3.line()
-					.x((datum) => x(datum.date))
-					.y((datum) => y(datum[d.category]))
-					.defined(datum => datum[d.category] !== null)
-					.curve(d3[config.essential.lineCurveType]);
-				return customLineGenerator(d.data);
-			});
-
-		// CIRCLES: Handle end-of-line circles
-		const circleData = categories.map((category, index) => {
-			const lastDatum = [...filteredData].reverse().find(d => d[category] != null && d[category] !== "");
-			return {
-				category: category,
-				index: index,
-				x: x(lastDatum.date),
-				y: y(lastDatum[category]),
-				color: config.essential.colour_palette[index % config.essential.colour_palette.length]
-			};
+	// Set y domain for "auto" min/max using filtered data
+	let yDomainMin = config.yDomainMin;
+	let yDomainMax = config.yDomainMax;
+	if (yDomainMin === "auto" || yDomainMax === "auto") {
+		const [minY, maxY] = getYDomainMinMax({
+			minType: yDomainMin,
+			maxType: yDomainMax,
+			allData: graphic_data,
+			filteredData: filteredData,
+			categories
 		});
-
-		const circles = svg.selectAll('circle.line-end')
-			.data(circleData, d => d.category); // Use category as key
-
-		// EXIT: Remove old circles
-		circles.exit()
-			.transition()
-			.duration(300)
-			.attr('r', 0)
-			.style('opacity', 0)
-			.remove();
-
-		// ENTER: Add new circles
-		const circlesEnter = circles.enter()
-			.append('circle')
-			.attr('class', 'line-end')
-			.attr('r', 0)
-			.style('opacity', 0);
-
-		// UPDATE + ENTER: Update all circles
-		const circlesUpdate = circlesEnter.merge(circles);
-
-		circlesUpdate
+		y.domain([minY, maxY]);
+		
+		// Update y axis
+		svg.select('.y.axis.numeric')
 			.transition()
 			.duration(500)
-			// .delay(250) // Slight delay so circles animate after lines
-			.attr('cx', d => d.x)
-			.attr('cy', d => d.y)
-			.attr('r', 4)
-			.attr('fill', d => d.color)
-			.style('opacity', 1);
-
-		// LABELS AND LEADER LINES: Handle similarly if needed
-		// Remove existing labels and leader lines with transition
-		svg.selectAll('text.directLineLabel')
+			.call(d3.axisLeft(y).ticks(config.yAxisTicks[size])
+				.tickFormat(d3.format(config.yAxisNumberFormat)));
+		// Update grid lines
+		svg.select('.grid')
 			.transition()
-			.duration(300)
-			.style('opacity', 0)
-			.remove();
+			.duration(500)
+			.call(
+				d3.axisLeft(y)
+					.ticks(config.yAxisTicks[size])
+					.tickSize(-chart_width)
+					.tickFormat('')
+			);
+	}
 
-		svg.selectAll('line.label-leader-line')
-			.transition()
-			.duration(300)
-			.style('opacity', 0)
-			.remove();
+	// Prepare data for binding - create array of objects with category info
+    const lineData = categories.map((category, index) => ({
+        category: category,
+        index: index,
+        data: filteredData,
+        color: config.colour_palette[index % config.colour_palette.length]
+    }));
+    
+    // Create line generator
+    const lineGenerator = d3.line()
+        .x((d) => x(d.date))
+        .y((d) => y(d[lineData.category])) // This will be set per line
+        .defined(d => d[lineData.category] !== null)
+        .curve(d3[config.lineCurveType]);
+    
+    // LINES: Bind data and handle enter/update/exit
+    const lines = svg.selectAll('path.line')
+        .data(lineData, d => d.category); // Use category as key for object constancy
+    
+    // EXIT: Remove old lines
+    lines.exit()
+        .transition()
+        .duration(300)
+        .style('opacity', 0)
+        .remove();
+    
+    // ENTER: Add new lines
+    const linesEnter = lines.enter()
+        .append('path')
+        .attr('class', 'line')
+        .attr('fill', 'none')
+        .attr('stroke-width', 3)
+        .style('stroke-linejoin', 'round')
+        .style('stroke-linecap', 'round')
+        .style('opacity', 0);
+    
+    // UPDATE + ENTER: Update all lines (both new and existing)
+    const linesUpdate = linesEnter.merge(lines);
+    
+    linesUpdate
+        .transition()
+        .duration(500)
+        .style('opacity', 1)
+        .attr('stroke', d => d.color)
+        .attr('d', d => {
+            // Set the y accessor for this specific line
+            const customLineGenerator = d3.line()
+                .x((datum) => x(datum.date))
+                .y((datum) => y(datum[d.category]))
+                .defined(datum => datum[d.category] !== null)
+                .curve(d3[config.lineCurveType]);
+            return customLineGenerator(d.data);
+        });
+    
+    // CIRCLES: Handle end-of-line circles
+    const circleData = categories.map((category, index) => {
+        const lastDatum = [...filteredData].reverse().find(d => d[category] != null && d[category] !== "");
+        return {
+            category: category,
+            index: index,
+            x: x(lastDatum.date),
+            y: y(lastDatum[category]),
+            color: config.colour_palette[index % config.colour_palette.length]
+        };
+    });
+    
+    const circles = svg.selectAll('circle.line-end')
+        .data(circleData, d => d.category); // Use category as key
+    
+    // EXIT: Remove old circles
+    circles.exit()
+        .transition()
+        .duration(300)
+        .attr('r', 0)
+        .style('opacity', 0)
+        .remove();
+    
+    // ENTER: Add new circles
+    const circlesEnter = circles.enter()
+        .append('circle')
+        .attr('class', 'line-end')
+        .attr('r', 0)
+        .style('opacity', 0);
+    
+    // UPDATE + ENTER: Update all circles
+    const circlesUpdate = circlesEnter.merge(circles);
+    
+    circlesUpdate
+        .transition()
+        .duration(500)
+        // .delay(250) // Slight delay so circles animate after lines
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', 4)
+        .attr('fill', d => d.color)
+        .style('opacity', 1);
+    
+    // LABELS AND LEADER LINES: Handle similarly if needed
+    // Remove existing labels and leader lines with transition
+    svg.selectAll('text.directLineLabel')
+        .transition()
+        .duration(300)
+        .style('opacity', 0)
+        .remove();
+    
+    svg.selectAll('line.label-leader-line')
+        .transition()
+        .duration(300)
+        .style('opacity', 0)
+        .remove();
 
-		// Handle legend vs direct labels
-		if (config.essential.drawLegend || size === 'sm') {
-			// Create legend (moved outside the loop)
-			let legenditem = d3
-				.select('#legend')
-				.selectAll('div.legend--item')
-				.data(categories.map((c, i) => [c, config.essential.colour_palette[i % config.essential.colour_palette.length]]))
-				.enter()
-				.append('div')
-				.attr('class', 'legend--item');
+	// Handle legend vs direct labels
+	if (config.drawLegend || size === 'sm') {
+		// Create legend (moved outside the loop)
+		let legenditem = d3
+			.select('#legend')
+			.selectAll('div.legend--item')
+			.data(categories.map((c, i) => [c, config.colour_palette[i % config.colour_palette.length]]))
+			.enter()
+			.append('div')
+			.attr('class', 'legend--item');
 
 			legenditem
 				.append('div')
@@ -320,8 +320,7 @@ function drawGraphic() {
 		}
 	}
 
-	// Define the dimensions and margin, width and height of the chart.
-	// Remove duplicate declarations of margin, chart_width, and height in drawGraphic
+	
 
 	// Get categories from the keys used in the stack generator
 	const categories = Object.keys(graphic_data[0]).filter((k) => k !== 'date' && k !== 'option');
@@ -351,8 +350,8 @@ function drawGraphic() {
 		.range([height, 0]);
 
 	// Set y domain for "autoAll" or manual values, but not for "auto"
-	let yDomainMin = config.essential.yDomainMin;
-	let yDomainMax = config.essential.yDomainMax;
+	let yDomainMin = config.yDomainMin;
+	let yDomainMax = config.yDomainMax;
 	if (yDomainMin === "auto" || yDomainMax === "auto") {
 		// Will be set in changeData for filtered data
 	} else {
@@ -374,71 +373,71 @@ function drawGraphic() {
 		size,
 		config
 	}) {
-		let ticks = [];
-		const method = config.optional.xAxisTickMethod || "interval";
-		if (xDataType === 'date') {
-			const start = data[0].date;
-			const end = data[data.length - 1].date;
-			if (method === "total") {
-				// Use d3.ticks for total number of ticks
-				const count = config.optional.xAxisTickCount[size] || 5;
-				ticks = d3.scaleTime().domain([start, end]).ticks(count);
-			} else if (method === "interval") {
-				// Use d3.time* for interval ticks
-				const interval = config.optional.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
-				const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
-				let d3Interval;
-				switch (interval.unit) {
-					case "year":
-						d3Interval = d3.timeYear.every(step);
-						break;
-					case "month":
-						d3Interval = d3.timeMonth.every(step);
-						break;
-					case "quarter":
-						d3Interval = d3.timeMonth.every(step * 3);
-						break;
-					case "day":
-						d3Interval = d3.timeDay.every(step);
-						break;
-					default:
-						d3Interval = d3.timeYear.every(1);
-				}
-				ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
-			}
-			// Only add first/last if not present by value
-			if (config.optional.addFirstDate && !ticks.some(t => +t === +start)) {
-				ticks.unshift(start);
-			}
-			if (config.optional.addFinalDate && !ticks.some(t => +t === +end)) {
-				ticks.push(end);
-			}
-		} else {
-			// Numeric axis
-			if (method === "total") {
-				const count = config.optional.xAxisTickCount[size] || 5;
-				const extent = d3.extent(data, d => d.date);
-				ticks = d3.ticks(extent[0], extent[1], count);
-			} else if (method === "interval") {
-				const interval = config.optional.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
-				const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
-				const extent = d3.extent(data, d => d.date);
-				let current = extent[0];
-				while (current <= extent[1]) {
-					ticks.push(current);
-					current += step;
-				}
-			}
-			if (config.optional.addFirstDate && !ticks.some(t => t === data[0].date)) {
-				ticks.unshift(data[0].date);
-			}
-			if (config.optional.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
-				ticks.push(data[data.length - 1].date);
-			}
-		}
-		// Remove duplicates and sort
-		ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
-		return ticks;
+	    let ticks = [];
+	    const method = config.xAxisTickMethod || "interval";
+	    if (xDataType === 'date') {
+	        const start = data[0].date;
+	        const end = data[data.length - 1].date;
+	        if (method === "total") {
+	            // Use d3.ticks for total number of ticks
+	            const count = config.xAxisTickCount[size] || 5;
+	            ticks = d3.scaleTime().domain([start, end]).ticks(count);
+	        } else if (method === "interval") {
+	            // Use d3.time* for interval ticks
+	            const interval = config.xAxisTickInterval || { unit: "year", step: { sm: 1, md: 1, lg: 1 } };
+	            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+	            let d3Interval;
+	            switch (interval.unit) {
+	                case "year":
+	                    d3Interval = d3.timeYear.every(step);
+	                    break;
+	                case "month":
+	                    d3Interval = d3.timeMonth.every(step);
+	                    break;
+	                case "quarter":
+	                    d3Interval = d3.timeMonth.every(step * 3);
+	                    break;
+	                case "day":
+	                    d3Interval = d3.timeDay.every(step);
+	                    break;
+	                default:
+	                    d3Interval = d3.timeYear.every(1);
+	            }
+	            ticks = d3Interval.range(start, d3.timeDay.offset(end, 1));
+	        }
+	        // Only add first/last if not present by value
+	        if (config.addFirstDate && !ticks.some(t => +t === +start)) {
+	            ticks.unshift(start);
+	        }
+	        if (config.addFinalDate && !ticks.some(t => +t === +end)) {
+	            ticks.push(end);
+	        }
+	    } else {
+	        // Numeric axis
+	        if (method === "total") {
+	            const count = config.xAxisTickCount[size] || 5;
+	            const extent = d3.extent(data, d => d.date);
+	            ticks = d3.ticks(extent[0], extent[1], count);
+	        } else if (method === "interval") {
+	            const interval = config.xAxisTickInterval || { unit: "number", step: { sm: 1, md: 1, lg: 1 } };
+	            const step = typeof interval.step === 'object' ? interval.step[size] : interval.step;
+	            const extent = d3.extent(data, d => d.date);
+	            let current = extent[0];
+	            while (current <= extent[1]) {
+	                ticks.push(current);
+	                current += step;
+	            }
+	        }
+	        if (config.addFirstDate && !ticks.some(t => t === data[0].date)) {
+	            ticks.unshift(data[0].date);
+	        }
+	        if (config.addFinalDate && !ticks.some(t => t === data[data.length - 1].date)) {
+	            ticks.push(data[data.length - 1].date);
+	        }
+	    }
+	    // Remove duplicates and sort
+	    ticks = Array.from(new Set(ticks.map(t => +t))).sort((a, b) => a - b).map(t => xDataType === 'date' ? new Date(t) : t);
+	    return ticks;
 	}
 
 	// In drawGraphic, replace the x-axis tickValues logic:
@@ -455,16 +454,16 @@ function drawGraphic() {
 					size,
 					config
 				}))
-				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.essential.xAxisTickFormat[size])(d)
-					: d3.format(config.essential.xAxisNumberFormat)(d))
+				.tickFormat((d) => xDataType == 'date' ? d3.timeFormat(config.xAxisTickFormat[size])(d)
+					: d3.format(config.xAxisNumberFormat)(d))
 		);
 
 	// Add the y-axis
 	svg
 		.append('g')
 		.attr('class', 'y axis numeric')
-		.call(d3.axisLeft(y).ticks(config.optional.yAxisTicks[size])
-			.tickFormat(d3.format(config.essential.yAxisNumberFormat)));
+		.call(d3.axisLeft(y).ticks(config.yAxisTicks[size])
+			.tickFormat(d3.format(config.yAxisNumberFormat)));
 
 
 
@@ -473,7 +472,7 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: 5 - margin.left,
 		yPosition: -15,
-		text: config.essential.yAxisLabel,
+		text: config.yAxisLabel,
 		textAnchor: "start",
 		wrapWidth: chart_width
 	});
@@ -483,18 +482,18 @@ function drawGraphic() {
 		svgContainer: svg,
 		xPosition: chart_width,
 		yPosition: height + margin.bottom - 25,
-		text: config.essential.xAxisLabel,
+		text: config.xAxisLabel,
 		textAnchor: "end",
 		wrapWidth: chart_width
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//if there is a default option, set it
-	if (config.essential.defaultOption) {
-		$('#optionsSelect').val(config.essential.defaultOption).trigger('chosen:updated');
-		changeData(config.essential.defaultOption);
+	if (config.defaultOption) {
+		$('#optionsSelect').val(config.defaultOption).trigger('chosen:updated');
+		changeData(config.defaultOption);
 	} else {
 		// If no default option, clear the chart
 		clearChart();
@@ -508,7 +507,7 @@ function drawGraphic() {
 		.attr('class', 'grid')
 		.call(
 			d3.axisLeft(y)
-				.ticks(config.optional.yAxisTicks[size])
+				.ticks(config.yAxisTicks[size])
 				.tickSize(-chart_width)
 				.tickFormat('')
 		)
@@ -522,11 +521,11 @@ function drawGraphic() {
 
 
 // Load the data
-d3.csv(config.essential.graphic_data_url).then((rawData) => {
+d3.csv(config.graphic_data_url).then((rawData) => {
 	graphic_data = rawData.map((d) => {
-		if (d3.timeParse(config.essential.dateFormat)(d.date) !== null) {
+		if (d3.timeParse(config.dateFormat)(d.date) !== null) {
 			return {
-				date: d3.timeParse(config.essential.dateFormat)(d.date),
+				date: d3.timeParse(config.dateFormat)(d.date),
 				option: d.option,
 				...Object.entries(d)
 					.filter(([key]) => key !== 'date' && key !== 'option') // Exclude 'date' and 'option' keys from the data

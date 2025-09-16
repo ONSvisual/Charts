@@ -32,11 +32,11 @@ function drawGraphic() {
 
 	function drawChart(container, seriesName, data, chartIndex) {
 
-		const chartEvery = config.optional.chart_every[size];
-		const chartsPerRow = config.optional.chart_every[size];
+		const chartEvery = config.chart_every[size];
+		const chartsPerRow = config.chart_every[size];
 		let chartPosition = chartIndex % chartsPerRow;
 
-		let margin = { ...config.optional.margin[size] };
+		let margin = { ...config.margin[size] };
 		let chartGap = config.optional?.chartGap || 10;
 
 		let chart_width = calculateChartWidth({
@@ -47,13 +47,13 @@ function drawGraphic() {
 		})
 
 		// If the chart is not in the first position in the row, reduce the left margin
-		if (config.optional.dropYAxis) {
+		if (config.dropYAxis) {
 			if (chartPosition !== 0) {
 				margin.left = chartGap;
 			}
 		}
 
-		const aspectRatio = config.optional.aspectRatio[size];
+		const aspectRatio = config.aspectRatio[size];
 		// let chart_width = calculateChartWidth(size)
 
 		//height is set by the aspect ratio
@@ -73,7 +73,7 @@ function drawGraphic() {
 		const colour = d3
 			.scaleOrdinal()
 			.domain(graphic_data.columns.slice(2))
-			.range(config.essential.colour_palette);
+			.range(config.colour_palette);
 
 		//use the data to find unique entries in the date column
 		x.domain([...new Set(graphic_data.map((d) => d.date))]);
@@ -82,20 +82,20 @@ function drawGraphic() {
 		const yAxis = d3.axisLeft(y)
 			.tickSize(-chart_width)
 			.tickPadding(10)
-			.ticks(config.optional.yAxisTicks[size])
-			.tickFormat((d) => config.optional.dropYAxis !== true ? d3.format(config.essential.yAxisTickFormat)(d) :
-				chartPosition == 0 ? d3.format(config.essential.yAxisTickFormat)(d) : "");
+			.ticks(config.yAxisTicks[size])
+			.tickFormat((d) => config.dropYAxis !== true ? d3.format(config.yAxisTickFormat)(d) :
+				chartPosition == 0 ? d3.format(config.yAxisTickFormat)(d) : "");
 
 		const stack = d3
 			.stack()
 			.keys(graphic_data.columns.slice(2))
-			.offset(d3[config.essential.stackOffset])
-			.order(d3[config.essential.stackOrder]);
+			.offset(d3[config.stackOffset])
+			.order(d3[config.stackOrder]);
 
 		const series = stack(data);
 		const seriesAll = stack(graphic_data);
 
-		let xTime = d3.timeFormat(config.essential.xAxisTickFormat[size])
+		let xTime = d3.timeFormat(config.xAxisTickFormat[size])
 
 		//set up xAxis generator
 		const xAxis = d3
@@ -116,16 +116,16 @@ function drawGraphic() {
 					return a - b
 				})
 				.filter(function (d, i) {
-					return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
-				}) : x.domain().filter((d, i) => { return i % config.optional.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.optional.xAxisTicksEvery[size] || i == data.length - 1 })
+					return i % config.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.xAxisTicksEvery[size] || i == data.length - 1 //Rob's fussy comment about labelling the last date
+				}) : x.domain().filter((d, i) => { return i % config.xAxisTicksEvery[size] === 0 && i <= graphic_data.length - config.xAxisTicksEvery[size] || i == data.length - 1 })
 			)
 			.tickFormat((d) => xDataType == 'date' ? xTime(d)
-				: d3.format(config.essential.xAxisNumberFormat)(d));
+				: d3.format(config.xAxisNumberFormat)(d));
 
 		// //Labelling the first and/or last bar if needed
-		// if (config.optional.showStartEndDate == true) {
+		// if (config.showStartEndDate == true) {
 		// 	xAxis.tickValues(x.domain().filter(function (d, i) {
-		// 		return !(i % config.optional.xAxisTicksEvery[size])
+		// 		return !(i % config.xAxisTicksEvery[size])
 		// 	}).concat(x.domain()[0], x.domain()[x.domain().length - 1]))
 		// }
 
@@ -137,14 +137,14 @@ function drawGraphic() {
 			margin: margin
 		})
 
-		if (config.essential.yDomain == 'auto') {
+		if (config.yDomain == 'auto') {
 			y.domain(d3.extent(seriesAll.flat(2))); //flatten the arrays and then get the extent
 		} else {
-			y.domain(config.essential.yDomain);
+			y.domain(config.yDomain);
 		}
 
 		//Getting the list of colours used in this visualisation
-		let colours = [...config.essential.colour_palette].slice(0, graphic_data.columns.slice(2).length)
+		let colours = [...config.colour_palette].slice(0, graphic_data.columns.slice(2).length)
 
 		// Set up the legend
 		let legenditem = d3
@@ -174,7 +174,7 @@ function drawGraphic() {
 
 		if (size !== 'sm') {
 			d3.select('#legend')
-				.style('grid-template-columns', `repeat(${config.optional.legendColumns}, 1fr)`)
+				.style('grid-template-columns', `repeat(${config.legendColumns}, 1fr)`)
 		}
 
 		svg
@@ -201,7 +201,7 @@ function drawGraphic() {
 			.selectAll('g')
 			.data(series)
 			.join('g')
-			.attr('fill', (d, i) => config.essential.colour_palette[i])
+			.attr('fill', (d, i) => config.colour_palette[i])
 			.selectAll('rect')
 			.data((d) => d)
 			.join('rect')
@@ -223,7 +223,7 @@ function drawGraphic() {
 			svgContainer: svg,
 			xPosition: 5 - margin.left,
 			yPosition: -10,
-			text: chartIndex % chartEvery == 0 ? config.essential.yAxisLabel : "",
+			text: chartIndex % chartEvery == 0 ? config.yAxisLabel : "",
 			textAnchor: "start",
 			wrapWidth: chart_width
 		});
@@ -235,7 +235,7 @@ function drawGraphic() {
 	});
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -243,11 +243,11 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
-	let parseTime = d3.timeParse(config.essential.dateFormat);
+	let parseTime = d3.timeParse(config.dateFormat);
 
 	data.forEach((d, i) => {
 

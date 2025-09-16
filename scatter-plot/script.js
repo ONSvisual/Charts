@@ -25,11 +25,11 @@ function drawGraphic() {
   //Set up some of the basics and return the size value ('sm', 'md' or 'lg')
   size = initialise(size);
 
-  let colour = d3.scaleOrdinal(config.essential.colour_palette);
+  let colour = d3.scaleOrdinal(config.colour_palette);
 
-  let margin = config.optional.margin[size];
+  let margin = config.margin[size];
   let chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-  let height = (config.optional.aspectRatio[size][1] / config.optional.aspectRatio[size][0]) * chart_width;
+  let height = (config.aspectRatio[size][1] / config.aspectRatio[size][0]) * chart_width;
 
   const x = d3.scaleLinear().range([0, chart_width]);
   const y = d3.scaleLinear().range([height, 0]);
@@ -104,27 +104,27 @@ function drawGraphic() {
 
 
 
-  if (config.essential.xDomain == "auto") {
+  if (config.xDomain == "auto") {
     x.domain([d3.min(graphic_data, d => d.xvalue), d3.max(graphic_data, d => d.xvalue)]);
   } else {
-    x.domain(config.essential.xDomain);
+    x.domain(config.xDomain);
   }
 
 
-  if (config.essential.yDomain == "auto") {
+  if (config.yDomain == "auto") {
     y.domain([d3.min(graphic_data, d => d.yvalue), d3.max(graphic_data, d => d.yvalue)]);
   } else {
-    y.domain(config.essential.yDomain);
+    y.domain(config.yDomain);
   }
 
   svg.append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0,${height})`)
     .call(d3.axisBottom(x)
-      .ticks(config.optional.xAxisTicks[size])
+      .ticks(config.xAxisTicks[size])
       .tickSize(-height)
       .tickPadding(10)
-      .tickFormat(d3.format(config.essential.xAxisFormat))
+      .tickFormat(d3.format(config.xAxisFormat))
     )
     .selectAll('line')
     .each(function (d) {
@@ -139,10 +139,10 @@ function drawGraphic() {
     .attr('class', 'axis numeric')
     .call(
       d3.axisLeft(y)
-        .ticks(config.optional.yAxisTicks[size])
+        .ticks(config.yAxisTicks[size])
         .tickSize(-chart_width)
         .tickPadding(10)
-        .tickFormat(d3.format(config.essential.yAxisFormat))
+        .tickFormat(d3.format(config.yAxisFormat))
     ).selectAll('line')
     .each(function (d) {
       if (d === 0) {
@@ -163,11 +163,11 @@ function drawGraphic() {
     })
     .attr('transform', d => `translate(${x(d.xvalue)},${y(d.yvalue)})`)
     .attr('fill', d => colour(d.group))
-    .attr('fill-opacity', config.essential.fillOpacity)
+    .attr('fill-opacity', config.fillOpacity)
     .attr('stroke', d => d.highlight === 'y' ? '#222' : "#fff")
     .attr('stroke-width', d => d.highlight === 'y' ? '1.5px' : '1px')
     .attr('stroke-linejoin', 'round')
-    .attr('stroke-opacity', config.essential.strokeOpacity);
+    .attr('stroke-opacity', config.strokeOpacity);
 
   // Clean up previous overlay if it exists
   if (overlayCleanup) {
@@ -188,11 +188,11 @@ function drawGraphic() {
     triangleSize: triangleSize,
     diamondSize: diamondSize,
     tooltipConfig: {
-      xValueFormat: d3.format(config.essential.xAxisFormat),
-      yValueFormat: d3.format(config.essential.yAxisFormat),
-      xLabel: config.essential.xAxisLabel || 'X Value',
-      yLabel: config.essential.yAxisLabel || 'Y Value',
-      groupLabel: config.essential.groupLabel || 'Group',
+      xValueFormat: d3.format(config.xAxisFormat),
+      yValueFormat: d3.format(config.yAxisFormat),
+      xLabel: config.xAxisLabel || 'X Value',
+      yLabel: config.yAxisLabel || 'Y Value',
+      groupLabel: config.groupLabel || 'Group',
       width: "250px",
       offset: { x: 3, y: 3 }
     },
@@ -218,7 +218,7 @@ function drawGraphic() {
     svgContainer: svg,
     xPosition: chart_width,
     yPosition: height + 40,
-    text: config.essential.xAxisLabel,
+    text: config.xAxisLabel,
     textAnchor: "end",
     wrapWidth: chart_width
   });
@@ -228,14 +228,14 @@ function drawGraphic() {
     svgContainer: svg,
     xPosition: -(margin.left - 5),
     yPosition: -10,
-    text: config.essential.yAxisLabel,
+    text: config.yAxisLabel,
     textAnchor: "start",
     wrapWidth: chart_width
   });
 
 
   //create link to source
-    addSource('source', config.essential.sourceText)
+    addSource('source', config.sourceText)
 
 
 
@@ -245,7 +245,7 @@ function drawGraphic() {
   }
 }
 
-d3.csv(config.essential.graphic_data_url)
+d3.csv(config.graphic_data_url)
   .then(data => {
     //load chart data
     graphic_data = data
