@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout source repository for lib
+    - name: Checkout source repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
         path: source-repo
     
-    - name: Checkout target repository for charts-lib
+    - name: Checkout target repository: charts-lib
       uses: actions/checkout@v4
       with:
         repository: ONSvisual/charts-lib
@@ -24,108 +24,50 @@ jobs:
         fetch-depth: 0
         path: charts-lib
 
-    - name: Checkout target repository for otherCharts
+    - name: Checkout target repository: otherCharts
       uses: actions/checkout@v4
       with:
         repository: ONSvisual/otherCharts
         token: ${{ secrets.SYNC_LIB }}
         fetch-depth: 0
         path: otherCharts
-        
-    - name: Debug and copy files to target repos
+    
+    - name: Replace lib folder in charts-lib
       run: |
-        # Debug: Check what's in the directories before copying
-        echo "=== Debugging charts-lib before copy ==="
-        ls -la charts-lib/
-        echo "=== Checking if .git exists ==="
-        test -d charts-lib/.git && echo ".git directory exists" || echo ".git directory MISSING"
-        
-        # Copy to charts-lib (excluding .git and .github, delete extraneous files)
-        echo "=== Running rsync to charts-lib ==="
-        rsync -av --delete-excluded --exclude='.git' --exclude='.github' source-repo/ charts-lib/
-        
-        # Debug: Check what's in the directory after copying
-        echo "=== Debugging charts-lib after copy ==="
-        ls -la charts-lib/
-        test -d charts-lib/.git && echo ".git directory still exists" || echo ".git directory GONE"
-        
-        # Clear and copy to otherCharts/lib
+        rm -rf charts-lib/lib
+        mkdir -p charts-lib/lib
+        rsync -av --exclude='.git' --exclude='.github' source-repo/lib/ charts-lib/lib/
+
+    - name: Replace lib folder in otherCharts
+      run: |
         rm -rf otherCharts/lib
         mkdir -p otherCharts/lib
-        rsync -av --exclude='.git' --exclude='.github' source-repo/ otherCharts/lib/
+        rsync -av --exclude='.git' --exclude='.github' source-repo/lib/ otherCharts/lib/
     
     - name: Commit and push changes to charts-lib
       run: |
-        echo "=== Final check before git commands ==="
-        ls -la charts-lib/
-        test -d charts-lib/.git && echo ".git directory exists" || echo ".git directory MISSING"
-        
         cd charts-lib
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
         
-        # Check if we're in a git repository
-        if ! git rev-parse --git-dir > /dev/null 2>&1; then
-          echo "ERROR: Not in a git repository!"
-          exit 1
-        fi
-        
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        
-        # Add all changes
-        git add --all
-        
-        # Only commit if there are changes
+        git add lib/
         if git diff --staged --quiet; then
-          echo "No changes to commit to charts-lib"
+          echo "No changes to commit in charts-lib"
         else
-          git commit -m "Sync from lib: ${{ github.sha }}"
+          git commit -m "Sync lib from source: ${{ github.sha }}"
           git push
         fi
-        
-    # - name: Clear existing lib folders in target repo
-    #   run: |
-    #     # Clear charts-lib content but preserve .git and .github
-    #     rsync -av --delete --exclude='.git' --exclude='.github' source-repo/ charts-lib/
-        
-    #     # Clear lib folder
-    #     rm -rf otherCharts/lib
-    #     mkdir -p otherCharts/lib
-    # - name: Copy files to target repo (excluding GitHub Actions)
-    #   run: |
-    #     # Copy
-    #     rsync -av --exclude='.git' --exclude='.github' source-repo/ otherCharts/lib/
-    
-    # - name: Commit and push changes to charts-lib
-    #   run: |
-    #     cd charts-lib
-    #     git config --local user.email "action@github.com"
-    #     git config --local user.name "GitHub Action"
-        
-    #     # Add all changes
-    #     git add --all
-        
-    #     # Only commit if there are changes
-    #     if git diff --staged --quiet; then
-    #       echo "No changes to commit to charts-lib"
-    #     else
-    #       git commit -m "Sync from lib: ${{ github.sha }}"
-    #       git push
-    #     fi
 
     - name: Commit and push changes to otherCharts
       run: |
         cd otherCharts
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
         
-        # Add all changes
         git add lib/
-        
-        # Only commit if there are changes
         if git diff --staged --quiet; then
-          echo "No changes to commit to otherCharts"
+          echo "No changes to commit in otherCharts"
         else
-          git commit -m "Sync from lib: ${{ github.sha }}"
+          git commit -m "Sync lib from source: ${{ github.sha }}"
           git push
         fi
-    
