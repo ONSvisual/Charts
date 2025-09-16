@@ -36,11 +36,11 @@ function drawGraphic() {
 
   // Create size scale for circles
   let sizeScale = null;
-  if (config.essential.sizeConfig.enabled && graphic_data.some(d => d[config.essential.sizeConfig.sizeField] !== undefined)) {
-    const sizeExtent = d3.extent(graphic_data, d => +d[config.essential.sizeConfig.sizeField]);
+  if (config.sizeConfig.enabled && graphic_data.some(d => d[config.sizeConfig.sizeField] !== undefined)) {
+    const sizeExtent = d3.extent(graphic_data, d => +d[config.sizeConfig.sizeField]);
     sizeScale = d3.scaleSqrt()
       .domain(sizeExtent)
-      .range([config.essential.sizeConfig.minSize, config.essential.sizeConfig.maxSize]);
+      .range([config.sizeConfig.minSize, config.sizeConfig.maxSize]);
   }
 
   svg = addSvg({
@@ -87,14 +87,14 @@ function drawGraphic() {
       .attr('cx', 15)
       .attr('cy', d => Math.round(Math.sqrt(sizeScale(d) / Math.PI)))
       .attr('r', d => Math.sqrt(sizeScale(d) / Math.PI))
-      .attr('fill', config.essential.colour_palette[0])
+      .attr('fill', config.colour_palette[0])
       .attr('stroke', 'white')
       .attr('stroke-width', 1);
 
     sizeLegendItems.append('span')
       .style('margin-left', '5px')
       .style('font-size', '12px')
-      .text(d => d3.format(config.essential.sizeLabelFormat)(d));
+      .text(d => d3.format(config.sizeLabelFormat)(d));
   }else{
     
 
@@ -208,8 +208,8 @@ function drawGraphic() {
 
   // Function to get symbol size based on data point
   function getSymbolSize(d) {
-    if (shape(d.group) === 'circle' && sizeScale && d[config.essential.sizeConfig.sizeField] !== undefined) {
-      return sizeScale(+d[config.essential.sizeConfig.sizeField]);
+    if (shape(d.group) === 'circle' && sizeScale && d[config.sizeConfig.sizeField] !== undefined) {
+      return sizeScale(+d[config.sizeConfig.sizeField]);
     }
     // Return default sizes for other shapes or when size scaling is disabled
     switch (shape(d.group)) {
@@ -224,7 +224,7 @@ function drawGraphic() {
   svg.append('g').selectAll('path')
     .data(graphic_data.sort((a, b) => { 
       if (sizeScale) { 
-        return d3.descending(a[config.essential.sizeConfig.sizeField],b[config.essential.sizeConfig.sizeField])
+        return d3.descending(a[config.sizeConfig.sizeField],b[config.sizeConfig.sizeField])
       } else {
         return 0
       }
@@ -258,7 +258,7 @@ function drawGraphic() {
     svgContainer: svg,
     data: graphic_data.sort((a, b) => { 
       if (sizeScale) { 
-        return d3.descending(a[config.essential.sizeConfig.sizeField],b[config.essential.sizeConfig.sizeField])
+        return d3.descending(a[config.sizeConfig.sizeField],b[config.sizeConfig.sizeField])
       } else {
         return 0
       }
@@ -269,7 +269,7 @@ function drawGraphic() {
     yScale: y,
     shape: shape,
     sizeScale: sizeScale,
-    sizeField: config.essential.sizeConfig.sizeField,
+    sizeField: config.sizeConfig.sizeField,
     getSymbolSize: getSymbolSize,
     tooltipConfig: {
       xValueFormat: d3.format(config.xAxisFormat),
@@ -298,7 +298,7 @@ function drawGraphic() {
     .style('font-weight', '600')
     .each(function(d){
       if(sizeScale){
-        wrap2(d3.select(this),100,Math.round(Math.sqrt(sizeScale(d[config.essential.sizeConfig.sizeField]) / Math.PI))/14+1,1,1.05,1,true,'middle')
+        wrap2(d3.select(this),100,Math.round(Math.sqrt(sizeScale(d[config.sizeConfig.sizeField]) / Math.PI))/14+1,1,1.05,1,true,'middle')
       } else {
         wrap2(d3.select(this),100,1.5,1,1.05,1,true,'middle')
       }
@@ -347,8 +347,8 @@ d3.csv(config.graphic_data_url,d3.autoType)
     }));
 
     // Sort for rendering (largest circles first)
-    if (config.essential.sizeConfig.enabled) {
-      graphic_data.sort((a, b) => (+b[config.essential.sizeConfig.sizeField]) - (+a[config.essential.sizeConfig.sizeField]));
+    if (config.sizeConfig.enabled) {
+      graphic_data.sort((a, b) => (+b[config.sizeConfig.sizeField]) - (+a[config.sizeConfig.sizeField]));
     }
 
     //use pym to create iframed chart dependent on specified variables
