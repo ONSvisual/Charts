@@ -43,6 +43,7 @@ config = {
 	"yAxisLabel": "y axis label",
 	"xAxisLabel": "",
 	"zeroLine": "0",
+	"addEndMarkers":true,
 
 	"aspectRatio": {
 		"sm": [1, 1],
