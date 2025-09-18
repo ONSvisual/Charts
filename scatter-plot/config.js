@@ -1,6 +1,6 @@
 config={
   "graphic_data_url": "data.csv",
-  "colour_palette": ["#206095","#A8BD3A","#F66068","#27A0CC"],
+  "colour_palette": ONSpalette,
   "fillOpacity":1,
   "strokeOpacity":1,
   "radius": "4",
