@@ -6,10 +6,7 @@ The official repository for all publication ready ONS charts. See our
 [chart menu](https://onsvisual.github.io/Charts/chart-menu/) and
 [service manual](https://service-manual.ons.gov.uk/data-visualisation)
 for more guidance on the use of these charts, and of charts more
-generally. This repo uses
-[charts-lib](https://github.com/ONSvisual/charts-lib/) to maintain the
-central lib files. If you want to change `helpers.js` or
-`globalStyle.css` or other central file, do it there.
+generally.
 
 We currently maintain a separate [map templates
 repository](https://github.com/ONSvisual/maptemplates).
@@ -42,9 +39,6 @@ the team will have a look.
 -   All initial commits of charts must must follow [JavaScript
     ES6](https://www.w3schools.com/js/js_es6.asp) standards and use [D3
     v6](https://observablehq.com/@d3/d3v6-migration-guide) or higher.
--   Before making additions to the `lib` folder please do check the [ONS
-    CDN](https://github.com/ONSdigital/cdn.ons.gov.uk-vendor) as your
-    addition to the lib folder may already to uploaded.
 
 ### Charts uploaded so far
 

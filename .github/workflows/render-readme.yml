@@ -30,6 +30,11 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add README.md
-          git commit -m "Render README.md from README.Rmd" || echo "No changes to commit"
-          git push
+          git add README.md       
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Render README.md from README.Rmd"
+            git push
+          fi
