@@ -243,7 +243,7 @@ function drawGraphic() {
     .attr('transform', d => `translate(${x(d.xvalue)},${y(d.yvalue)})`)
     .attr('fill', d => colour(d.group))
     .attr('fill-opacity', config.fillOpacity)
-    .attr('stroke', d => d.highlight === 'y' ? '#222' : "#fff")
+    .attr('stroke', d => d.highlight === 'y' ? '#222' : config.sizeConfig.enabled ? ONScolours.oceanBlue : "#fff")
     .attr('stroke-width', d => d.highlight === 'y' ? '1.5px' : '1px')
     .attr('stroke-linejoin', 'round')
     .attr('stroke-opacity', config.strokeOpacity);

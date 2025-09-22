@@ -2,7 +2,7 @@
 
 ## Overview
 
-This JavaScript implementation creates interactive scatter plots and bubble charts using D3.js. The chart supports multiple data groups with different shapes, optional size scaling for bubble charts, tooltips, highlighting, and a searchable dropdown for data point selection.
+Create interactive scatter plots and bubble charts using D3.js in the ONS style. The chart supports multiple data groups with different shapes, optional size scaling for bubble charts, tooltips, highlighting, and a searchable dropdown for data point selection.
 
 ## Key Features
 
@@ -11,50 +11,6 @@ This JavaScript implementation creates interactive scatter plots and bubble char
 - **Interactive Elements**: Tooltips, point highlighting, searchable dropdown
 - **Responsive Design**: Adapts to different screen sizes
 - **Accessibility**: Screen reader support and keyboard navigation
-
-## Configuration
-
-### Basic Configuration Structure
-
-```javascript
-const config = {
-  // Data and styling
-  "graphic_data_url": "data.csv",
-  "colour_palette": ["#206095", "#A8BD3A", "#F66068", "#27A0CC"],
-  "fillOpacity": 1,
-  "strokeOpacity": 1,
-  
-  // Chart dimensions and domains
-  "xDomain": "auto", // or [min, max]
-  "yDomain": "auto", // or [min, max]
-  "aspectRatio": {
-    "sm": [1, 1],
-    "md": [1, 1], 
-    "lg": [1, 1]
-  },
-  
-  // Axes configuration
-  "xAxisLabel": "X-axis Label",
-  "yAxisLabel": "Y-axis Label",
-  "xAxisFormat": ".1f",
-  "yAxisFormat": ".1f",
-  
-  // Size scaling (for bubble charts)
-  "sizeConfig": {
-    "enabled": false, // Set to true for bubble chart
-    "minSize": 25,
-    "maxSize": 500,
-    "sizeField": "size"
-  },
-  
-  // Labels and text
-  "groupLabel": "Group",
-  "sizeLabel": "Size",
-  "sizeLabelFormat": ".0f",
-  "sourceText": "Data source attribution",
-  "accessibleSummary": "Chart description for screen readers"
-};
-```
 
 ## Data Format
 
@@ -76,9 +32,9 @@ Your CSV data should have the following structure:
 ### Configuration
 ```javascript
 const scatterConfig = {
-  "graphic_data_url": "scatter_data.csv",
+  "graphic_data_url": "data.csv",
   "colour_palette": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"],
-  "fillOpacity": 0.7,
+  "fillOpacity": 1,
   "strokeOpacity": 1,
   
   "xDomain": "auto",
@@ -130,8 +86,8 @@ xvalue,yvalue,group,name,highlight
 const bubbleConfig = {
   "graphic_data_url": "bubble_data.csv",
   "colour_palette": ["#206095", "#A8BD3A", "#F66068", "#27A0CC"],
-  "fillOpacity": 0.6,
-  "strokeOpacity": 0.8,
+  "fillOpacity": 0.75,
+  "strokeOpacity": 1,
   
   "xDomain": [0, 100],
   "yDomain": [0, 85],
@@ -181,6 +137,8 @@ xvalue,yvalue,group,name,population,highlight
 ## Advanced Configuration Options
 
 ### Responsive Design
+You can set different margins and different number of ticks for each axis for different screen sizes. You can also set different breakpoints. 
+
 ```javascript
 "margin": {
   "sm": { "top": 30, "right": 20, "bottom": 75, "left": 50 },
@@ -199,18 +157,6 @@ xvalue,yvalue,group,name,population,highlight
 - `".0%"` - Percentage (e.g., 42%)
 - `"$,.0f"` - Currency with commas (e.g., $42,000)
 - `".2s"` - SI prefix (e.g., 42k, 1.2M)
-
-### Color Palettes
-```javascript
-// Professional palette
-"colour_palette": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
-
-// Government/official palette  
-"colour_palette": ["#206095", "#A8BD3A", "#F66068", "#27A0CC"]
-
-// Accessible high-contrast palette
-"colour_palette": ["#000000", "#E69F00", "#56B4E9", "#009E73"]
-```
 
 ## Interactive Features
 
@@ -232,6 +178,8 @@ Display on hover:
 - X and Y values (formatted)
 - Group/category
 - Size value (for bubble charts)
+
+Edit the tooltipConfig object of the `createDelaunayOverlay` function. 
 
 ## Shape Assignment
 

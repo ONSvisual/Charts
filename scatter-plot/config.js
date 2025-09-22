@@ -1,9 +1,8 @@
 config={
   "graphic_data_url": "bubbleplotdata.csv",
-  "colour_palette": ["#206095","#A8BD3A","#F66068","#27A0CC"],
-  "fillOpacity":1,
+  "colour_palette": [ONScolours.oceanBlue,ONScolours.springGreen,ONScolours.coralPink,ONScolours.skyBlue],
+  "fillOpacity":0.75,
   "strokeOpacity":1,
-  "radius": "4",
   "sourceText": "Office for National Statistics",
   "accessibleSummary":"Here is the screenreader text describing the chart.",
   "xDomain":[0,1],
@@ -21,7 +20,7 @@ config={
       "minSize": 25,   // Minimum circle size in pixels
       "maxSize": 500,  // Maximum circle size in pixels
       "sizeField": 'size' // Field name in data that contains size values
-  }
+  },
   "aspectRatio": {
     "sm": [1, 1],
     "md": [1, 1],
