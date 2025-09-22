@@ -13,9 +13,9 @@ function drawGraphic() {
 	size = initialise(size);
 
 	//population accessible summmary
-	d3.select('#accessibleSummary').html(config.essential.accessibleSummary);
+	d3.select('#accessibleSummary').html(config.accessibleSummary);
 
-	let formatNo = d3.format(config.essential.numberFormat);
+	let formatNo = d3.format(config.numberFormat);
 
 	// set up scale
 	let x = d3
@@ -36,10 +36,10 @@ function drawGraphic() {
 	// unique columns
 	let xcategories = [...new Set(graphic_data.map((d) => d.xcategory))];
 
-	if (config.essential.colour_palette_type == 'categorical') {
+	if (config.colour_palette_type == 'categorical') {
 		colour = d3
 			.scaleOrdinal()
-			.range(config.essential.colour_palette_colours)
+			.range(config.colour_palette_colours)
 			.domain(xcategories);
 
 		if (size == 'sm') {
@@ -47,7 +47,7 @@ function drawGraphic() {
 			let legenditem = d3
 				.select('#legend')
 				.selectAll('div.legend--item')
-				.data(d3.zip(xcategories, config.essential.colour_palette_colours))
+				.data(d3.zip(xcategories, config.colour_palette_colours))
 				.enter()
 				.append('div')
 				.attr('class', 'legend--item');
@@ -92,13 +92,13 @@ function drawGraphic() {
 		headers
 			.append('div')
 			.attr('class', 'rowLabel')
-			.style('width', config.essential.rowWidth[size] + 'px');
+			.style('width', config.rowWidth[size] + 'px');
 
 		// create divs for the rest of the column headers
 		headers
 			.append('div')
 			.attr('class', 'headers')
-			.style('width', `calc(100% - ${config.essential.rowWidth[size]}px)`)
+			.style('width', `calc(100% - ${config.rowWidth[size]}px)`)
 			.selectAll('div.column')
 			.data(xcategories)
 			.join('div')
@@ -119,7 +119,7 @@ function drawGraphic() {
 	rows
 		.append('div')
 		.attr('class', 'rowLabel')
-		.style('width', config.essential.rowWidth[size] + 'px')
+		.style('width', config.rowWidth[size] + 'px')
 		.append('span')
 		.style('text-align', 'right')
 		.html((d) => d[0]);
@@ -128,7 +128,7 @@ function drawGraphic() {
 	splitBar = rows
 		.append('div')
 		.attr('class', 'headers')
-		.style('width', `calc(100% - ${config.essential.rowWidth[size]}px)`)
+		.style('width', `calc(100% - ${config.rowWidth[size]}px)`)
 		.selectAll('div.splitBar')
 		.data((d) => d[1])
 		.join('div')
@@ -163,13 +163,13 @@ function drawGraphic() {
 			+d.value > 0 ? 100 - x(+d.value) + '%' : 100 - x(0) + '%'
 		)
 		.style('background', function (d) {
-			if (config.essential.colour_palette_type == 'mono') {
-				return config.essential.colour_palette_colours[0];
-			} else if (config.essential.colour_palette_type == 'divergent') {
+			if (config.colour_palette_type == 'mono') {
+				return config.colour_palette_colours[0];
+			} else if (config.colour_palette_type == 'divergent') {
 				return +d.value > 0
-					? config.essential.colour_palette_colours[0]
-					: config.essential.colour_palette_colours[1];
-			} else if (config.essential.colour_palette_type == 'categorical') {
+					? config.colour_palette_colours[0]
+					: config.colour_palette_colours[1];
+			} else if (config.colour_palette_type == 'categorical') {
 				return colour(d.xcategory);
 			}
 		})
@@ -195,13 +195,13 @@ function drawGraphic() {
 	finalrow
 		.append('div')
 		.attr('class', 'rowLabel')
-		.style('width', config.essential.rowWidth[size] + 'px');
+		.style('width', config.rowWidth[size] + 'px');
 
 	finalrow
 		.append('div')
 		.attr('class', '')
 		.style('margin-right', '-10px')
-		.style('width', `calc(100% - ${config.essential.rowWidth[size]}px)`)
+		.style('width', `calc(100% - ${config.rowWidth[size]}px)`)
 		.style('display', 'inline-block')
 		.selectAll('div.column')
 		.data(xcategories)
@@ -225,10 +225,10 @@ function drawGraphic() {
 		.style('padding-right', '10px') 
 		.append('span')
 		.style('white-space', 'nowrap') 
-		.text(config.essential.xAxisLabel);
+		.text(config.xAxisLabel);
 
 	//create link to source
-	addSource('source', config.essential.sourceText);
+	addSource('source', config.sourceText);
 
 	//use pym to calculate chart dimensions
 	if (pymChild) {
@@ -236,7 +236,7 @@ function drawGraphic() {
 	}
 }
 
-d3.csv(config.essential.graphic_data_url).then((data) => {
+d3.csv(config.graphic_data_url).then((data) => {
 	//load chart data
 	graphic_data = data;
 
