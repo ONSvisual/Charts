@@ -225,11 +225,28 @@ text {
   forced-color-adjust: auto;
 }
 
-/* title for small multiple panels */
+/* small multiple specific styles */
 text.title {
   font-weight: 600;
   font-size: 14px;
   fill: var(--ons-color-grey-100);
+}
+
+.grid line {
+  stroke: var(--ons-color-grey-20);;
+}
+
+.chart-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.chart-container:last-child {
+  margin-right: 0;
+}
+
+.grid path.domain {
+  display: none;
 }
 
 /* title for sub-groups in charts with groups */

@@ -4,6 +4,7 @@ on:
   push:
     branches: ['main']
     paths: ['lib/**']
+  workflow_dispatch:
 
 jobs:
   sync-repos:
@@ -35,8 +36,7 @@ jobs:
     - name: Clear existing lib folders in target repo
       run: |
         # Clear lib folder
-        rm -rf charts-lib/
-        mkdir -p charts-lib/
+        find charts-lib -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 
         rm -rf otherCharts/lib
         mkdir -p otherCharts/lib
@@ -44,8 +44,8 @@ jobs:
     - name: Copy files to target repo (excluding GitHub Actions)
       run: |
         # Copy
-        rsync -av --exclude='.git' --exclude='.github' source-repo/ charts-lib/
-        rsync -av --exclude='.git' --exclude='.github' source-repo/ otherCharts/lib/
+        rsync -av --exclude='.git' --exclude='.github' source-repo/lib/ charts-lib/
+        rsync -av --exclude='.git' --exclude='.github' source-repo/lib/ otherCharts/lib/
     
     - name: Commit and push changes to charts-lib
       run: |
